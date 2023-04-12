@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d6d9813d2b6e6f4886fe9a84fde7e2a, type: 3}
+  m_Name: Hound
+  m_EditorClassIdentifier: 
+  <Type>k__BackingField: 3
+  <Stats>k__BackingField:
+    Health: 50
+    Attack: 5
+    AttackSpeed: 1
+    RunSpeed: 2
+    Cost: 7
+    Gold: 7
+  <Prefab>k__BackingField: {fileID: 5506775913253073397, guid: 9ebe00cf37a187b45b0081d87c75c1fc, type: 3}
