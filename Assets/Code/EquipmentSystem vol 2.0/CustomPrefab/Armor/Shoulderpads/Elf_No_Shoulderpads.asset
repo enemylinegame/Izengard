@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0fc94b35dc427643b4a6d984400368c, type: 3}
+  m_Name: Elf_No_Shoulderpads
+  m_EditorClassIdentifier: 
+  _name: Elf_No_Shoulderpads
+  _icon: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  _material: {fileID: 2100000, guid: 8c10d0579a1faa547b0825e1e3a93c76, type: 2}
+  _itemObject: {fileID: 4044914784434502720, guid: 1b8f050c6c377e1429015525bf743f75, type: 3}
+  _itemParameters:
+    _defendsModificator:
+      _value: 0
+      _description: 
+    _speedModificator:
+      _value: 0
+      _description: 
+    _rangeAttackModificator:
+      _value: 0
+      _description: 
+    _damageModificator:
+      _value: 0
+      _description: 
+  _costInGold:
+    _coastInResurse:
+    - _maxResurseCount: 0
+      _currentResurseCount: 0
+      _resurseInHolder: {fileID: 11400000, guid: 47367927ed5735546b6d6dd284d01bb8, type: 2}
+    _pricePaid: 0
+    _itIsResetable: 0
+    _produceTime: 0
+  _costInResurse:
+    _coastInResurse: []
+    _pricePaid: 0
+    _itIsResetable: 0
+    _produceTime: 0
+  _skinnedMeshRenderer: {fileID: -3892246984659998700, guid: 1b8f050c6c377e1429015525bf743f75, type: 3}
+  _armorBindingsType: 20
+  _armorSlotType:
+    _value: 5
+    _description: 

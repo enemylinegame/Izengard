@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0fc94b35dc427643b4a6d984400368c, type: 3}
+  m_Name: Elf_Boots
+  m_EditorClassIdentifier: 
+  _name: Elf_Boots
+  _icon: {fileID: 21300000, guid: 4b7e061b65f682641bce8208e1444068, type: 3}
+  _material: {fileID: 2100000, guid: 8c10d0579a1faa547b0825e1e3a93c76, type: 2}
+  _itemObject: {fileID: 307573361940144026, guid: 18a4388f53ab2c34b80d8bf857a7f4ac, type: 3}
+  _itemParameters:
+    _defendsModificator:
+      _value: 0
+      _description: 
+    _speedModificator:
+      _value: 0
+      _description: 
+    _rangeAttackModificator:
+      _value: 0
+      _description: 
+    _damageModificator:
+      _value: 0
+      _description: 
+  _costInGold:
+    _coastInResurse:
+    - _maxResurseCount: 0
+      _currentResurseCount: 0
+      _resurseInHolder: {fileID: 11400000, guid: 47367927ed5735546b6d6dd284d01bb8, type: 2}
+    _pricePaid: 0
+    _itIsResetable: 0
+    _produceTime: 0
+  _costInResurse:
+    _coastInResurse: []
+    _pricePaid: 0
+    _itIsResetable: 0
+    _produceTime: 0
+  _skinnedMeshRenderer: {fileID: 307573361926476836, guid: 18a4388f53ab2c34b80d8bf857a7f4ac, type: 3}
+  _armorBindingsType: 60
+  _armorSlotType:
+    _value: 3
+    _description: 

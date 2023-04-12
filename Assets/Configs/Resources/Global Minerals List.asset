@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1eb72108ed194fdeaed7ced5d713034f, type: 3}
+  m_Name: Global Minerals List
+  m_EditorClassIdentifier: 
+  Minerals:
+  - {fileID: 11400000, guid: cf50f9e237f44a547913f4c57f20894e, type: 2}
+  - {fileID: 11400000, guid: 411936b9fd5c0fe42a3f45bd6ea21626, type: 2}
+  - {fileID: 11400000, guid: 36542b179fec0dd4ea54bf9334575537, type: 2}
+  - {fileID: 11400000, guid: 49d84185aef2fe94b9085085d19fc2ff, type: 2}
+  - {fileID: 11400000, guid: 5df775a5744797d469a87d811637979f, type: 2}
+  - {fileID: 11400000, guid: 625570fb8d3eb6c4fa0a52ef5fee1b25, type: 2}

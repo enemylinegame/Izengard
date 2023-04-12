@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f08a583672b6eda4c8477fb15887c745, type: 3}
+  m_Name: DeersT2
+  m_EditorClassIdentifier: 
+  Prefab: {fileID: 6611631232710345216, guid: d51b15c221863a94eaf34838669b467f, type: 3}
+  _nameOfMine: deers
+  _extractionTime: 10
+  resourceHolderMine:
+    _objectInHolder: {fileID: 11400000, guid: 1f6bc84148d604645846d03cbb7bea57, type: 2}
+    _currentValue: 0
+    _maxValue: 200
+  _icon: {fileID: 21300000, guid: 76300a0e0c8d5bc408c5f5fd3ec3a53b, type: 3}
+  _currentMineValue: 1
+  thisMineTier: 2
+  _typeOfMine: 603

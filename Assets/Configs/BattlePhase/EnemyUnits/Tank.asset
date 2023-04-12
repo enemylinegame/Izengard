@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d6d9813d2b6e6f4886fe9a84fde7e2a, type: 3}
+  m_Name: Tank
+  m_EditorClassIdentifier: 
+  <Type>k__BackingField: 1
+  <Stats>k__BackingField:
+    Health: 100
+    Attack: 5
+    AttackSpeed: 1
+    AttackRange: 0.5
+    RunSpeed: 1
+    Cost: 5
+    Gold: 5
+  <Prefab>k__BackingField: {fileID: 1548683655444547302, guid: 1bbc60aa227b8914baf4fb553e7649c5, type: 3}
