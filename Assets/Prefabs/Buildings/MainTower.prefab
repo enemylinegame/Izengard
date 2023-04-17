@@ -785,6 +785,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 21300000, guid: cc097096fddcacc4587026cfac78c1b7, type: 3}
+  _maxCountAttackers: 5
 --- !u!65 &1831737973244403283
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -793,7 +794,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4437343820552527173}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.29, z: 0.5}

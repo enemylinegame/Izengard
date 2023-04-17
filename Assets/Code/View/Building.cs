@@ -1,4 +1,5 @@
 using System;
+using Code.TileSystem;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -30,27 +31,5 @@ public class Building : BaseBuildAndResources
     {
         var r = new Random();
         BuildingID = r.Next(0, 100);
-    }
-
-    public void SetAvailableToInstant(bool available)
-    {
-        if (available)
-        {
-            _renderer.material.color = Color.green;
-        }
-        else
-        {
-            _renderer.material.color = Color.red;
-        }
-    }
-
-    public void SetNormalColor()
-    {
-        _renderer.material.color = Color.white;
-    }
-
-    public void SetPointDestination(Vector3 pointDestination)
-    {
-        _navMeshLink.endPoint = pointDestination;
     }
 }

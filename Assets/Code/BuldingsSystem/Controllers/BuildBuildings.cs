@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-
-public class BuildBuildings
+namespace Code.BuildingSystem
+{
+    public class BuildBuildings
 {
     private const int START_POOL_CAPACITY = 5;
 
@@ -61,4 +62,5 @@ public class BuildBuildings
         var buiding = _buildGenerator.StartBuildingHouses(buildingConfig);
         return buiding;
     }
+}
 }

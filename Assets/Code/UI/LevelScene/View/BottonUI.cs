@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Views.BuildBuildingsUI;
 
-namespace Code.View
+namespace Code.UI
 {
     public class BottonUI : MonoBehaviour
     {

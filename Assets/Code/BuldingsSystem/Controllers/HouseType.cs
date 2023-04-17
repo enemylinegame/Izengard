@@ -1,4 +1,4 @@
-﻿namespace Controllers.BuildBuildingsUI
+﻿namespace Code.BuildingSystem
 {
     public enum HouseType: int
     {

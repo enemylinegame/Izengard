@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Controllers.BuildBuildingsUI;
+using Code.BuildingSystem;
 using ResourceSystem;
 using Unity.Collections;
 using UnityEngine;
@@ -13,7 +13,7 @@ namespace Code.TileSystem
     {
         [SerializeField] private HouseType _type;
         [SerializeField] private TileConfig _tileConfig;
-        [SerializeField] private DotSpawns _dotSpawns;
+        [SerializeField] private List<Dot> _dotSpawns;
         [SerializeField] private List<Building> _floodedBuildings = new List<Building>();
         
         private List<BuildingConfig> _curBuildingConfigs;
@@ -25,14 +25,10 @@ namespace Code.TileSystem
         public TileConfig TileConfig => _tileConfig;
         public List<BuildingConfig> CurrBuildingConfigs => _curBuildingConfigs;
         public List<Building> FloodedBuildings => _floodedBuildings;
-        public int EightQuantity
-        {
-            get => _eightQuantity;
-            set => _eightQuantity = value;
-        }
-
-        public DotSpawns DotSpawns => _dotSpawns;
-
+        public int EightQuantity => _eightQuantity;
+        public List<Dot> DotSpawns => _dotSpawns;
+        
+        
         private void Start()
         {
             _saveTileConfig = new TileConfig();
@@ -43,7 +39,6 @@ namespace Code.TileSystem
             _workersAssigmentses = new List<WorkersAssigments>();
             FillWorkerList();
         }
-        
         private void FillWorkerList()
         {
             for (int i = 0; i < _saveTileConfig.MaxUnits.GetHashCode(); i++) //TODO: read from config
@@ -52,7 +47,6 @@ namespace Code.TileSystem
                 _workerViews[i].AssignedResource = BuildingTypes.None;
             }
         }
-
         public void UpdateWorkerAssigment(BuildingTypes resourceType, Building building)
         {
             if (!_workerViews.Exists(x => x.AssignedResource == BuildingTypes.None))
@@ -71,6 +65,7 @@ namespace Code.TileSystem
             else
             {
                 var workersAssigments =  _workersAssigmentses.Find(x => x.Building.BuildingID == building.BuildingID);
+                Debug.Log(_saveTileConfig.MaxUnits.GetHashCode());
                 workersAssigments.BusyWorkersCount++;
                 _eightQuantity++;
             }
@@ -78,7 +73,6 @@ namespace Code.TileSystem
                 var worker = _workerViews.Find(x => x.AssignedResource == BuildingTypes.None);
             worker.AssignedResource = resourceType;
         }
-
         public void RemoveWorkerAssigment(BuildingTypes resourceType, Building building)
         {
             if (!_workerViews.Exists(x => x.AssignedResource == resourceType))
@@ -96,7 +90,6 @@ namespace Code.TileSystem
             var worker = _workerViews.Find(x => x.AssignedResource == resourceType);
             worker.AssignedResource = BuildingTypes.None;
         }
-
         public int GetAssignedWorkers(Building building)
         {
             if (!_workersAssigmentses.Exists(x => x.Building.BuildingID == building.BuildingID))
@@ -106,9 +99,7 @@ namespace Code.TileSystem
             return _workersAssigmentses.
                 Find(x => x.Building.BuildingID == building.BuildingID).BusyWorkersCount;
         }
-        
-        
-        public void LVLUp(TileUIController controller)
+        public void LVLUp(TileController controller)
         {
             if (_saveTileConfig.TileLvl.GetHashCode() < 5)
             {
@@ -117,14 +108,14 @@ namespace Code.TileSystem
                 _curBuildingConfigs.AddRange(_saveTileConfig.BuildingTirs);
                 controller.UpdateInfo(_saveTileConfig);
                 controller.ADDBuildUI(_curBuildingConfigs, this);
+                FillWorkerList();
             }else controller.CenterText.NotificationUI("Max LVL", 1000);
         }
-
-        public void LoadButtonsUIBuy(TileUIController controller)
+        public void LoadButtonsUIBuy(TileController controller)
         {
             foreach (var building in _floodedBuildings)
             {
-                controller.BuildingsUIView.LoadBuildingInfo(building, GetAssignedWorkers(building), controller.DestroyBuilding, controller);
+                controller.BuildingsUIView.LoadBuildingInfo(building, GetAssignedWorkers(building), controller.RemoveBuilding, controller);
             }
         }
     }

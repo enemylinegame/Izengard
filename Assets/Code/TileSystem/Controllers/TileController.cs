@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Code.BuildingSystem;
 using Code.TileSystem;
-using Controllers.BuildBuildingsUI;
 using ResourceSystem;
 using ResourceSystem.SupportClases;
 using UnityEditor;
@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 
 namespace Code.TileSystem
 {
-    public class TileUIController : IDisposable, IOnController, IOnUpdate
+    public class TileController : IDisposable, IOnController, IOnUpdate
     {
         private TileList _list;
         private TileView _view;
@@ -22,8 +22,9 @@ namespace Code.TileSystem
         private BuildGenerator _generator;
         private GlobalResorceStock _stock;
         private List<BuildingConfig> _buildingConfigs;
-        private Dictionary<GameObject, BuildingConfig> _destroyBuilding = new Dictionary<GameObject, BuildingConfig>();
+        private Dictionary<Building, BuildingConfig> _removeBuilding = new Dictionary<Building, BuildingConfig>();
         private BuildBuildings _buildBuildings;
+        private BuildingController _buildingController;
         private int _currentlvl;
         private int _eightQuantity;
         private int _units;
@@ -34,10 +35,10 @@ namespace Code.TileSystem
         public int CurrentLVL => _currentlvl;
         public TileView View => _view;
         public BuildingsUIView BuildingsUIView => _buildingsUIView;
-        public Dictionary<GameObject, BuildingConfig> DestroyBuilding => _destroyBuilding;
+        public Dictionary<Building, BuildingConfig> RemoveBuilding => _removeBuilding;
 
-        public TileUIController(TileList tileList, TileUIView uiView, BaseCenterText centerText, BuildingsUIView buildingsUIView, 
-            BuildGenerator buildGenerator, GlobalResorceStock stock)
+        public TileController(TileList tileList, TileUIView uiView, BaseCenterText centerText, BuildingsUIView buildingsUIView, 
+            BuildGenerator buildGenerator, GlobalResorceStock stock, BuildingController buildingController)
         {
             _centerText = centerText;
             _list = tileList;
@@ -48,8 +49,9 @@ namespace Code.TileSystem
             
             _stock.GlobalResStock.HoldersInStock.Find(x => x.ObjectInHolder.ResourceType == ResourceType.Wood)
                 .CurrentValue = 100;
+            _buildingController = buildingController;
             
-            OpenMenu(false);
+            buildingsUIView.OpenMenu(false);
         }
 
         /// <summary>
@@ -108,14 +110,37 @@ namespace Code.TileSystem
                     x.ObjectInHolder.ResourceType == resourcePrice.ResourceType);
                 resourceHolder.CurrentValue -= resourcePrice.Cost;
             }
-
-            var building = _generator.StartBuildingHouses(buildingConfig);
-            var info = _buildingsUIView.CreateBuildingInfo(buildingConfig, this, building);
-            building.Icon = info.Icon;
-            building.Type = info.Types;
-            _destroyBuilding.Add(building.gameObject, buildingConfig);
-            _buildingsUIView.ButtonsBuy.Add(buildingConfig);
-            view.FloodedBuildings.Add(building);
+            var building = _buildingController.StartBuilding(view, buildingConfig);
+            if (building)
+            {
+                var info = _buildingsUIView.CreateBuildingInfo(buildingConfig, this, building);
+                building.Icon = info.Icon;
+                building.Type = info.Types;
+                _removeBuilding.Add(building, buildingConfig);
+                _buildingsUIView.ButtonsBuy.Add(buildingConfig);
+                view.FloodedBuildings.Add(building);
+            }
+        }
+        
+        public void DestroyBuilding(Dictionary<Building, BuildingConfig> buildingConfigs, BuildingUIInfo Button, TileView view)
+        {
+            foreach (var kvp in buildingConfigs)
+            {
+                if (kvp.Value.BuildingType == Button.Types)
+                {
+                    Button.DestroyBuildingInfo.onClick.RemoveAllListeners();
+                    Button.PlusUnit.onClick.RemoveAllListeners();
+                    Button.MinusUnit.onClick.RemoveAllListeners();
+                    buildingConfigs.Remove(kvp.Key);
+                    _buildingsUIView.DestroyBuildingInfo.Remove(Button.gameObject);
+                    view.FloodedBuildings.Remove(kvp.Key);
+                    _buildingController.RemoveTypeDots(view, kvp.Key);
+                    GameObject.Destroy(kvp.Key.gameObject);
+                    GameObject.Destroy(Button.gameObject);
+                    break;
+                }
+                
+            }
         }
         
         private bool IsResourcesEnough(BuildingConfig buildingConfig)
@@ -130,34 +155,6 @@ namespace Code.TileSystem
             }
             return true;
         }
-        
-        public void LevelCheck()
-        {
-            if (CurrentLVL > _buildingsUIView.DestroyBuildingInfo.Count)
-            {
-                _buildingsUIView.PrefabButtonClear.gameObject.SetActive(true);
-            }
-            else
-            {
-                _buildingsUIView.PrefabButtonClear.gameObject.SetActive(false);
-            }
-        }
-
-        private void OnOpenMenuButton() => OpenMenu(true);
-
-        private void OnCloseMenuButton() => OpenMenu(false);
-
-        public void OpenMenu(bool isOpen)
-        {
-            foreach (var window in _buildingsUIView.Windows) window.gameObject.SetActive(isOpen);
-            _buildingsUIView.CloseMenuButton.gameObject.SetActive(isOpen);
-            if (isOpen == false)
-            {
-                _buildingsUIView.ClearButtonsUIBuy();
-            }
-        }
-        
-        
         #region Other
 
         /// <summary>
@@ -199,7 +196,17 @@ namespace Code.TileSystem
             _buildingsUIView.Deinit();
             _uiView.Upgrade.onClick.RemoveAllListeners();
         }
-
+        public void LevelCheck()
+                {
+                    if (CurrentLVL > _buildingsUIView.DestroyBuildingInfo.Count)
+                    {
+                        _buildingsUIView.PrefabButtonClear.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        _buildingsUIView.PrefabButtonClear.gameObject.SetActive(false);
+                    }
+                }
         public void OnUpdate(float deltaTime)
         {
             LevelCheck();

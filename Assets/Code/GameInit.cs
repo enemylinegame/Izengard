@@ -5,18 +5,18 @@ using UnityEngine;
 using ResourceSystem;
 using BuildingSystem;
 using Code;
+using Code.BuildingSystem;
 using Code.TileSystem;
 using Code.TowerShot;
-using Code.View;
+using Code.UI;
 using Views.BaseUnit.UI;
-using Controllers.BuildBuildingsUI;
 using CombatSystem;
 using EquipmentSystem;
 
 public class GameInit
 {
     public GameInit(Controller controller, GameConfig gameConfig, RightUI rightUI, 
-        Transform btnParents, LeftUI leftUI, BottonUI bottonUI,
+        Transform btnParents, LeftUI leftUI, CenterUI centerUI,BottonUI bottonUI,
         BuildingsUI buildingsUI, GlobalResorceStock globalResStock, TopResUiVew topResUI,
         BuildingList buildingList, EndGameScreen endGameScreen, TowerShotConfig towerShotConfig, 
         BuyItemScreenView buyItemScreenView, HireSystemView hireSystemView , EquipScreenView equipScreenView, 
@@ -30,10 +30,11 @@ public class GameInit
         var unitController = new UnitController();
         var buildController = new BuildGenerator(gameConfig, leftUI);
         var timeRemaining = new TimeRemainingController();
-        var buildingController = new BuildingResursesUIController(buildingsUI, /*buildingList,*/topResUI,globalResStock);
+        var buildingResursesUIController = new BuildingResursesUIController(buildingsUI, /*buildingList,*/topResUI,globalResStock);
         var towershotcontroller = new TowerShotController(towerShotConfig, levelGenerator, gameConfig.Bullet);
         var eqScreenController = new EquipScreenController(equipScreenView, camera);
         var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, hireSystemView, levelGenerator);
+        var buildingController = new BuildingController(centerText);
         
         var waveController = new WaveController(levelGenerator, rightUI, btnParents, gameConfig, centerText);
         var endGameController = new EndGameController(endGameScreen, levelGenerator);
@@ -48,7 +49,7 @@ public class GameInit
         {
             new ResourceGenerator(buildController.Buildings, gameConfig, levelGenerator, 2);
         }
-        var tilecontroller = new TileUIController(tileList, tileUIView, centerText, bottonUI.BuildingMenu, buildController, globalResStock);
+        var tilecontroller = new TileController(tileList, tileUIView, centerText, bottonUI.BuildingMenu, buildController, globalResStock, buildingController);
         var inputController = new InputController(/*buildingController, */tilecontroller);
 
 
@@ -58,7 +59,7 @@ public class GameInit
         controller.Add(timeRemaining);
         controller.Add(unitController);
         controller.Add(inputController);
-        controller.Add(buildingController);
+        controller.Add(buildingResursesUIController);
         controller.Add(globalResController);
         controller.Add(waveController);
         controller.Add(endGameController);

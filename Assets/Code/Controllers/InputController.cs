@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using BuildingSystem;
 using Code.TileSystem;
-using Controllers.BuildBuildingsUI;
 using Controllers.OutPost;
 using Views.BuildBuildingsUI;
 
@@ -12,12 +11,12 @@ namespace Controllers
     public class InputController : IOnController, IOnUpdate
     {
         // private BuildingResursesUIController _rescontoller;
-        private TileUIController _tileUIController;
+        private TileController _tileController;
 
-        public InputController(TileUIController tileUIController)
+        public InputController(TileController tileController)
         {
             // _rescontoller = rescontoller;
-            _tileUIController = tileUIController;
+            _tileController = tileController;
         }
 
 
@@ -25,7 +24,7 @@ namespace Controllers
         {
             if (Input.GetMouseButtonDown(1))
             {
-                _tileUIController.OpenMenu(false);
+                _tileController.BuildingsUIView.OpenMenu(false);
             }
             if (Input.GetMouseButtonDown(0))
             {
@@ -43,8 +42,8 @@ namespace Controllers
 
                     if (tile)
                     {
-                        _tileUIController.OpenMenu(true);
-                        _tileUIController.LoadInfo(tile);
+                        _tileController.BuildingsUIView.OpenMenu(true);
+                        _tileController.LoadInfo(tile);
                     }
                 }
 

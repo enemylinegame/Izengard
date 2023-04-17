@@ -496,6 +496,7 @@ MonoBehaviour:
   _towerShotConfig: {fileID: 11400000, guid: 434693b8852395646991acdccd102705, type: 2}
   _rightUI: {fileID: 298062939}
   _leftUI: {fileID: 1779826467}
+  _centerUI: {fileID: 0}
   _bottonUI: {fileID: 1287871307}
   TopResUI: {fileID: 1208401995}
   _endGameScreen: {fileID: 1000522867}
@@ -3398,7 +3399,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5537125970293088711, guid: 9b8418457783bd944b73b4510f5449b6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00010258628
+      value: 0.000015865637
       objectReference: {fileID: 0}
     - target: {fileID: 5537125970308451800, guid: 9b8418457783bd944b73b4510f5449b6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

@@ -35,7 +35,7 @@ namespace Views.BuildBuildingsUI
             set => _Types = value;
         }
         
-        public void Hiring(bool isOn, TileUIController controller, Building building)
+        public void Hiring(bool isOn, TileController controller, Building building)
         {
             if (isOn)
             {
