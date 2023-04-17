@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Code.BuildingSystem;
+using Code.UI.Controllers;
 using ResourceSystem;
 using Unity.Collections;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace Code.TileSystem
         [SerializeField] private HouseType _type;
         [SerializeField] private TileConfig _tileConfig;
         [SerializeField] private List<Dot> _dotSpawns;
-        [SerializeField] private List<Building> _floodedBuildings = new List<Building>();
+        [SerializeField] private Dictionary<Building, BuildingConfig> _floodedBuildings = new Dictionary<Building, BuildingConfig>();
         
         private List<BuildingConfig> _curBuildingConfigs;
         private List<WorkerView> _workerViews;
@@ -24,7 +25,7 @@ namespace Code.TileSystem
 
         public TileConfig TileConfig => _tileConfig;
         public List<BuildingConfig> CurrBuildingConfigs => _curBuildingConfigs;
-        public List<Building> FloodedBuildings => _floodedBuildings;
+        public Dictionary<Building, BuildingConfig> FloodedBuildings => _floodedBuildings;
         public int EightQuantity => _eightQuantity;
         public List<Dot> DotSpawns => _dotSpawns;
         
@@ -111,11 +112,11 @@ namespace Code.TileSystem
                 FillWorkerList();
             }else controller.CenterText.NotificationUI("Max LVL", 1000);
         }
-        public void LoadButtonsUIBuy(TileController controller)
+        public void LoadButtonsUIBuy(TileController controller, UIController uiController)
         {
             foreach (var building in _floodedBuildings)
             {
-                controller.BuildingsUIView.LoadBuildingInfo(building, GetAssignedWorkers(building), controller.RemoveBuilding, controller);
+                uiController.LoadBuildingInfo(building.Key, GetAssignedWorkers(building.Key), building, controller);
             }
         }
     }
