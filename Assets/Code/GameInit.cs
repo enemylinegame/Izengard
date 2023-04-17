@@ -31,6 +31,7 @@ public class GameInit
         var buildController = new BuildGenerator(gameConfig, leftUI);
         var timeRemaining = new TimeRemainingController();
         var buildingResursesUIController = new BuildingResursesUIController(buildingsUI, /*buildingList,*/topResUI,globalResStock);
+        var uiController = new UIController(leftUI, rightUI, bottonUI, centerUI);
         var towershotcontroller = new TowerShotController(towerShotConfig, levelGenerator, gameConfig.Bullet);
         var eqScreenController = new EquipScreenController(equipScreenView, camera);
         var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, hireSystemView, levelGenerator);
@@ -49,8 +50,8 @@ public class GameInit
         {
             new ResourceGenerator(buildController.Buildings, gameConfig, levelGenerator, 2);
         }
-        var tilecontroller = new TileController(tileList, tileUIView, centerText, bottonUI.BuildingMenu, buildController, globalResStock, buildingController);
-        var inputController = new InputController(/*buildingController, */tilecontroller);
+        var tilecontroller = new TileController(tileList, tileUIView, centerText, uiController, buildController, globalResStock, buildingController);
+        var inputController = new InputController(tilecontroller, uiController);
 
 
         controller.Add(btnConroller);

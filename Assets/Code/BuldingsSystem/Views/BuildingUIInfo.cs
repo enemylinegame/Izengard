@@ -34,7 +34,9 @@ namespace Views.BuildBuildingsUI
             get => _Types;
             set => _Types = value;
         }
-        
+        /// <summary>
+        /// найм юнитов для определеного типа здания
+        /// </summary>
         public void Hiring(bool isOn, TileController controller, Building building)
         {
             if (isOn)
