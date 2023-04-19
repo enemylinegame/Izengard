@@ -3,12 +3,12 @@ using UnityEngine;
 namespace BuildingSystem
 {
     [System.Serializable]    
-    public class MainBuildingModel : WareHouseBuildModel,IProduceWorkers
+    public class MainBuildingModel :IProduceWorkers
     {
         public int CurrentWorkerValue => _currentWorkerValue;
 
         [SerializeField] private int _currentWorkerValue;
-        public MainBuildingModel(MainBuildingModel baseBuilding):base(baseBuilding)
+        public MainBuildingModel(MainBuildingModel baseBuilding)
         {
             _currentWorkerValue = baseBuilding.CurrentWorkerValue;
         }

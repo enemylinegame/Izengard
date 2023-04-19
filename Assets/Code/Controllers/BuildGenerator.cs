@@ -11,7 +11,7 @@ public class BuildGenerator : IOnController/*, IOnUpdate*/, IDisposable
     //возможно переполнение массива при большом количестве зданий и ресурсов
     public BaseBuildAndResources[,] Buildings => _buildings;
 
-    private LeftUI _leftUI;
+   
     private Camera _mainCamera;
     private BaseBuildAndResources[,] _buildings;
     private Building _flyingBuilding;
@@ -20,9 +20,9 @@ public class BuildGenerator : IOnController/*, IOnUpdate*/, IDisposable
     
     //привязать к ширине тайла
     private float _offsetY = 0.1f;
-    public BuildGenerator(GameConfig gameConfig, LeftUI leftUI)
+    public BuildGenerator(GameConfig gameConfig)
     {
-        _leftUI = leftUI;
+       
        _buildings = new BaseBuildAndResources[gameConfig.MapSizeX,gameConfig.MapSizeY];
         //_leftUI.BuildFirstButton.onClick.AddListener(() => StartPlacingBuild(gameConfig.BuildFirst));
         //_leftUI.BuildSecondButton.onClick.AddListener(() => StartPlacingBuild(gameConfig.BuildSecond));

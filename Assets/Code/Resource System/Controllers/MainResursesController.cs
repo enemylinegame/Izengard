@@ -10,12 +10,12 @@ namespace ResourceSystem
         [SerializeField]
         private TopResUiVew _topUI; 
         [SerializeField]
-        private GlobalResorceStock _globalResorcesStock;
+        private GlobalResourceStock _globalResorcesStock;
         
         
         
 
-        public MainResursesController(GlobalResorceStock globalResorceStock, TopResUiVew topResUIView)
+        public MainResursesController(GlobalResourceStock globalResorceStock, TopResUiVew topResUIView)
         {
             _globalResorcesStock = globalResorceStock;
             _topUI = topResUIView;
@@ -36,7 +36,7 @@ namespace ResourceSystem
             UpdateGoldValue(_globalResorcesStock.AllGoldHolder);
         }
 
-        public void UpdateTopUIValues(ResurseStock stock)
+        public void UpdateTopUIValues(ResourceStock stock)
         {
             foreach (ResourceHolder holder in stock.HoldersInStock)
             {

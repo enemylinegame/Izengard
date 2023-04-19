@@ -54,17 +54,17 @@ namespace ResourceSystem
         {
             _produceTime = value;
         }
-        public void PaidCostForProduceProduct(ResurseStock stock)
+        public void PaidCostForProduceProduct(ResourceStock stock)
         {
             _producePrice.GetNeededResource(stock);
             
         }
-        public void PaidCostForProduceProduct(GlobalResorceStock stock)
+        public void PaidCostForProduceProduct(GlobalResourceStock stock)
         {
             stock.GetResurseForProduceFromGlobalStock(_producePrice);
             
         }
-        public void GetBackResurse(ResurseStock stock)
+        public void GetBackResurse(ResourceStock stock)
         {
             _producePrice.GetBackResource(stock);
         }

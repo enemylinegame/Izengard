@@ -32,7 +32,7 @@ namespace BuildingSystem
             _marketCostModification = baseBuilding.MarketCostModification;
         }
 
-        public void BuyBasket(GlobalResorceStock stock)
+        public void BuyBasket(GlobalResourceStock stock)
         {
            if (stock.PriceGoldFromGlobalStock(CurrentBuyCost))
             {

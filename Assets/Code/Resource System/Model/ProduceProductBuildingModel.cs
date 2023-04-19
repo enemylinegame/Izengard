@@ -14,7 +14,7 @@ namespace BuildingSystem
         [SerializeField] protected List<M> _produceProduct;
         [SerializeField] protected bool _autoProduceFlag;
         [SerializeField] protected Stock<T,N> _producedObjectStock;
-        [SerializeField] protected GlobalResorceStock globalResorceStock;
+        [SerializeField] protected GlobalResourceStock globalResorceStock;
         protected List<M> ProductsWaitPaid;
         protected List<M> ProduceWaitProducts;
 
@@ -78,9 +78,9 @@ namespace BuildingSystem
                 }
             }
         }
-        public abstract void GetPaidForProducts(GlobalResorceStock stock);
+        public abstract void GetPaidForProducts(GlobalResourceStock stock);
         
-        public void CancelProduce(GlobalResorceStock stock)
+        public void CancelProduce(GlobalResourceStock stock)
         {
             if (ProduceWaitProducts!=null && ProduceWaitProducts.Count > 0)
             { 
@@ -88,7 +88,7 @@ namespace BuildingSystem
                 {
                     if (product.ProducePrice.PricePaidFlag)
                     { 
-                        stock.ReturnPayForGlobalResurseStock(product.ProducePrice);
+                        stock.ReturnPayForGlobalResourceStock(product.ProducePrice);
                         product.ResetCostInResurse();
                     }                    
                 }

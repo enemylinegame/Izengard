@@ -4,7 +4,7 @@ namespace BuildingSystem
 { 
     public interface IResurseStockHolder
     {
-        public ResurseStock ThisBuildingStock { get; }
+        public ResourceStock ThisBuildingStock { get; }
 
         public void AddResurseInStock(IResurseHolder holder);
 

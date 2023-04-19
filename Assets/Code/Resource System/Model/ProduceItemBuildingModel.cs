@@ -18,7 +18,7 @@ namespace BuildingSystem
             ProductsWaitPaid.Add(tempProduct);
         }
 
-        public override void GetPaidForProducts(GlobalResorceStock stock)
+        public override void GetPaidForProducts(GlobalResourceStock stock)
         {
             if (ProductsWaitPaid!=null)
             { 

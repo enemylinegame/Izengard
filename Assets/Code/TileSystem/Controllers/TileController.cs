@@ -20,7 +20,7 @@ namespace Code.TileSystem
         private TileUIView _uiView;
         private BaseCenterText _centerText;
         private BuildGenerator _generator;
-        private GlobalResorceStock _stock;
+        private GlobalResourceStock _stock;
         private List<BuildingConfig> _buildingConfigs;
         private BuildBuildings _buildBuildings;
         private BuildingController _buildingController;
@@ -36,7 +36,7 @@ namespace Code.TileSystem
         public TileView View => _view;
 
         public TileController(TileList tileList, TileUIView uiView, BaseCenterText centerText, UIController uiController, 
-            BuildGenerator buildGenerator, GlobalResorceStock stock, BuildingController buildingController)
+            BuildGenerator buildGenerator, GlobalResourceStock stock, BuildingController buildingController)
         {
             _centerText = centerText;
             _list = tileList;

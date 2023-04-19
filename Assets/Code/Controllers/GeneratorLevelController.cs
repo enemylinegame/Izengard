@@ -16,7 +16,6 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
     private readonly List<VoxelTile> _voxelTiles;
     private readonly GameConfig _gameConfig;
     private readonly RightUI _rightUI;
-    private readonly LeftUI _leftUI;
     private readonly BottonUI _bottonUI;
     private readonly BtnUIController _btnUIController;
     private readonly Dictionary<Vector2Int, VoxelTile> _spawnedTiles = new Dictionary<Vector2Int, VoxelTile>();
@@ -30,13 +29,13 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
 
 
     public GeneratorLevelController(List<VoxelTile> tiles, GameConfig gameConfig, RightUI rightUI,
-        BtnUIController btnUIController, Transform btnParents, LeftUI leftUI, BottonUI BottonUI)
+        BtnUIController btnUIController, Transform btnParents,  BottonUI BottonUI)
     {
         _voxelTiles = tiles;
         _gameConfig = gameConfig;
         _rightUI = rightUI;
         _btnUIController = btnUIController;
-        _leftUI = leftUI;
+        
         _bottonUI = BottonUI;
         _buttonsSetter = new ButtonsSetter(SpawnTile, btnParents, tiles[0].SizeTile, _spawnedTiles, gameConfig.ButtonSpawn);
     }

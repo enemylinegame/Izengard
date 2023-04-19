@@ -9,13 +9,16 @@ namespace Code.UI
 {
     public class UIController
     {
-        private LeftUI _leftUI;
         private RightUI _rightUI;
         private BottonUI _bottonUI;
         private CenterUI _centerUI;
-
+        
+        private TileView _view;
+        public TileView View => _view;
         public BuildingsUIView BuildingsUIView => _bottonUI.BuildingMenu;
         public TileUIView TileUIView => _bottonUI.TileUIView;
+        
+
         
         public List<BuildingConfig> ButtonsBuy = new List<BuildingConfig>();
         public Dictionary<BuildingConfig, Button> ButtonsInMenu = new Dictionary<BuildingConfig, Button>();
@@ -23,9 +26,8 @@ namespace Code.UI
         /// <summary>
         /// Главный контроллер UI
         /// </summary>
-        public UIController(LeftUI leftUI, RightUI rightUI, BottonUI bottonUI, CenterUI centerUI)
+        public UIController(RightUI rightUI, BottonUI bottonUI, CenterUI centerUI)
         {
-            _leftUI = leftUI;
             _rightUI = rightUI;
             _bottonUI = bottonUI;
             _centerUI = centerUI;
