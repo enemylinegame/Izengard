@@ -9,15 +9,9 @@ namespace Code.BuildingSystem
     public class BuildingConfig : ScriptableObject, IBuildingModel
     {
         [SerializeField]private Sprite _icon;
-
-        private float _currentHealth;
-
         [SerializeField]private float _maxHealth;
-
         [SerializeField]private string _name;
-
         [SerializeField]private List<ResourcePriceModel> _buildingCost;
-
         [SerializeField]private GameObject _buildingPrefab;
 
         [SerializeField]private TierNumber _tierNumber;
@@ -29,15 +23,7 @@ namespace Code.BuildingSystem
         [SerializeField] private string _description; 
 
         private float _buildingTime;
-        /* [SerializeField] private BuildingTypes _TypeForBuildingsUI;
-        [SerializeField] private Sprite _imageForBuildingsUI;
-        [SerializeField] private string _costForBuildingsUI;
-        [SerializeField] private string _infoForBuildingsUI;
-    
-        public Sprite SpriteForBuildingsUI => _imageForBuildingsUI;
-        public BuildingTypes TypeForBuildingsUI => _TypeForBuildingsUI;
-        public string CostForBuildingsUI => _costForBuildingsUI;
-        public string InfoForBuildingsUI => _infoForBuildingsUI;*/
+        private float _currentHealth;
 
 
         public Sprite Icon => _icon;

@@ -1,5 +1,6 @@
 using Code.TileSystem;
 using ResourceSystem;
+using ResourceSystem.SupportClases;
 using UnityEngine;
 
 public class Mineral : BaseBuildAndResources
@@ -12,14 +13,7 @@ public class Mineral : BaseBuildAndResources
 
     }
 
-    //private void Awake()
-    //{
-    //    if (mineralConfig == null)
-    //      {
-    //           throw new Exception($"Not implement mine model in {gameObject}");
-    //      }
-    //}
-public void SetModelOfMine(ResourceMine mine)
+    public void SetModelOfMine(ResourceMine mine)
     {
         _thisResourceMine=new ResourceMine(mine);
     }
@@ -27,7 +21,6 @@ public void SetModelOfMine(ResourceMine mine)
     public void SetModelOfMine(MineralConfig mineralConfig)
     {
         _thisResourceMine = new ResourceMine(mineralConfig.NameOfMine, mineralConfig.ExtractionTime,
-                                new ResourceHolder(mineralConfig.ResourceHolderMine),
-                                mineralConfig.Icon, mineralConfig.CurrentMineValue, (TierNumber)mineralConfig.Tier, (TypeOfMine)mineralConfig.TypeOfMine);
+            mineralConfig.Icon, mineralConfig.CurrentMineValue,mineralConfig.Tier, mineralConfig.TypeOfMine);
     }
 }

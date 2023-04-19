@@ -7,16 +7,14 @@ namespace ResourceSystem.SupportClases
     public class  ResourcePriceModel
     {
         [SerializeField] private ResourceType _resourceType;
-        [SerializeField] private float _cost;
+        [SerializeField] private int _cost;
 
         public ResourceType ResourceType => _resourceType;
 
-        public float Cost
-        {
-            get => _cost;
-        }
+        public int Cost=> _cost;
+       
 
-        public ResourcePriceModel(ResourceType resourceType, float cost)
+        public ResourcePriceModel(ResourceType resourceType, int cost)
         {
             _resourceType = resourceType;
             _cost = cost;

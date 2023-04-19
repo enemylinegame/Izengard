@@ -9,6 +9,8 @@ using Object = UnityEngine.Object;
 
 namespace Controllers.NewOutPost
 {
+    
+    //TODO: FULL REWORK
     public enum UnitStates
     {
         MovingToWorkInResource,MovingToWorkInBuilding,WorkInBuilding, WorkInResorce, idle, MovingToSpawn
@@ -278,7 +280,7 @@ namespace Controllers.NewOutPost
         /// <param name="workerView"></param>
         private void WorkingInResource(OutPostView view, WorkerView workerView)
         {
-           view.MeshAgent.isStopped = true;
+         /*  view.MeshAgent.isStopped = true;
            if (_mine.ResourceHolderMine.CurrentValue == 0)
            {
                view.MeshAgent.isStopped = false;
@@ -289,7 +291,7 @@ namespace Controllers.NewOutPost
            {
                workerView.MineResurse(_mine, _TimeMining);
                Debug.Log(_mine.ResourceHolderMine.CurrentValue);
-           }
+           }*/
         }
         
         private void WorkingInBuilding(OutPostView view, WorkerView workerView)

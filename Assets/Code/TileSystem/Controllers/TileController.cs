@@ -101,7 +101,7 @@ namespace Code.TileSystem
             
             foreach (var resourcePrice in buildingConfig.BuildingCost)
             {
-                _stock.RemoveResourceFromStock(resourcePrice.ResourceType, resourcePrice.Cost);
+                _stock.GetResourceFromStock(resourcePrice.ResourceType, resourcePrice.Cost);
             }
             var building = _buildingController.StartBuilding(view, buildingConfig);
             if (building)
@@ -139,7 +139,7 @@ namespace Code.TileSystem
         {
             foreach (ResourcePriceModel resourcePriceModel in buildingConfig.BuildingCost)
             {
-                if (_stock.GetResourceAmount(resourcePriceModel.ResourceType) < resourcePriceModel.Cost)
+                if (_stock.CheckResourceInStock(resourcePriceModel.ResourceType,resourcePriceModel.Cost))
                 {
                     _centerText.NotificationUI("you do not have enough resources to buy", 1000);
                     return false;
