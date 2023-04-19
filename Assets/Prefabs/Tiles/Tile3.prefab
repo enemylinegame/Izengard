@@ -216,13 +216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dddfa889e64d4f75b7d684a5d98ff38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dots:
-  - {fileID: 5691657273616978855}
-  - {fileID: 5314973816092974706}
-  - {fileID: 5749648951339931143}
-  - {fileID: 8928505673802935694}
-  - {fileID: 5978876481970717367}
-  - {fileID: 5481226159477494249}
+  _dots: []
 --- !u!114 &5155625539814870875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,9 +229,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11e8fb32f42e4bba8642b8d3a0bd483a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _type: 0
   _tileConfig: {fileID: 11400000, guid: 9565a228ea7f390448b26a5a1b3ef329, type: 2}
   _dotSpawns: {fileID: 1940076410840995219}
-  _curBuildingConfigs: []
+  _floodedBuildings: []
 --- !u!65 &-5021133366478644037
 BoxCollider:
   m_ObjectHideFlags: 0

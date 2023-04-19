@@ -7,9 +7,9 @@ namespace ResourceSystem
         Iron,
         Deer,
         Horse,
-        MagicStones,
+        MagikStones,
         Textile,
-        Steel,
+        Steele,
         Gold,
     }
     

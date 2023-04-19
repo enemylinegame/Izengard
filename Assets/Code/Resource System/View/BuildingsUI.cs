@@ -281,7 +281,7 @@ public class BuildingsUI : MonoBehaviour
             }
         }
     }
-    public void SetProduceItemButtons(List<ResourceProduct> products)
+    public void SetProduceItemButtons(List<ResurseProduct> products)
     {
         if (products.Count < _loadProduceButtons.Count && products != null)
         {

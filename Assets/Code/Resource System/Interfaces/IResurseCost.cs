@@ -11,7 +11,7 @@ namespace ResourceSystem
 
         public void CheckRequiredResurses();
         public ResourceHolder AddResource(ResourceHolder holder);
-        public void GetNeededResource(ResourceStock stock);
+        public void GetNeededResource(ResurseStock stock);
         public void ResetPaid();
 
     }

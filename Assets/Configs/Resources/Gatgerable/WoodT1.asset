@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f08a583672b6eda4c8477fb15887c745, type: 3}
   m_Name: WoodT1
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 6611631232710345216, guid: 77aba7449117f4d4ba692a9bf4ab20be, type: 3}
+  Prefab: {fileID: 6611631232710345216, guid: 77aba7449117f4d4ba692a9bf4ab20be, type: 3}
   _nameOfMine: Forest
   _extractionTime: 5
-  _resourceHolderMine:
-    _objectInHolder: {fileID: 0}
+  resourceHolderMine:
+    _objectInHolder: {fileID: 11400000, guid: 869b0147c4507f2408e1f6552b08af7d, type: 2}
     _currentValue: 0
-    _maxValue: 0
+    _maxValue: 200
   _icon: {fileID: 21300000, guid: c2631df3315186d4bad59892113fe4ec, type: 3}
   _currentMineValue: 1
   thisMineTier: 1

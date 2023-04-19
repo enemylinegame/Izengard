@@ -1,6 +1,5 @@
 using UnityEngine;
 using static UnityEngine.Vector3;
-using System.Collections.Generic;
 
 public class VoxelTile : MonoBehaviour
 {
@@ -10,14 +9,11 @@ public class VoxelTile : MonoBehaviour
     private byte [] _tablePassAccess = new byte[4];
     private int sizeTile;
     private float _sizeTileY;
-    
 
     public int NumZone { get; set; }
 
     public bool IsDefendTile { get; set; }
     public int WeightTile { get; set; }
-   
-    
 
     public float SizeTileY => _sizeTileY;
 
@@ -25,7 +21,6 @@ public class VoxelTile : MonoBehaviour
 
     public Sprite IconTile => _iconTile;
 
-   
     public byte[] TablePassAccess => _tablePassAccess;
     
     void Awake()

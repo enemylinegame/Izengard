@@ -718,7 +718,7 @@ GameObject:
   - component: {fileID: 1831737973244403283}
   - component: {fileID: 4977917654534155612}
   - component: {fileID: 7048356653519256996}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: MainTower
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -794,7 +794,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4437343820552527173}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.29, z: 0.5}

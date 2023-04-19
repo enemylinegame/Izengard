@@ -13,7 +13,6 @@ public class Damageable : MonoBehaviour, IHealthHolder
     public float MaxHealth {get; private set;}
   
     public event Action DeathAction;
-    public event Action<List<Damageable>> MeAttackedChenged;
     public bool IsDamagableDead { get; private set; }
 
     private List<Damageable> _listAttackedUnits = new List<Damageable>();
@@ -23,14 +22,6 @@ public class Damageable : MonoBehaviour, IHealthHolder
         CurrentHealth = maxHealth;
         MaxHealth = maxHealth;
         IsDamagableDead = false;
-    }
-
-    public void Init(int maxHealth, int maxAttackers)
-    {
-        CurrentHealth = maxHealth;
-        MaxHealth = maxHealth;
-        IsDamagableDead = false;
-        _maxCountAttackers = maxAttackers;
     }
 
     // private void OnCollisionEnter(Collision other) 
@@ -50,7 +41,6 @@ public class Damageable : MonoBehaviour, IHealthHolder
             {
                 _listAttackedUnits.Add(damageable);
                 damageable.DeathAction += MeAttackedDead;
-                MeAttackedChenged?.Invoke(_listAttackedUnits);
                 return true;
             }
             return false;
@@ -68,7 +58,6 @@ public class Damageable : MonoBehaviour, IHealthHolder
                 _listAttackedUnits.Remove(_listAttackedUnits[i]);
             }
         }
-        MeAttackedChenged?.Invoke(_listAttackedUnits);
     }
 
     public void MakeDamage(int damage)
@@ -77,9 +66,9 @@ public class Damageable : MonoBehaviour, IHealthHolder
         if (CurrentHealth <= 0)
         {
             IsDamagableDead = true;
-            DeathAction?.Invoke();
             _listAttackedUnits.Clear();
-            MeAttackedChenged?.Invoke(_listAttackedUnits);
+            DeathAction?.Invoke();
+            
         }
     }
 }

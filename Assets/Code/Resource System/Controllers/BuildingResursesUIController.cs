@@ -12,13 +12,13 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
     //private BuildingList _buildingsList;
     private TopResUiVew _TopResUI;
     private ProduceItemButtonView _currentProduceButton;
-    private GlobalResourceStock _globalResStock; 
+    private GlobalResorceStock _globalResStock; 
 
 
 
 
 
-    public BuildingResursesUIController(BuildingsUI UI,/*BuildingList buildingList,*/TopResUiVew topUI, GlobalResourceStock globalResStock)
+    public BuildingResursesUIController(BuildingsUI UI,/*BuildingList buildingList,*/TopResUiVew topUI, GlobalResorceStock globalResStock)
     {
         _BuildingResUI = UI;
         //_buildingsList = buildingList;
@@ -47,10 +47,10 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
             case ResourceType.Horse:
                 _BuildingResUI.SetHorseValue(holder.ObjectInHolder.Icon, holder.CurrentValue, holder.MaxValue);
                 break;
-            case ResourceType.MagicStones:
+            case ResourceType.MagikStones:
                 _BuildingResUI.SetMagikStonesValue(holder.ObjectInHolder.Icon, holder.CurrentValue, holder.MaxValue);
                 break;
-            case ResourceType.Steel:
+            case ResourceType.Steele:
                 _BuildingResUI.SetSteelValue(holder.ObjectInHolder.Icon, holder.CurrentValue, holder.MaxValue);
                 break;
             case ResourceType.Textile:
@@ -89,7 +89,7 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
     /// Set current stock fot Stock UI of Building UI
     /// </summary>
     /// <param name="stock"></param>
-    public void SetCurrentStock(ResourceStock stock)
+    public void SetCurrentStock(ResurseStock stock)
     {
         _BuildingResUI.SetActiveStockSpace(true);
         _BuildingResUI.DisableAllStockHolders();
@@ -155,9 +155,9 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
     {
         _BuildingResUI.SetActiveLoadUI(false);
         _BuildingResUI.SetActiveProduceUI(false);
-       /* WareHouseBuildModel warehouse = (WareHouseBuildModel)_currentBuilding;
+        WareHouseBuildModel warehouse = (WareHouseBuildModel)_currentBuilding;
         warehouse.WareHouseStock.ResursesChange += SetStockValue;
-        SetCurrentStock(warehouse.WareHouseStock);*/
+        SetCurrentStock(warehouse.WareHouseStock);
     }    
     /// <summary>
     /// "State machine" for building UI
@@ -172,7 +172,7 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
             UnsubscribeProduceButton();
             SetBuildUnderConstraction();
             
-            /*if (building is WareHouseBuildModel)
+            if (building is WareHouseBuildModel)
             {
                 SetCurrentWarehouse();
             }
@@ -187,7 +187,7 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
             if (building is ItemMarketBuildingModel | building is ResurseMarkeBuildingModel)
             {
                 SetCurrentMarket();
-            }*/
+            }
         }
     }
     public void DisactivatedBuildingInfo()
@@ -219,7 +219,7 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
     /// Update value of current building stock for Stock UI of Building UI
     /// </summary>
     /// <param name="stock"></param>
-    public void UpdateStock (ResourceStock stock)
+    public void UpdateStock (ResurseStock stock)
     {         
         foreach (ResourceHolder holder in stock.HoldersInStock)
         {
@@ -282,7 +282,7 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
     /// </summary>
     /// <param name="time"></param>
     /// <param name="stock"></param>
-    public void StartProducing(float time,GlobalResourceStock stock)
+    public void StartProducing(float time,GlobalResorceStock stock)
     {
         //_buildingsList.StartGlobalProducing(time,stock);        
     }
@@ -296,7 +296,7 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
     {
 
         _BuildingResUI.DisableProduceButtons();
-     /*   if (_currentBuilding is ProduceItemBuildingModel)
+        if (_currentBuilding is ProduceItemBuildingModel)
         {
             var tempBuildingModel = (ProduceItemBuildingModel)_currentBuilding;
             var tempListButtons = _BuildingResUI.GetListProduceButtons();
@@ -331,7 +331,7 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
                 _currentProduceButton = null;
                 _BuildingResUI.SetActiveProduceUI(false);
             }
-        }*/
+        }
     }
     /// <summary>
     /// unsubscribe of buttons and action producing UI and building
@@ -361,7 +361,7 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
     public void SetCurrentProduceCost()
     {
         ItemProduct tempIproduct = _currentProduceButton.GetCurrentItemProductInButton();
-        ResourceProduct tempResProduct = _currentProduceButton.GetCurrentResurseProductInButton();
+        ResurseProduct tempResProduct = _currentProduceButton.GetCurrentResurseProductInButton();
         string costProductText = "";
         if (tempIproduct != null)
         {
@@ -380,7 +380,7 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
     {
         _currentProduceButton = null;
         _BuildingResUI.SetLoadSliderValue(0f);
-        /*if (_currentBuilding is ProduceItemBuildingModel)
+        if (_currentBuilding is ProduceItemBuildingModel)
         {
             var tempBuild = (ProduceItemBuildingModel)_currentBuilding;
             tempBuild.CancelProduce(_globalResStock);
@@ -389,7 +389,7 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
         {
             var tempBuild = (ResurseProduceBuildingModel)_currentBuilding;
             tempBuild.CancelProduce(_globalResStock);
-        }*/
+        }
     }
     /// <summary>
     /// Adding product for producing in current building produce product list
@@ -399,9 +399,9 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
         if (_currentProduceButton != null)
         {
             ItemProduct tempIProduct = _currentProduceButton.GetCurrentItemProductInButton();
-            ResourceProduct tempRProduct = _currentProduceButton.GetCurrentResurseProductInButton();
+            ResurseProduct tempRProduct = _currentProduceButton.GetCurrentResurseProductInButton();
             int tempValue = _BuildingResUI.GetProduceSliderValue();
-           /* if (tempIProduct != null && _currentBuilding is ProduceItemBuildingModel)
+            if (tempIProduct != null && _currentBuilding is ProduceItemBuildingModel)
             {
                 ProduceItemBuildingModel tempBuilding = (ProduceItemBuildingModel)_currentBuilding;
                 for (int i = 0; i < tempValue; i++)
@@ -416,7 +416,7 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
                 {
                     tempBuilding.AddProductForProduce(tempRProduct);
                 }
-            }*/
+            }
         }
     }
     /// <summary>
@@ -435,7 +435,7 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
     /// </summary>
     public void SubscribeProduceButton()
     {
-      /*  if (_currentBuilding is ProduceItemBuildingModel)
+        if (_currentBuilding is ProduceItemBuildingModel)
         {
             var tempBuilding = (ProduceItemBuildingModel)_currentBuilding;
             _BuildingResUI.AutoProduceToggle.isOn = tempBuilding.AutoProduceFlag;
@@ -449,7 +449,7 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
             _BuildingResUI.AutoProduceToggle.onValueChanged.AddListener(tempBuilding.SetAutoproduceFlag);
             _BuildingResUI.StartProduceButton.onClick.AddListener(AddProductInCurrentBasket);
             _BuildingResUI.CancelProduceButton.onClick.AddListener(CancelProduceButtonMetod);
-        }*/
+        }
         
     }
     /// <summary>
@@ -497,13 +497,13 @@ public class BuildingResursesUIController:IOnController, IOnUpdate,IOnStart,IDis
     /// Compile warehouse resurse stock with Global resurse stock 
     /// </summary>
     /// <param name="warehouse"></param>
-   /* public void CompileStockWithGlobalStock(WareHouseBuildModel warehouse)
+    public void CompileStockWithGlobalStock(WareHouseBuildModel warehouse)
     {
         if (warehouse.WareHouseStock!=null)
         { 
             _globalResStock.CompileStockWithGlobalResStock(warehouse.WareHouseStock);
         }
-    }*/
+    }
     #endregion
     public void OnUpdate(float fixedDeltaTime)
     {

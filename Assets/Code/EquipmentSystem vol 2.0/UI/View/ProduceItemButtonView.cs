@@ -6,7 +6,7 @@ public class ProduceItemButtonView : MonoBehaviour
 {    
     [SerializeField] public Button producedObjButton;    
     [SerializeField] private ItemProduct ItemProductInButton;
-    [SerializeField] private ResourceProduct resourceProductInButton;
+    [SerializeField] private ResurseProduct ResurseProductInButton;
 
     public void SetProductInButton(ItemProduct product)
     {
@@ -14,7 +14,7 @@ public class ProduceItemButtonView : MonoBehaviour
         { 
             ItemProductInButton = product;            
             SetButtonView(product);
-            resourceProductInButton = null;
+            ResurseProductInButton = null;
         }
         else
         {
@@ -24,17 +24,17 @@ public class ProduceItemButtonView : MonoBehaviour
             }
         }
     }
-    public void SetProductInButton(ResourceProduct product)
+    public void SetProductInButton(ResurseProduct product)
     {
-        if (product!= resourceProductInButton)
+        if (product!= ResurseProductInButton)
         { 
-            resourceProductInButton = product;
+            ResurseProductInButton = product;
             SetButtonView(product);
             ItemProductInButton = null;
         }
         else
         {
-            if (resourceProductInButton!=null)
+            if (ResurseProductInButton!=null)
             {
                 SetButtonView(product);
             }
@@ -48,7 +48,7 @@ public class ProduceItemButtonView : MonoBehaviour
         }
         SetActiveButton(true);
     }
-    public void SetButtonView(ResourceProduct product)
+    public void SetButtonView(ResurseProduct product)
     {
         if (producedObjButton.image.sprite != product.ObjectProduct.Icon)
         {
@@ -74,10 +74,10 @@ public class ProduceItemButtonView : MonoBehaviour
             return ItemProductInButton;
         
     }
-    public ResourceProduct GetCurrentResurseProductInButton()
+    public ResurseProduct GetCurrentResurseProductInButton()
     {
        
-            return resourceProductInButton;
+            return ResurseProductInButton;
         
     }
     public void OnDisable()

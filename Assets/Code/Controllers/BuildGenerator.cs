@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Code.BuildingSystem;
+using Code.UI;
 using Interfaces;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-public class BuildGenerator : IOnController, IOnUpdate, IDisposable
+public class BuildGenerator : IOnController/*, IOnUpdate*/, IDisposable
 {
     //возможно переполнение массива при большом количестве зданий и ресурсов
     public BaseBuildAndResources[,] Buildings => _buildings;
@@ -60,39 +62,39 @@ public class BuildGenerator : IOnController, IOnUpdate, IDisposable
 
     }
 
-    public void OnUpdate(float deltaTime)
-    {
-        if (_flyingBuilding != null)
-        {
-            Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
-            
-            if (Physics.Raycast(ray, out var position, 100f, _layerMask))
-            {
-                var pos = new Vector3(position.collider.bounds.center.x, 0f, position.collider.bounds.center.z);
-                
-                Vector3 worldPosition = position.point;
-                int x = Mathf.RoundToInt(worldPosition.x);
-                int y = Mathf.RoundToInt(worldPosition.z);
-                _flyingBuilding.transform.position = new Vector3(x, _offsetY, y);
-                _flyingBuilding.SetAvailableToInstant(false);
-                if (position.point.y > _offsetY || Math.Abs(pos.x - x) == 0 && Math.Abs(pos.z - y) == 0 && _buildings[x, y] == null)
-                {
-                    _flyingBuilding.SetAvailableToInstant(true);
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        Vector3 pointDestination = new Vector3(position.transform.parent.position.x - _flyingBuilding.transform.position.x, 
-                            0f, position.transform.parent.position.z - _flyingBuilding.transform.position.z);
-                        _flyingBuilding.SetPointDestination(pointDestination);
-                        _buildings[x, y] = _flyingBuilding;
-                        _flyingBuilding.SetNormalColor();
-                        //var outpost = _flyingBuilding.gameObject.GetComponentInChildren<OutpostUnitView>();
-                        _flyingBuilding = null;
-                        //_outpostSpawner.SpawnLogic(outpost);
-                    }
-                }
-            }
-        }
-    }
+    // public void OnUpdate(float deltaTime)
+    // {
+    //     if (_flyingBuilding != null)
+    //     {
+    //         Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
+    //         
+    //         if (Physics.Raycast(ray, out var position, 100f, _layerMask))
+    //         {
+    //             var pos = new Vector3(position.collider.bounds.center.x, 0f, position.collider.bounds.center.z);
+    //             
+    //             Vector3 worldPosition = position.point;
+    //             int x = Mathf.RoundToInt(worldPosition.x);
+    //             int y = Mathf.RoundToInt(worldPosition.z);
+    //             _flyingBuilding.transform.position = new Vector3(x, _offsetY, y);
+    //             _flyingBuilding.SetAvailableToInstant(false);
+    //             if (position.point.y > _offsetY || Math.Abs(pos.x - x) == 0 && Math.Abs(pos.z - y) == 0 && _buildings[x, y] == null)
+    //             {
+    //                 _flyingBuilding.SetAvailableToInstant(true);
+    //                 if (Input.GetMouseButtonDown(0))
+    //                 {
+    //                     Vector3 pointDestination = new Vector3(position.transform.parent.position.x - _flyingBuilding.transform.position.x, 
+    //                         0f, position.transform.parent.position.z - _flyingBuilding.transform.position.z);
+    //                     _flyingBuilding.SetPointDestination(pointDestination);
+    //                     _buildings[x, y] = _flyingBuilding;
+    //                     _flyingBuilding.SetNormalColor();
+    //                     //var outpost = _flyingBuilding.gameObject.GetComponentInChildren<OutpostUnitView>();
+    //                     _flyingBuilding = null;
+    //                     //_outpostSpawner.SpawnLogic(outpost);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
     
     public bool IsFlyingBuildingTrue()
     {

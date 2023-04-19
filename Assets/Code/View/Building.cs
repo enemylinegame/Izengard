@@ -1,4 +1,5 @@
 using System;
+using Code.TileSystem;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -12,7 +13,7 @@ public class Building : BaseBuildAndResources
     [SerializeField] private Image _icon;
     private BuildingTypes _buildingTypes;
     public int Units;
-    public int CurrentBuildingID;
+    public int BuildingID;
 
     public Image Icon
     {
@@ -29,29 +30,6 @@ public class Building : BaseBuildAndResources
     private void Start()
     {
         var r = new Random();
-        CurrentBuildingID = r.Next(0, 100);
-    }
-
-
-    public void SetAvailableToInstant(bool available)
-    {
-        if (available)
-        {
-            _renderer.material.color = Color.green;
-        }
-        else
-        {
-            _renderer.material.color = Color.red;
-        }
-    }
-
-    public void SetNormalColor()
-    {
-        _renderer.material.color = Color.white;
-    }
-
-    public void SetPointDestination(Vector3 pointDestination)
-    {
-        _navMeshLink.endPoint = pointDestination;
+        BuildingID = r.Next(0, 100);
     }
 }

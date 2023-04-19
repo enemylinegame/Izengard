@@ -27,7 +27,7 @@ MonoBehaviour:
       _currentValue: 0
       _maxValue: 10000
     - _objectInHolder: {fileID: 11400000, guid: b0d9e08c88f7a944e9cd13ab1c53f95e, type: 2}
-      _currentValue: 99
+      _currentValue: 0
       _maxValue: 10000
     - _objectInHolder: {fileID: 11400000, guid: 246ddfa3b77be4f4198327ae2f57105b, type: 2}
       _currentValue: 0

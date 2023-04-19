@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Bullet
   - Enemy
+  - Building
   layers:
   - Default
   - TransparentFX
@@ -16,8 +17,8 @@ TagManager:
   - Tile
   - 
   - Enemy
-  - Defenders
-  - Buildings
+  - 
+  - 
   - 
   - 
   - 

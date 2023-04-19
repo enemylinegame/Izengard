@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f08a583672b6eda4c8477fb15887c745, type: 3}
   m_Name: IronT1
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 1937639535466988551, guid: 600e7605e2d83774495a3cf79a6b10bd, type: 3}
+  Prefab: {fileID: 1937639535466988551, guid: 600e7605e2d83774495a3cf79a6b10bd, type: 3}
   _nameOfMine: iron mine
   _extractionTime: 5
-  _resourceHolderMine:
-    _objectInHolder: {fileID: 0}
+  resourceHolderMine:
+    _objectInHolder: {fileID: 11400000, guid: b0d9e08c88f7a944e9cd13ab1c53f95e, type: 2}
     _currentValue: 0
-    _maxValue: 0
+    _maxValue: 200
   _icon: {fileID: 21300000, guid: 8e438106b0288e94f9d53f43ddb61293, type: 3}
   _currentMineValue: 1
   thisMineTier: 1

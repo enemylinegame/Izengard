@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Code/Resource System/Model/ResourceCost.cs.meta
 guid: c82055393e7b5a0448053ed556bd3538
-========
-guid: 9c3749383a2c8d446b9ed5c2fb956ea8
->>>>>>>> Dev-Work:Assets/Code/Resource System/Interfaces/IResurseCost.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

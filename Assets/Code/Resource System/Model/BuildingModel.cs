@@ -97,7 +97,7 @@ namespace BuildingSystem
             }*/
         }
 
-        public void GetResourceFromGlobalStock(GlobalResourceStock globalStock)
+        public void GetResourceFromGlobalStock(GlobalResorceStock globalStock)
         {
          /*   foreach (ResourceCost resource in _buildingCost)
             {
@@ -107,7 +107,7 @@ namespace BuildingSystem
             //_buildingCost.GetNeededResource(globalStock.GlobalResStock);
         }
 
-        public void GetGoldCostForBuilding(GlobalResourceStock globalStock)
+        public void GetGoldCostForBuilding(GlobalResorceStock globalStock)
         {
             Debug.LogError("Commented by V.Chirkov");
             

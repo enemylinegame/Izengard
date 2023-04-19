@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using ResourceSystem;
 using UnityEngine;
-using UnityEngine.AI;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
@@ -17,20 +16,12 @@ public class ResourceGenerator : IDisposable
     private int _numOfVariant = 0;
     private bool _flag;
 
-    private List<GameObject> _listOfMineral=new List<GameObject>();
-
     private List<MineralConfig> _resourcesTierOne;
     private List<MineralConfig> _resourcesTierTwo;
     private List<MineralConfig> _resourcesTierThree;
-    private LoadContainersWithResources _listOfResources=new LoadContainersWithResources();
-   
-
-
-    
     public ResourceGenerator(BaseBuildAndResources[,] installedBuildings,
-        GameConfig gameConfig, GeneratorLevelController generatorLevelController,LoadContainersWithResources listOfResources)
+        GameConfig gameConfig, GeneratorLevelController generatorLevelController)
     {
-        _listOfResources = listOfResources;
         _installedBuildings = installedBuildings;
         _gameConfig = gameConfig;
         _generatorLevelController = generatorLevelController;
@@ -50,11 +41,13 @@ public class ResourceGenerator : IDisposable
         _generatorLevelController.SpawnResources += SpawnResources;
         _numOfVariant = i;
     }
+    
+    
+    
+ 
     private void SpawnResources(VoxelTile tile)
     {
-        
         GetPossiblePlace(tile);
-        _listOfResources.SetResources(_listOfMineral);
     }
 
     private void GetPossiblePlace(VoxelTile tile)
@@ -181,7 +174,6 @@ public class ResourceGenerator : IDisposable
 
         if (_possiblePlaceResource.Count != 0)
         {
-            _listOfMineral.Clear();
             switch (numberOfMineralsToSpawn)
             {
                 case 1:
@@ -286,7 +278,6 @@ public class ResourceGenerator : IDisposable
                     
                     break;
             }
-            
             _possiblePlaceResource.Clear();
         }
     }
@@ -324,6 +315,7 @@ public class ResourceGenerator : IDisposable
         if (pos != null)
         {
             CreateMineralGameObject(resourceConfig, pos);
+            
             _installedBuildings[pos.x, pos.y] = _mineral;
             _possiblePlaceResource.Remove(pos);
         }
@@ -331,18 +323,15 @@ public class ResourceGenerator : IDisposable
 
     private void CreateMineralGameObject(MineralConfig mineralConfig, Vector2Int posistion)
     {
-        GameObject currentMineral = Object.Instantiate(mineralConfig.Prefab);
-        currentMineral.transform.position = new Vector3(posistion.x, 0.1f, posistion.y);
-        currentMineral.transform.rotation = Quaternion.identity;
-        Mineral _tempMineral = currentMineral.AddComponent<Mineral>();
+        GameObject _gameObject = Object.Instantiate(mineralConfig.Prefab);
+        _gameObject.transform.position = new Vector3(posistion.x, 0.1f, posistion.y);
+        _gameObject.transform.rotation = Quaternion.identity;
+        Mineral _tempMineral = _gameObject.AddComponent<Mineral>();
         _tempMineral.SetModelOfMine(mineralConfig);
-        BoxCollider _boxCollider = currentMineral.AddComponent<BoxCollider>();
+        BoxCollider _boxCollider = _gameObject.AddComponent<BoxCollider>();
         _mineral = _tempMineral;
-        _listOfMineral.Add(currentMineral);
-        
-        
     }
-    
+
     public void Dispose()
     {
         _generatorLevelController.SpawnResources -= SpawnResources;

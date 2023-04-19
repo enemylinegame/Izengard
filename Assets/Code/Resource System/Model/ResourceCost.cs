@@ -66,14 +66,14 @@ namespace ResourceSystem
             return holder;*/
             return null;
         }
-        public void GetBackResource(ResourceStock stock)
+        public void GetBackResource(ResurseStock stock)
         {
            /* foreach (ResourceHolder costHolder in resourcePrice)
             {
                 stock.AddInStock(costHolder);
             }*/
         }
-        public void GetNeededResource(ResourceStock stock)
+        public void GetNeededResource(ResurseStock stock)
         {            
             /*foreach (ResourceHolder costHolder in resourcePrice)
             {
