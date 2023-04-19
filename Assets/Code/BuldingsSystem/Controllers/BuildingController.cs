@@ -18,7 +18,7 @@ namespace Code.BuildingSystem
         {
             if (CheckDot(view))
             {
-                var r = new Random();
+                //var r = new Random();
                 var build = Object.Instantiate(config.BuildingPrefab.GetComponent<Building>(), CheckDot(view).transform);
                 build.Type = config.BuildingType;
                 return build;

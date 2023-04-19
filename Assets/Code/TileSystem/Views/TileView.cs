@@ -98,6 +98,25 @@ namespace Code.TileSystem
             var worker = _workerViews.Find(x => x.AssignedResource == resourceType);
             worker.AssignedResource = BuildingTypes.None;
         }
+        
+        public void RemoveAllWorkerAssigment(BuildingTypes resourceType, Building building, TileController controller)
+        {
+            if (!_workerViews.Exists(x => x.AssignedResource == resourceType))
+            {
+                return;
+            }
+            if (_workersAssigmentses.Exists(x => x.Building.BuildingID == building.BuildingID))
+            {
+                var workersAssigments =  _workersAssigmentses.Find(x => x.Building.BuildingID == building.BuildingID);
+                controller.RemoveFromHiringUnits(workersAssigments.BusyWorkersCount);
+                _eightQuantity -= workersAssigments.BusyWorkersCount;
+                workersAssigments.BusyWorkersCount = 0;
+                if (workersAssigments.BusyWorkersCount < 0) workersAssigments.BusyWorkersCount = 0;
+                
+            }
+            var worker = _workerViews.Find(x => x.AssignedResource == resourceType);
+            worker.AssignedResource = BuildingTypes.None;
+        }
         /// <summary>
         /// получение информации о нанятых юнитов для определенного здания
         /// </summary>
