@@ -5,10 +5,10 @@ namespace ResourceSystem
     [System.Serializable]
     public class GoldHolder  
     {
-        public ResurseCraft GoldObject => _goldObject;
+        public ResourceConfig GoldObject => _goldObject;
         public float CurrentValue => _currentValue;
 
-        [SerializeField] private ResurseCraft _goldObject;
+        [SerializeField] private ResourceConfig _goldObject;
         [SerializeField] private float _currentValue;
 
         public void AddGold(GoldCost cost)

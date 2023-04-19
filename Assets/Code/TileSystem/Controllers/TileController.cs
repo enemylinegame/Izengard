@@ -20,7 +20,7 @@ namespace Code.TileSystem
         private TileUIView _uiView;
         private BaseCenterText _centerText;
         private BuildGenerator _generator;
-        private GlobalResourceStock _stock;
+        private GlobalStock _stock;
         private List<BuildingConfig> _buildingConfigs;
         private BuildBuildings _buildBuildings;
         private BuildingController _buildingController;
@@ -36,7 +36,7 @@ namespace Code.TileSystem
         public TileView View => _view;
 
         public TileController(TileList tileList, TileUIView uiView, BaseCenterText centerText, UIController uiController, 
-            BuildGenerator buildGenerator, GlobalResourceStock stock, BuildingController buildingController)
+            BuildGenerator buildGenerator, GlobalStock stock, BuildingController buildingController)
         {
             _centerText = centerText;
             _list = tileList;
@@ -45,8 +45,7 @@ namespace Code.TileSystem
             _stock = stock;
             _uiController = uiController;
             
-            _stock.GlobalResStock.HoldersInStock.Find(x => x.ObjectInHolder.ResourceType == ResourceType.Wood)
-                .CurrentValue = 100;
+            _stock.AddResourceToStock(ResourceType.Wood,100);
             _buildingController = buildingController;
         }
 
@@ -102,9 +101,7 @@ namespace Code.TileSystem
             
             foreach (var resourcePrice in buildingConfig.BuildingCost)
             {
-                var resourceHolder = _stock.GlobalResStock.HoldersInStock.Find(x => 
-                    x.ObjectInHolder.ResourceType == resourcePrice.ResourceType);
-                resourceHolder.CurrentValue -= resourcePrice.Cost;
+                _stock.RemoveResourceFromStock(resourcePrice.ResourceType, resourcePrice.Cost);
             }
             var building = _buildingController.StartBuilding(view, buildingConfig);
             if (building)
@@ -142,7 +139,7 @@ namespace Code.TileSystem
         {
             foreach (ResourcePriceModel resourcePriceModel in buildingConfig.BuildingCost)
             {
-                if (_stock.GlobalResStock.GetResursesCount(resourcePriceModel.ResourceType) < resourcePriceModel.Cost)
+                if (_stock.GetResourceAmount(resourcePriceModel.ResourceType) < resourcePriceModel.Cost)
                 {
                     _centerText.NotificationUI("you do not have enough resources to buy", 1000);
                     return false;

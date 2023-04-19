@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a3c62949aa7d374bb3569971c798828, type: 3}
   m_Name: Wood
   m_EditorClassIdentifier: 
-  _resurseType: 0
-  _nameOFResurse: Wood
   _icon: {fileID: 21300000, guid: c2631df3315186d4bad59892113fe4ec, type: 3}
+  _resourceType: 1
+  _maxHoldedAmount: 1000
+  _resourceName: Wood

@@ -13,8 +13,5 @@ namespace ResourceSystem
         Gold,
     }
     
-    public interface IResurseHolder:IHolder<ResurseCraft>
-    {               
-        
-    }
+   
 }

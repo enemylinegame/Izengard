@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ResourceSystem
 {   
     [System.Serializable]
-    public class ResourceStock : Stock<ResurseCraft,ResourceHolder>
+    public class ResourceStock : Stock<ResourceConfig,ResourceHolder>
     {           
         
        

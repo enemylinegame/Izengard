@@ -6,19 +6,19 @@ using UnityEngine.UI;
 public class ResurseHolderButton : MonoBehaviour
 {
     [SerializeField] private Button ResurseButton;
-    [SerializeField] private ResurseCraft ResurseInButton;
+    [SerializeField] private ResourceConfig resourceInButton;
     [SerializeField] private TextMeshProUGUI CostText;
     [SerializeField] private TextMeshProUGUI NameItemText;
 
 
-    public void SetModelInButton(ResurseCraft resurse)
+    public void SetModelInButton(ResourceConfig resource)
     {
-        ResurseInButton = resurse;
+        resourceInButton = resource;
         ChangeInfoButton();
     }
-    public ResurseCraft GetModelInButton()
+    public ResourceConfig GetModelInButton()
     {
-        return ResurseInButton;
+        return resourceInButton;
     }
     public Button GetButton()
     {
@@ -26,11 +26,11 @@ public class ResurseHolderButton : MonoBehaviour
     }
     public void ChangeInfoButton()
     {
-        if (ResurseInButton != null)
+        if (resourceInButton != null)
         {
-            ResurseButton.image.sprite = ResurseInButton.Icon;
-            CostText.text = ResurseInButton.NameOFResurse;
-            CostText.text = ResurseInButton.CostInGold.ToString();
+            ResurseButton.image.sprite = resourceInButton.Icon;
+           // CostText.text = resourceInButton.ResourceName;
+           // CostText.text = resourceInButton.CostInGold.ToString();
         }
         else
         {

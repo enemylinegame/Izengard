@@ -16,7 +16,8 @@ public class Main : MonoBehaviour
     [SerializeField] private GameConfig _gameConfig;
     [SerializeField] private BuildingList _buildingList;
     [SerializeField] private TileList _tileList;
-    [SerializeField] private GlobalResourceStock GlobalResStock;
+    [SerializeField] private GlobalResourceList _globalResourceList;
+  
     [SerializeField] private TowerShotConfig _towerShotConfig;
     [Header("UI")]
     [SerializeField] private RightUI _rightUI;
@@ -40,11 +41,10 @@ public class Main : MonoBehaviour
 
     private void Start()
     {
-        GlobalResStock.ResetGlobalRes();
         _controllers = new Controller();
         new GameInit(_controllers, _gameConfig, _rightUI,  _btnParents, _centerUI,_bottonUI ,
-            buildingsUI, GlobalResStock, TopResUI, _buildingList, _endGameScreen, _towerShotConfig,
-            _buyItemScreenView, _hireSystemView, _equipScreenView, _screenCamera, _centerText, tileUIView, _tileList);
+             _endGameScreen, _towerShotConfig, _buyItemScreenView, _hireSystemView, _equipScreenView, _screenCamera,
+             _centerText, tileUIView, _tileList, _globalResourceList);
         _controllers.OnStart();
     }
 

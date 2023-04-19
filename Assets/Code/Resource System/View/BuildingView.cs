@@ -40,10 +40,7 @@ namespace BuildingSystem
         {
             return _buildingModel;
         }
-        public void ChangeBuildingVisual(BuildingModel bmodel)
-        {
-            _buildingVisual = bmodel.BuildingPrefab;
-        }
+        
     }
 }
 

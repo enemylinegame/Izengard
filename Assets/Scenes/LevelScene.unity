@@ -508,7 +508,7 @@ MonoBehaviour:
   _gameConfig: {fileID: 11400000, guid: 98e5e98fb8896b9469ebb3186cc7dbbd, type: 2}
   _buildingList: {fileID: 11400000, guid: a793b0773b79d9843b621639c7da9e61, type: 2}
   _tileList: {fileID: 11400000, guid: 2b94eb3998178964b8b1aa096b4b42c4, type: 2}
-  GlobalResStock: {fileID: 11400000, guid: 7ddcc0051a44bec47a66c91b44c60120, type: 2}
+  _globalResourceList: {fileID: 11400000, guid: dd801d0d2bc2cab40a6492c4aba5cd12, type: 2}
   _towerShotConfig: {fileID: 11400000, guid: 434693b8852395646991acdccd102705, type: 2}
   _rightUI: {fileID: 298062939}
   _centerUI: {fileID: 584311494}
@@ -3390,7 +3390,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5537125970293088711, guid: 9b8418457783bd944b73b4510f5449b6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.00000044501368
+      value: 0.000010580323
       objectReference: {fileID: 0}
     - target: {fileID: 5537125970308451800, guid: 9b8418457783bd944b73b4510f5449b6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

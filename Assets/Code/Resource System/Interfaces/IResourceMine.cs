@@ -1,3 +1,5 @@
+using ResourceSystem.SupportClases;
+
 namespace ResourceSystem
 { 
     public interface IResourceMine : IIconHolder

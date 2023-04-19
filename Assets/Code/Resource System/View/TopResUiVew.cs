@@ -43,10 +43,10 @@ public class TopResUiVew : MonoBehaviour
             case ResourceType.Textile:
                 textilecount.text = $"{count}";
                 break;
-            case ResourceType.Steele:
+            case ResourceType.Steel:
                 steelcount.text = $"{count}";
                 break;
-            case ResourceType.MagikStones:
+            case ResourceType.MagicStones:
                 magikStonescount.text = $"{count}";
                 break;
             case ResourceType.Gold:

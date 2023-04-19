@@ -1,6 +1,7 @@
 using BuildingSystem;
 using EquipmentSystem;
 using ResourceSystem;
+using ResourceSystem.SupportClases;
 using TMPro;
 using UnityEngine;
 
@@ -34,8 +35,5 @@ public class WorkerView : UnitView
             _currentMineTime = 0;
         }
     }
-    public void GiveMeItem(BuildingModel building)
-    {
-
-    }
+   
 }

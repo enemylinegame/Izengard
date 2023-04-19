@@ -206,7 +206,7 @@ public class BuyItemScreenView : MonoBehaviour
         ResursesContentButton.gameObject.SetActive(true);        
         UnActiveButtons(ResurseButtons);
     }
-    public void SetResursesContent(List<ResurseCraft> products)
+    public void SetResursesContent(List<ResourceConfig> products)
     {
         SetActiveResurseMarketSpace();
         if (ResurseButtons.Count <= products.Count)

@@ -271,26 +271,7 @@ public class BuildingsUI : MonoBehaviour
     {
         _loadSlider.maxValue = MaxSliderValue;
     }
-    public void SetProduceItemButtons(List<ItemProduct> products)
-    {
-        if (products.Count<_loadProduceButtons.Count && products!=null)
-        {
-            for (int i=0;i< products.Count;i++)
-            {
-                _loadProduceButtons[0].SetButtonView(products[0]);
-            }
-        }
-    }
-    public void SetProduceItemButtons(List<ResurseProduct> products)
-    {
-        if (products.Count < _loadProduceButtons.Count && products != null)
-        {
-            for (int i = 0; i < products.Count; i++)
-            {
-                _loadProduceButtons[0].SetButtonView(products[0]);
-            }
-        }
-    }
+    
     public void DisableAllProduceButtons()
     {
         foreach (ProduceItemButtonView button in _loadProduceButtons)

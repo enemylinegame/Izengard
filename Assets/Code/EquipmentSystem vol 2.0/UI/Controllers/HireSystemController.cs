@@ -11,11 +11,11 @@ namespace EquipmentSystem
     {
     private HireSystemView _view;
     private BaseELFUnitFactory _factory;
-    public GlobalResourceStock _globalResStock;
+    public GlobalStock _globalResStock;
     private Transform _whereToSpawn;
     private GeneratorLevelController _levelController;
 
-    public HireSystemController(GlobalResourceStock glStock, BuyItemScreenView buyView,
+    public HireSystemController(GlobalStock glStock, BuyItemScreenView buyView,
         EquipScreenController eqScreenController, HireSystemView view, GeneratorLevelController levelController)
     {
         view.BuyItemScreen = buyView;
@@ -150,7 +150,7 @@ namespace EquipmentSystem
     public void HireUnit()
     {
 
-        if (_globalResStock.PriceGoldFromGlobalStock(_view.TempCostInGold))
+      /*  if (_globalResStock.PriceGoldFromGlobalStock(_view.TempCostInGold))
         {
             _view.EquipController.ChangeCameraPosition();
             //Object.Instantiate(_view.RecrutUnitView.gameObject, _view.PositionForInstantiateUnit);
@@ -161,7 +161,7 @@ namespace EquipmentSystem
         else
         {
             _view.BuyItemScreen.SetCurrentCost($"НУЖНО БОЛЬШЕ ЗОЛОТА!");
-        }
+        }*/
 
     }
     public void OnStart()
