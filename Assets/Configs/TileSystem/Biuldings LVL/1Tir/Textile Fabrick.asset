@@ -17,8 +17,8 @@ MonoBehaviour:
   _name: 
   _buildingCost:
   - _resourceType: 2
-    _cost: 159
-  _buildingPrefab: {fileID: 3778682633861357730, guid: a5a01801ab4c97d46a7b6f97c5b13d50, type: 3}
+    _cost: 0
+  _buildingPrefab: {fileID: 8901040941739594243, guid: a3a22ed8d083a894aaefc4efd031b92c, type: 3}
   _tierNumber: 1
   _buildingType: 202
   _houseType: 0

@@ -11,15 +11,15 @@ namespace ResourceSystem
         [SerializeField] private int _extractionTime;
         [SerializeField] private Sprite _icon;
         [SerializeField] private int _currentMineValue;
-        [SerializeField] private TierNumber thisMineTier;
-        [SerializeField] private TypeOfMine _typeOfMine;
+        [SerializeField] private TierNumber _thisMineTier;
+        [SerializeField] private ResourceType _resourceType;
         public GameObject Prefab => _prefab;
         public string NameOfMine => _nameOfMine;
         public int ExtractionTime => _extractionTime;
         public Sprite Icon => _icon;
         public int CurrentMineValue => _currentMineValue;
-        public TierNumber Tier => thisMineTier;
-        public TypeOfMine TypeOfMine => _typeOfMine;
+        public TierNumber Tier => _thisMineTier;
+        public ResourceType ResourceType => _resourceType;
 
     }
 }

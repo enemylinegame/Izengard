@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using BuildingSystem;
 using Code.BuildingSystem;
+using Code.BuldingsSystem.ScriptableObjects;
 using ResourceSystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -186,7 +187,7 @@ namespace Controllers.NewOutPost
             for (var index = 0; index < _minerals.Count; index++)
             {
                 var minerals = _minerals[index];
-                switch (minerals.ThisResourceMine.TypeOfMine)
+             /*   switch (minerals.ThisResourceMine.TypeOfMine)
                 {
                     case 601:
                         SettingsOfWorkerInMineral(minerals);
@@ -209,7 +210,7 @@ namespace Controllers.NewOutPost
                     case 607:
                         SettingsOfWorkerInMineral(minerals);
                         break;
-                }
+                }*/
             }
         }
         

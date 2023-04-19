@@ -143,6 +143,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _renderer: {fileID: 0}
   _navMeshLink: {fileID: 0}
+  _icon: {fileID: 0}
+  Units: 0
+  BuildingID: 0
 --- !u!114 &-6081989340384410363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,6 +158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59a795461707c4c4db1f57288b4fef40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _buildingVisual: {fileID: 8901040941739594243}
   _buildingConfig: {fileID: 11400000, guid: 9ed9cde684325fe469ed2c982d491537, type: 2}
 --- !u!1 &8901040943017105477
 GameObject:

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Code.BuildingSystem;
+using Code.BuldingsSystem.ScriptableObjects;
 using Code.UI;
 using ResourceSystem;
 using Unity.Collections;

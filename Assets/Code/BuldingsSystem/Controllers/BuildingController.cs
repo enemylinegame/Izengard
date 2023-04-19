@@ -1,4 +1,5 @@
-﻿using Code.TileSystem;
+﻿using Code.BuldingsSystem.ScriptableObjects;
+using Code.TileSystem;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = System.Random;
@@ -22,11 +23,7 @@ namespace Code.BuildingSystem
                 build.Type = config.BuildingType;
                 return build;
             }
-            else
-            {
-                _centerText.NotificationUI("You have built maximum buildings", 1000);
-            }
-
+            _centerText.NotificationUI("You have built maximum buildings", 1000);
             return null;
         }
         public void RemoveTypeDots(TileView view, Building building)

@@ -4,41 +4,30 @@ using UnityEngine;
 
 namespace ResourceSystem
 {
- public enum TypeOfMine:int
-    {
-        Forest=601,
-        Textile=602,
-        Deers=603,
-        Horse=604,
-        Iron=605,
-        Steel=606,
-        MagicStones=607,
-    }
+ 
 
     [System.Serializable]
     public class ResourceMine : ScriptableObject,IResourceMine
     {
         public string NameOfMine => _nameOfMine;
-
         public int ExtractionTime => _extractionTime;
-
         public int MaxMineAmount { get; }
       
         public Sprite Icon => _icon;
         public int CurrentMineValue => _currentMineValue;
-        public int TirID => (int)_thisMineTier;
-        public int TypeOfMine => (int)_typeOfMine;
+        public TierNumber MineTier => _thisMineTier;
+        public ResourceType ResourceType => _resourceType;
+        public Action<ResourceHolder> OnMineResourceEnd;
 
         private string _nameOfMine;
         private int _extractionTime;
         private ResourceHolder _resourceHolderMine;
         private Sprite _icon;
         private int _currentMineValue;
-        public Action<ResourceHolder> resurseMined;
+  
         
         private TierNumber _thisMineTier;
-        private TypeOfMine _typeOfMine;
-        private int _extractionTime1;
+        private ResourceType _resourceType;
 
         public ResourceMine (ResourceMine mine)
         {
@@ -72,7 +61,7 @@ namespace ResourceSystem
         {
             ResourceHolder tempResHolder = new ResourceHolder(_resourceHolderMine.ResourceType, 1000, _currentMineValue);
             //_resourceHolderMine.GetFromHolder(tempResHolder);
-            resurseMined?.Invoke(_resourceHolderMine);
+            OnMineResourceEnd?.Invoke(_resourceHolderMine);
             return tempResHolder;
         }
         
@@ -85,14 +74,14 @@ namespace ResourceSystem
             _icon = icon;
         }           
 
-        public ResourceMine(string name, int time, Sprite icon, int value, TierNumber tier, TypeOfMine typeOfMine)
+        public ResourceMine(string name, int time, Sprite icon, int value, TierNumber tier, ResourceType resourceType)
         {
             _nameOfMine = name;
             _extractionTime = time;
             _icon = icon;
             _currentMineValue = value;
             _thisMineTier = tier;
-            _typeOfMine = typeOfMine;
+            _resourceType = resourceType;
         }
     }
 }

@@ -16,9 +16,10 @@ MonoBehaviour:
   _maxHealth: 10000
   _name: 
   _buildingCost:
-  - _resourceType: 0
-    _cost: 150
+  - _resourceType: 5
+    _cost: 0
   _buildingPrefab: {fileID: 7792856555819872173, guid: b6337cf5402de7640a955740aa72a575, type: 3}
   _tierNumber: 2
   _buildingType: 212
+  _houseType: 0
   _description: 

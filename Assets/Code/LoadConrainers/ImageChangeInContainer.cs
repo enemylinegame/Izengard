@@ -19,7 +19,7 @@ public class ImageChangeInContainer : MonoBehaviour
     {
         var minerals = _listOfMinerals[index];
         Mineral mineral = minerals.GetComponent<Mineral>();
-        switch (mineral.ThisResourceMine.TypeOfMine)
+        /*switch (mineral.ThisResourceMine.TypeOfMine)
         {
 
             case 601:
@@ -44,7 +44,7 @@ public class ImageChangeInContainer : MonoBehaviour
                 _spriteOfResource = _magicStonesIcon;
                 break;
 
-        }
+        }*/
     }
 
 }

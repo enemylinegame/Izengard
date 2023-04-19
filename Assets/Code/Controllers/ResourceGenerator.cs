@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 public class ResourceGenerator : IDisposable
 {
-    private BaseBuildAndResources[,] _installedBuildings;
+    private GameObject[,] _installedBuildings;
     private List<Vector2Int> _possiblePlaceResource = new List<Vector2Int>();
     private List<Vector2Int> _spawnedResources = new List<Vector2Int>();
     private GameConfig _gameConfig;
@@ -19,7 +19,7 @@ public class ResourceGenerator : IDisposable
     private List<MineralConfig> _resourcesTierOne;
     private List<MineralConfig> _resourcesTierTwo;
     private List<MineralConfig> _resourcesTierThree;
-    public ResourceGenerator(BaseBuildAndResources[,] installedBuildings,
+    public ResourceGenerator(GameObject[,] installedBuildings,
         GameConfig gameConfig, GeneratorLevelController generatorLevelController)
     {
         _installedBuildings = installedBuildings;
@@ -32,7 +32,7 @@ public class ResourceGenerator : IDisposable
         _generatorLevelController.SpawnResources += SpawnResources;
     }
     
-    public ResourceGenerator(BaseBuildAndResources[,] installedBuildings,
+    public ResourceGenerator(GameObject[,] installedBuildings,
         GameConfig gameConfig, GeneratorLevelController generatorLevelController, int i)
     {
         _installedBuildings = installedBuildings;
@@ -316,7 +316,7 @@ public class ResourceGenerator : IDisposable
         {
             CreateMineralGameObject(resourceConfig, pos);
             
-            _installedBuildings[pos.x, pos.y] = _mineral;
+            _installedBuildings[pos.x, pos.y] = _mineral.gameObject;
             _possiblePlaceResource.Remove(pos);
         }
     }
@@ -327,7 +327,9 @@ public class ResourceGenerator : IDisposable
         _gameObject.transform.position = new Vector3(posistion.x, 0.1f, posistion.y);
         _gameObject.transform.rotation = Quaternion.identity;
         Mineral _tempMineral = _gameObject.AddComponent<Mineral>();
-        _tempMineral.SetModelOfMine(mineralConfig);
+        
+        _tempMineral.LoadMineralModel(mineralConfig);
+        //_tempMineral.SetModelOfMine(mineralConfig);
         BoxCollider _boxCollider = _gameObject.AddComponent<BoxCollider>();
         _mineral = _tempMineral;
     }

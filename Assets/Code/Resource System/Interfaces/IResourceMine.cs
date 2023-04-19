@@ -6,7 +6,6 @@ namespace ResourceSystem
     {
         public string NameOfMine { get; }
         public int ExtractionTime { get; }
-
         public int MaxMineAmount { get; }
 
 

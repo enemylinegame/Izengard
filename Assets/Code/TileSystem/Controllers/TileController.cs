@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Code.BuildingSystem;
+using Code.BuldingsSystem.ScriptableObjects;
 using Code.TileSystem;
 using Code.UI;
 using ResourceSystem;
@@ -22,7 +23,6 @@ namespace Code.TileSystem
         private BuildGenerator _generator;
         private GlobalStock _stock;
         private List<BuildingConfig> _buildingConfigs;
-        private BuildBuildings _buildBuildings;
         private BuildingController _buildingController;
         private UIController _uiController;
         private int _currentlvl;

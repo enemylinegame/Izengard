@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a3c62949aa7d374bb3569971c798828, type: 3}
   m_Name: Textile
   m_EditorClassIdentifier: 
-  _icon: {fileID: 21300000, guid: 2f06b58ed0b529547bf45753f35993d7, type: 3}
   _resourceType: 6
+  _itemName: 
+  _icon: {fileID: 21300000, guid: 2f06b58ed0b529547bf45753f35993d7, type: 3}
   _maxHoldedAmount: 10000
-  _resourceName: Textile
