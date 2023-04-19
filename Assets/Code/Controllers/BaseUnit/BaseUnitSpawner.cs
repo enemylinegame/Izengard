@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Code.MovementOfWorkers.Animations;
 using Controllers.OutPost;
 using Controllers.Pool;
 using Controllers.Worker;
@@ -37,7 +38,7 @@ namespace Controllers.BaseUnit
         
         public void OnStart()
         {
-            _baseUnitFactory = new BaseUnitFactory(new GameObjectPoolController(10, _unitPrefab));
+            _baseUnitFactory = new BaseUnitFactory(new GameObjectPoolController(5, _unitPrefab));
         }
 
         public void Dispose()
@@ -81,7 +82,7 @@ namespace Controllers.BaseUnit
         private void SendInfoToGroupController(GameObject gameObject,Vector3 endPos)
         {
             var movementHolder = gameObject.GetComponent<UnitMovement>();
-            var animHolder = gameObject.GetComponent<UnitAnimation>();
+            var animHolder = gameObject.GetComponent<WorkerAnimationController>();
             var listOfUnitC = _unitController.GetBaseUnitController();
             //костыль
             listOfUnitC.Add(new WorkerController(

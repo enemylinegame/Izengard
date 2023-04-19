@@ -51,7 +51,7 @@ namespace Wave
             _enemyAI ??= new EnemyAI(Enemy, _generatorLevelController.MainBuilding, _enemyAnimation, _bulletsController);
             _enemyAIController.AddEnemyAI(_enemyAI);
             _damageable.Init(Enemy.Stats.Health);
-           // SlowlyKilling();
+            SlowlyKilling();
         }
 
         public void Dispose()

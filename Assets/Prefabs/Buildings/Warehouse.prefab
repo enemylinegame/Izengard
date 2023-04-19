@@ -157,6 +157,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _renderer: {fileID: 4680817099103497525}
   _navMeshLink: {fileID: 4831823251224428445}
+  _icon: {fileID: 0}
+  Units: 0
+  BuildingID: 1
 --- !u!114 &4831823251224428445
 MonoBehaviour:
   m_ObjectHideFlags: 0

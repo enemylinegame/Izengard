@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1012487368215033113}
   - component: {fileID: 3617237778266156342}
   - component: {fileID: 8520136139173329557}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: DummyTarget
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -128,7 +128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 0}
-  _towerShotConfig: {fileID: 11400000, guid: 434693b8852395646991acdccd102705, type: 2}
+  _maxCountAttackers: 3
 --- !u!1001 &6745009079887306128
 PrefabInstance:
   m_ObjectHideFlags: 0

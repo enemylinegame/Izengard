@@ -13,6 +13,7 @@ namespace Views.BuildBuildingsUI
 {
     public class BuildingsUIView : MonoBehaviour
     {
+        [field: SerializeField] public Button BuyDefender { get; private set; } // add Nikolay Vasilev
         [field: SerializeField] public Button CloseMenuButton { get; private set; }
         [field: SerializeField] public Button PrefabButtonClear { get; private set; }
         [field: SerializeField] public GameObject BuildingInfo { get; private set; }
@@ -22,7 +23,7 @@ namespace Views.BuildBuildingsUI
 
         [SerializeField] private Button _buyPrefabButton;
         public Dictionary<BuildingConfig, Button> ButtonsInMenu = new Dictionary<BuildingConfig, Button>();
-        public Dictionary<GameObject, BuildingConfig> DestroyBuildingInfo = new Dictionary<GameObject, BuildingConfig>();
+        public Dictionary<GameObject, BuildingUIInfo> DestroyBuildingInfo = new Dictionary<GameObject, BuildingUIInfo>();
         public List<BuildingConfig> ButtonsBuy = new List<BuildingConfig>();
 
 
@@ -36,7 +37,7 @@ namespace Views.BuildBuildingsUI
             }
         }
 
-        public BuildingUIInfo CreateBuildingInfo(BuildingConfig config, Dictionary<GameObject, BuildingConfig> buildingConfigs, TileUIController controller)
+        public BuildingUIInfo CreateBuildingInfo(BuildingConfig config, TileUIController controller, Building building)
         {
             var button = Instantiate(BuildingInfo, ByBuildButtonsHolder);
             var view = button.GetComponent<BuildingUIInfo>();
@@ -45,10 +46,25 @@ namespace Views.BuildBuildingsUI
             view.Type.text = config.BuildingType.ToString();
             view.Types = config.BuildingType;
             view.UnitsBusy.text = view.Units +"/5";
-            DestroyBuildingInfo.Add(button, config);
+            DestroyBuildingInfo.Add(button, view);
+            view.DestroyBuildingInfo.onClick.AddListener((() => DestroyBuildingAndInfo(controller.DestroyBuilding, view, controller.View)));
+            view.PlusUnit.onClick.AddListener((() => view.Hiring(true, controller, building)));
+            view.MinusUnit.onClick.AddListener((() => view.Hiring(false, controller, building)));
+            return view;
+        }
+        public BuildingUIInfo LoadBuildingInfo(Building building, int Units, Dictionary<GameObject, BuildingConfig> buildingConfigs, TileUIController controller)
+        {
+            var button = Instantiate(BuildingInfo, ByBuildButtonsHolder);
+            var view = button.GetComponent<BuildingUIInfo>();
+            view.Icon.sprite = building.Icon.sprite;
+            view.Type.text = building.Type.ToString();
+            view.Types = building.Type;
+            view.UnitsBusy.text = Units +"/5";
+            view.Units = Units;
+            DestroyBuildingInfo.Add(button, view);
             view.DestroyBuildingInfo.onClick.AddListener((() => DestroyBuildingAndInfo(buildingConfigs, view, controller.View)));
-            view.PlusUnit.onClick.AddListener((() => view.Hiring(true, controller)));
-            view.MinusUnit.onClick.AddListener((() => view.Hiring(false, controller)));
+            view.PlusUnit.onClick.AddListener((() => view.Hiring(true, controller, building)));
+            view.MinusUnit.onClick.AddListener((() => view.Hiring(false, controller, building)));
             return view;
         }
 

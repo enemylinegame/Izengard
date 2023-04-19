@@ -8,9 +8,13 @@ namespace CombatSystem
     {
         private readonly Damageable _dummy;
 
+        private Transform _transform;
+
+        public Transform TransformDummy => _transform;
 
         public DummyController(GameObject dummy)
         {
+            _transform = dummy.transform;
             _dummy = dummy.GetComponent<Damageable>();
             _dummy.Init(100);
             _dummy.DeathAction += OnDead;

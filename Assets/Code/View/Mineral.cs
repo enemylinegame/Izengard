@@ -12,4 +12,6 @@ public class Mineral : BaseBuildAndResources
                                 new ResourceHolder(mineralConfig.ResourceHolderMine),
                                 mineralConfig.Icon, mineralConfig.CurrentMineValue, mineralConfig.Tier, mineralConfig.TypeOfMine);
     }
+    
+    
 }

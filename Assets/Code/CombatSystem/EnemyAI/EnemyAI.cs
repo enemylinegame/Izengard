@@ -25,7 +25,7 @@ namespace CombatSystem
         {
             var navmesh = unit.Prefab.GetComponent<NavMeshAgent>();
             _primaryTarget = primaryTarget;
-            _findTarget = new FindTargetAction(unit);
+            _findTarget = new FindTargetAction(unit,primaryTarget);
             _onUpdate = _findTarget as IOnUpdate;
             _planRoute = new PlanRouteAction(navmesh);
             if (unit.Type == EnemyType.Archer)

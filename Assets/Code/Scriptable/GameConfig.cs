@@ -13,6 +13,7 @@ public class GameConfig : ScriptableObject
     [SerializeField] private GameObject _mainTower;
     [SerializeField] private GameObject _baseUnit;
     [SerializeField] private GameObject _enemy;
+    [SerializeField] private GameObject _defenderPrefab;
     [SerializeField] private Building _buildFirst;
     [SerializeField] private Building _buildSecond;
     [SerializeField] private VoxelTile _firstTile;
@@ -45,6 +46,7 @@ public class GameConfig : ScriptableObject
         "Если выключено, то вариант Николая и сумма весов должна равняться 1, если включено, то вариант Иоанна, " +
         " 1 - сумма всех весов = вероятности спавна пустоты";
 
+    public GameObject DefenderUnit => _defenderPrefab;
     public GameObject Enemy => _enemy;
     public GameObject PrefabWarehouse => _prefabWarehouse;
 

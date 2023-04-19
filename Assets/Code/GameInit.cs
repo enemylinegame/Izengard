@@ -24,7 +24,7 @@ public class GameInit
     {
 
         var tiles = GetTileList.GetTiles(gameConfig);
-            
+        var _listOfResources = new LoadContainersWithResources();
         var btnConroller = new BtnUIController(rightUI, gameConfig);
         var levelGenerator = new GeneratorLevelController(tiles, gameConfig, rightUI, btnConroller, btnParents, leftUI, bottonUI);
         var unitController = new UnitController();
@@ -42,7 +42,7 @@ public class GameInit
         //var buildController = new BuildGenerator(gameConfig, leftUI, layerMask, outPostSpawner);
         if (!gameConfig.ChangeVariant)
         {
-            new ResourceGenerator(buildController.Buildings, gameConfig, levelGenerator);
+            new ResourceGenerator(buildController.Buildings, gameConfig, levelGenerator,_listOfResources);
         }
         else
         {
@@ -70,5 +70,8 @@ public class GameInit
 
         var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
         controller.Add(testDummyTargetController);
+
+        var defendersController = new DefendersController(tilecontroller,gameConfig.DefenderUnit);
+        controller.Add(defendersController);
     }
 }

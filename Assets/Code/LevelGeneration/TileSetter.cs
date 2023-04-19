@@ -17,7 +17,9 @@ namespace LevelGenerator
         private readonly Dictionary<Vector2Int, VoxelTile> _spawnedTiles;
         private int _count;
 
-        private NavMeshSurface _navMeshSurface;
+        private NavMeshSurface _navMeshSurfaceHumanoids;
+        private NavMeshSurface _navMeshSurfaceWorkers;
+        
 
 
         public TileSetter(List<VoxelTile> availableTiles, Dictionary<Vector2Int, VoxelTile> spawnedTiles, VoxelTile firstTile, GameObject TestBuilding)
@@ -25,13 +27,20 @@ namespace LevelGenerator
             _availableTiles = availableTiles;
             _spawnedTiles = spawnedTiles;
             _tilesParent = new GameObject("Tiles").transform;
-            _navMeshSurface = _tilesParent.gameObject.AddComponent<NavMeshSurface>();//Object.FindObjectOfType<NavMeshSurface>();
-            _navMeshSurface.useGeometry = NavMeshCollectGeometry.RenderMeshes;
-            _navMeshSurface.overrideTileSize = true;
-            _navMeshSurface.tileSize = 128;
-            _navMeshSurface.overrideVoxelSize = true;
-            _navMeshSurface.voxelSize = 0.03f;
+            _navMeshSurfaceHumanoids = _tilesParent.gameObject.AddComponent<NavMeshSurface>();//Object.FindObjectOfType<NavMeshSurface>();
+            _navMeshSurfaceHumanoids.useGeometry = NavMeshCollectGeometry.RenderMeshes;
+            _navMeshSurfaceHumanoids.overrideTileSize = true;
+            _navMeshSurfaceHumanoids.tileSize = 128;
+            _navMeshSurfaceHumanoids.overrideVoxelSize = true;
+            _navMeshSurfaceHumanoids.voxelSize = 0.03f;
             
+            _navMeshSurfaceWorkers = _tilesParent.gameObject.AddComponent<NavMeshSurface>();
+            _navMeshSurfaceWorkers.agentTypeID = -1372625422;
+            _navMeshSurfaceWorkers.useGeometry = NavMeshCollectGeometry.RenderMeshes;
+            _navMeshSurfaceWorkers.overrideTileSize = true;
+            _navMeshSurfaceWorkers.tileSize = 128;
+            _navMeshSurfaceWorkers.overrideVoxelSize = true;
+            _navMeshSurfaceWorkers.voxelSize = 0.03f;
 
             PlaceFirstTile(firstTile);
         }
@@ -39,7 +48,8 @@ namespace LevelGenerator
         private void PlaceFirstTile(VoxelTile firstTile)
         {
             _spawnedTiles.Add(FirstTileGridPosition, InstantiateTile(firstTile, _firstTilePosition));
-            _navMeshSurface.BuildNavMesh();//_navMeshSurface.UpdateNavMesh(_navMeshSurface.navMeshData);
+            _navMeshSurfaceHumanoids.BuildNavMesh();//_navMeshSurface.UpdateNavMesh(_navMeshSurface.navMeshData);
+            _navMeshSurfaceWorkers.BuildNavMesh();
         }
 
         public void SetTile(TileSpawnInfo spawnInfo)
@@ -47,7 +57,8 @@ namespace LevelGenerator
             var side = (spawnInfo.GridSpawnPosition - spawnInfo.GridBasePosition);
             _spawnedTiles.Add(spawnInfo.GridSpawnPosition, GetTile(side, spawnInfo.GridBasePosition));
             _spawnedTiles[spawnInfo.GridSpawnPosition].IsDefendTile = spawnInfo.IsDefendTile;
-            _navMeshSurface.UpdateNavMesh(_navMeshSurface.navMeshData);
+            _navMeshSurfaceHumanoids.UpdateNavMesh(_navMeshSurfaceHumanoids.navMeshData);
+            _navMeshSurfaceWorkers.UpdateNavMesh(_navMeshSurfaceWorkers.navMeshData);
         }
 
         private VoxelTile GetTile(Vector2Int side, Vector2Int baseTileGridPosition)

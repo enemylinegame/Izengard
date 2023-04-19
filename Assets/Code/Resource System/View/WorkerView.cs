@@ -1,20 +1,31 @@
 using BuildingSystem;
 using EquipmentSystem;
 using ResourceSystem;
+using TMPro;
 using UnityEngine;
 
 public class WorkerView : UnitView
 {
-    [SerializeField]
-    private ResourceHolder _Resholder;
-    [SerializeField]
-    private ItemСarrierHolder _Itemholder;
+    [SerializeField] private ResourceHolder _Resholder;
+    [SerializeField] private ItemСarrierHolder _Itemholder;
+    [SerializeField] private float _currentMineTime;
+    private BuildingTypes _type;
 
-    [SerializeField] public ResourceType AssignedResource;
-    
-    private float _currentMineTime;
+    public BuildingTypes AssignedResource
+    {
+        get => _type;
+        set => _type = value;
+    }
 
-    public void MineResource (ResourceMine mine,float time)
+   /* public void GetResurseOutOfHolder(WareHouseBuildModel model)
+    {
+        model.AddInStock(_Resholder);
+    }
+    public void GetItemOutOfHolder (WareHouseBuildModel model)
+    {
+        model.AddInStock(_Itemholder);
+    }*/
+    public void MineResurse (ResourceMine mine,float time)
     {
         _currentMineTime += time;
         if (_currentMineTime>=mine.ExtractionTime)

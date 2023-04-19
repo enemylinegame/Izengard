@@ -1,6 +1,7 @@
 
 public enum BuildingTypes : int
 {
+    None = 200,
     House = 201,
     TextileFabrick=202,
     Forge=203,

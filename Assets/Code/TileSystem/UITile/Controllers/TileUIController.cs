@@ -59,10 +59,10 @@ namespace Code.TileSystem
         {
             _uiView.Upgrade.onClick.RemoveAllListeners();
             _view = view;
-            view.CreateButtonsUIBuy(this);
+            ADDBuildUI(view.CurrBuildingConfigs, view);
+            view.LoadButtonsUIBuy(this);
             _uiView.Upgrade.onClick.AddListener(() => view.LVLUp(this));
             UpdateInfo(view.TileConfig);
-            ADDBuildUI(view.CurrBuildingConfigs, view);
         }
         /// <summary>
         /// Загрузка всей информации на тайл
@@ -81,10 +81,6 @@ namespace Code.TileSystem
             _buildingsUIView.Deinit();
             _buildingConfigs = configs;
             UpdateBuildings(view);
-            foreach (var kvp in _buildingsUIView.ButtonsInMenu)
-            {
-                kvp.Value.onClick.AddListener((() => _view.CreateButtonsUIBuy(this)));
-            }
         }
         
         public void UpdateBuildings(TileView view)
@@ -114,6 +110,9 @@ namespace Code.TileSystem
             }
 
             var building = _generator.StartBuildingHouses(buildingConfig);
+            var info = _buildingsUIView.CreateBuildingInfo(buildingConfig, this, building);
+            building.Icon = info.Icon;
+            building.Type = info.Types;
             _destroyBuilding.Add(building.gameObject, buildingConfig);
             _buildingsUIView.ButtonsBuy.Add(buildingConfig);
             view.FloodedBuildings.Add(building);

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6124803917790517481}
   - component: {fileID: -806893638035582307}
   - component: {fileID: -7352286412949628950}
+  - component: {fileID: -467260036110976057}
   m_Layer: 6
   m_Name: Tile1
   m_TagString: Untagged
@@ -98,6 +99,21 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2, y: 1, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-467260036110976057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005405932157645916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff536379dfc86764cb945bc7f54027ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefabContainer: {fileID: 0}
+  _collectorOfResource: {fileID: 0}
+  _listOfMinerals: []
 --- !u!1 &3654591994311749279
 GameObject:
   m_ObjectHideFlags: 0

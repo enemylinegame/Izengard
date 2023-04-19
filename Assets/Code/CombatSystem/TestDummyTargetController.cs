@@ -11,6 +11,8 @@ namespace CombatSystem
         private readonly GameObject _dummyPrefab;
         private readonly HashSet<DummyController> _instantiatedDummys = new HashSet<DummyController>();
 
+        public HashSet<DummyController> InstatiatedDummys => _instantiatedDummys;
+
 
         public TestDummyTargetController(GeneratorLevelController levelGenerator, GameObject testBuilding)
         {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Code.MovementOfWorkers.Animations;
 using Controllers.BaseUnit;
 using Enums.BaseUnit;
 using Models.BaseUnit;
@@ -11,13 +12,13 @@ namespace Controllers.Worker
     {
         private readonly BaseUnitModel _baseUnitModel;
         private readonly UnitMovement _unitMovement;
-        private readonly UnitAnimation _unitAnimation;
+        private readonly WorkerAnimationController _unitAnimation;
         private List<UnitHandler> _unitHandlers;
         private List<float> _timerPositions;
         private UnitStates _currentUnitState;
      
 
-        public WorkerController(BaseUnitModel baseUnitModel, UnitMovement unitMovement, UnitAnimation unitAnimation) :
+        public WorkerController(BaseUnitModel baseUnitModel, UnitMovement unitMovement, WorkerAnimationController unitAnimation) :
             base(baseUnitModel, unitMovement, unitAnimation)
         {
             _baseUnitModel = baseUnitModel;

@@ -1,4 +1,5 @@
 ﻿using Code.TileSystem;
+using ResourceSystem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,7 +14,7 @@ namespace Views.BuildBuildingsUI
         [SerializeField] private Button _destroyBuildingInfo;
         [SerializeField] private Button _plusUnit;
         [SerializeField] private Button _minusUnit;
-        private BuildingTypes _buildingTypes;
+        private BuildingTypes _Types;
         private int _units;
 
         public Image Icon => _icon;
@@ -30,20 +31,20 @@ namespace Views.BuildBuildingsUI
 
         public BuildingTypes Types
         {
-            get => _buildingTypes;
-            set => _buildingTypes = value;
+            get => _Types;
+            set => _Types = value;
         }
         
-        public void Hiring(bool isOn, TileUIController controller)
+        public void Hiring(bool isOn, TileUIController controller, Building building)
         {
             if (isOn)
             {
                 if (_units < 5)
                 {
                     controller.hiringUnits(1);
+                    controller.View.UpdateWorkerAssigment(_Types, building);
                     _units += 1;
                     _unitsBusy.text = _units + "/5";
-                    controller.View.EightQuantity += 1;
                 }
                 
 
@@ -52,10 +53,10 @@ namespace Views.BuildBuildingsUI
             {
                 if (_units > 0)
                 {
+                    controller.View.RemoveWorkerAssigment(_Types, building);
                     controller.RemoveFromHiringUnits(1);
                     _units -= 1;
                     _unitsBusy.text = _units + "/5";
-                    controller.View.EightQuantity -= 1;
                 }
                 
             }

@@ -34,7 +34,7 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
         
         _enemyAIController = new EnemyAIController();
         _bulletsController = new BulletsController();
-        
+
         _waveGathering = new WaveGatheringController(_levelGenerator, _enemyAIController, _bulletsController, gameConfig);
         _sendingEnemys = new SendingEnemies(_enemyAIController, _levelGenerator, gameConfig.BattlePhaseConfig.EnemySpawnSettings);
         _combatPhaseWaiting = new CombatPhaseWaiting(_sendingEnemys);

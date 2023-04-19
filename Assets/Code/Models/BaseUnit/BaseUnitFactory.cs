@@ -10,7 +10,6 @@ namespace Models.BaseUnit
     {
         private readonly IPoolController<GameObject> _pool;
 
-
         public BaseUnitFactory(IPoolController<GameObject> pool)
         {
             _pool = pool;

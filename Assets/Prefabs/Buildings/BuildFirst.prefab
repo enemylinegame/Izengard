@@ -144,6 +144,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _renderer: {fileID: 4729628290816978494}
   _navMeshLink: {fileID: 6951055738118195208}
+  _icon: {fileID: 0}
+  Units: 0
+  BuildingID: 2
 --- !u!114 &6951055738118195208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,9 +179,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59a795461707c4c4db1f57288b4fef40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BuildingVisual: {fileID: 7089116107053444962}
-  _globalBuildingsModels: {fileID: 11400000, guid: 16a615f2c1cb0f64794cc4a813911c13, type: 2}
-  _thisBuildingType: 201
+  _buildingVisual: {fileID: 0}
+  _buildingConfig: {fileID: 0}
 --- !u!65 &-4819879548547988412
 BoxCollider:
   m_ObjectHideFlags: 0
