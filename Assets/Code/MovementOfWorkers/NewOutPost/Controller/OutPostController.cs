@@ -14,7 +14,8 @@ namespace Controllers.NewOutPost
     //TODO: FULL REWORK
     public enum UnitStates
     {
-        MovingToWorkInResource,MovingToWorkInBuilding,WorkInBuilding, WorkInResorce, idle, MovingToSpawn
+        MovingToWorkInResource, MovingToWorkInBuilding,
+        WorkInBuilding, WorkInResorce, idle, MovingToSpawn
     }
     /// <summary>
     /// Контроллер наших юнитов
