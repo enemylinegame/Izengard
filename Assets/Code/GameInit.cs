@@ -49,7 +49,7 @@ public class GameInit
         }
         var tilecontroller = new TileController(tileList, tileUIView, centerText, uiController, buildController, globalResStock, buildingController);
         var inputController = new InputController(tilecontroller, uiController);
-
+        var defenderController = new DefendersController(tilecontroller,uiController, gameConfig.Defender);
 
         controller.Add(btnConroller);
         controller.Add(levelGenerator);

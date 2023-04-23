@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using Code.TileSystem;
 using Code.UI;
 using UnityEngine;
 using UnityEngine.AI;
@@ -12,14 +13,15 @@ namespace CombatSystem
         private float _radius = 1f;
         private List<DefenderUnit> _defenderUnits; 
         private GameObject _defenderPrefab;
-        private UIController _tilecontroller;
+        private TileController _tilecontroller;
         private NavMeshAgent _navMeshAgent;
+        private UIController _uiConroller;
 
-        public DefendersController(UIController tilecontroller, GameObject defenderPrefab)
+        public DefendersController(TileController tilecontroller,UIController _uiConroller, GameObject defenderPrefab)
         {
             _defenderUnits = new List<DefenderUnit>();
             _tilecontroller = tilecontroller;
-            _tilecontroller.BuildingsUIView.BuyDefender.onClick.AddListener(BuyDefenderClicked);
+            _uiConroller.BuildingsUIView.BuyDefender.onClick.AddListener(BuyDefenderClicked);
             _defenderPrefab = defenderPrefab;
         }
 
