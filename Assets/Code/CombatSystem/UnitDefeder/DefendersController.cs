@@ -17,10 +17,11 @@ namespace CombatSystem
         private NavMeshAgent _navMeshAgent;
         private UIController _uiConroller;
 
-        public DefendersController(TileController tilecontroller,UIController _uiConroller, GameObject defenderPrefab)
+        public DefendersController(TileController tilecontroller,UIController uiConroller, GameObject defenderPrefab)
         {
             _defenderUnits = new List<DefenderUnit>();
             _tilecontroller = tilecontroller;
+            _uiConroller = uiConroller;
             _uiConroller.BuildingsUIView.BuyDefender.onClick.AddListener(BuyDefenderClicked);
             _defenderPrefab = defenderPrefab;
         }
@@ -54,7 +55,7 @@ namespace CombatSystem
 
         public void Dispose()
         {
-            _tilecontroller.BuildingsUIView.BuyDefender.onClick.RemoveListener(BuyDefenderClicked);
+            _uiConroller.BuildingsUIView.BuyDefender.onClick.RemoveListener(BuyDefenderClicked);
         }
     }
 }
