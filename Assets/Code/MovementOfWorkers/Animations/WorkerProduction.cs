@@ -29,7 +29,8 @@ namespace Code.MovementOfWorkers.Animations
             if (_isStartMoving)
             {
                 _currentDashPosition += DASH_SPEED * deltaTime;
-                _unit.Prefab.transform.Translate(Vector3.forward * DASH_SPEED * deltaTime);
+                _unit.Prefab.transform.Translate(
+                    Vector3.forward * DASH_SPEED * deltaTime);
                 if (_currentDashPosition > DASH_DISTANCE)
                 {
                     _isStartMoving = false;
@@ -44,7 +45,8 @@ namespace Code.MovementOfWorkers.Animations
                     _unit.Prefab.transform.localPosition = _startPosition;
                     AnimationComplete?.Invoke();
                 }
-                _unit.Prefab.transform.Translate(Vector3.back * DASH_SPEED * deltaTime);
+                _unit.Prefab.transform.Translate(
+                    Vector3.back * DASH_SPEED * deltaTime);
             }
         }
 

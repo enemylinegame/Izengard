@@ -10,8 +10,6 @@ using Object = UnityEngine.Object;
 
 namespace Controllers.NewOutPost
 {
-    
-    //TODO: FULL REWORK
     public enum UnitStates
     {
         MovingToWorkInResource, MovingToWorkInBuilding,
@@ -20,11 +18,12 @@ namespace Controllers.NewOutPost
     /// <summary>
     /// Контроллер наших юнитов
     /// </summary>
-    public class OutPostController : IDisposable,IOnUpdate, IOnController
+    public class OutPostController : IDisposable, IOnUpdate, IOnController
     {
-           #region Fields
+#region Fields
            
-        private Button _backToSpawnButton; private Button _goToWorkInResourceButton;
+        private Button _backToSpawnButton; 
+        private Button _goToWorkInResourceButton;
         private Button _goToWorkInBuildingButton;
            
         private OutPostBtn _btn;
@@ -36,7 +35,7 @@ namespace Controllers.NewOutPost
         private Vector3 _whereToSpawn;
         private Vector3 _whereToGo;
 
-        private List<GameObject> _UnitList = new List<GameObject>();
+        private List<GameObject> _unitList = new List<GameObject>();
         private List<Mineral> _minerals = new List<Mineral>();
         
         private BuildingList _buildingList;
@@ -57,9 +56,13 @@ namespace Controllers.NewOutPost
         /// <param name="gameConfig"> конфиг</param>
         /// <param name="prefab"> префаб юинта</param>
         /// <param name="lvlController"></param>
-        public OutPostController(OutPostBtn btn,GameConfig gameConfig, GameObject prefab, GeneratorLevelController controller, BuildingList model)
+        public OutPostController(OutPostBtn btn, GameConfig gameConfig, 
+            GameObject prefab, GeneratorLevelController controller, 
+            BuildingList model)
         {
-            _whereToSpawn = new Vector3(gameConfig.MapSizeX / 2.0f,0,gameConfig.MapSizeY / 2.0f);//костыль
+            _whereToSpawn = new Vector3(gameConfig.MapSizeX / 2.0f, 0, 
+                gameConfig.MapSizeY / 2.0f);//костыль
+
             _btn = btn;
             _prefab = prefab;
             _btn.spawnUnit += BuyAUnit;
@@ -68,9 +71,9 @@ namespace Controllers.NewOutPost
 
         public void OnUpdate(float deltaTime)
         {
-            for (var index = 0; index < _UnitList.Count; index++)
+            for (var index = 0; index < _unitList.Count; index++)
             {
-                var unit = _UnitList[index];
+                var unit = _unitList[index];
                 var view = unit.GetComponent<OutPostView>();
                 var worker = unit.GetComponentInChildren<WorkerView>();
                 if (_goToWorkInResourceButton && _isGoToWork)
@@ -137,7 +140,8 @@ namespace Controllers.NewOutPost
         /// Стейтовая машина для юнитов
         /// </summary>
         /// <param name="states">стаейты</param>
-        private void StateMachineUnit(UnitStates states, WorkerView workerView, OutPostView view)
+        private void StateMachineUnit(UnitStates states, 
+            WorkerView workerView, OutPostView view)
         {
             switch (states)
             {
@@ -171,11 +175,12 @@ namespace Controllers.NewOutPost
         /// <param name="point"></param>
         private void BuyAUnit(OutPostPoint point)
         {
-            float MaxCountOfNPC = 5;
-            if (MaxCountOfNPC > _UnitList.Count)
+            float maxCountOfNPC = 5;
+            if (maxCountOfNPC > _unitList.Count)
             {
-                var spawn = Object.Instantiate(_prefab, _whereToSpawn, new Quaternion());
-                _UnitList.Add(spawn);
+                var spawn = Object.Instantiate(
+                    _prefab, _whereToSpawn, new Quaternion());
+                _unitList.Add(spawn);
             }
         }
 
@@ -269,10 +274,10 @@ namespace Controllers.NewOutPost
         /// </summary>
         /// <param name="view"></param>
         /// <param name="worker"></param>
-        /// <param name="WhereToGo"></param>
-        private void Move(OutPostView view, Vector3 WhereToGo)
+        /// <param name="whereToGo"></param>
+        private void Move(OutPostView view, Vector3 whereToGo)
         {
-            view.MeshAgent.SetDestination(WhereToGo);
+            view.MeshAgent.SetDestination(whereToGo);
         }
 
         /// <summary>

@@ -11,7 +11,8 @@ namespace Code.MovementOfWorkers.Animations
         public event Action AnimationComplete;
         public bool IsAnimationPlaying { get; private set; }
 
-        private readonly Dictionary<WorkerAnimationType, IWorkerAnimation> _animations;
+        private readonly Dictionary<WorkerAnimationType, IWorkerAnimation> 
+            _animations;
 
         private IWorkerAnimation _currentAnimation;
 
@@ -19,7 +20,8 @@ namespace Code.MovementOfWorkers.Animations
         public WorkerAnimationController(Enemy unit)
         {
             _animations = new Dictionary<WorkerAnimationType, IWorkerAnimation>();
-            _animations.Add(WorkerAnimationType.Production, new WorkerProductionAnimation(unit));
+            _animations.Add(WorkerAnimationType.Production, 
+                new WorkerProductionAnimation(unit));
         }
 
         public void PlayAnimation(WorkerAnimationType animationType)
