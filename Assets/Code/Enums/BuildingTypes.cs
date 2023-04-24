@@ -15,4 +15,5 @@ public enum BuildingTypes : int
     MainBuilding=211,
     ResourceMarket=212,
     ItemMarket=213,
+    Barrack=214,
 }
