@@ -23,6 +23,7 @@ namespace CombatSystem
             _tilecontroller = tilecontroller;
             _uiConroller = uiConroller;
             _uiConroller.BuildingsUIView.BuyDefender.onClick.AddListener(BuyDefenderClicked);
+            _uiConroller.BuildingsUIView.EnterToBarracks.onClick.AddListener(EnterToBarracksClicked);
             _defenderPrefab = defenderPrefab;
         }
 
@@ -36,6 +37,11 @@ namespace CombatSystem
             _defenderUnits.Add(defender);
             defender.DefenderUnitDead += DefenderDead;
 
+        }
+
+        private void EnterToBarracksClicked()
+        {
+            Debug.Log("DefendersController->EnterToBarracksClicked:");
         }
 
         private void DefenderDead(DefenderUnit defender)
@@ -56,6 +62,7 @@ namespace CombatSystem
         public void Dispose()
         {
             _uiConroller.BuildingsUIView.BuyDefender.onClick.RemoveListener(BuyDefenderClicked);
+            _uiConroller.BuildingsUIView.EnterToBarracks.onClick.RemoveListener(EnterToBarracksClicked);
         }
     }
 }
