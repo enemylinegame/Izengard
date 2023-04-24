@@ -76,10 +76,10 @@ namespace Controllers.BaseUnit
         private void Spawn(Vector3 endPos)
         {
             var go = _baseUnitFactory.CreateUnit(_unitPrefab,_whereToSpawn);
-            SendInfoToGroupController(go,endPos);
+            //SendInfoToGroupController(go,endPos);
         }
         
-        private void SendInfoToGroupController(GameObject gameObject,Vector3 endPos)
+        /*private void SendInfoToGroupController(GameObject gameObject,Vector3 endPos)
         {
             var movementHolder = gameObject.GetComponent<UnitMovement>();
             var animHolder = gameObject.GetComponent<WorkerAnimationController>();
@@ -92,7 +92,7 @@ namespace Controllers.BaseUnit
             unitWasSpawned.Invoke(listOfUnitC.Count-1,
                 new List<Vector3>(){endPos,gameObject.transform.position},
                 new List<float>(){3});
-        }
+        }*/
 
         #endregion
     }

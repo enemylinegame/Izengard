@@ -1,95 +1,69 @@
-﻿using System.Collections.Generic;
-using Code.MovementOfWorkers.Animations;
-using Controllers.BaseUnit;
-using Enums.BaseUnit;
-using Models.BaseUnit;
-using UnityEngine;
-using Views.BaseUnit;
+﻿
 
 namespace Controllers.Worker
 {
-    public sealed class WorkerController: BaseUnitController
+    public sealed class WorkerController: IOnUpdate
     {
-        private readonly BaseUnitModel _baseUnitModel;
-        private readonly UnitMovement _unitMovement;
-        private readonly WorkerAnimationController _unitAnimation;
-        private List<UnitHandler> _unitHandlers;
-        private List<float> _timerPositions;
-        private UnitStates _currentUnitState;
-     
-
-        public WorkerController(BaseUnitModel baseUnitModel, UnitMovement unitMovement, WorkerAnimationController unitAnimation) :
-            base(baseUnitModel, unitMovement, unitAnimation)
+        private WorkerModel _model;
+        private IWorkerView _view;
+    
+        public WorkerController(WorkerModel workerModel, IWorkerView workerView)
         {
-            _baseUnitModel = baseUnitModel;
-            _unitMovement = unitMovement;
-            _unitAnimation = unitAnimation;
-            _unitHandlers = new List<UnitHandler>();
-            _timerPositions = new List<float>();
+            _model = workerModel;
+            _view = workerView;
         }
 
-        public override void SetStateMachine(UnitStates unitStates)
+        public void GoToWork()
         {
-            //_unitMovement.WaitingForNextCommand = false;
-            //base.SetStateMachine(unitStates);
-            _currentUnitState = unitStates;
-            switch (_currentUnitState)
-            {
-                case UnitStates.IDLE:
-                    //Anim state, looking for target, waiting destination
-                    break;
-            
-                case UnitStates.MOVING:
-                    //AnimState
-                    break;
-                case UnitStates.DEAD:
-                    //AnimeState, destroy
-                    break;
-            }
+            _view.Activate();
+            _view.InitPlace(_model.StatrtingPlace);
+            _view.GoToPlace(_model.PlaceOfWork);
+
+            _model.State = WorkerStates.GO_TO_WORK;
         }
 
-        public override void SetUnitSequence(List<UnitStates> workerActionsList)
+        public bool IsReady()
         {
-            int timerCount = 0;
-            foreach (var workerAction in workerActionsList)
+            return WorkerStates.AT_HOME == _model.State;
+        }
+
+        private void ProduceWork()
+        {
+            _view.ProduceWork();
+        }
+
+        private void BringProducts()
+        {
+            _view.GoToPlace(_model.PlaceOfWork);
+        }
+
+        public void OnUpdate(float deltaTime)
+        {
+            if (WorkerStates.AT_HOME == _model.State)
+                return;
+
+            if (WorkerStates.PRODUCE_WORK == _model.State)
             {
-               
-                switch (workerAction)
+                _model.WorkTimeLeft -= deltaTime;
+                if (_model.WorkTimeLeft < 0)
                 {
-                        case UnitStates.MOVING:
-                            _unitHandlers.Add(new BaseUnitMoveHandler(_unitMovement, this));
-                            MoveCounter++;
-                            break;
-                        case UnitStates.ATTAKING:
-                            _unitHandlers.Add(new BaseUnitWaitHandler(_timerPositions[timerCount], this));
-                            timerCount++;
-                            break;
+                    _model.WorkTimeLeft = 0;
+                    _model.State = WorkerStates.GO_TO_HOME;
+                    BringProducts();
                 }
             }
-            _unitHandlers[0].Handle();
-            for (int i = 1; i < _unitHandlers.Count; i++)
+            else if (_view.IsOnThePlace())
             {
-                if (i != _unitHandlers.Count)
-                    _unitHandlers[i - 1].SetNext(_unitHandlers[i]);
-            }
-            _unitHandlers[_unitHandlers.Count - 1].SetNext(_unitHandlers[0]);
-        }
-
-        public override void SetDestination(Vector3 whereToGo)
-        {
-            _unitMovement.PointWhereToGo.Add(whereToGo);
-        }
-
-        public override void SetEndTime(float time)
-        {
-            _timerPositions.Add(time);
-        }
-
-        public override void Check(float deltaTime)
-        {
-            if (CurrentUnitHandler is BaseUnitMoveHandler moveHandler)
-            {
-                moveHandler.OnUpdate(deltaTime);
+                if (WorkerStates.GO_TO_WORK == _model.State)
+                {
+                    ProduceWork();
+                    _model.State = WorkerStates.PRODUCE_WORK;
+                    _model.WorkTimeLeft = _model.TimeOfWork;
+                }
+                else if (WorkerStates.GO_TO_HOME == _model.State)
+                {
+                    _model.State = WorkerStates.AT_HOME;
+                }
             }
         }
     }

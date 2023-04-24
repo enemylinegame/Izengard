@@ -5,7 +5,7 @@ using ResourceSystem.SupportClases;
 using TMPro;
 using UnityEngine;
 
-public class WorkerView : UnitView
+public class WorkerView_old : UnitView
 {
     [SerializeField] private ResourceHolder _Resholder;
     [SerializeField] private ItemСarrierHolder _Itemholder;

@@ -75,7 +75,7 @@ namespace Controllers.NewOutPost
             {
                 var unit = _unitList[index];
                 var view = unit.GetComponent<OutPostView>();
-                var worker = unit.GetComponentInChildren<WorkerView>();
+                var worker = unit.GetComponentInChildren<WorkerView_old>();
                 if (_goToWorkInResourceButton && _isGoToWork)
                 {
                     StateMachineUnit(UnitStates.MovingToWorkInResource, worker, view);
@@ -141,7 +141,7 @@ namespace Controllers.NewOutPost
         /// </summary>
         /// <param name="states">стаейты</param>
         private void StateMachineUnit(UnitStates states, 
-            WorkerView workerView, OutPostView view)
+            WorkerView_old workerView, OutPostView view)
         {
             switch (states)
             {
@@ -285,7 +285,7 @@ namespace Controllers.NewOutPost
         /// </summary>
         /// <param name="view"></param>
         /// <param name="workerView"></param>
-        private void WorkingInResource(OutPostView view, WorkerView workerView)
+        private void WorkingInResource(OutPostView view, WorkerView_old workerView)
         {
          /*  view.MeshAgent.isStopped = true;
            if (_mine.ResourceHolderMine.CurrentValue == 0)
@@ -301,7 +301,7 @@ namespace Controllers.NewOutPost
            }*/
         }
         
-        private void WorkingInBuilding(OutPostView view, WorkerView workerView)
+        private void WorkingInBuilding(OutPostView view, WorkerView_old workerView)
         {
             // view.MeshAgent.isStopped = true;
         }

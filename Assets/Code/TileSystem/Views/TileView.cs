@@ -19,7 +19,7 @@ namespace Code.TileSystem
         [SerializeField] private Dictionary<Building, BuildingConfig> _floodedBuildings = new Dictionary<Building, BuildingConfig>();
         
         private List<BuildingConfig> _curBuildingConfigs;
-        private List<WorkerView> _workerViews;
+        private List<WorkerView_old> _workerViews;
         public List<WorkersAssigments> _workersAssigmentses;
         private int _eightQuantity;
         private TileConfig _saveTileConfig;
@@ -36,7 +36,7 @@ namespace Code.TileSystem
             _saveTileConfig = new TileConfig();
             _saveTileConfig = _tileConfig;
             _curBuildingConfigs = new List<BuildingConfig>(_tileConfig.BuildingTirs);
-            _workerViews = new List<WorkerView>();
+            _workerViews = new List<WorkerView_old>();
             
             _workersAssigmentses = new List<WorkersAssigments>();
             FillWorkerList();
@@ -45,7 +45,7 @@ namespace Code.TileSystem
         {
             for (int i = 0; i < _saveTileConfig.MaxUnits.GetHashCode(); i++)
             {
-                _workerViews.Add(new WorkerView());
+                _workerViews.Add(new WorkerView_old());
                 _workerViews[i].AssignedResource = BuildingTypes.None;
             }
         }
