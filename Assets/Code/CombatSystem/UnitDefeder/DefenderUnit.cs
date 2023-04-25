@@ -20,7 +20,8 @@ namespace CombatSystem
     
     public enum DefenderState
     {
-        GoInPosition,
+        None = 0,
+        Going,
         Fight,
         Idle
     }
@@ -38,20 +39,32 @@ namespace CombatSystem
         private NavMeshAgent _agent;
 
         private Vector3 _defendPosition;
-        private DefenderState _state = DefenderState.GoInPosition;
+        private DefenderState _state = DefenderState.Going;
 
-        private bool _isReload = false;
         private float _tempTime = 0;
+        private float _stopDistanceSqr;
+        private bool _isReload = false;
+        private bool _isPositionChanged;
 
-       
+
+        public Vector3 Position
+        {
+            get
+            {
+                return _agent.nextPosition;
+            }
+        }
+
 
         public DefenderUnit(GameObject defender, Vector3 defendPosition)
         {
             _unitStats = new DefenderUnitStats(1f,25);
             _defender = defender;
             _defendPosition = defendPosition;
+            _isPositionChanged = true;
             _damageable = defender.GetComponent<Damageable>();
             _agent = defender.GetComponent<NavMeshAgent>();
+            _stopDistanceSqr = _agent.stoppingDistance * _agent.stoppingDistance;
             _damageable.DeathAction += DefenderDead;
             _damageable.MeAttackedChenged += MeAttacked;
             _damageable.Init(100, 1);
@@ -69,6 +82,7 @@ namespace CombatSystem
                 _state = DefenderState.Idle;
             }
             _listMeAttackedUnits = listMeAttackedUnits;
+            Debug.Log($"DefenderUnit->MeAttacked: _listMeAttackedUnits.Count = {_listMeAttackedUnits.Count}; _state = {_state}");
         }
 
         private void DefenderDead()
@@ -107,19 +121,35 @@ namespace CombatSystem
         {
             if (_listMeAttackedUnits.Count == 0)
             {
-                if (!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance)
+                Vector3 currentPosition = _agent.nextPosition;
+                currentPosition.y = 0.0f;
+
+                //if ( !_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance)
+                if ( _isPositionChanged || (_agent.remainingDistance > _agent.stoppingDistance))
                 {
-                    _state = DefenderState.GoInPosition;
+                    _state = DefenderState.Going;
                 }
                 else
                 {
                     _state = DefenderState.Idle;
                 }
+                //Debug.Log("DefenderUnit->DefenderLogic: _state = " + _state.ToString());
             }
+            else
+            {
+                Debug.Log("DefenderUnit->DefenderLogic: _listMeAttackedUnits.Count != 0; _state = " + _state.ToString());
+            }
+
             switch (_state)
             {
-                case DefenderState.GoInPosition:
-                    _agent.SetDestination(_defendPosition);
+                case DefenderState.Going:
+                    if (_isPositionChanged)
+                    {
+                        _agent.SetDestination(_defendPosition);
+                        _isPositionChanged = false;
+                        Debug.Log($"DefenderUnit->DefenderLogic: _defendPosition = {_defendPosition}; " +
+                            $"_nextPosition = {_agent.nextPosition}");
+                    }
                     break;
                 case DefenderState.Idle:
                     break;
@@ -130,11 +160,18 @@ namespace CombatSystem
                         {
                             _isReload = true;
                             _attackAction.StartAction(_listMeAttackedUnits[i]);
+                            Debug.Log("DefenderUnit->DefenderLogic: _attackAction.StartAction(...)");
                         }
                     }
                     break;
-
             }
+        }
+
+        public void GoToPosition(Vector3 newPosition)
+        {
+            newPosition.y = _defendPosition.y;
+            _defendPosition = newPosition;
+            _isPositionChanged = true;
         }
     }
 
