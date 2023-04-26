@@ -47,6 +47,10 @@ namespace CombatSystem
         private float _stopDistanceSqr;
         private bool _isReload = false;
         private bool _isPositionChanged;
+        private bool _isEnabled;
+
+
+        private bool t_pathPending;
 
 
         public Vector3 Position
@@ -57,6 +61,21 @@ namespace CombatSystem
             }
         }
 
+        public bool IsEnabled
+        {
+            get
+            {
+                return _isEnabled;
+            }
+            set
+            {
+                if (_isEnabled != value)
+                {
+                    _isEnabled = value;
+                    _defender.SetActive(value);
+                }
+            }
+        }
 
         public DefenderUnit(GameObject defender, Vector3 defendPosition)
         {
@@ -71,6 +90,11 @@ namespace CombatSystem
             _damageable.MeAttackedChenged += MeAttacked;
             _damageable.Init(100, 1);
             _attackAction = new DefenderAttackAction(_unitStats);
+            _isEnabled = true;
+
+
+            t_pathPending = _agent.pathPending;
+            Debug.Log("DefenderUnit->DefenderUnit: t_pathPending = " + t_pathPending.ToString());
         }
 
         private void MeAttacked(List<Damageable> listMeAttackedUnits)
@@ -100,7 +124,10 @@ namespace CombatSystem
 
         public void OnUpdate(float deltaTime)
         {
-            DefenderLogic();
+            if (_isEnabled)
+            {
+                DefenderLogic();
+            }
             Reload();
         }
         private void Reload()
@@ -121,6 +148,8 @@ namespace CombatSystem
 
         private void DefenderLogic()
         {
+            PavPendingObserving();
+
             if (_listMeAttackedUnits.Count == 0)
             {
                 Vector3 currentPosition = _agent.nextPosition;
@@ -180,6 +209,17 @@ namespace CombatSystem
             _defendPosition = newPosition;
             _isPositionChanged = true;
         }
+
+        private void PavPendingObserving()
+        {
+            bool newPathPending = _agent.pathPending;
+            if (newPathPending != t_pathPending)
+            {
+                t_pathPending = newPathPending;
+                Debug.Log("DefenderUnit->PavPendingObserving: t_pathPending = " + t_pathPending.ToString());
+            }
+        }
+
     }
 
 }

@@ -17,6 +17,9 @@ namespace CombatSystem
 
         private Vector3 _tempOffset = new Vector3(0.5f, 0, 0);
 
+        private bool _isDefendersInsideBarrack;
+
+
         public DefendersController(TileController tilecontroller,UIController uiConroller, GameObject defenderPrefab)
         {
             _defenderUnits = new List<DefenderUnit>();
@@ -45,20 +48,13 @@ namespace CombatSystem
 
             //TestUnitMovement();
 
-            Building barrack = FindBarrack();
-
-            if (barrack != null)
+            if (_isDefendersInsideBarrack)
             {
-                Vector3 barrackPosition = barrack.transform.position;
-                for (int i = 0; i < _defenderUnits.Count; i++)
-                {
-                    DefenderUnit unit = _defenderUnits[i];
-                    unit.GoToPosition(barrackPosition);
-                }
+                KickDefendersOutOfBarrack();
             }
             else
             {
-                Debug.Log("DefendersController->EnterToBarracksClicked:  The Tile don't have any barracks.");
+                SentDefendersToBarrack();
             }
 
         }
@@ -95,6 +91,56 @@ namespace CombatSystem
                 unit.GoToPosition(position);
             }
             _tempOffset *= -1;
+        }
+
+        private void SentDefendersToBarrack()
+        {
+            Building barrack = FindBarrack();
+
+            if (barrack != null)
+            {
+                Vector3 barrackPosition = barrack.transform.position;
+                for (int i = 0; i < _defenderUnits.Count; i++)
+                {
+                    DefenderUnit unit = _defenderUnits[i];
+                    unit.GoToPosition(barrackPosition);
+                    unit.OnDestinationReached += OnUnitReachedBarrack;
+                }
+            }
+            else
+            {
+                Debug.Log("DefendersController->EnterToBarracksClicked:  The Tile don't have any barracks.");
+            }
+
+
+            _isDefendersInsideBarrack = true;
+        }
+
+        private void OnUnitReachedBarrack(DefenderUnit unit)
+        {
+            unit.OnDestinationReached -= OnUnitReachedBarrack;
+            if (_isDefendersInsideBarrack)
+            {
+                unit.IsEnabled = false;
+            }
+        }
+
+        private void KickDefendersOutOfBarrack()
+        {
+            for (int i = 0; i < _defenderUnits.Count; i++)
+            {
+                DefenderUnit unit = _defenderUnits[i];
+                unit.OnDestinationReached -= OnUnitReachedBarrack;
+                unit.IsEnabled = true;
+                SendDefenderToTilePosition(unit);
+            }
+
+            _isDefendersInsideBarrack = false;
+        }
+
+        private void SendDefenderToTilePosition(DefenderUnit unit)
+        {
+
         }
 
 
