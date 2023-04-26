@@ -8,5 +8,6 @@ namespace Code.UI
     {
         [field: SerializeField] public BuildingsUIView BuildingMenu { get; set; }
         [field: SerializeField] public TileUIView TileUIView { get; set; }
+        [field: SerializeField] public ResourcesLayoutUIView ResourcesLayoutUIView { get; set; }
     }
 }
