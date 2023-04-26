@@ -16,6 +16,7 @@ namespace CombatSystem
 
         public void StartAction(Damageable target)
         {
+            Debug.Log("DefenderAttackAction->StartAction:");
             target.MakeDamage(_stats._attackDamage);
             OnComplete?.Invoke(target);
         }
