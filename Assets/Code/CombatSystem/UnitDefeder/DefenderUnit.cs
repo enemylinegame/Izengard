@@ -171,10 +171,10 @@ namespace CombatSystem
                 }
                 //Debug.Log("DefenderUnit->DefenderLogic: _state = " + _state.ToString());
             }
-            else
-            {
-                Debug.Log("DefenderUnit->DefenderLogic: _listMeAttackedUnits.Count != 0; _state = " + _state.ToString());
-            }
+            //else
+            //{
+            //    Debug.Log("DefenderUnit->DefenderLogic: _listMeAttackedUnits.Count != 0; _state = " + _state.ToString());
+            //}
 
             switch (_state)
             {
