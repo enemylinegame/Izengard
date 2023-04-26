@@ -378,7 +378,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41e0f114166a4abdba1ead67a3f0d43f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <BuildBuildingMenu>k__BackingField: {fileID: 5064343491368005663}
+  <BuildingMenu>k__BackingField: {fileID: 0}
+  <TileUIView>k__BackingField: {fileID: 0}
 --- !u!1 &5064343490181763596
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,6 +389,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5064343490181763597}
+  - component: {fileID: 2418278515037476871}
   m_Layer: 5
   m_Name: D
   m_TagString: Untagged
@@ -418,6 +420,22 @@ RectTransform:
   m_AnchoredPosition: {x: 12.400014, y: 45.616226}
   m_SizeDelta: {x: 96.249, y: 41.9301}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2418278515037476871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5064343490181763596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3885334df3c683841927d0e8c7ca81e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _resourceValue: {fileID: 5064343491518649831}
+  _resourceText: {fileID: 5064343490524848313}
+  _resourceAddButton: {fileID: 5064343491144735423}
+  _resourceRemoveButton: {fileID: 5064343491576021494}
 --- !u!1 &5064343490238913681
 GameObject:
   m_ObjectHideFlags: 0
@@ -1535,6 +1553,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5064343491036389856}
+  - component: {fileID: 6688509527681210379}
   m_Layer: 5
   m_Name: Res
   m_TagString: Untagged
@@ -1564,6 +1583,20 @@ RectTransform:
   m_AnchoredPosition: {x: -61.7507, y: 0.0013294}
   m_SizeDelta: {x: 123.5115, y: 185.73}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6688509527681210379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5064343491036389859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f3c06f8ceab2ca439794334ab465c71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _kResource: {fileID: 9081254036973602533}
+  _dResource: {fileID: 2418278515037476871}
 --- !u!1 &5064343491064458042
 GameObject:
   m_ObjectHideFlags: 0
@@ -1573,6 +1606,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5064343491064458043}
+  - component: {fileID: 9081254036973602533}
   m_Layer: 5
   m_Name: K
   m_TagString: Untagged
@@ -1603,6 +1637,22 @@ RectTransform:
   m_AnchoredPosition: {x: 12.4, y: 21}
   m_SizeDelta: {x: 96.249, y: 41.9301}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &9081254036973602533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5064343491064458042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3885334df3c683841927d0e8c7ca81e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _resourceValue: {fileID: 5064343491830328762}
+  _resourceText: {fileID: 5064343490238913687}
+  _resourceAddButton: {fileID: 5064343491527221601}
+  _resourceRemoveButton: {fileID: 5064343492232482328}
 --- !u!1 &5064343491108044587
 GameObject:
   m_ObjectHideFlags: 0
@@ -2107,18 +2157,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec169f0386610904ea1d09054bf58203, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <OpenMenuButton>k__BackingField: {fileID: 5064343490639194484}
   <CloseMenuButton>k__BackingField: {fileID: 5064343490858247152}
   <PrefabButtonClear>k__BackingField: {fileID: 0}
-  <PrefabButtonInfo>k__BackingField: {fileID: 0}
+  <BuildingInfo>k__BackingField: {fileID: 0}
   <Windows>k__BackingField:
   - {fileID: 5064343491580756888}
   - {fileID: 5064343491209104766}
   - {fileID: 5064343492077096299}
-  <BuildButtonsHolder>k__BackingField: {fileID: 0}
   <ByBuildButtonsHolder>k__BackingField: {fileID: 0}
-  _buyPrefabButton: {fileID: 8458766582952026973, guid: 3f606a4b129c70f43808aef0020bbe82, type: 3}
-  Config: {fileID: 0}
+  <BuyPrefabButton>k__BackingField: {fileID: 0}
+  <BuyDefender>k__BackingField: {fileID: 0}
 --- !u!1 &5064343491518649825
 GameObject:
   m_ObjectHideFlags: 0
