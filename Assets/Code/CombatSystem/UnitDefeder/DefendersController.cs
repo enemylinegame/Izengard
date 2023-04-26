@@ -1,10 +1,9 @@
-
 using System;
 using System.Collections.Generic;
 using Code.TileSystem;
 using Code.UI;
 using UnityEngine;
-using UnityEngine.AI;
+
 
 namespace CombatSystem
 {
@@ -14,8 +13,9 @@ namespace CombatSystem
         private List<DefenderUnit> _defenderUnits; 
         private GameObject _defenderPrefab;
         private TileController _tilecontroller;
-        private NavMeshAgent _navMeshAgent;
         private UIController _uiConroller;
+
+        private Vector3 _tempOffset = new Vector3(0.5f, 0, 0);
 
         public DefendersController(TileController tilecontroller,UIController uiConroller, GameObject defenderPrefab)
         {
@@ -42,7 +42,61 @@ namespace CombatSystem
         private void EnterToBarracksClicked()
         {
             Debug.Log("DefendersController->EnterToBarracksClicked:");
+
+            //TestUnitMovement();
+
+            Building barrack = FindBarrack();
+
+            if (barrack != null)
+            {
+                Vector3 barrackPosition = barrack.transform.position;
+                for (int i = 0; i < _defenderUnits.Count; i++)
+                {
+                    DefenderUnit unit = _defenderUnits[i];
+                    unit.GoToPosition(barrackPosition);
+                }
+            }
+            else
+            {
+                Debug.Log("DefendersController->EnterToBarracksClicked:  The Tile don't have any barracks.");
+            }
+
         }
+
+        private Building FindBarrack()
+        {
+            Building barrack = null;
+
+            TileView tileView = _tilecontroller.View;
+            if (tileView != null)
+            {
+                var buildings = tileView.FloodedBuildings;
+
+                foreach (var kvp in buildings)
+                {
+                    if ( kvp.Key.Type == BuildingTypes.Barrack)
+                    {
+                        barrack = kvp.Key;
+                        break;
+                    }
+                }
+            }
+
+            return barrack;
+        }
+
+        private void TestUnitMovement()
+        {
+            for (int i = 0; i < _defenderUnits.Count; i++)
+            {
+                var unit = _defenderUnits[i];
+                Vector3 position = unit.Position;
+                position += _tempOffset;
+                unit.GoToPosition(position);
+            }
+            _tempOffset *= -1;
+        }
+
 
         private void DefenderDead(DefenderUnit defender)
         {
@@ -66,4 +120,3 @@ namespace CombatSystem
         }
     }
 }
-
