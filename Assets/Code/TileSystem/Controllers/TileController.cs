@@ -25,6 +25,7 @@ namespace Code.TileSystem
         private GlobalStock _stock;
         private List<BuildingConfig> _buildingConfigs;
         private BuildingController _buildingController;
+        private TileResourceController _tileResourceController;
         private UIController _uiController;
         private WorkerAssigmentsController _workerAssigmentsController;
         private int _currentlvl;
@@ -65,7 +66,10 @@ namespace Code.TileSystem
             ADDBuildUI(view.TileModel);
             view.LoadButtonsUIBuy(this, _uiController);
             _uiView.Upgrade.onClick.AddListener(() => view.LVLUp(this));
-            UpdateInfo(_tileModel.TileConfig);
+            UpdateInfo(view.TileConfig);
+            _buildingController.ADDListMinerals(view);
+
+            _tileResourceController = new TileResourceController(_uiView);
         }
         /// <summary>
         /// Загрузка всей информации на тайл
