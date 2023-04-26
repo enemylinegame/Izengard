@@ -29,6 +29,8 @@ namespace CombatSystem
     public class DefenderUnit : IDisposable, IOnUpdate
     {
         public event Action<DefenderUnit> DefenderUnitDead;
+        public event Action<DefenderUnit> OnDestinationReached;
+
         public GameObject DefenderGameObject { get { return _defender; } }
 
         private Damageable _damageable;
@@ -131,6 +133,11 @@ namespace CombatSystem
                 }
                 else
                 {
+                    if (_state == DefenderState.Going)
+                    {
+                        _state = DefenderState.Idle;
+                        OnDestinationReached?.Invoke(this);
+                    }
                     _state = DefenderState.Idle;
                 }
                 //Debug.Log("DefenderUnit->DefenderLogic: _state = " + _state.ToString());
