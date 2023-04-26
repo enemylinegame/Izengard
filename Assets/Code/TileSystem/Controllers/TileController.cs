@@ -18,14 +18,14 @@ namespace Code.TileSystem
     {
         private TileList _list;
         private TileUIView _uiView;
-        private TileView _tileView;
-        private TileModel _tileModel;
         private BaseCenterText _centerText;
         private BuildGenerator _generator;
         private GlobalStock _stock;
         private List<BuildingConfig> _buildingConfigs;
         private BuildingController _buildingController;
-        private TileResourceController _tileResourceController;
+        private TileResourceUIController _tileResourceController;
+        private TileResouceUIFactory _tileResouceUIFactory;
+        private ResourcesLayoutUIView _resourcesLayoutUIView;
         private UIController _uiController;
         private WorkerAssigmentsController _workerAssigmentsController;
         private int _currentlvl;
@@ -50,7 +50,8 @@ namespace Code.TileSystem
             _generator = buildGenerator;
             _stock = stock;
             _uiController = uiController;
-            
+            _resourcesLayoutUIView = _uiController.ResourcesLayoutUIView;
+
             _stock.AddResourceToStock(ResourceType.Wood,100);
             _buildingController = buildingController;
         }
@@ -69,7 +70,8 @@ namespace Code.TileSystem
             UpdateInfo(view.TileConfig);
             _buildingController.ADDListMinerals(view);
 
-            _tileResourceController = new TileResourceController(_uiView);
+            _tileResourceController = new TileResourceUIController(_resourcesLayoutUIView);
+            _tileResouceUIFactory = new TileResouceUIFactory(_resourcesLayoutUIView, _tileResourceController);
         }
         /// <summary>
         /// Загрузка всей информации на тайл

@@ -18,9 +18,10 @@ namespace Code.UI
         public TileView View => _view;
         public BuildingsUIView BuildingsUIView => _bottonUI.BuildingMenu;
         public TileUIView TileUIView => _bottonUI.TileUIView;
-        
+        public ResourcesLayoutUIView ResourcesLayoutUIView => _bottonUI.ResourcesLayoutUIView;
 
-        
+
+
         public List<BuildingConfig> ButtonsBuy = new List<BuildingConfig>();
         public Dictionary<BuildingConfig, Button> ButtonsInMenu = new Dictionary<BuildingConfig, Button>();
         public Dictionary<GameObject, BuildingUIInfo> DestroyBuildingInfo = new Dictionary<GameObject, BuildingUIInfo>();
