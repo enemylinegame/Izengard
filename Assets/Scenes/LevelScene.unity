@@ -222,6 +222,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 253a8bda7d963944eb57a99d0d1ca2a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &85879879 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6688509527681210379, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
+  m_PrefabInstance: {fileID: 5064343490899393618}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f3c06f8ceab2ca439794334ab465c71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &152160446 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5064343491368005663, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
@@ -1680,6 +1691,10 @@ PrefabInstance:
       propertyPath: _unitMax
       value: 
       objectReference: {fileID: 13566918}
+    - target: {fileID: 1768718661469220081, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
+      propertyPath: _tileResourcesView
+      value: 
+      objectReference: {fileID: 85879879}
     - target: {fileID: 3918144682107280996, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -0.31556
@@ -3405,7 +3420,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5537125970293088711, guid: 9b8418457783bd944b73b4510f5449b6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00029712013
+      value: 23.248837
       objectReference: {fileID: 0}
     - target: {fileID: 5537125970308451800, guid: 9b8418457783bd944b73b4510f5449b6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
