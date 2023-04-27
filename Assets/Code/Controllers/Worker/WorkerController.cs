@@ -1,5 +1,6 @@
 ﻿
 
+using System;
 using UnityEngine;
 
 namespace Controllers.Worker
@@ -8,14 +9,16 @@ namespace Controllers.Worker
     {
         private WorkerModel _model;
         private IWorkerView _view;
-    
+
+        public Action<int> OnMissionCompleted = delegate { };
+
         public WorkerController(WorkerModel workerModel, IWorkerView workerView)
         {
             _model = workerModel;
             _view = workerView;
         }
 
-        public void GoToWork(Vector3 placeOfWork)
+        public int GoToWork(Vector3 placeOfWork)
         {
             _view.Activate();
             _view.InitPlace(_model.StatrtingPlace);
@@ -24,6 +27,8 @@ namespace Controllers.Worker
             _view.GoToPlace(_model.PlaceOfWork);
 
             _model.State = WorkerStates.GO_TO_WORK;
+
+            return _model.WorkerId;
         }
 
         public bool IsReady()
@@ -66,7 +71,9 @@ namespace Controllers.Worker
                 }
                 else if (WorkerStates.GO_TO_HOME == _model.State)
                 {
+                    OnMissionCompleted.Invoke(_model.WorkerId);
                     _model.State = WorkerStates.AT_HOME;
+                    _view.Deactivate();
                 }
             }
         }

@@ -53,7 +53,8 @@ public class WorkersTeamController: IOnUpdate, IDisposable
                 PlaceOfWork = _model.StartPosition,
                 State = WorkerStates.AT_HOME,
                 TimeOfWork = config.TimeToProcessWork,
-                WorkTimeLeft  = 0 
+                WorkTimeLeft  = 0,
+                WorkerId = i
             };
 
             _model.WorkerModels.Add(workerModel);
@@ -63,7 +64,15 @@ public class WorkersTeamController: IOnUpdate, IDisposable
 
     private void SendNextWorker(int workerId)
     {
+        _controllers[workerId].OnMissionCompleted += MissionIsCompeted;
         _controllers[workerId].GoToWork(_model.PlaceOfWork);
+    }
+
+    private void MissionIsCompeted(int workerId)
+    {
+        _controllers[workerId].OnMissionCompleted -= MissionIsCompeted;
+
+        Debug.Log("Mission is completed!");
     }
 
     public void Dispose()

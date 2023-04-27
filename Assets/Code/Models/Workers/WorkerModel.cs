@@ -9,4 +9,6 @@ public class WorkerModel
 
     public float TimeOfWork { get; set; }
     public float WorkTimeLeft { get; set; }
+
+    public int WorkerId { get; set; }
 }
