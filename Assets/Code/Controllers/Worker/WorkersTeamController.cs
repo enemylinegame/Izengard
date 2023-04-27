@@ -1,4 +1,3 @@
-using Assets.Code.Controllers.Worker;
 using Controllers.Worker;
 using System;
 using System.Collections.Generic;
@@ -7,89 +6,79 @@ using UnityEngine;
 
 public class WorkersTeamController: IOnUpdate, IDisposable
 {
+    public Action<int> OnMissionCompleted = delegate{ };
+
     public WorkersTeamController(
-        WorkersTeamConfig config, Vector3 initPosition,
-        IWorkerTeamView teamView)
+        WorkersTeamConfig config)
     {
-        _view = teamView;
+        _workerFactory = new WorkerFactory(config);
 
-        _model = new WorkersTeamModel();
-        _model.StartPosition = initPosition;
-        _model.WorkerModels = new List<WorkerModel>();
-        _model.WorkersInterval = config.WorkersIntervalSec;
 
-        _controllers = new List<WorkerController>();
-
-        CreateWorkers(config);
-
-        _timer = new WorkersTeamTimer();
-        _timer.OnTimeOut += SendNextWorker;
+        _workers = new Dictionary<int, WorkerController>();
+        _completedWorkers = new List<int>();
     }
 
-    internal void SendSingleWorkerToPlace(Vector3 palce)
+    public int SendWorkerToPlace(Vector3 startPalce, Vector3 targetPalce)
     {
-        int workerId = _controllers.Count - 1;
-        _controllers[workerId].GoToPlace(palce);
-        _controllers[workerId].OnMissionCompleted += MissionIsCompeted;
+        WorkerController workerController =
+            _workerFactory.CreateWorker();
+
+        _workers.Add(workerController.WorkerId, workerController);
+
+        workerController.OnMissionCompleted += MissionIsCompeted;
+
+        workerController.GoToPlace(startPalce, targetPalce);
+        return workerController.WorkerId;
+    }
+
+    public int SendWorkerToWork(Vector3 startPalce, Vector3 targetPalce)
+    {
+        WorkerController workerController =
+            _workerFactory.CreateWorker();
+
+        _workers.Add(workerController.WorkerId, workerController);
+
+        workerController.OnMissionCompleted += MissionIsCompeted;
+
+        workerController.GoToWorkAndReturn(startPalce, targetPalce);
+        return workerController.WorkerId;
+    }
+
+    public void CancelWork(int workerId)
+    {
+        if (!_workers.TryGetValue(workerId, out WorkerController workerController))
+            return;
+
+        workerController.CancelWork();
     }
 
     public void OnUpdate(float deltaTime)
     {
-        _timer.OnUpdate(deltaTime);
+        foreach (var worker  in _workers)
+            worker.Value.OnUpdate(deltaTime);
 
-        for (int i = 0; i < _controllers.Count; ++i)
-            _controllers[i].OnUpdate(deltaTime);
+        for (int i = 0; i < _completedWorkers.Count; ++ i)
+            _workers.Remove(_completedWorkers[i]);
     }
 
-    public void SendTeamToWork(Vector3 place)
+    private void MissionIsCompeted(WorkerController workerController)
     {
-        _model.PlaceOfWork = place;
-        _timer.SetTimer( _model.WorkersInterval, _controllers.Count - 1);
-    }
+        workerController.OnMissionCompleted -= MissionIsCompeted;
+        OnMissionCompleted.Invoke(workerController.WorkerId);
 
-    private void CreateWorkers(WorkersTeamConfig config)
-    {
-        int workerAmount = _view.WorkersViews.Count;
-
-        for (int i = 0; i < workerAmount; ++i)
-        {
-            IWorkerView workerView = _view.WorkersViews[i];
-
-            WorkerModel workerModel = new WorkerModel() {  
-                StatrtingPlace = _model.StartPosition,
-                PlaceOfWork = _model.StartPosition,
-                State = WorkerStates.NONE,
-                TimeOfWork = config.TimeToProcessWork,
-                WorkTimeLeft  = 0,
-                WorkerId = i
-            };
-
-            _model.WorkerModels.Add(workerModel);
-            _controllers.Add(new WorkerController(workerModel, workerView));
-        }
-    }
-
-    private void SendNextWorker(int workerId)
-    {
-        _controllers[workerId].OnMissionCompleted += MissionIsCompeted;
-        _controllers[workerId].GoToWorkAndReturn(_model.PlaceOfWork);
-    }
-
-    private void MissionIsCompeted(int workerId)
-    {
-        _controllers[workerId].OnMissionCompleted -= MissionIsCompeted;
+        _completedWorkers.Add(workerController.WorkerId);
 
         Debug.Log("Mission is completed!");
     }
 
     public void Dispose()
     {
-        _timer.OnTimeOut -= SendNextWorker;
+        foreach (var worker in _workers)
+            worker.Value.OnMissionCompleted -= MissionIsCompeted;
     }
 
-    private IList<WorkerController> _controllers;
-    private WorkersTeamModel _model;
-    private IWorkerTeamView _view;
+    private WorkerFactory _workerFactory;
 
-    private WorkersTeamTimer _timer;
+    private Dictionary<int, WorkerController> _workers;
+    private List<int> _completedWorkers;
 }

@@ -9,7 +9,7 @@ namespace Controllers.Worker
         private WorkerModel _model;
         private IWorkerView _view;
 
-        public Action<int> OnMissionCompleted = delegate { };
+        public Action<WorkerController> OnMissionCompleted = delegate { };
 
         public WorkerController(WorkerModel workerModel, IWorkerView workerView)
         {
@@ -17,30 +17,38 @@ namespace Controllers.Worker
             _view = workerView;
         }
 
-        private void InitTask(Vector3 target)
+        private void InitTask(Vector3 fromPlace, Vector3 target)
         {
             _view.Activate();
-            _view.InitPlace(_model.StatrtingPlace);
+            _model.StatrtingPlace = fromPlace;
 
-            _model.PlaceOfWork = target;
-            _view.GoToPlace(_model.PlaceOfWork);
+            _view.InitPlace(fromPlace);
+            _view.GoToPlace(target);
             _model.State = WorkerStates.NONE;
         }
 
-        public int GoToWorkAndReturn(Vector3 placeOfWork)
+        public int GoToWorkAndReturn(Vector3 fromPlace, Vector3 placeOfWork)
         {
-            InitTask(placeOfWork);
+            InitTask(fromPlace, placeOfWork);
             _model.State = WorkerStates.GO_TO_WORK;
             return _model.WorkerId;
         }
 
-        public int GoToPlace(Vector3 place)
+        public int GoToPlace(Vector3 fromPlace, Vector3 toPlace)
         {
-            InitTask(place);
+            InitTask(fromPlace, toPlace);
             _model.State = WorkerStates.GO_TO_PLACE;
             return _model.WorkerId;
         }
 
+        public void CancelWork()
+        {
+            _model.State = WorkerStates.GO_TO_HOME;
+            _view.GoToPlace(_model.StatrtingPlace);
+        }
+
+        public int WorkerId => _model.WorkerId;
+        
         private void ProduceWork()
         {
             _view.ProduceWork();
@@ -77,7 +85,7 @@ namespace Controllers.Worker
                 else if (WorkerStates.GO_TO_HOME == _model.State ||
                     WorkerStates.GO_TO_PLACE == _model.State)
                 {
-                    OnMissionCompleted.Invoke(_model.WorkerId);
+                    OnMissionCompleted.Invoke(this);
                     _model.State = WorkerStates.NONE;
                     _view.Deactivate();
                 }
