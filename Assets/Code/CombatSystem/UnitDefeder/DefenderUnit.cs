@@ -148,7 +148,7 @@ namespace CombatSystem
 
         private void DefenderLogic()
         {
-            PavPendingObserving();
+            //PavPendingObserving();
 
             if (_listMeAttackedUnits.Count == 0)
             {
@@ -181,6 +181,7 @@ namespace CombatSystem
                 case DefenderState.Going:
                     if (_isPositionChanged)
                     {
+                        _agent.ResetPath();
                         _agent.SetDestination(_defendPosition);
                         _isPositionChanged = false;
                         Debug.Log($"DefenderUnit->DefenderLogic: _defendPosition = {_defendPosition}; " +
