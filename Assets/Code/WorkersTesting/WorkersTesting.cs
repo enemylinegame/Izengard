@@ -17,8 +17,8 @@ public class WorkersTesting : MonoBehaviour
         _controller = new WorkersTeamController(
             config, new Vector3(5, 0, 5), teamView);
 
-        _controller.SendTeamToPlace(new Vector3(30, 0, 30));
-
+        _controller.SendTeamToWork(new Vector3(30, 0, 30));
+        _controller.SendSingleWorkerToPlace(new Vector3(30, 0, 0));
     }
 
     void Update()

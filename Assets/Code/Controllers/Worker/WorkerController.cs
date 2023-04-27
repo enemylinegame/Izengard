@@ -1,7 +1,6 @@
-﻿
-
-using System;
+﻿using System;
 using UnityEngine;
+
 
 namespace Controllers.Worker
 {
@@ -18,22 +17,28 @@ namespace Controllers.Worker
             _view = workerView;
         }
 
-        public int GoToWork(Vector3 placeOfWork)
+        private void InitTask(Vector3 target)
         {
             _view.Activate();
             _view.InitPlace(_model.StatrtingPlace);
 
-            _model.PlaceOfWork = placeOfWork;
+            _model.PlaceOfWork = target;
             _view.GoToPlace(_model.PlaceOfWork);
+            _model.State = WorkerStates.NONE;
+        }
 
+        public int GoToWorkAndReturn(Vector3 placeOfWork)
+        {
+            InitTask(placeOfWork);
             _model.State = WorkerStates.GO_TO_WORK;
-
             return _model.WorkerId;
         }
 
-        public bool IsReady()
+        public int GoToPlace(Vector3 place)
         {
-            return WorkerStates.AT_HOME == _model.State;
+            InitTask(place);
+            _model.State = WorkerStates.GO_TO_PLACE;
+            return _model.WorkerId;
         }
 
         private void ProduceWork()
@@ -48,7 +53,7 @@ namespace Controllers.Worker
 
         public void OnUpdate(float deltaTime)
         {
-            if (WorkerStates.AT_HOME == _model.State)
+            if (WorkerStates.NONE == _model.State)
                 return;
 
             if (WorkerStates.PRODUCE_WORK == _model.State)
@@ -69,10 +74,11 @@ namespace Controllers.Worker
                     _model.State = WorkerStates.PRODUCE_WORK;
                     _model.WorkTimeLeft = _model.TimeOfWork;
                 }
-                else if (WorkerStates.GO_TO_HOME == _model.State)
+                else if (WorkerStates.GO_TO_HOME == _model.State ||
+                    WorkerStates.GO_TO_PLACE == _model.State)
                 {
                     OnMissionCompleted.Invoke(_model.WorkerId);
-                    _model.State = WorkerStates.AT_HOME;
+                    _model.State = WorkerStates.NONE;
                     _view.Deactivate();
                 }
             }

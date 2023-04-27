@@ -26,6 +26,13 @@ public class WorkersTeamController: IOnUpdate, IDisposable
         _timer.OnTimeOut += SendNextWorker;
     }
 
+    internal void SendSingleWorkerToPlace(Vector3 palce)
+    {
+        int workerId = _controllers.Count - 1;
+        _controllers[workerId].GoToPlace(palce);
+        _controllers[workerId].OnMissionCompleted += MissionIsCompeted;
+    }
+
     public void OnUpdate(float deltaTime)
     {
         _timer.OnUpdate(deltaTime);
@@ -34,10 +41,10 @@ public class WorkersTeamController: IOnUpdate, IDisposable
             _controllers[i].OnUpdate(deltaTime);
     }
 
-    public void SendTeamToPlace(Vector3 place)
+    public void SendTeamToWork(Vector3 place)
     {
         _model.PlaceOfWork = place;
-        _timer.SetTimer( _model.WorkersInterval, _controllers.Count);
+        _timer.SetTimer( _model.WorkersInterval, _controllers.Count - 1);
     }
 
     private void CreateWorkers(WorkersTeamConfig config)
@@ -51,7 +58,7 @@ public class WorkersTeamController: IOnUpdate, IDisposable
             WorkerModel workerModel = new WorkerModel() {  
                 StatrtingPlace = _model.StartPosition,
                 PlaceOfWork = _model.StartPosition,
-                State = WorkerStates.AT_HOME,
+                State = WorkerStates.NONE,
                 TimeOfWork = config.TimeToProcessWork,
                 WorkTimeLeft  = 0,
                 WorkerId = i
@@ -65,7 +72,7 @@ public class WorkersTeamController: IOnUpdate, IDisposable
     private void SendNextWorker(int workerId)
     {
         _controllers[workerId].OnMissionCompleted += MissionIsCompeted;
-        _controllers[workerId].GoToWork(_model.PlaceOfWork);
+        _controllers[workerId].GoToWorkAndReturn(_model.PlaceOfWork);
     }
 
     private void MissionIsCompeted(int workerId)
