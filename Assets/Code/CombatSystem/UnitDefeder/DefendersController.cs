@@ -13,23 +13,22 @@ namespace CombatSystem
         private const string NO_BARRACKS_MESSAGE = "The Tile don't have any barracks.";
         private const string MAX_UNITS_MESSAGE = "Maximum number of units reached.";
 
+        private const float POSITION_RADIUS = 1f;
+
         private const int TEXT_MASSAGES_DURATION_MILISEC = 3000;
         private const int MAX_DEFENDER_UNITS = 5;
 
-        private float _radius = 1f;
         private List<DefenderUnit> _defenderUnits; 
+        private Dictionary<TileView, TileDefendersSquad> _defendersSquadron;
         private GameObject _defenderPrefab;
         private TileController _tilecontroller;
         private UIController _uiConroller;
-
-        private Vector3 _tempOffset = new Vector3(0.5f, 0, 0);
-
-        private bool _isDefendersInsideBarrack;
 
 
         public DefendersController(TileController tilecontroller,UIController uiConroller, GameObject defenderPrefab)
         {
             _defenderUnits = new List<DefenderUnit>();
+            _defendersSquadron = new Dictionary<TileView, TileDefendersSquad>();
             _tilecontroller = tilecontroller;
             _uiConroller = uiConroller;
             _uiConroller.BuildingsUIView.BuyDefender.onClick.AddListener(BuyDefenderClicked);
@@ -39,147 +38,146 @@ namespace CombatSystem
 
         private void BuyDefenderClicked()
         {
-            if (_defenderUnits.Count < MAX_DEFENDER_UNITS)
+            TileDefendersSquad squad = SelectSquad();
+            if (squad != null)
             {
-                GameObject go = GameObject.Instantiate(_defenderPrefab, new Vector3(200f, 0f, 200f), Quaternion.identity);
-                Vector3 position = GeneratePositionNearTileCentre();
-                DefenderUnit defender = new DefenderUnit(go, position);
-                _defenderUnits.Add(defender);
-                defender.DefenderUnitDead += DefenderDead;
-            }
-            else
-            {
-                Debug.Log("DefendersController->EnterToBarracksClicked: " + MAX_UNITS_MESSAGE);
-                _tilecontroller.CenterText.NotificationUI(MAX_UNITS_MESSAGE, TEXT_MASSAGES_DURATION_MILISEC);
+                if ( squad.DefenderUnits.Count < MAX_DEFENDER_UNITS)
+                {
+                    GameObject go = GameObject.Instantiate(_defenderPrefab, new Vector3(200f, 0f, 200f), Quaternion.identity);
+                    Vector3 position = GeneratePositionNearTileCentre(_tilecontroller.View);
+                    DefenderUnit defender = new DefenderUnit(go, position);
+                    AddDefenderToSquad(squad, defender);
+                    defender.DefenderUnitDead += DefenderDead;
+                    _defenderUnits.Add(defender);
+                }
+                else
+                {
+                    Debug.Log("DefendersController->EnterToBarracksClicked: " + MAX_UNITS_MESSAGE);
+                    _tilecontroller.CenterText.NotificationUI(MAX_UNITS_MESSAGE, TEXT_MASSAGES_DURATION_MILISEC);
+                }
             }
         }
 
-        private Vector3 GeneratePositionNearTileCentre()
+        private Vector3 GeneratePositionNearTileCentre(TileView tile)
         {
-            Vector3 position = UnityEngine.Random.insideUnitSphere * _radius;
+            Vector3 position = UnityEngine.Random.insideUnitSphere * POSITION_RADIUS;
             position.y = 0f;
-            return  position + _tilecontroller.View.transform.position;
+            return  position + tile.transform.position;
+        }
+
+        private TileDefendersSquad SelectSquad()
+        {
+            TileDefendersSquad squad = null;
+
+            TileView tileView = _tilecontroller.View;
+            if (tileView != null)
+            {
+                if (!_defendersSquadron.ContainsKey(tileView))
+                {
+                    squad = new TileDefendersSquad(tileView);
+                    _defendersSquadron.Add(tileView, squad);
+                }
+                else
+                {
+                    squad = _defendersSquadron[tileView];
+                }
+            }
+            return squad;
+        }
+
+        private bool AddDefenderToSquad(TileDefendersSquad squad, DefenderUnit defenderUnit)
+        {
+            bool isAdded = false;
+
+            if (defenderUnit.Squad == null)
+            {
+                if (squad.DefenderUnits.Count < MAX_DEFENDER_UNITS)
+                {
+                    squad.DefenderUnits.Add(defenderUnit);
+                    defenderUnit.Squad = squad;
+                }
+            }
+
+            return isAdded;
+        }
+
+        private bool RemovDefenderFromSquad(TileDefendersSquad squad, DefenderUnit defenderUnit)
+        {
+            bool isRemoved = false;
+
+            if (defenderUnit.Squad == squad)
+            {
+                if (squad.DefenderUnits.Remove(defenderUnit))
+                {
+                    defenderUnit.Squad = null;
+                }
+            }
+            return isRemoved;
         }
 
         private void EnterToBarracksClicked()
         {
             Debug.Log("DefendersController->EnterToBarracksClicked:");
 
-            //TestUnitMovement();
-
-            if (_isDefendersInsideBarrack)
+            TileDefendersSquad squad = SelectSquad();
+            if (squad != null)
             {
-                KickDefendersOutOfBarrack();
-                _isDefendersInsideBarrack = false;
-            }
-            else
-            {
-                //_isDefendersInsideBarrack = SentDefendersToBarrack();
-                _isDefendersInsideBarrack = SendDefendersToCentralBuilding();
-            }
-
-        }
-
-        private void TestUnitMovement()
-        {
-            for (int i = 0; i < _defenderUnits.Count; i++)
-            {
-                var unit = _defenderUnits[i];
-                Vector3 position = unit.Position;
-                position += _tempOffset;
-                unit.GoToPosition(position);
-            }
-            _tempOffset *= -1;
-        }
-
-        private bool SentDefendersToBarrack()
-        {
-            bool isUnitsSended = false;
-            Building barrack = FindBarrack();
-
-            if (barrack != null)
-            {
-                SendDefendersIntoBuilding(barrack.transform.position);
-                isUnitsSended = true;
-            }
-            else
-            {
-                Debug.Log("DefendersController->EnterToBarracksClicked: " + NO_BARRACKS_MESSAGE);
-                _tilecontroller.CenterText.NotificationUI(NO_BARRACKS_MESSAGE, TEXT_MASSAGES_DURATION_MILISEC);
-            }
-
-            return isUnitsSended;
-        }
-
-        private Building FindBarrack()
-        {
-            Building barrack = null;
-
-            TileView tileView = _tilecontroller.View;
-            if (tileView != null)
-            {
-                var buildings = tileView.FloodedBuildings;
-
-                foreach (var kvp in buildings)
+                if (squad.IsDefendersInside)
                 {
-                    if (kvp.Key.Type == BuildingTypes.Barrack)
-                    {
-                        barrack = kvp.Key;
-                        break;
-                    }
+                    KickDefendersOutOfBarrack(squad);
+                    squad.IsDefendersInside = false;
+                }
+                else
+                {
+                    squad.IsDefendersInside = SendDefendersToBarrack(squad);
                 }
             }
-
-            return barrack;
         }
 
-        private bool SendDefendersToCentralBuilding()
+        private bool SendDefendersToBarrack(TileDefendersSquad squad)
         {
             bool isUnitsSended = false;
 
-            TileView tileView = _tilecontroller.View;
-            if (tileView != null)
+            List<DefenderUnit> defenderUnits = squad.DefenderUnits;
+
+            if (defenderUnits.Count > 0)
             {
-                SendDefendersIntoBuilding(tileView.transform.position);
+                Vector3 buildingPosition = squad.View.transform.position;
+                for (int i = 0; i < defenderUnits.Count; i++)
+                {
+                    DefenderUnit unit = defenderUnits[i];
+                    unit.GoToPosition(buildingPosition);
+                    unit.OnDestinationReached += OnUnitReachedBarrack;
+                }
+
                 isUnitsSended = true;
             }
-
             return isUnitsSended;
-        }
-
-        private void SendDefendersIntoBuilding(Vector3 buildingPosition)
-        {
-            for (int i = 0; i < _defenderUnits.Count; i++)
-            {
-                DefenderUnit unit = _defenderUnits[i];
-                unit.GoToPosition(buildingPosition);
-                unit.OnDestinationReached += OnUnitReachedBarrack;
-            }
         }
 
         private void OnUnitReachedBarrack(DefenderUnit unit)
         {
             unit.OnDestinationReached -= OnUnitReachedBarrack;
-            if (_isDefendersInsideBarrack)
-            {
-                unit.IsEnabled = false;
-            }
+            unit.IsEnabled = false;
         }
 
-        private void KickDefendersOutOfBarrack()
+        private void KickDefendersOutOfBarrack(TileDefendersSquad squad)
         {
-            for (int i = 0; i < _defenderUnits.Count; i++)
+            List<DefenderUnit> defenderUnits = squad.DefenderUnits;
+
+
+            for (int i = 0; i < defenderUnits.Count; i++)
             {
-                DefenderUnit unit = _defenderUnits[i];
+                DefenderUnit unit = defenderUnits[i];
                 unit.OnDestinationReached -= OnUnitReachedBarrack;
                 unit.IsEnabled = true;
-                SendDefenderToTilePosition(unit);
+                SendDefenderToTilePosition(unit, squad.View);
             }
         }
 
-        private void SendDefenderToTilePosition(DefenderUnit unit)
+        private void SendDefenderToTilePosition(DefenderUnit unit, TileView tile)
         {
-            Vector3 position = GeneratePositionNearTileCentre();
+            Vector3 position = GeneratePositionNearTileCentre(tile);
             unit.GoToPosition(position);
         }
 
@@ -187,6 +185,7 @@ namespace CombatSystem
         {
             defender.DefenderUnitDead -= DefenderDead;
             _defenderUnits.Remove(defender);
+            RemovDefenderFromSquad(defender.Squad, defender);
             GameObject.Destroy(defender.DefenderGameObject);
         }
 
