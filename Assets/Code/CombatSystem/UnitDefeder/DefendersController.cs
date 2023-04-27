@@ -13,7 +13,7 @@ namespace CombatSystem
         private const string NO_BARRACKS_MESSAGE = "The Tile don't have any barracks.";
         private const string MAX_UNITS_MESSAGE = "Maximum number of units reached.";
 
-        private const int TEXT_MASSAGES_DURATION_MILISEC = 30000;
+        private const int TEXT_MASSAGES_DURATION_MILISEC = 3000;
         private const int MAX_DEFENDER_UNITS = 5;
 
         private float _radius = 1f;
@@ -65,34 +65,14 @@ namespace CombatSystem
             if (_isDefendersInsideBarrack)
             {
                 KickDefendersOutOfBarrack();
+                _isDefendersInsideBarrack = false;
             }
             else
             {
-                SentDefendersToBarrack();
+                //_isDefendersInsideBarrack = SentDefendersToBarrack();
+                _isDefendersInsideBarrack = SendDefendersToCentralBuilding();
             }
 
-        }
-
-        private Building FindBarrack()
-        {
-            Building barrack = null;
-
-            TileView tileView = _tilecontroller.View;
-            if (tileView != null)
-            {
-                var buildings = tileView.FloodedBuildings;
-
-                foreach (var kvp in buildings)
-                {
-                    if ( kvp.Key.Type == BuildingTypes.Barrack)
-                    {
-                        barrack = kvp.Key;
-                        break;
-                    }
-                }
-            }
-
-            return barrack;
         }
 
         private void TestUnitMovement()
@@ -107,19 +87,15 @@ namespace CombatSystem
             _tempOffset *= -1;
         }
 
-        private void SentDefendersToBarrack()
+        private bool SentDefendersToBarrack()
         {
+            bool isUnitsSended = false;
             Building barrack = FindBarrack();
 
             if (barrack != null)
             {
-                Vector3 barrackPosition = barrack.transform.position;
-                for (int i = 0; i < _defenderUnits.Count; i++)
-                {
-                    DefenderUnit unit = _defenderUnits[i];
-                    unit.GoToPosition(barrackPosition);
-                    unit.OnDestinationReached += OnUnitReachedBarrack;
-                }
+                SendDefendersIntoBuilding(barrack.transform.position);
+                isUnitsSended = true;
             }
             else
             {
@@ -127,8 +103,53 @@ namespace CombatSystem
                 _tilecontroller.CenterText.NotificationUI(NO_BARRACKS_MESSAGE, TEXT_MASSAGES_DURATION_MILISEC);
             }
 
+            return isUnitsSended;
+        }
 
-            _isDefendersInsideBarrack = true;
+        private Building FindBarrack()
+        {
+            Building barrack = null;
+
+            TileView tileView = _tilecontroller.View;
+            if (tileView != null)
+            {
+                var buildings = tileView.FloodedBuildings;
+
+                foreach (var kvp in buildings)
+                {
+                    if (kvp.Key.Type == BuildingTypes.Barrack)
+                    {
+                        barrack = kvp.Key;
+                        break;
+                    }
+                }
+            }
+
+            return barrack;
+        }
+
+        private bool SendDefendersToCentralBuilding()
+        {
+            bool isUnitsSended = false;
+
+            TileView tileView = _tilecontroller.View;
+            if (tileView != null)
+            {
+                SendDefendersIntoBuilding(tileView.transform.position);
+                isUnitsSended = true;
+            }
+
+            return isUnitsSended;
+        }
+
+        private void SendDefendersIntoBuilding(Vector3 buildingPosition)
+        {
+            for (int i = 0; i < _defenderUnits.Count; i++)
+            {
+                DefenderUnit unit = _defenderUnits[i];
+                unit.GoToPosition(buildingPosition);
+                unit.OnDestinationReached += OnUnitReachedBarrack;
+            }
         }
 
         private void OnUnitReachedBarrack(DefenderUnit unit)
@@ -149,8 +170,6 @@ namespace CombatSystem
                 unit.IsEnabled = true;
                 SendDefenderToTilePosition(unit);
             }
-
-            _isDefendersInsideBarrack = false;
         }
 
         private void SendDefenderToTilePosition(DefenderUnit unit)
