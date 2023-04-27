@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Code.BuildingSystem;
 using Code.BuldingsSystem.ScriptableObjects;
 using Code.UI;
+using CombatSystem;
 using ResourceSystem;
 using Unity.Collections;
 using UnityEngine;
@@ -16,29 +17,34 @@ namespace Code.TileSystem
         [SerializeField] private HouseType _type;
         [SerializeField] private TileConfig _tileConfig;
         [SerializeField] private List<Dot> _dotSpawns;
-        [SerializeField] private Dictionary<Building, BuildingConfig> _floodedBuildings = new Dictionary<Building, BuildingConfig>();
         
         private List<BuildingConfig> _curBuildingConfigs;
         private List<WorkerView> _workerViews;
+        private List<DefenderUnit> _defenderUnits;
         public List<WorkersAssigments> _workersAssigmentses;
-        private int _eightQuantity;
         private TileConfig _saveTileConfig;
+        private Dictionary<Building, BuildingConfig> _floodedBuildings;
+        private List<Mineral> _floodedMinerals;
+        private int _eightQuantity;
 
         public TileConfig TileConfig => _tileConfig;
         public List<BuildingConfig> CurrBuildingConfigs => _curBuildingConfigs;
         public Dictionary<Building, BuildingConfig> FloodedBuildings => _floodedBuildings;
+        public List<Mineral> FloodedMinerals => _floodedMinerals;
         public int EightQuantity => _eightQuantity;
         public List<Dot> DotSpawns => _dotSpawns;
         
         
-        private void Start()
+        private void Awake()
         {
             _saveTileConfig = new TileConfig();
-            _saveTileConfig = _tileConfig;
             _curBuildingConfigs = new List<BuildingConfig>(_tileConfig.BuildingTirs);
+            _floodedBuildings = new Dictionary<Building, BuildingConfig>();
+            _floodedMinerals = new List<Mineral>();
             _workerViews = new List<WorkerView>();
-            
             _workersAssigmentses = new List<WorkersAssigments>();
+            
+            _saveTileConfig = _tileConfig;
             FillWorkerList();
         }
         private void FillWorkerList()
@@ -65,12 +71,10 @@ namespace Code.TileSystem
                 workers.BusyWorkersCount++;
                 _eightQuantity++;
                 _workersAssigmentses.Add(workers);
-                Debug.Log(_workersAssigmentses.Count);
             }
             else
             {
                 var workersAssigments =  _workersAssigmentses.Find(x => x.Building.BuildingID == building.BuildingID);
-                Debug.Log(_saveTileConfig.MaxUnits.GetHashCode());
                 workersAssigments.BusyWorkersCount++;
                 _eightQuantity++;
             }

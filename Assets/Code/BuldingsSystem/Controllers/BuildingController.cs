@@ -18,7 +18,6 @@ namespace Code.BuildingSystem
         {
             if (CheckDot(view))
             {
-                //var r = new Random();
                 var build = Object.Instantiate(config.BuildingPrefab.GetComponent<Building>(), CheckDot(view).transform);
                 build.Type = config.BuildingType;
                 return build;
@@ -34,6 +33,21 @@ namespace Code.BuildingSystem
                 dot.Types = BuildingTypes.None;
                 dot.IsActive = true;
             }
+        }
+
+        public void ADDListMinerals(TileView view)
+        {
+            if (view.FloodedMinerals.Count < 2)
+            {
+                foreach (var dot in view.DotSpawns)
+                {
+                    if (dot.Mineral)
+                    {
+                        view.FloodedMinerals.Add(dot.Mineral);
+                    }
+                }
+            }
+            
         }
         private GameObject CheckDot(TileView view)
         {

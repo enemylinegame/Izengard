@@ -60,6 +60,7 @@ namespace Code.TileSystem
             view.LoadButtonsUIBuy(this, _uiController);
             _uiView.Upgrade.onClick.AddListener(() => view.LVLUp(this));
             UpdateInfo(view.TileConfig);
+            _buildingController.ADDListMinerals(view);
         }
         /// <summary>
         /// Загрузка всей информации на тайл
