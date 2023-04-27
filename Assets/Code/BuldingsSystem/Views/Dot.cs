@@ -3,10 +3,12 @@ using UnityEngine;
 
 namespace Code.TileSystem
 {
+    [RequireComponent(typeof(SphereCollider))]
     public class Dot : MonoBehaviour
     {
         public bool IsActive = true;
         public BuildingTypes Types;
+        public Mineral Mineral;
 
         private void Start()
         {
@@ -17,6 +19,8 @@ namespace Code.TileSystem
         {
             if (other.GetComponent<Mineral>())
             {
+                var mineral = other.GetComponent<Mineral>();//TODO Коостыль!!!
+                Mineral = mineral;
                 IsActive = false;
             }
 

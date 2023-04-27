@@ -60,6 +60,7 @@ namespace Code.TileSystem
             view.LoadButtonsUIBuy(this, _uiController);
             _uiView.Upgrade.onClick.AddListener(() => view.LVLUp(this));
             UpdateInfo(view.TileConfig);
+            _buildingController.ADDListMinerals(view);
         }
         /// <summary>
         /// Загрузка всей информации на тайл
@@ -126,6 +127,7 @@ namespace Code.TileSystem
                     buildingConfigs.Remove(kvp.Key);
                     _uiController.DestroyBuildingInfo.Remove(Button.gameObject);
                     view.FloodedBuildings.Remove(kvp.Key);
+                    view.RemoveAllWorkerAssigment(Button.Types, kvp.Key, this);
                     _buildingController.RemoveTypeDots(view, kvp.Key);
                     GameObject.Destroy(kvp.Key.gameObject);
                     GameObject.Destroy(Button.gameObject);

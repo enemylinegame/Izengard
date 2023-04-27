@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Code.TileSystem;
 using ResourceSystem;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -13,6 +14,7 @@ public class ResourceGenerator : IDisposable
     private GameConfig _gameConfig;
     private Mineral _mineral;
     private GeneratorLevelController _generatorLevelController;
+    private TileController _tileController;
     private int _numOfVariant = 0;
     private bool _flag;
 
@@ -28,7 +30,7 @@ public class ResourceGenerator : IDisposable
         _resourcesTierOne = gameConfig.MineralConfigs.Minerals.FindAll(x => x.Tier == TierNumber.One);
         _resourcesTierTwo = gameConfig.MineralConfigs.Minerals.FindAll(x => x.Tier == TierNumber.Two);
         _resourcesTierThree = gameConfig.MineralConfigs.Minerals.FindAll(x => x.Tier == TierNumber.Three);
-        
+
         _generatorLevelController.SpawnResources += SpawnResources;
     }
     

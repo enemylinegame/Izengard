@@ -23,22 +23,10 @@ public class GameInit
         var tiles = GetTileList.GetTiles(gameConfig);
         
         var globalResStock = new GlobalStock(globalResourceList.GlobalResourceConfigs);
-            
         var btnConroller = new BtnUIController(rightUI, gameConfig);
         var levelGenerator = new GeneratorLevelController(tiles, gameConfig, rightUI, btnConroller, btnParents, bottonUI);
-        var unitController = new UnitController();
         var buildController = new BuildGenerator(gameConfig);
-        var timeRemaining = new TimeRemainingController();
-
-        var uiController = new UIController(rightUI, bottonUI, centerUI);
-        var towershotcontroller = new TowerShotController(towerShotConfig, levelGenerator, gameConfig.Bullet);
-        var eqScreenController = new EquipScreenController(equipScreenView, camera);
-        var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, hireSystemView, levelGenerator);
-        var buildingController = new BuildingController(centerText);
         
-        var waveController = new WaveController(levelGenerator, rightUI, btnParents, gameConfig, centerText);
-        var endGameController = new EndGameController(endGameScreen, levelGenerator);
-
         if (!gameConfig.ChangeVariant)
         {
             new ResourceGenerator(buildController.Buildings, gameConfig, levelGenerator);
@@ -47,9 +35,20 @@ public class GameInit
         {
             new ResourceGenerator(buildController.Buildings, gameConfig, levelGenerator, 2);
         }
+        var unitController = new UnitController();
+        var timeRemaining = new TimeRemainingController();
+
+        var uiController = new UIController(rightUI, bottonUI, centerUI);
+        var towershotcontroller = new TowerShotController(towerShotConfig, levelGenerator, gameConfig.Bullet);
+        var eqScreenController = new EquipScreenController(equipScreenView, camera);
+        var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, hireSystemView, levelGenerator);
+        var buildingController = new BuildingController(centerText);
+        var waveController = new WaveController(levelGenerator, rightUI, btnParents, gameConfig, centerText);
+        var endGameController = new EndGameController(endGameScreen, levelGenerator);
         var tilecontroller = new TileController(tileList, tileUIView, centerText, uiController, buildController, globalResStock, buildingController);
         var inputController = new InputController(tilecontroller, uiController);
         var defenderController = new DefendersController(tilecontroller,uiController, gameConfig.Defender);
+
 
         controller.Add(btnConroller);
         controller.Add(levelGenerator);

@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5568471426994783927}
+  - component: {fileID: 1454725268499054388}
+  - component: {fileID: 1149881052460279055}
   m_Layer: 6
   m_Name: DotSpawn
   m_TagString: Untagged
@@ -30,6 +32,34 @@ Transform:
   m_Father: {fileID: 4729717541368032505}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1454725268499054388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870148307890582694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acc2334511394856b187bf5d53e32fe7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsActive: 1
+  Types: 0
+  Mineral: {fileID: 0}
+--- !u!135 &1149881052460279055
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870148307890582694}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4246090675931123590
 GameObject:
   m_ObjectHideFlags: 0
@@ -39,6 +69,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7075171662413936555}
+  - component: {fileID: 4885431349910620679}
+  - component: {fileID: 4160444696085434657}
   m_Layer: 6
   m_Name: DotSpawn (1)
   m_TagString: Untagged
@@ -60,6 +92,34 @@ Transform:
   m_Father: {fileID: 4729717541368032505}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4885431349910620679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4246090675931123590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acc2334511394856b187bf5d53e32fe7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsActive: 1
+  Types: 0
+  Mineral: {fileID: 0}
+--- !u!135 &4160444696085434657
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4246090675931123590}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4729717541368032506
 GameObject:
   m_ObjectHideFlags: 0
@@ -70,7 +130,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4729717541368032505}
   - component: {fileID: -6135819058454172838}
-  - component: {fileID: 2652708262981317882}
   - component: {fileID: 7672705327460748190}
   - component: {fileID: 7880946814716734968}
   m_Layer: 6
@@ -114,19 +173,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _iconTile: {fileID: 21300000, guid: ed8506933b90fda48b8a0685f3083f08, type: 3}
---- !u!114 &2652708262981317882
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4729717541368032506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dddfa889e64d4f75b7d684a5d98ff38d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _dots: []
 --- !u!114 &7672705327460748190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,8 +187,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _type: 0
   _tileConfig: {fileID: 11400000, guid: 9565a228ea7f390448b26a5a1b3ef329, type: 2}
-  _dotSpawns: {fileID: 2652708262981317882}
-  _floodedBuildings: []
+  _dotSpawns:
+  - {fileID: 1454725268499054388}
+  - {fileID: 4885431349910620679}
+  - {fileID: 3177415484535286308}
+  - {fileID: 5487993870084740137}
+  - {fileID: 5480756271090061669}
+  - {fileID: 5248055221042204164}
 --- !u!65 &7880946814716734968
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -165,6 +216,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8106010000246578798}
+  - component: {fileID: 3177415484535286308}
+  - component: {fileID: 5150275195508125676}
   m_Layer: 6
   m_Name: DotSpawn (2)
   m_TagString: Untagged
@@ -186,6 +239,34 @@ Transform:
   m_Father: {fileID: 4729717541368032505}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3177415484535286308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5480478720698691940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acc2334511394856b187bf5d53e32fe7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsActive: 1
+  Types: 0
+  Mineral: {fileID: 0}
+--- !u!135 &5150275195508125676
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5480478720698691940}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5510971663805851801
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,6 +276,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7170712174201228680}
+  - component: {fileID: 5480756271090061669}
+  - component: {fileID: 4236846133108892237}
   m_Layer: 6
   m_Name: DotSpawn (5)
   m_TagString: Untagged
@@ -216,6 +299,34 @@ Transform:
   m_Father: {fileID: 4729717541368032505}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5480756271090061669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5510971663805851801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acc2334511394856b187bf5d53e32fe7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsActive: 1
+  Types: 0
+  Mineral: {fileID: 0}
+--- !u!135 &4236846133108892237
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5510971663805851801}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7100149020163381186
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,6 +336,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2284399447818991170}
+  - component: {fileID: 5248055221042204164}
+  - component: {fileID: 8539544687288249114}
   m_Layer: 6
   m_Name: DotSpawn (6)
   m_TagString: Untagged
@@ -246,6 +359,34 @@ Transform:
   m_Father: {fileID: 4729717541368032505}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5248055221042204164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7100149020163381186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acc2334511394856b187bf5d53e32fe7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsActive: 1
+  Types: 0
+  Mineral: {fileID: 0}
+--- !u!135 &8539544687288249114
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7100149020163381186}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7661443265471129649
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,6 +396,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6008532318766332195}
+  - component: {fileID: 5487993870084740137}
+  - component: {fileID: 538568858594196492}
   m_Layer: 6
   m_Name: DotSpawn (3)
   m_TagString: Untagged
@@ -276,6 +419,34 @@ Transform:
   m_Father: {fileID: 4729717541368032505}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5487993870084740137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7661443265471129649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acc2334511394856b187bf5d53e32fe7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsActive: 1
+  Types: 0
+  Mineral: {fileID: 0}
+--- !u!135 &538568858594196492
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7661443265471129649}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &6946274702871968451
 PrefabInstance:
   m_ObjectHideFlags: 0
