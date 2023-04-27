@@ -89,7 +89,6 @@ namespace CombatSystem
             _attackAction = new DefenderAttackAction(_unitStats);
             _isEnabled = true;
 
-            LogPathInfo("ctor");
         }
 
         private void MeAttacked(List<Damageable> listMeAttackedUnits)
@@ -149,22 +148,12 @@ namespace CombatSystem
                 Vector3 currentPosition = _agent.nextPosition;
                 currentPosition.y = 0.0f;
 
-                //if ( _isPositionChanged || (_agent.remainingDistance > _agent.stoppingDistance))
-                //if ( _isPositionChanged || (_agent.pathStatus != NavMeshPathStatus.PathComplete))
                 if ( _isPositionChanged || _agent.hasPath)
                 {
-                    if (_state != DefenderState.Going)
-                    {
-                        LogPathInfo("newState = Going");
-                    }
                     _state = DefenderState.Going;
                 }
                 else
                 {
-                    if (_state != DefenderState.Idle)
-                    {
-                        LogPathInfo("newState = Idle");
-                    }
                     if (_state == DefenderState.Going)
                     {
                         _state = DefenderState.Idle;
@@ -180,13 +169,9 @@ namespace CombatSystem
                 case DefenderState.Going:
                     if (_isPositionChanged)
                     {
-                        LogPathInfo("before SetDestination");
                         _agent.ResetPath();
                         _agent.SetDestination(_defendPosition);
                         _isPositionChanged = false;
-                        Debug.Log($"DefenderUnit->DefenderLogic: _defendPosition = {_defendPosition}; " +
-                            $"_nextPosition = {_agent.nextPosition}");
-                        LogPathInfo("after SetDestination");
                     }
                     break;
                 case DefenderState.Idle:
@@ -211,13 +196,6 @@ namespace CombatSystem
             _defendPosition = newPosition;
             _isPositionChanged = true;
         }
-
-        private void LogPathInfo(string addString = "")
-        {
-            Debug.Log($"DefenderUnit->PavPendingObserving: {addString}; pathPending = {_agent.pathPending}; " +
-                $"hasPath = {_agent.hasPath}; pathStatus = {_agent.pathStatus};");
-        }
-
     }
 
 }
