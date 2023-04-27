@@ -9,6 +9,13 @@ namespace CombatSystem
 {
     public class DefendersController : IOnController, IOnUpdate, IDisposable
     {
+
+        private const string NO_BARRACKS_MESSAGE = "The Tile don't have any barracks.";
+        private const string MAX_UNITS_MESSAGE = "Maximum number of units reached.";
+
+        private const int TEXT_MASSAGES_DURATION_MILISEC = 30000;
+        private const int MAX_DEFENDER_UNITS = 5;
+
         private float _radius = 1f;
         private List<DefenderUnit> _defenderUnits; 
         private GameObject _defenderPrefab;
@@ -32,14 +39,21 @@ namespace CombatSystem
 
         private void BuyDefenderClicked()
         {
-            GameObject go = GameObject.Instantiate(_defenderPrefab,new Vector3(200f,0f,200f) ,Quaternion.identity);
-            Vector3 position = UnityEngine.Random.insideUnitSphere * _radius;
-            position.y = 0f;
-            position += _tilecontroller.View.transform.position;
-            DefenderUnit defender = new DefenderUnit(go, position);
-            _defenderUnits.Add(defender);
-            defender.DefenderUnitDead += DefenderDead;
-
+            if (_defenderUnits.Count < MAX_DEFENDER_UNITS)
+            {
+                GameObject go = GameObject.Instantiate(_defenderPrefab, new Vector3(200f, 0f, 200f), Quaternion.identity);
+                Vector3 position = UnityEngine.Random.insideUnitSphere * _radius;
+                position.y = 0f;
+                position += _tilecontroller.View.transform.position;
+                DefenderUnit defender = new DefenderUnit(go, position);
+                _defenderUnits.Add(defender);
+                defender.DefenderUnitDead += DefenderDead;
+            }
+            else
+            {
+                Debug.Log("DefendersController->EnterToBarracksClicked: " + MAX_UNITS_MESSAGE);
+                _tilecontroller.CenterText.NotificationUI(MAX_UNITS_MESSAGE, TEXT_MASSAGES_DURATION_MILISEC);
+            }
         }
 
         private void EnterToBarracksClicked()
@@ -109,7 +123,8 @@ namespace CombatSystem
             }
             else
             {
-                Debug.Log("DefendersController->EnterToBarracksClicked:  The Tile don't have any barracks.");
+                Debug.Log("DefendersController->EnterToBarracksClicked: " + NO_BARRACKS_MESSAGE);
+                _tilecontroller.CenterText.NotificationUI(NO_BARRACKS_MESSAGE, TEXT_MASSAGES_DURATION_MILISEC);
             }
 
 
