@@ -39,6 +39,7 @@ namespace CombatSystem
         private GameObject _defender;
         private DefenderUnitStats _unitStats;
         private NavMeshAgent _agent;
+        private TileDefendersSquad _squad;
 
         private Vector3 _defendPosition;
         private DefenderState _state = DefenderState.Going;
@@ -73,6 +74,8 @@ namespace CombatSystem
                 }
             }
         }
+
+        public TileDefendersSquad Squad { get => _squad; set => _squad = value; }
 
         public DefenderUnit(GameObject defender, Vector3 defendPosition)
         {
