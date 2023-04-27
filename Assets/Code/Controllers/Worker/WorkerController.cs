@@ -1,5 +1,7 @@
 ﻿
 
+using UnityEngine;
+
 namespace Controllers.Worker
 {
     public sealed class WorkerController: IOnUpdate
@@ -13,10 +15,12 @@ namespace Controllers.Worker
             _view = workerView;
         }
 
-        public void GoToWork()
+        public void GoToWork(Vector3 placeOfWork)
         {
             _view.Activate();
             _view.InitPlace(_model.StatrtingPlace);
+
+            _model.PlaceOfWork = placeOfWork;
             _view.GoToPlace(_model.PlaceOfWork);
 
             _model.State = WorkerStates.GO_TO_WORK;
@@ -34,7 +38,7 @@ namespace Controllers.Worker
 
         private void BringProducts()
         {
-            _view.GoToPlace(_model.PlaceOfWork);
+            _view.GoToPlace(_model.StatrtingPlace);
         }
 
         public void OnUpdate(float deltaTime)

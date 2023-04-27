@@ -19,4 +19,8 @@ public class WorkersTeamConfig : ScriptableObject
     [SerializeField]
     private GameObject _workerPrefab;
     public GameObject WorkerPrefab => _workerPrefab;
+
+    [SerializeField]
+    int _workersIntervalSec;
+    public float WorkersIntervalSec => _workersIntervalSec;
 }

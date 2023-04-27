@@ -6,31 +6,37 @@ using UnityEngine.AI;
     typeof(CapsuleCollider))]
 public class WorkerView : MonoBehaviour, IWorkerView
 {
+    [SerializeField]
+    private Animator _animator;
+
+    [SerializeField]
+    private NavMeshAgent _navigationAgent;
+
     public void InitPlace(Vector3 place)
     {
         _navigationAgent.Warp(place);
-        _animator.Play("Idle");
+        _animator.Play(IDLE);
     }
 
     public void GoToPlace(Vector3 place)
     {
         _navigationAgent.SetDestination(place);
-        _animator.Play("Walk");
+        _animator.Play(WALK);
     }
 
     public bool IsOnThePlace()
     {
-        return _navigationAgent.remainingDistance < 0.1;
+        return _navigationAgent.remainingDistance < 1;
     }
 
     public void ProduceWork()
     {
-        _animator.Play("ProduceWork");
+        _animator.Play(PRODUCE_WORK);
     }
 
-    public void Idle(Vector3 place)
+    public void Idle()
     {
-        _animator.Play("Idle");
+        _animator.Play(IDLE);
     }
 
     public void Activate()
@@ -43,12 +49,8 @@ public class WorkerView : MonoBehaviour, IWorkerView
         gameObject.SetActive(false);
     }
 
-    private void Start()
-    {
-        _navigationAgent = gameObject.GetComponent<NavMeshAgent>();
-        _animator = gameObject.GetComponent<Animator>();
-    }
+    private const string IDLE = "Idle";
+    private const string WALK = "WALK";
+    private const string PRODUCE_WORK = "ProduceWork";
 
-    private Animator _animator;
-    private NavMeshAgent _navigationAgent;
 }

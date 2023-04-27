@@ -1,7 +1,5 @@
 using UnityEngine;
 
-public enum WorkerStates {GO_TO_WORK, PRODUCE_WORK, GO_TO_HOME, AT_HOME};
-
 public class WorkerModel
 {
     public Vector3 StatrtingPlace { get; set; }

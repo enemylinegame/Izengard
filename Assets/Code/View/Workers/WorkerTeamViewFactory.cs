@@ -18,7 +18,9 @@ public class WorkerTeamViewFactory
             GameObject workerGameObject = GameObject.Instantiate(
                    config.WorkerPrefab, teamGameObject.transform);
 
-            IWorkerView workerView = workerGameObject.GetComponent<IWorkerView>();
+            IWorkerView workerView = 
+                workerGameObject.GetComponent<IWorkerView>();
+            workerView.Deactivate();
             teamView.WorkersViews.Add(workerView);
         }
 
