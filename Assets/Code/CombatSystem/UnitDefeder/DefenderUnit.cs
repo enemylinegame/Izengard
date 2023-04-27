@@ -148,7 +148,7 @@ namespace CombatSystem
                 Vector3 currentPosition = _agent.nextPosition;
                 currentPosition.y = 0.0f;
 
-                if ( _isPositionChanged || _agent.hasPath)
+                if (_isPositionChanged || (_agent.remainingDistance > _agent.stoppingDistance))
                 {
                     _state = DefenderState.Going;
                 }
@@ -182,7 +182,6 @@ namespace CombatSystem
                         for (int i = 0; i < _listMeAttackedUnits.Count; i++)
                         {
                             _isReload = true;
-                            Debug.Log("DefenderUnit->DefenderLogic: _attackAction.StartAction(...)");
                             _attackAction.StartAction(_listMeAttackedUnits[i]);
                         }
                     }
