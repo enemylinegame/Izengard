@@ -42,9 +42,7 @@ namespace CombatSystem
             if (_defenderUnits.Count < MAX_DEFENDER_UNITS)
             {
                 GameObject go = GameObject.Instantiate(_defenderPrefab, new Vector3(200f, 0f, 200f), Quaternion.identity);
-                Vector3 position = UnityEngine.Random.insideUnitSphere * _radius;
-                position.y = 0f;
-                position += _tilecontroller.View.transform.position;
+                Vector3 position = GeneratePositionNearTileCentre();
                 DefenderUnit defender = new DefenderUnit(go, position);
                 _defenderUnits.Add(defender);
                 defender.DefenderUnitDead += DefenderDead;
@@ -54,6 +52,13 @@ namespace CombatSystem
                 Debug.Log("DefendersController->EnterToBarracksClicked: " + MAX_UNITS_MESSAGE);
                 _tilecontroller.CenterText.NotificationUI(MAX_UNITS_MESSAGE, TEXT_MASSAGES_DURATION_MILISEC);
             }
+        }
+
+        private Vector3 GeneratePositionNearTileCentre()
+        {
+            Vector3 position = UnityEngine.Random.insideUnitSphere * _radius;
+            position.y = 0f;
+            return  position + _tilecontroller.View.transform.position;
         }
 
         private void EnterToBarracksClicked()
@@ -174,9 +179,9 @@ namespace CombatSystem
 
         private void SendDefenderToTilePosition(DefenderUnit unit)
         {
-
+            Vector3 position = GeneratePositionNearTileCentre();
+            unit.GoToPosition(position);
         }
-
 
         private void DefenderDead(DefenderUnit defender)
         {
