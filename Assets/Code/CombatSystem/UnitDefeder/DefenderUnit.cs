@@ -50,9 +50,6 @@ namespace CombatSystem
         private bool _isEnabled;
 
 
-        private bool t_pathPending;
-
-
         public Vector3 Position
         {
             get
@@ -92,9 +89,7 @@ namespace CombatSystem
             _attackAction = new DefenderAttackAction(_unitStats);
             _isEnabled = true;
 
-
-            t_pathPending = _agent.pathPending;
-            Debug.Log("DefenderUnit->DefenderUnit: t_pathPending = " + t_pathPending.ToString());
+            LogPathInfo("ctor");
         }
 
         private void MeAttacked(List<Damageable> listMeAttackedUnits)
@@ -130,6 +125,7 @@ namespace CombatSystem
             }
             Reload();
         }
+
         private void Reload()
         {
             if (_isReload)
@@ -148,44 +144,49 @@ namespace CombatSystem
 
         private void DefenderLogic()
         {
-            //PavPendingObserving();
-
             if (_listMeAttackedUnits.Count == 0)
             {
                 Vector3 currentPosition = _agent.nextPosition;
                 currentPosition.y = 0.0f;
 
-                //if ( !_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance)
-                if ( _isPositionChanged || (_agent.remainingDistance > _agent.stoppingDistance))
+                //if ( _isPositionChanged || (_agent.remainingDistance > _agent.stoppingDistance))
+                //if ( _isPositionChanged || (_agent.pathStatus != NavMeshPathStatus.PathComplete))
+                if ( _isPositionChanged || _agent.hasPath)
                 {
+                    if (_state != DefenderState.Going)
+                    {
+                        LogPathInfo("newState = Going");
+                    }
                     _state = DefenderState.Going;
                 }
                 else
                 {
+                    if (_state != DefenderState.Idle)
+                    {
+                        LogPathInfo("newState = Idle");
+                    }
                     if (_state == DefenderState.Going)
                     {
                         _state = DefenderState.Idle;
                         OnDestinationReached?.Invoke(this);
                     }
+
                     _state = DefenderState.Idle;
                 }
-                //Debug.Log("DefenderUnit->DefenderLogic: _state = " + _state.ToString());
             }
-            //else
-            //{
-            //    Debug.Log("DefenderUnit->DefenderLogic: _listMeAttackedUnits.Count != 0; _state = " + _state.ToString());
-            //}
 
             switch (_state)
             {
                 case DefenderState.Going:
                     if (_isPositionChanged)
                     {
+                        LogPathInfo("before SetDestination");
                         _agent.ResetPath();
                         _agent.SetDestination(_defendPosition);
                         _isPositionChanged = false;
                         Debug.Log($"DefenderUnit->DefenderLogic: _defendPosition = {_defendPosition}; " +
                             $"_nextPosition = {_agent.nextPosition}");
+                        LogPathInfo("after SetDestination");
                     }
                     break;
                 case DefenderState.Idle:
@@ -196,8 +197,8 @@ namespace CombatSystem
                         for (int i = 0; i < _listMeAttackedUnits.Count; i++)
                         {
                             _isReload = true;
-                            _attackAction.StartAction(_listMeAttackedUnits[i]);
                             Debug.Log("DefenderUnit->DefenderLogic: _attackAction.StartAction(...)");
+                            _attackAction.StartAction(_listMeAttackedUnits[i]);
                         }
                     }
                     break;
@@ -211,14 +212,10 @@ namespace CombatSystem
             _isPositionChanged = true;
         }
 
-        private void PavPendingObserving()
+        private void LogPathInfo(string addString = "")
         {
-            bool newPathPending = _agent.pathPending;
-            if (newPathPending != t_pathPending)
-            {
-                t_pathPending = newPathPending;
-                Debug.Log("DefenderUnit->PavPendingObserving: t_pathPending = " + t_pathPending.ToString());
-            }
+            Debug.Log($"DefenderUnit->PavPendingObserving: {addString}; pathPending = {_agent.pathPending}; " +
+                $"hasPath = {_agent.hasPath}; pathStatus = {_agent.pathStatus};");
         }
 
     }
