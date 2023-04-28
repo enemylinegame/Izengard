@@ -13,9 +13,10 @@ public class WorkersTeamController: IOnUpdate, IDisposable
     {
         _workerFactory = new WorkerFactory(config);
 
+        _model = new WorkersTeamModel();
 
-        _workers = new Dictionary<int, WorkerController>();
-        _completedWorkers = new List<int>();
+        _model.Workers = new Dictionary<int, WorkerController>();
+        _model.CompletedWorkers = new List<int>();
     }
 
     public int SendWorkerToPlace(Vector3 startPalce, Vector3 targetPalce)
@@ -23,7 +24,7 @@ public class WorkersTeamController: IOnUpdate, IDisposable
         WorkerController workerController =
             _workerFactory.CreateWorker();
 
-        _workers.Add(workerController.WorkerId, workerController);
+        _model.Workers.Add(workerController.WorkerId, workerController);
 
         workerController.OnMissionCompleted += MissionIsCompeted;
 
@@ -36,7 +37,7 @@ public class WorkersTeamController: IOnUpdate, IDisposable
         WorkerController workerController =
             _workerFactory.CreateWorker();
 
-        _workers.Add(workerController.WorkerId, workerController);
+        _model.Workers.Add(workerController.WorkerId, workerController);
 
         workerController.OnMissionCompleted += MissionIsCompeted;
 
@@ -46,7 +47,8 @@ public class WorkersTeamController: IOnUpdate, IDisposable
 
     public void CancelWork(int workerId)
     {
-        if (!_workers.TryGetValue(workerId, out WorkerController workerController))
+        if (!_model.Workers.TryGetValue(workerId, 
+            out WorkerController workerController))
             return;
 
         workerController.CancelWork();
@@ -54,11 +56,11 @@ public class WorkersTeamController: IOnUpdate, IDisposable
 
     public void OnUpdate(float deltaTime)
     {
-        foreach (var worker  in _workers)
+        foreach (var worker  in _model.Workers)
             worker.Value.OnUpdate(deltaTime);
 
-        for (int i = 0; i < _completedWorkers.Count; ++ i)
-            _workers.Remove(_completedWorkers[i]);
+        for (int i = 0; i < _model.CompletedWorkers.Count; ++ i)
+            _model.Workers.Remove(_model.CompletedWorkers[i]);
     }
 
     private void MissionIsCompeted(WorkerController workerController)
@@ -66,19 +68,17 @@ public class WorkersTeamController: IOnUpdate, IDisposable
         workerController.OnMissionCompleted -= MissionIsCompeted;
         OnMissionCompleted.Invoke(workerController.WorkerId);
 
-        _completedWorkers.Add(workerController.WorkerId);
+        _model.CompletedWorkers.Add(workerController.WorkerId);
 
         Debug.Log("Mission is completed!");
     }
 
     public void Dispose()
     {
-        foreach (var worker in _workers)
+        foreach (var worker in _model.Workers)
             worker.Value.OnMissionCompleted -= MissionIsCompeted;
     }
 
     private WorkerFactory _workerFactory;
-
-    private Dictionary<int, WorkerController> _workers;
-    private List<int> _completedWorkers;
+    private WorkersTeamModel _model;
 }
