@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Types: 0
+  Building: {fileID: 0}
   Mineral: {fileID: 0}
 --- !u!135 &7431671700408987992
 SphereCollider:
@@ -105,7 +105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Types: 0
+  Building: {fileID: 0}
   Mineral: {fileID: 0}
 --- !u!135 &1729311349140638306
 SphereCollider:
@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Types: 0
+  Building: {fileID: 0}
   Mineral: {fileID: 0}
 --- !u!135 &369633488355764085
 SphereCollider:
@@ -225,7 +225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Types: 0
+  Building: {fileID: 0}
   Mineral: {fileID: 0}
 --- !u!135 &8723900812043836626
 SphereCollider:
@@ -285,7 +285,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Types: 0
+  Building: {fileID: 0}
   Mineral: {fileID: 0}
 --- !u!135 &3133089406636738352
 SphereCollider:
@@ -345,7 +345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Types: 0
+  Building: {fileID: 0}
   Mineral: {fileID: 0}
 --- !u!135 &7093044874512590201
 SphereCollider:
@@ -413,6 +413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _iconTile: {fileID: 21300000, guid: bc240038fb34f514cbc08c02d46ee4e7, type: 3}
+  <TileView>k__BackingField: {fileID: 5600119947884894010}
 --- !u!114 &5600119947884894010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -425,7 +426,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11e8fb32f42e4bba8642b8d3a0bd483a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 0
   _tileConfig: {fileID: 11400000, guid: 9565a228ea7f390448b26a5a1b3ef329, type: 2}
   _dotSpawns:
   - {fileID: 2819405968195624367}
@@ -434,6 +434,8 @@ MonoBehaviour:
   - {fileID: 7325500583717936872}
   - {fileID: 7763244982633474057}
   - {fileID: 615838556824969664}
+  _floodedBuildings: []
+  _floodedMinerals: []
 --- !u!65 &-7948236483247246764
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -445,7 +447,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 1, z: 2}
+  m_Size: {x: 2.5, y: 1, z: 2.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &6060815172731091165
 PrefabInstance:

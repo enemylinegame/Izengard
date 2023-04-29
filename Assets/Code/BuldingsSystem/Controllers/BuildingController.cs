@@ -14,51 +14,32 @@ namespace Code.BuildingSystem
             _centerText = centerText;
         }
 
-        public Building StartBuilding(TileView view, BuildingConfig config)
+        public Building StartBuilding(TileModel model, BuildingConfig config)
         {
-            if (CheckDot(view))
+            if (CheckDot(model))
             {
-                var build = Object.Instantiate(config.BuildingPrefab.GetComponent<Building>(), CheckDot(view).transform);
+                var dot = CheckDot(model);
+                var build = Object.Instantiate(config.BuildingPrefab.GetComponent<Building>(), dot.transform);
                 build.Type = config.BuildingType;
+                dot.IsActive = false;
                 return build;
             }
             _centerText.NotificationUI("You have built maximum buildings", 1000);
             return null;
         }
-        public void RemoveTypeDots(TileView view, Building building)
+        public void RemoveTypeDots(TileModel model, Building building)
         {
-            if (view.DotSpawns.Exists(x => x.Types == building.Type))
+            if (model.DotSpawns.Exists(x => x.Building == building))
             {
-                var dot = view.DotSpawns.Find(x => x.Types == building.Type);
-                dot.Types = BuildingTypes.None;
+                var dot = model.DotSpawns.Find(x => x.Building == building);
+                dot.Building.Type = BuildingTypes.None;
                 dot.IsActive = true;
             }
         }
-
-        public void ADDListMinerals(TileView view)
+        public Dot CheckDot(TileModel model)
         {
-            if (view.FloodedMinerals.Count < 2)
-            {
-                foreach (var dot in view.DotSpawns)
-                {
-                    if (dot.Mineral)
-                    {
-                        view.FloodedMinerals.Add(dot.Mineral);
-                    }
-                }
-            }
-            
-        }
-        private GameObject CheckDot(TileView view)
-        {
-            foreach (var dot in view.DotSpawns)
-            {
-                if (dot.IsActive == true)
-                {
-                    return dot.gameObject;
-                }
-            }
-            return null;
+            var cleardots = model.DotSpawns.Find(x => x.IsActive);
+            return cleardots;
         }
     }
 }

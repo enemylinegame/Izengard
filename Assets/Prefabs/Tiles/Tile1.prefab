@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 2005405932157645919}
   - component: {fileID: -806893638035582307}
   - component: {fileID: -7352286412949628950}
-  - component: {fileID: -5799929021966758531}
   m_Layer: 6
   m_Name: Tile1
   m_TagString: Untagged
@@ -52,6 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _iconTile: {fileID: 21300000, guid: 0783302d25209cc42b7e866627c1074c, type: 3}
+  <TileView>k__BackingField: {fileID: -806893638035582307}
 --- !u!114 &-806893638035582307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,7 +64,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11e8fb32f42e4bba8642b8d3a0bd483a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 0
   _tileConfig: {fileID: 11400000, guid: 9565a228ea7f390448b26a5a1b3ef329, type: 2}
   _dotSpawns:
   - {fileID: 8409919048658340631}
@@ -72,6 +71,7 @@ MonoBehaviour:
   - {fileID: 3217159458997147915}
   - {fileID: 7805954452646696845}
   _floodedBuildings: []
+  _floodedMinerals: []
 --- !u!65 &-7352286412949628950
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -83,24 +83,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 1, z: 2}
+  m_Size: {x: 2.5, y: 1, z: 2.5}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &-5799929021966758531
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2005405932157645916}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &3654591994311749279
 GameObject:
   m_ObjectHideFlags: 0
@@ -146,7 +130,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  _collider: {fileID: 1299342432319403562}
+  Building: {fileID: 0}
+  Mineral: {fileID: 0}
 --- !u!135 &1299342432319403562
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -205,7 +190,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  _collider: {fileID: 1299342432319403562}
+  Building: {fileID: 0}
+  Mineral: {fileID: 0}
 --- !u!135 &6318360562633598336
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -264,7 +250,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  _collider: {fileID: 1299342432319403562}
+  Building: {fileID: 0}
+  Mineral: {fileID: 0}
 --- !u!135 &1361258319189022900
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -323,7 +310,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  _collider: {fileID: 1299342432319403562}
+  Building: {fileID: 0}
+  Mineral: {fileID: 0}
 --- !u!135 &6346603177127829867
 SphereCollider:
   m_ObjectHideFlags: 0

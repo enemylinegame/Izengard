@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Types: 0
+  Building: {fileID: 0}
   Mineral: {fileID: 0}
 --- !u!135 &2371431301135719227
 SphereCollider:
@@ -105,7 +105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Types: 0
+  Building: {fileID: 0}
   Mineral: {fileID: 0}
 --- !u!135 &1644600294385216802
 SphereCollider:
@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Types: 0
+  Building: {fileID: 0}
   Mineral: {fileID: 0}
 --- !u!135 &4293876528800719119
 SphereCollider:
@@ -225,7 +225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Types: 0
+  Building: {fileID: 0}
   Mineral: {fileID: 0}
 --- !u!135 &7772734667681550281
 SphereCollider:
@@ -292,6 +292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _iconTile: {fileID: 21300000, guid: f184391c004652b4aac6d2ff0cab0ad4, type: 3}
+  <TileView>k__BackingField: {fileID: -6424345356670496559}
 --- !u!114 &-6424345356670496559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -304,7 +305,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11e8fb32f42e4bba8642b8d3a0bd483a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 0
   _tileConfig: {fileID: 11400000, guid: 9565a228ea7f390448b26a5a1b3ef329, type: 2}
   _dotSpawns:
   - {fileID: 6802864099254358015}
@@ -312,6 +312,8 @@ MonoBehaviour:
   - {fileID: 8961194891872438405}
   - {fileID: 9165360535634144754}
   - {fileID: 5541097221107124649}
+  _floodedBuildings: []
+  _floodedMinerals: []
 --- !u!65 &-2519845506795623528
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -323,7 +325,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 1, z: 2}
+  m_Size: {x: 2.5, y: 1, z: 2.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7952821339211360544
 GameObject:
@@ -370,7 +372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Types: 0
+  Building: {fileID: 0}
   Mineral: {fileID: 0}
 --- !u!135 &5007580214849275477
 SphereCollider:

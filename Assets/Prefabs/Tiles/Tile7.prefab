@@ -52,6 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _iconTile: {fileID: 21300000, guid: f278e9c582b9a0947a90e75713e62384, type: 3}
+  <TileView>k__BackingField: {fileID: -7104797126420925764}
 --- !u!114 &-7104797126420925764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,7 +65,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11e8fb32f42e4bba8642b8d3a0bd483a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 0
   _tileConfig: {fileID: 11400000, guid: 9565a228ea7f390448b26a5a1b3ef329, type: 2}
   _dotSpawns:
   - {fileID: 7626794464628184890}
@@ -72,6 +72,8 @@ MonoBehaviour:
   - {fileID: 6081982586314160769}
   - {fileID: 7477541335486119571}
   - {fileID: 9091367657202934273}
+  _floodedBuildings: []
+  _floodedMinerals: []
 --- !u!65 &-13118480165941152
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -83,7 +85,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 1, z: 2}
+  m_Size: {x: 2.5, y: 1, z: 2.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3046522372593385161
 GameObject:
@@ -130,7 +132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Types: 0
+  Building: {fileID: 0}
   Mineral: {fileID: 0}
 --- !u!135 &4599746371974132718
 SphereCollider:
@@ -190,7 +192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Types: 0
+  Building: {fileID: 0}
   Mineral: {fileID: 0}
 --- !u!135 &1517805353713788708
 SphereCollider:
@@ -250,7 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Types: 0
+  Building: {fileID: 0}
   Mineral: {fileID: 0}
 --- !u!135 &4957675516571075599
 SphereCollider:
@@ -310,7 +312,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Types: 0
+  Building: {fileID: 0}
   Mineral: {fileID: 0}
 --- !u!135 &6519550875198933691
 SphereCollider:
@@ -370,7 +372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Types: 0
+  Building: {fileID: 0}
   Mineral: {fileID: 0}
 --- !u!135 &3773296431496466537
 SphereCollider:

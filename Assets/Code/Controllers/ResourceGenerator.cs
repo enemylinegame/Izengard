@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Code.BuildingSystem;
 using Code.TileSystem;
 using ResourceSystem;
 using UnityEngine;
@@ -14,6 +15,7 @@ public class ResourceGenerator : IDisposable
     private GameConfig _gameConfig;
     private Mineral _mineral;
     private GeneratorLevelController _generatorLevelController;
+    private BuildingController _buildingController;
     private TileController _tileController;
     private int _numOfVariant = 0;
     private bool _flag;
@@ -22,8 +24,9 @@ public class ResourceGenerator : IDisposable
     private List<MineralConfig> _resourcesTierTwo;
     private List<MineralConfig> _resourcesTierThree;
     public ResourceGenerator(GameObject[,] installedBuildings,
-        GameConfig gameConfig, GeneratorLevelController generatorLevelController)
+        GameConfig gameConfig, GeneratorLevelController generatorLevelController, BuildingController buildingController)
     {
+        _buildingController = buildingController;
         _installedBuildings = installedBuildings;
         _gameConfig = gameConfig;
         _generatorLevelController = generatorLevelController;
@@ -31,7 +34,7 @@ public class ResourceGenerator : IDisposable
         _resourcesTierTwo = gameConfig.MineralConfigs.Minerals.FindAll(x => x.Tier == TierNumber.Two);
         _resourcesTierThree = gameConfig.MineralConfigs.Minerals.FindAll(x => x.Tier == TierNumber.Three);
 
-        _generatorLevelController.SpawnResources += SpawnResources;
+        _generatorLevelController.SpawnResources += PlaceResources;
     }
     
     public ResourceGenerator(GameObject[,] installedBuildings,
@@ -40,83 +43,83 @@ public class ResourceGenerator : IDisposable
         _installedBuildings = installedBuildings;
         _gameConfig = gameConfig;
         _generatorLevelController = generatorLevelController;
-        _generatorLevelController.SpawnResources += SpawnResources;
+        _generatorLevelController.SpawnResources += PlaceResources;
         _numOfVariant = i;
     }
     
     
     
  
-    private void SpawnResources(VoxelTile tile)
-    {
-        GetPossiblePlace(tile);
-    }
+    // private void SpawnResources(VoxelTile tile)
+    // {
+    //     // GetPossiblePlace(tile);
+    // }
 
-    private void GetPossiblePlace(VoxelTile tile)
-    {
-        int numTile = tile.NumZone;
-        int count = 0;
-        int x = (int) tile.transform.position.x - 1;
-        int y = (int) tile.transform.position.z - 1;
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                _possiblePlaceResource.Add(new Vector2Int(x + i, y + j));
-            }
-        }
+    // private void GetPossiblePlace(VoxelTile tile)
+    // {
+    //     int numTile = tile.NumZone;
+    //     int count = 0;
+    //     int x = (int) tile.transform.position.x - 1;
+    //     int y = (int) tile.transform.position.z - 1;
+    //     for (int i = 0; i < 3; i++)
+    //     {
+    //         for (int j = 0; j < 3; j++)
+    //         {
+    //             _possiblePlaceResource.Add(new Vector2Int(x + i, y + j));
+    //         }
+    //     }
+    //
+    //     _possiblePlaceResource.Remove(new Vector2Int((int) tile.transform.position.x,
+    //         (int) tile.transform.position.z));
+    //
+    //     foreach (var byteAccess in tile.TablePassAccess)
+    //     {
+    //         if (byteAccess == 1)
+    //         {
+    //             switch (count)
+    //             {
+    //                 case 0:
+    //                     _possiblePlaceResource.Remove(new Vector2Int((int) tile.transform.position.x,
+    //                         (int) tile.transform.position.z - 1));
+    //                     break;
+    //                 case 1:
+    //                     _possiblePlaceResource.Remove(new Vector2Int((int) tile.transform.position.x - 1,
+    //                         (int) tile.transform.position.z));
+    //                     break;
+    //                 case 2:
+    //                     _possiblePlaceResource.Remove(new Vector2Int((int) tile.transform.position.x,
+    //                         (int) tile.transform.position.z + 1));
+    //                     break;
+    //                 case 3:
+    //                     _possiblePlaceResource.Remove(new Vector2Int((int) tile.transform.position.x + 1,
+    //                         (int) tile.transform.position.z));
+    //                     break;
+    //             }
+    //         }
+    //         count++;
+    //     }
+    //
+    //     foreach (var building in _installedBuildings)
+    //     {
+    //         if (building != null)
+    //         {
+    //             _possiblePlaceResource.Remove(new Vector2Int((int) building.transform.position.x,
+    //                 (int) building.transform.position.z));
+    //         }
+    //     }
+    //
+    //     if (_numOfVariant == 0)
+    //     {
+    //         PlaceResources(numTile);
+    //     }
+    //     else
+    //     {
+    //         PlaceResourcesSecondVariant(numTile);
+    //     }
+    //     
+    // }
 
-        _possiblePlaceResource.Remove(new Vector2Int((int) tile.transform.position.x,
-            (int) tile.transform.position.z));
-
-        foreach (var byteAccess in tile.TablePassAccess)
-        {
-            if (byteAccess == 1)
-            {
-                switch (count)
-                {
-                    case 0:
-                        _possiblePlaceResource.Remove(new Vector2Int((int) tile.transform.position.x,
-                            (int) tile.transform.position.z - 1));
-                        break;
-                    case 1:
-                        _possiblePlaceResource.Remove(new Vector2Int((int) tile.transform.position.x - 1,
-                            (int) tile.transform.position.z));
-                        break;
-                    case 2:
-                        _possiblePlaceResource.Remove(new Vector2Int((int) tile.transform.position.x,
-                            (int) tile.transform.position.z + 1));
-                        break;
-                    case 3:
-                        _possiblePlaceResource.Remove(new Vector2Int((int) tile.transform.position.x + 1,
-                            (int) tile.transform.position.z));
-                        break;
-                }
-            }
-            count++;
-        }
-
-        foreach (var building in _installedBuildings)
-        {
-            if (building != null)
-            {
-                _possiblePlaceResource.Remove(new Vector2Int((int) building.transform.position.x,
-                    (int) building.transform.position.z));
-            }
-        }
-
-        if (_numOfVariant == 0)
-        {
-            PlaceResources(numTile);
-        }
-        else
-        {
-            PlaceResourcesSecondVariant(numTile);
-        }
-        
-    }
-
-    private void PlaceResources(int numTile)
+    private void PlaceResources(VoxelTile tile)
     {
         int numberOfMineralsToSpawn;
         int random;
@@ -147,8 +150,8 @@ public class ResourceGenerator : IDisposable
         }
         
         float weightT1 = _gameConfig.TearOneWeightVariantNik;
-        float weightT2 = _gameConfig.TearTwoWeightVariantNik * numTile;
-        float weightT3 = _gameConfig.TearThirdWeightVariantNik * Mathf.Pow(numTile, 1.5f);
+        float weightT2 = _gameConfig.TearTwoWeightVariantNik * tile.NumZone;
+        float weightT3 = _gameConfig.TearThirdWeightVariantNik * Mathf.Pow(tile.NumZone, 1.5f);
         float sumAllWeight = weightT1 + weightT2 + weightT3;
         int randomChance = 0;
         
@@ -174,24 +177,22 @@ public class ResourceGenerator : IDisposable
 
         #endregion
 
-        if (_possiblePlaceResource.Count != 0)
-        {
-            switch (numberOfMineralsToSpawn)
+        switch (numberOfMineralsToSpawn)
             {
                 case 1:
                     randomChance = Random.Range(0, 101);
                     if ((int)Math.Round(weightT1 * 100) >= randomChance)
                     {
-                        CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)]);
+                        CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], tile.TileView.TileModel);
                     }
                     else if ((int)Math.Round(weightT2 * 100) >= 100 - randomChance && 
                              (int)Math.Round(weightT3 * 100) < 100 - randomChance)
                     {
-                        CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)]);
+                        CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)], tile.TileView.TileModel);
                     }
                     else if ((int)Math.Round(weightT3 * 100) >= 100 - randomChance)
                     {
-                        CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)]);
+                        CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)], tile.TileView.TileModel);
                     }
                     break;
                 case 2:
@@ -202,32 +203,32 @@ public class ResourceGenerator : IDisposable
                         {
                             if ((int)Math.Round(weightT1 * 2f / (weightT1 * 2f + weightT2 * 0.5f + weightT3 * 0.5f) * 100) >= randomChance)
                             {
-                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)]);
+                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], tile.TileView.TileModel);
                             }
                             else if ((int)Math.Round(weightT2/2f/(weightT1*2f+weightT2*0.5f+weightT3*0.5f) * 100) >= 100 - randomChance &&
                                       (int)Math.Round((weightT3 / (weightT1 * 2f + weightT2 * 0.5f + weightT3 * 0.5f) / 2f) * 100) < 100 - randomChance)
                             {
-                                CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)]);
+                                CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)], tile.TileView.TileModel);
                             }
                             else if ((int)Math.Round((weightT3 / (weightT1 * 2f + weightT2 * 0.5f + weightT3 * 0.5f) / 2f) * 100) >= 100 - randomChance)
                             {
-                                CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)]);
+                                CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)], tile.TileView.TileModel);
                             }
                         }
                         else if (i == 2)
                         {
                             if ((int)Math.Round(weightT1 / sumAllWeight * 100) >= randomChance)
                             {
-                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)]);
+                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], tile.TileView.TileModel);
                             }
                             else if ((int)Math.Round(weightT2 / sumAllWeight * 100) >= 100 - randomChance && 
                                      (int)Math.Round(weightT3 / sumAllWeight * 100) < 100 - randomChance)
                             {
-                                CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)]);
+                                CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)], tile.TileView.TileModel);
                             }
                             else if ((int)Math.Round(weightT3 / sumAllWeight * 100) >= 100 - randomChance)
                             {
-                                CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)]);
+                                CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)], tile.TileView.TileModel);
                             }
                         }
                     }
@@ -240,39 +241,39 @@ public class ResourceGenerator : IDisposable
                         {
                             if (50f >= randomChance)
                             {
-                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)]);
+                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], tile.TileView.TileModel);
                             }
                         }
                         else if (i == 2)
                         {
                             if ((int)Math.Round(weightT1 / sumAllWeight / 2f * 100) >= randomChance)
                             {
-                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)]);
+                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], tile.TileView.TileModel);
                             }
                             else if ((int)Math.Round(weightT2 / sumAllWeight / 2f * 100) >= 100 - randomChance && 
                                      (int)Math.Round(weightT3/sumAllWeight * 100) < 100 - randomChance)
                             {
-                                CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)]);
+                                CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)], tile.TileView.TileModel);
                             }
                             else if ((int)Math.Round(weightT3/sumAllWeight * 100) >= 100 - randomChance)
                             {
-                                CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)]);
+                                CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)], tile.TileView.TileModel);
                             }
                         }
                         else if (i == 3)
                         {
                             if ((int)Math.Round(weightT1 / sumAllWeight / 2f * 100) >= randomChance)
                             {
-                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)]);
+                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], tile.TileView.TileModel);
                             }
                             else if ((int)Math.Round(weightT2 / sumAllWeight / 2f * 100) >= 100 - randomChance &&
                                      (int)Math.Round(weightT3/sumAllWeight * 100) < 100 - randomChance)
                             {
-                                CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)]);
+                                CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)], tile.TileView.TileModel);
                             }
                             else if ((int)Math.Round(weightT3/sumAllWeight * 100) >= randomChance)
                             {
-                                CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)]);
+                                CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)], tile.TileView.TileModel);
                             }
                         }
                     }
@@ -280,64 +281,60 @@ public class ResourceGenerator : IDisposable
                     
                     break;
             }
-            _possiblePlaceResource.Clear();
-        }
     }
 
-    private void PlaceResourcesSecondVariant(int numTile)
+    // private void PlaceResourcesSecondVariant(int numTile)
+    // {
+    //     int n = _possiblePlaceResource.Count;
+    //     for (int i = 0; i < n; i++)
+    //     {
+    //         int random = Random.Range(0, 101);
+    //         if (random <= _gameConfig.TearOneWeightSecondVariant*100)
+    //         {
+    //             CreateResources(_resourcesTierOne[Random.Range(0, _resourcesTierOne.Count)]);
+    //         }
+    //         else if (random > _gameConfig.TearTwoWeightSecondVariant*100 && random <= _gameConfig.TearOneWeightSecondVariant*100 + _gameConfig.TearTwoWeightSecondVariant*100)
+    //         {
+    //             CreateResources(_resourcesTierTwo[Random.Range(0, _resourcesTierTwo.Count)]);
+    //         }
+    //         else if (random > _gameConfig.TearOneWeightSecondVariant*100 + _gameConfig.TearTwoWeightSecondVariant*100 
+    //                  && random <= _gameConfig.TearOneWeightSecondVariant*100 + _gameConfig.TearThirdWeightSecondVariant*100 + _gameConfig.TearTwoWeightSecondVariant*100)
+    //         {
+    //             CreateResources(_resourcesTierThree[0]);
+    //         }
+    //         else
+    //         {
+    //             Debug.Log("Спавн ничего");
+    //         }
+    //     }
+    //     _possiblePlaceResource.Clear();
+    // }
+
+    private void CreateResources(MineralConfig resourceConfig, TileModel model)
     {
-        int n = _possiblePlaceResource.Count;
-        for (int i = 0; i < n; i++)
+        if (_buildingController.CheckDot(model) != null)
         {
-            int random = Random.Range(0, 101);
-            if (random <= _gameConfig.TearOneWeightSecondVariant*100)
-            {
-                CreateResources(_resourcesTierOne[Random.Range(0, _resourcesTierOne.Count)]);
-            }
-            else if (random > _gameConfig.TearTwoWeightSecondVariant*100 && random <= _gameConfig.TearOneWeightSecondVariant*100 + _gameConfig.TearTwoWeightSecondVariant*100)
-            {
-                CreateResources(_resourcesTierTwo[Random.Range(0, _resourcesTierTwo.Count)]);
-            }
-            else if (random > _gameConfig.TearOneWeightSecondVariant*100 + _gameConfig.TearTwoWeightSecondVariant*100 
-                     && random <= _gameConfig.TearOneWeightSecondVariant*100 + _gameConfig.TearThirdWeightSecondVariant*100 + _gameConfig.TearTwoWeightSecondVariant*100)
-            {
-                CreateResources(_resourcesTierThree[0]);
-            }
-            else
-            {
-                Debug.Log("Спавн ничего");
-            }
-        }
-        _possiblePlaceResource.Clear();
-    }
-
-    private void CreateResources(MineralConfig resourceConfig)
-    {
-        var pos = _possiblePlaceResource[Random.Range(0, _possiblePlaceResource.Count)];
-        if (pos != null)
-        {
-            CreateMineralGameObject(resourceConfig, pos);
-            
-            _installedBuildings[pos.x, pos.y] = _mineral.gameObject;
-            _possiblePlaceResource.Remove(pos);
+            var building = CreateMineralGameObject(resourceConfig, _buildingController.CheckDot(model).transform.position);
+            _buildingController.CheckDot(model).IsActive = false;
+            model.FloodedMinerals.Add(building);
         }
     }
 
-    private void CreateMineralGameObject(MineralConfig mineralConfig, Vector2Int posistion)
+    private Mineral CreateMineralGameObject(MineralConfig mineralConfig, Vector3 posistion)
     {
         GameObject _gameObject = Object.Instantiate(mineralConfig.Prefab);
-        _gameObject.transform.position = new Vector3(posistion.x, 0.1f, posistion.y);
+        _gameObject.transform.position = new Vector3(posistion.x, 0.1f, posistion.z);
         _gameObject.transform.rotation = Quaternion.identity;
         Mineral _tempMineral = _gameObject.AddComponent<Mineral>();
         
         _tempMineral.LoadMineralModel(mineralConfig);
         //_tempMineral.SetModelOfMine(mineralConfig);
         BoxCollider _boxCollider = _gameObject.AddComponent<BoxCollider>();
-        _mineral = _tempMineral;
+        return _tempMineral;
     }
 
     public void Dispose()
     {
-        _generatorLevelController.SpawnResources -= SpawnResources;
+        _generatorLevelController.SpawnResources -= PlaceResources;
     }
 }

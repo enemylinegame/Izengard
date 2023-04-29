@@ -26,10 +26,11 @@ public class GameInit
         var btnConroller = new BtnUIController(rightUI, gameConfig);
         var levelGenerator = new GeneratorLevelController(tiles, gameConfig, rightUI, btnConroller, btnParents, bottonUI);
         var buildController = new BuildGenerator(gameConfig);
+        var buildingController = new BuildingController(centerText);
         
         if (!gameConfig.ChangeVariant)
         {
-            new ResourceGenerator(buildController.Buildings, gameConfig, levelGenerator);
+            new ResourceGenerator(buildController.Buildings, gameConfig, levelGenerator, buildingController);
         }
         else
         {
@@ -42,7 +43,6 @@ public class GameInit
         var towershotcontroller = new TowerShotController(towerShotConfig, levelGenerator, gameConfig.Bullet);
         var eqScreenController = new EquipScreenController(equipScreenView, camera);
         var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, hireSystemView, levelGenerator);
-        var buildingController = new BuildingController(centerText);
         var waveController = new WaveController(levelGenerator, rightUI, btnParents, gameConfig, centerText);
         var endGameController = new EndGameController(endGameScreen, levelGenerator);
         var tilecontroller = new TileController(tileList, tileUIView, centerText, uiController, buildController, globalResStock, buildingController);

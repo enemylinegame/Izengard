@@ -92,7 +92,8 @@ namespace Code.UI
             view.Types = config.BuildingType;
             view.UnitsBusy.text = view.Units +"/5";
             DestroyBuildingInfo.Add(button, view);
-            view.DestroyBuildingInfo.onClick.AddListener((() => controller.DestroyBuilding(controller.View.FloodedBuildings, view, controller.View)));
+            view.DestroyBuildingInfo.onClick.AddListener((() => controller.DestroyBuilding(controller.TileModel.FloodedBuildings
+                , view, controller.TileModel)));
             view.PlusUnit.onClick.AddListener((() => view.Hiring(true, controller, building)));
             view.MinusUnit.onClick.AddListener((() => view.Hiring(false, controller, building)));
             IsWorkUI(UIType.Buy, false);
@@ -102,7 +103,7 @@ namespace Code.UI
         /// Загрузка сохраненного блока информации определеного здания и загрузка иго в UI
         /// </summary>
         /// <returns></returns>
-        public BuildingUIInfo LoadBuildingInfo(Building building, int Units, KeyValuePair<Building, BuildingConfig> buildingConfigs, TileController controller)
+        public BuildingUIInfo LoadBuildingInfo(Building building, int Units, TileController controller)
         {
             var button = GameObject.Instantiate(BuildingsUIView.BuildingInfo, BuildingsUIView.ByBuildButtonsHolder);
             var view = button.GetComponent<BuildingUIInfo>();
@@ -112,7 +113,8 @@ namespace Code.UI
             view.UnitsBusy.text = Units +"/5";
             view.Units = Units;
             DestroyBuildingInfo.Add(button, view);
-            view.DestroyBuildingInfo.onClick.AddListener((() => controller.DestroyBuilding(controller.View.FloodedBuildings, view, controller.View)));
+            view.DestroyBuildingInfo.onClick.AddListener((() => controller.DestroyBuilding(controller.TileModel.FloodedBuildings
+                , view, controller.TileModel)));
             view.PlusUnit.onClick.AddListener((() => view.Hiring(true, controller, building)));
             view.MinusUnit.onClick.AddListener((() => view.Hiring(false, controller, building)));
             return view;

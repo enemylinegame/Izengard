@@ -17,14 +17,15 @@ namespace Code.TileSystem
     public class TileController : IDisposable, IOnController, IOnUpdate
     {
         private TileList _list;
-        private TileView _view;
         private TileUIView _uiView;
+        private TileModel _tileModel;
         private BaseCenterText _centerText;
         private BuildGenerator _generator;
         private GlobalStock _stock;
         private List<BuildingConfig> _buildingConfigs;
         private BuildingController _buildingController;
         private UIController _uiController;
+        private HiringController _hiringController;
         private int _currentlvl;
         private int _eightQuantity;
         private int _units;
@@ -33,11 +34,14 @@ namespace Code.TileSystem
         public TileList List => _list;
         public BaseCenterText CenterText => _centerText;
         public int CurrentLVL => _currentlvl;
-        public TileView View => _view;
+        public HiringController HiringController => _hiringController;
+        public TileModel TileModel => _tileModel;
 
         public TileController(TileList tileList, TileUIView uiView, BaseCenterText centerText, UIController uiController, 
             BuildGenerator buildGenerator, GlobalStock stock, BuildingController buildingController)
         {
+            _hiringController = new HiringController(this);
+            
             _centerText = centerText;
             _list = tileList;
             _uiView = uiView;
@@ -55,12 +59,11 @@ namespace Code.TileSystem
         public void LoadInfo(TileView view)
         {
             _uiView.Upgrade.onClick.RemoveAllListeners();
-            _view = view;
-            ADDBuildUI(view.CurrBuildingConfigs, view);
+            _tileModel = view.TileModel;
+            ADDBuildUI(view.TileModel);
             view.LoadButtonsUIBuy(this, _uiController);
             _uiView.Upgrade.onClick.AddListener(() => view.LVLUp(this));
-            UpdateInfo(view.TileConfig);
-            _buildingController.ADDListMinerals(view);
+            UpdateInfo(_tileModel.TileConfig);
         }
         /// <summary>
         /// Загрузка всей информации на тайл
@@ -68,32 +71,27 @@ namespace Code.TileSystem
         public void UpdateInfo(TileConfig config)
         {
             _uiView.LvlText.text = config.TileLvl.GetHashCode().ToString() + " LVL";
-            _eightQuantity = _view.EightQuantity;
+            _eightQuantity = _tileModel.EightQuantity;
             _units = config.MaxUnits;
             _currentlvl = config.TileLvl.GetHashCode();
             _uiView.UnitMax.text = _eightQuantity + "/"+ config.MaxUnits + " Units";
             _uiView.Icon.sprite = config.IconTile;
         }
-        public void ADDBuildUI(List<BuildingConfig> configs, TileView view)
+        public void ADDBuildUI(TileModel model)
         {
             _uiController.Deinit();
-            _buildingConfigs = configs;
-            UpdateBuildings(view);
-        }
-        
-        public void UpdateBuildings(TileView view)
-        {
+            _buildingConfigs = model.CurrBuildingConfigs;
             _uiController.Init(_buildingConfigs);
             
             foreach (var kvp in _uiController.ButtonsInMenu)
             {
-                kvp.Value.onClick.AddListener(() => BuildBuilding(kvp.Key, view));
+                kvp.Value.onClick.AddListener(() => BuildBuilding(kvp.Key, model));
             }
         }
         /// <summary>
         /// Проверяет на наличие ресурса если он есть ставим здание.
         /// </summary>
-        private void BuildBuilding(BuildingConfig buildingConfig, TileView view)
+        private void BuildBuilding(BuildingConfig buildingConfig, TileModel model)
         {
             if (!IsResourcesEnough(buildingConfig))
             {
@@ -104,32 +102,32 @@ namespace Code.TileSystem
             {
                 _stock.GetResourceFromStock(resourcePrice.ResourceType, resourcePrice.Cost);
             }
-            var building = _buildingController.StartBuilding(view, buildingConfig);
+            var building = _buildingController.StartBuilding(model, buildingConfig);
             if (building)
             {
                 var info = _uiController.CreateBuildingInfo(buildingConfig, this, building);
                 building.Icon = info.Icon;
                 building.Type = info.Types;
                 _uiController.ButtonsBuy.Add(buildingConfig);
-                view.FloodedBuildings.Add(building, buildingConfig);
+                _tileModel.FloodedBuildings.Add(building);
             }
         }
         
-        public void DestroyBuilding(Dictionary<Building, BuildingConfig> buildingConfigs, BuildingUIInfo Button, TileView view)
+        public void DestroyBuilding(List<Building> buildingConfigs, BuildingUIInfo Button, TileModel model)
         {
             foreach (var kvp in buildingConfigs)
             {
-                if (kvp.Value.BuildingType == Button.Types)
+                if (kvp.Type == Button.Types)
                 {
                     Button.DestroyBuildingInfo.onClick.RemoveAllListeners();
                     Button.PlusUnit.onClick.RemoveAllListeners();
                     Button.MinusUnit.onClick.RemoveAllListeners();
-                    buildingConfigs.Remove(kvp.Key);
+                    buildingConfigs.Remove(kvp);
                     _uiController.DestroyBuildingInfo.Remove(Button.gameObject);
-                    view.FloodedBuildings.Remove(kvp.Key);
-                    view.RemoveAllWorkerAssigment(Button.Types, kvp.Key, this);
-                    _buildingController.RemoveTypeDots(view, kvp.Key);
-                    GameObject.Destroy(kvp.Key.gameObject);
+                    _tileModel.FloodedBuildings.Remove(kvp);
+                    _hiringController.RemoveAllWorkerAssigment(Button.Types, kvp, this);
+                    _buildingController.RemoveTypeDots(model, kvp);
+                    GameObject.Destroy(kvp.gameObject);
                     GameObject.Destroy(Button.gameObject);
                     break;
                 }
@@ -190,6 +188,7 @@ namespace Code.TileSystem
             _uiController.Deinit();
             _uiView.Upgrade.onClick.RemoveAllListeners();
         }
+        
         public void LevelCheck()
         {
             if (CurrentLVL > _uiController.DestroyBuildingInfo.Count)
@@ -201,6 +200,8 @@ namespace Code.TileSystem
                 _uiController.BuildingsUIView.PrefabButtonClear.gameObject.SetActive(false);
             }
         }
+        
+        
         public void OnUpdate(float deltaTime)
         {
             LevelCheck();
