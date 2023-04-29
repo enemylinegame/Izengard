@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using ResourceSystem;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Code.TileSystem
 {
@@ -7,29 +8,41 @@ namespace Code.TileSystem
     {
         private RectTransform _layoutTransform;
         private ResourcesLayoutUIView _resourcesLayoutUIView;
-        TileResourceUIController _tileResourceController;
+        private TileResourceUIController _tileResourceController;
+        private List<Mineral> _minerals;
 
-        public TileResouceUIFactory(ResourcesLayoutUIView layoutView, TileResourceUIController tileResourceController)
+        public TileResouceUIFactory(ResourcesLayoutUIView layoutView, TileResourceUIController tileResourceController, TileView tileView)
         {
             _layoutTransform = layoutView.LayoutRectTransform;
             _resourcesLayoutUIView = layoutView;
             _tileResourceController = tileResourceController;
-
-            _resourcesLayoutUIView.TestAdd.onClick.AddListener(() => TestAdd());
+            _minerals = tileView.FloodedMinerals;
+            Init();
+        }
+        private void Init()
+        {
+            foreach (Mineral mineral in _minerals)
+            {
+                AddNewLayoutElement(mineral.MineralConfig);
+            }
         }
 
-        public void CreateResourceUIOnLayout(GameObject resourceUIElement)
+        public void CreateResourceUIOnLayout(GameObject resourceUIElement, MineralConfig mineralConfig)
         {
             ResourceView resourceUIObjectView;
             GameObject resourceUIObject = GameObject.Instantiate(resourceUIElement, _layoutTransform);
-            resourceUIObject.TryGetComponent<ResourceView>(out resourceUIObjectView);
+            resourceUIObjectView = resourceUIObject.GetComponent<ResourceView>();
+            resourceUIObjectView.InitViewData(mineralConfig.ResourceType.ToString(), mineralConfig.CurrentMineValue, mineralConfig);
+
             _resourcesLayoutUIView.Resources.Add(resourceUIObjectView);
             _tileResourceController.AddNewLayoutElement(resourceUIObjectView);
         }
-        private void TestAdd()
+
+        private void AddNewLayoutElement(MineralConfig mineralConfig)
         {
             GameObject resourceUIElement = Resources.Load<GameObject>("UI/ResourceUI/Res");
-            CreateResourceUIOnLayout(resourceUIElement);
+
+            CreateResourceUIOnLayout(resourceUIElement, mineralConfig);
         }
     }
 }

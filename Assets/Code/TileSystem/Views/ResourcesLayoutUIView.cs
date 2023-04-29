@@ -9,8 +9,6 @@ namespace Code.TileSystem
         [SerializeField] private RectTransform _layoutRectTransform;
         [SerializeField] private List<ResourceView> _resources;
 
-        [SerializeField] private Button _testAdd;
-
         public RectTransform LayoutRectTransform
         {
             get { return _layoutRectTransform; }
@@ -19,10 +17,6 @@ namespace Code.TileSystem
         {
             get { return _resources; }
         }
-        
-        public Button TestAdd
-        {
-            get { return _testAdd; }
-        }
+
     }
 }

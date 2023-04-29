@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using ResourceSystem;
 
 namespace Code.TileSystem
 {
@@ -13,6 +14,7 @@ namespace Code.TileSystem
 
         [SerializeField] private Button _resourceAddButton;
         [SerializeField] private Button _resourceRemoveButton;
+        private MineralConfig _mineralConfig;
 
         public string ResourceCurrentValueString
         {
@@ -36,11 +38,19 @@ namespace Code.TileSystem
         {
             get { return _resourceRemoveButton; }
         }
-
-        public void InitViewData()
+        public MineralConfig MineralConfig
         {
-            _resourceCurrentValue.text = "0";
+            get { return _mineralConfig; }
+        }
+
+
+        public void InitViewData(string resourceName, int currentValue, MineralConfig mineralConfig)
+        {
+            _resourceCurrentValue.text = $"{currentValue}";
+            _resourceText.text = resourceName;
             _resourceMaxValue.text = "5";
+
+            _mineralConfig = mineralConfig;
         }
     }
 }

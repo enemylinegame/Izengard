@@ -15,6 +15,7 @@ namespace Code.TileSystem
     public class TileView : MonoBehaviour
     {
         [SerializeField] private TileConfig _tileConfig;
+<<<<<<< HEAD
         [SerializeField] private List<Dot> _dotSpawns;
         [SerializeField] private List<Building> _floodedBuildings;
         // [SerializeField] private List<Mineral> _floodedMinerals;
@@ -54,6 +55,18 @@ namespace Code.TileSystem
         //     // FillWorkerList();
         // }
         
+=======
+        [SerializeField] private List<Dot> _dotSpawns;
+        [SerializeField] private List<Mineral> _floodedMinerals;
+
+        private List<BuildingConfig> _curBuildingConfigs;
+        private List<WorkerView> _workerViews;
+        private List<DefenderUnit> _defenderUnits;
+        public List<WorkersAssigments> _workersAssigmentses;
+        private TileConfig _saveTileConfig;
+        private Dictionary<Building, BuildingConfig> _floodedBuildings;
+        private int _eightQuantity;
+>>>>>>> f92fc52 (Mineral config to Resources UI integration)
 
         private void Awake()
         {

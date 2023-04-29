@@ -13,7 +13,6 @@ namespace Code.TileSystem
         public TileResourceUIController(ResourcesLayoutUIView resourcesLayoutUIView)
         {
             _resourcesLayoutUIView = resourcesLayoutUIView;
-
             Init();
         }
 
@@ -40,6 +39,7 @@ namespace Code.TileSystem
             {
                 resourceValue++;
             }
+            resourceView.MineralConfig.CurrentMineValue = resourceValue;
             resourceView.ResourceCurrentValueString = $"{resourceValue}";
         }
         private void RemoveResource(ResourceView resourceView)
@@ -49,6 +49,7 @@ namespace Code.TileSystem
             {
                 resourceValue--;
             }
+            resourceView.MineralConfig.CurrentMineValue = resourceValue;
             resourceView.ResourceCurrentValueString = $"{resourceValue}";
         }
 
