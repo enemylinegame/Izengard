@@ -329,7 +329,7 @@ public class ResourceGenerator : IDisposable
         
         _tempMineral.LoadMineralModel(mineralConfig);
         //_tempMineral.SetModelOfMine(mineralConfig);
-        BoxCollider _boxCollider = _gameObject.AddComponent<BoxCollider>();
+        // BoxCollider _boxCollider = _gameObject.AddComponent<BoxCollider>();
         return _tempMineral;
     }
 

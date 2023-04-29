@@ -79,7 +79,7 @@ namespace Code.TowerShot
 		private void OnTriggerEnter(Collider other) //Это именно просто метод для экшона
 		{
 		Enemys.Add(other.GetComponent<Damageable>());
-		//Debug.Log("врагов осталось: " + Enemys.Count);
+		Debug.Log("врагов осталось: " + Enemys.Count);
 		}
 		private void NearestObject(Transform target) // поиск ближайшего объекта
 		{
@@ -159,7 +159,7 @@ namespace Code.TowerShot
 	private void RemoveFromList(Damageable target)
 	{
 		Enemys.Remove(target);
-		//Debug.Log("врагов осталось: " + Enemys.Count);
+		Debug.Log("врагов осталось: " + Enemys.Count);
 	}
 	//private void Choice()
 	//{
