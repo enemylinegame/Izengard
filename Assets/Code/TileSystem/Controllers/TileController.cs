@@ -18,6 +18,7 @@ namespace Code.TileSystem
     {
         private TileList _list;
         private TileUIView _uiView;
+        private TileView _tileView;
         private TileModel _tileModel;
         private BaseCenterText _centerText;
         private BuildGenerator _generator;
@@ -35,7 +36,8 @@ namespace Code.TileSystem
         public BaseCenterText CenterText => _centerText;
         public int CurrentLVL => _currentlvl;
         public HiringController HiringController => _hiringController;
-        public TileModel TileModel => _tileModel;
+        public TileModel TileModel => _tileView.TileModel;
+        public TileView View => _tileView;
 
         public TileController(TileList tileList, TileUIView uiView, BaseCenterText centerText, UIController uiController, 
             BuildGenerator buildGenerator, GlobalStock stock, BuildingController buildingController)
@@ -59,6 +61,7 @@ namespace Code.TileSystem
         public void LoadInfo(TileView view)
         {
             _uiView.Upgrade.onClick.RemoveAllListeners();
+            _tileView = view;
             _tileModel = view.TileModel;
             ADDBuildUI(view.TileModel);
             view.LoadButtonsUIBuy(this, _uiController);
