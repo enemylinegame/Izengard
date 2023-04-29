@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -365,6 +365,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76238587ae2cd8d4ab91f2b77c5c7539, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &485923583 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2045704353692862779, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
+  m_PrefabInstance: {fileID: 5064343490899393618}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &558454705 stripped
@@ -1829,6 +1840,10 @@ PrefabInstance:
       propertyPath: m_PixelsPerUnitMultiplier
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5064343491368005663, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
+      propertyPath: <BuyDefender>k__BackingField
+      value: 
+      objectReference: {fileID: 485923583}
     - target: {fileID: 5064343491368005663, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
       propertyPath: <BuildingInfo>k__BackingField
       value: 
@@ -3390,7 +3405,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5537125970293088711, guid: 9b8418457783bd944b73b4510f5449b6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000025135969
+      value: 0.00029712013
       objectReference: {fileID: 0}
     - target: {fileID: 5537125970308451800, guid: 9b8418457783bd944b73b4510f5449b6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

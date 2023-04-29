@@ -47,7 +47,7 @@ public class GameInit
         var endGameController = new EndGameController(endGameScreen, levelGenerator);
         var tilecontroller = new TileController(tileList, tileUIView, centerText, uiController, buildController, globalResStock, buildingController);
         var inputController = new InputController(tilecontroller, uiController);
-
+        var defenderController = new DefendersController(tilecontroller,uiController, gameConfig.Defender);
 
 
         controller.Add(btnConroller);
@@ -61,6 +61,7 @@ public class GameInit
         controller.Add(towershotcontroller);
         controller.Add(hireSystemController);
         controller.Add(tilecontroller);
+        controller.Add(defenderController);
 
         var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
         controller.Add(testDummyTargetController);
