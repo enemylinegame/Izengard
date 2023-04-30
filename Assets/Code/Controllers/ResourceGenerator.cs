@@ -38,7 +38,7 @@ public class ResourceGenerator : IDisposable
     }
     
     public ResourceGenerator(GameObject[,] installedBuildings,
-        GameConfig gameConfig, GeneratorLevelController generatorLevelController, int i)
+        GameConfig gameConfig, GeneratorLevelController generatorLevelController, BuildingController buildingController, int i)
     {
         _installedBuildings = installedBuildings;
         _gameConfig = gameConfig;

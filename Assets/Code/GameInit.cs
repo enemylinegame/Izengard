@@ -34,7 +34,7 @@ public class GameInit
         }
         else
         {
-            new ResourceGenerator(buildController.Buildings, gameConfig, levelGenerator, 2);
+            new ResourceGenerator(buildController.Buildings, gameConfig, levelGenerator, buildingController, 2);
         }
         var unitController = new UnitController();
         var timeRemaining = new TimeRemainingController();
