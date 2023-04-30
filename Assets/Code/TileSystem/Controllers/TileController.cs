@@ -26,7 +26,7 @@ namespace Code.TileSystem
         private List<BuildingConfig> _buildingConfigs;
         private BuildingController _buildingController;
         private UIController _uiController;
-        private HiringController _hiringController;
+        private WorkerAssigmentsController _workerAssigmentsController;
         private int _currentlvl;
         private int _eightQuantity;
         private int _units;
@@ -35,15 +35,14 @@ namespace Code.TileSystem
         public TileList List => _list;
         public BaseCenterText CenterText => _centerText;
         public int CurrentLVL => _currentlvl;
-        public HiringController HiringController => _hiringController;
+        public WorkerAssigmentsController WorkerAssigmentsController => _workerAssigmentsController;
         public TileModel TileModel => _tileView.TileModel;
         public TileView View => _tileView;
 
         public TileController(TileList tileList, TileUIView uiView, BaseCenterText centerText, UIController uiController, 
             BuildGenerator buildGenerator, GlobalStock stock, BuildingController buildingController)
         {
-            _hiringController = new HiringController(this);
-            
+            _workerAssigmentsController = new WorkerAssigmentsController(this);
             _centerText = centerText;
             _list = tileList;
             _uiView = uiView;
@@ -110,7 +109,8 @@ namespace Code.TileSystem
             {
                 var info = _uiController.CreateBuildingInfo(buildingConfig, this, building);
                 building.Icon = info.Icon;
-                building.Type = info.Types;
+                building.BuildingTypes = info.Types;
+                building.InitBuilding();
                 _uiController.ButtonsBuy.Add(buildingConfig);
                 _tileModel.FloodedBuildings.Add(building);
             }
@@ -120,7 +120,7 @@ namespace Code.TileSystem
         {
             foreach (var kvp in buildingConfigs)
             {
-                if (kvp.Type == Button.Types)
+                if (kvp.BuildingTypes == Button.Types)
                 {
                     Button.DestroyBuildingInfo.onClick.RemoveAllListeners();
                     Button.PlusUnit.onClick.RemoveAllListeners();
@@ -128,7 +128,7 @@ namespace Code.TileSystem
                     buildingConfigs.Remove(kvp);
                     _uiController.DestroyBuildingInfo.Remove(Button.gameObject);
                     _tileModel.FloodedBuildings.Remove(kvp);
-                    _hiringController.RemoveAllWorkerAssigment(Button.Types, kvp, this);
+                    _workerAssigmentsController.RemoveAllWorkerAssigment(Button.Types, kvp, this);
                     _buildingController.RemoveTypeDots(model, kvp);
                     GameObject.Destroy(kvp.gameObject);
                     GameObject.Destroy(Button.gameObject);

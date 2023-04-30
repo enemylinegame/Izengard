@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2070502120836933097}
   - component: {fileID: 6802864099254358015}
-  - component: {fileID: 2371431301135719227}
   m_Layer: 6
   m_Name: DotSpawn
   m_TagString: Untagged
@@ -47,19 +46,6 @@ MonoBehaviour:
   IsActive: 1
   Building: {fileID: 0}
   Mineral: {fileID: 0}
---- !u!135 &2371431301135719227
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 144938206546626411}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.32
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1047566957511230336
 GameObject:
   m_ObjectHideFlags: 0
@@ -70,7 +56,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2534230628082083305}
   - component: {fileID: 8961194891872438405}
-  - component: {fileID: 1644600294385216802}
   m_Layer: 6
   m_Name: DotSpawn (2)
   m_TagString: Untagged
@@ -107,19 +92,6 @@ MonoBehaviour:
   IsActive: 1
   Building: {fileID: 0}
   Mineral: {fileID: 0}
---- !u!135 &1644600294385216802
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1047566957511230336}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.32
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1067693628856667947
 GameObject:
   m_ObjectHideFlags: 0
@@ -130,7 +102,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3173578842571565409}
   - component: {fileID: 9165360535634144754}
-  - component: {fileID: 4293876528800719119}
   m_Layer: 6
   m_Name: DotSpawn (3)
   m_TagString: Untagged
@@ -167,19 +138,6 @@ MonoBehaviour:
   IsActive: 1
   Building: {fileID: 0}
   Mineral: {fileID: 0}
---- !u!135 &4293876528800719119
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1067693628856667947}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.32
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2150366787891461621
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,7 +148,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3163784247906797183}
   - component: {fileID: 5541097221107124649}
-  - component: {fileID: 7772734667681550281}
   m_Layer: 6
   m_Name: DotSpawn (5)
   m_TagString: Untagged
@@ -227,19 +184,6 @@ MonoBehaviour:
   IsActive: 1
   Building: {fileID: 0}
   Mineral: {fileID: 0}
---- !u!135 &7772734667681550281
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2150366787891461621}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.32
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5223726379283484116
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,7 +194,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7451352766246042264}
   - component: {fileID: 1388996785170211750}
-  - component: {fileID: 2729129526622339585}
   m_Layer: 6
   m_Name: DotSpawn (4)
   m_TagString: Untagged
@@ -287,19 +230,6 @@ MonoBehaviour:
   IsActive: 1
   Building: {fileID: 0}
   Mineral: {fileID: 0}
---- !u!135 &2729129526622339585
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5223726379283484116}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.32
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6107794650344137410
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,7 +335,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6056245652430755930}
   - component: {fileID: 81772624231454573}
-  - component: {fileID: 1101312623297993989}
   m_Layer: 6
   m_Name: DotSpawn (7)
   m_TagString: Untagged
@@ -442,19 +371,6 @@ MonoBehaviour:
   IsActive: 1
   Building: {fileID: 0}
   Mineral: {fileID: 0}
---- !u!135 &1101312623297993989
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6689981643987431035}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.32
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7493176315454012933
 GameObject:
   m_ObjectHideFlags: 0
@@ -465,7 +381,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4660273360323124299}
   - component: {fileID: 1861639173939898974}
-  - component: {fileID: 4234517835034026078}
   m_Layer: 6
   m_Name: DotSpawn (8)
   m_TagString: Untagged
@@ -502,19 +417,6 @@ MonoBehaviour:
   IsActive: 1
   Building: {fileID: 0}
   Mineral: {fileID: 0}
---- !u!135 &4234517835034026078
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7493176315454012933}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.32
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7643498831612854407
 GameObject:
   m_ObjectHideFlags: 0
@@ -525,7 +427,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6982723624620200692}
   - component: {fileID: 656112308567569143}
-  - component: {fileID: 4658096193820621725}
   m_Layer: 6
   m_Name: DotSpawn (6)
   m_TagString: Untagged
@@ -562,19 +463,6 @@ MonoBehaviour:
   IsActive: 1
   Building: {fileID: 0}
   Mineral: {fileID: 0}
---- !u!135 &4658096193820621725
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7643498831612854407}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.32
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7952821339211360544
 GameObject:
   m_ObjectHideFlags: 0
@@ -585,7 +473,6 @@ GameObject:
   m_Component:
   - component: {fileID: 476010888538611382}
   - component: {fileID: 1436408329481587977}
-  - component: {fileID: 5007580214849275477}
   m_Layer: 6
   m_Name: DotSpawn (1)
   m_TagString: Untagged
@@ -622,19 +509,6 @@ MonoBehaviour:
   IsActive: 1
   Building: {fileID: 0}
   Mineral: {fileID: 0}
---- !u!135 &5007580214849275477
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7952821339211360544}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.32
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &6107794650489889194
 PrefabInstance:
   m_ObjectHideFlags: 0

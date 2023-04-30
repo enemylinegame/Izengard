@@ -17,7 +17,7 @@ namespace Code.TileSystem
         [SerializeField] private TileConfig _tileConfig;
         [SerializeField] private List<Dot> _dotSpawns;
         [SerializeField] private List<Building> _floodedBuildings;
-        [SerializeField] private List<Mineral> _floodedMinerals;
+        // [SerializeField] private List<Mineral> _floodedMinerals;
         public TileModel TileModel;
         //
         // private List<BuildingConfig> _curBuildingConfigs;
@@ -62,7 +62,7 @@ namespace Code.TileSystem
             TileModel.DotSpawns = _dotSpawns;
             TileModel.Init();
             _floodedBuildings = TileModel.FloodedBuildings;
-            _floodedMinerals = TileModel.FloodedMinerals;
+            // _floodedMinerals = TileModel.FloodedMinerals;
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Code.TileSystem
                 TileModel.CurrBuildingConfigs.AddRange(TileModel.SaveTileConfig.BuildingTirs);
                 controller.UpdateInfo(TileModel.SaveTileConfig);
                 controller.ADDBuildUI(TileModel);
-                controller.HiringController.FillWorkerList();
+                controller.WorkerAssigmentsController.FillWorkerList();
             }else controller.CenterText.NotificationUI("Max LVL", 1000);
         }
         /// <summary>
@@ -85,10 +85,13 @@ namespace Code.TileSystem
         /// </summary>
         public void LoadButtonsUIBuy(TileController controller, UIController uiController)
         {
-            controller.HiringController.FillWorkerList();
+            controller.WorkerAssigmentsController.FillWorkerList();
             foreach (var building in TileModel.FloodedBuildings)
             {
-                uiController.LoadBuildingInfo(building, controller.HiringController.GetAssignedWorkers(building), controller);
+                if (building.MineralConfig == null)
+                {
+                    uiController.LoadBuildingInfo(building, controller.WorkerAssigmentsController.GetAssignedWorkers(building), controller);
+                }
             }
         }
     }

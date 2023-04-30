@@ -64,7 +64,7 @@ namespace Wave
         private async void SlowlyKilling()
         {
             await Task.Delay(10000);
-            if (!UnityEditor.EditorApplication.isPlaying) return;
+            // if (!UnityEditor.EditorApplication.isPlaying) return;
             if (!Enemy.Prefab.activeSelf) return;
             KillEnemy();
         }

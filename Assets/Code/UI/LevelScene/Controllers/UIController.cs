@@ -108,8 +108,8 @@ namespace Code.UI
             var button = GameObject.Instantiate(BuildingsUIView.BuildingInfo, BuildingsUIView.ByBuildButtonsHolder);
             var view = button.GetComponent<BuildingUIInfo>();
             view.Icon.sprite = building.Icon.sprite;
-            view.Type.text = building.Type.ToString();
-            view.Types = building.Type;
+            view.Type.text = building.BuildingTypes.ToString();
+            view.Types = building.BuildingTypes;
             view.UnitsBusy.text = Units +"/5";
             view.Units = Units;
             DestroyBuildingInfo.Add(button, view);

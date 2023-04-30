@@ -60,15 +60,15 @@ namespace Wave
         private bool TryBuyRandomEnemy(ref float totalScore, out EnemySettings enemy)
         {
             var typeEnemyToBuy = _enemyTypesToBuy[UnityEngine.Random.Range(0, _enemyTypesToBuy.Count)];
-            //Debug.Log($"хочу купить {typeEnemyToBuy.Type} имея {totalScore}");
+            //Debug.Log($"хочу купить {typeEnemyToBuy.BuildingTypes} имея {totalScore}");
             if(typeEnemyToBuy.Stats.Cost < totalScore)
             {
                 totalScore -= typeEnemyToBuy.Stats.Cost;
                 enemy = typeEnemyToBuy;
-                //Debug.Log($"купил {typeEnemyToBuy.Type}. бабок осталось {totalScore}");
+                //Debug.Log($"купил {typeEnemyToBuy.BuildingTypes}. бабок осталось {totalScore}");
                 return true;
             }
-            //Debug.Log($"не смог купить {typeEnemyToBuy.Type}");
+            //Debug.Log($"не смог купить {typeEnemyToBuy.BuildingTypes}");
             enemy = null;
             return false;
         }

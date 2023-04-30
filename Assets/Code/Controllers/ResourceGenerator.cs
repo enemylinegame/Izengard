@@ -314,20 +314,21 @@ public class ResourceGenerator : IDisposable
     {
         if (_buildingController.CheckDot(model) != null)
         {
-            var building = CreateMineralGameObject(resourceConfig, _buildingController.CheckDot(model).transform.position);
-            _buildingController.CheckDot(model).IsActive = false;
-            model.FloodedMinerals.Add(building);
+            var dot = _buildingController.CheckDot(model);
+            var building = CreateMineralGameObject(resourceConfig, dot.transform.position);
+            dot.IsActive = false;
+            model.FloodedBuildings.Add(building);
         }
     }
 
-    private Mineral CreateMineralGameObject(MineralConfig mineralConfig, Vector3 posistion)
+    private Building CreateMineralGameObject(MineralConfig mineralConfig, Vector3 posistion)
     {
         GameObject _gameObject = Object.Instantiate(mineralConfig.Prefab);
         _gameObject.transform.position = new Vector3(posistion.x, 0.1f, posistion.z);
         _gameObject.transform.rotation = Quaternion.identity;
-        Mineral _tempMineral = _gameObject.AddComponent<Mineral>();
+        var _tempMineral = _gameObject.AddComponent<Building>();
         
-        _tempMineral.LoadMineralModel(mineralConfig);
+        _tempMineral.InitMineral(mineralConfig);
         //_tempMineral.SetModelOfMine(mineralConfig);
         // BoxCollider _boxCollider = _gameObject.AddComponent<BoxCollider>();
         return _tempMineral;

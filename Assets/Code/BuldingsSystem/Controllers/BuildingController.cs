@@ -20,7 +20,7 @@ namespace Code.BuildingSystem
             {
                 var dot = CheckDot(model);
                 var build = Object.Instantiate(config.BuildingPrefab.GetComponent<Building>(), dot.transform);
-                build.Type = config.BuildingType;
+                build.BuildingTypes = config.BuildingType;
                 dot.IsActive = false;
                 return build;
             }
@@ -32,14 +32,14 @@ namespace Code.BuildingSystem
             if (model.DotSpawns.Exists(x => x.Building == building))
             {
                 var dot = model.DotSpawns.Find(x => x.Building == building);
-                dot.Building.Type = BuildingTypes.None;
+                dot.Building.BuildingTypes = BuildingTypes.None;
                 dot.IsActive = true;
             }
         }
         public Dot CheckDot(TileModel model)
         {
-            var cleardots = model.DotSpawns.Find(x => x.IsActive);
-            return cleardots;
+            var cleardots = model.DotSpawns.FindAll(x => x.IsActive);
+            return cleardots[UnityEngine.Random.Range(0, cleardots.Count)];
         }
     }
 }

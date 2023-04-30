@@ -4,21 +4,21 @@ using UnityEngine;
 
 namespace Code.TileSystem
 {
-    public class HiringController
+    public class WorkerAssigmentsController
     {
         private TileController _tileController;
 
-        private TileModel _TileModel => _tileController.TileModel;
-        private TileConfig _saveTileConfig => _TileModel.SaveTileConfig;
-        private List<WorkerView> _workerViews => _TileModel.Workers;
-        private List<WorkersAssigments> _workersAssigmentses => _TileModel.WorkersAssigments;
+        private TileModel _tileModel => _tileController.TileModel;
+        private TileConfig _saveTileConfig => _tileModel.SaveTileConfig;
+        private List<WorkerView> _workerViews => _tileModel.Workers;
+        private List<WorkersAssigments> _workersAssigments => _tileModel.WorkersAssigments;
         private int _eightQuantity
         {
-            get => _TileModel.EightQuantity;
-            set => _TileModel.EightQuantity = value;
+            get => _tileModel.EightQuantity;
+            set => _tileModel.EightQuantity = value;
         }
 
-        public HiringController(TileController tileController)
+        public WorkerAssigmentsController(TileController tileController)
         {
             _tileController = tileController;
         }
@@ -41,26 +41,24 @@ namespace Code.TileSystem
                 return;
             }
 
-            if (!_workersAssigmentses.Exists(x => x.Building.BuildingID == building.BuildingID))
+            if (!_workersAssigments.Exists(x => x.Building.BuildingID == building.BuildingID))
             {
                 var workers = new WorkersAssigments(building);
                 workers.BusyWorkersCount++;
                 _eightQuantity++;
-                _workersAssigmentses.Add(workers);
-                
-                var worker = _workerViews.Find(x => x.AssignedResource == BuildingTypes.None);
-                worker.AssignedResource = resourceType;
+                _workersAssigments.Add(workers);
             }
             else
             {
-                var workersAssigments =  _workersAssigmentses.Find(x => x.Building.BuildingID == building.BuildingID);
+                var workersAssigments =  _workersAssigments.Find(x => x.Building.BuildingID == building.BuildingID);
                 // Debug.Log(_saveTileConfig.MaxUnits.GetHashCode());
                 workersAssigments.BusyWorkersCount++;
                 _eightQuantity++;
                 
-                var worker = _workerViews.Find(x => x.AssignedResource == BuildingTypes.None);
-                worker.AssignedResource = resourceType;
+               
             }
+            var worker = _workerViews.Find(x => x.AssignedResource == BuildingTypes.None);
+            worker.AssignedResource = resourceType;
         }
         /// <summary>
         /// Удаление юнита из найма из определенного здания
@@ -71,9 +69,9 @@ namespace Code.TileSystem
             {
                 return;
             }
-            if (_workersAssigmentses.Exists(x => x.Building.BuildingID == building.BuildingID))
+            if (_workersAssigments.Exists(x => x.Building.BuildingID == building.BuildingID))
             {
-                var workersAssigments =  _workersAssigmentses.Find(x => x.Building.BuildingID == building.BuildingID);
+                var workersAssigments =  _workersAssigments.Find(x => x.Building.BuildingID == building.BuildingID);
                 workersAssigments.BusyWorkersCount--;
                 _eightQuantity--;
                 if (workersAssigments.BusyWorkersCount < 0) workersAssigments.BusyWorkersCount = 0;
@@ -89,9 +87,9 @@ namespace Code.TileSystem
             {
                 return;
             }
-            if (_workersAssigmentses.Exists(x => x.Building.BuildingID == building.BuildingID))
+            if (_workersAssigments.Exists(x => x.Building.BuildingID == building.BuildingID))
             {
-                var workersAssigments =  _workersAssigmentses.Find(x => x.Building.BuildingID == building.BuildingID);
+                var workersAssigments =  _workersAssigments.Find(x => x.Building.BuildingID == building.BuildingID);
                 controller.RemoveFromHiringUnits(workersAssigments.BusyWorkersCount);
                 _eightQuantity -= workersAssigments.BusyWorkersCount;
                 workersAssigments.BusyWorkersCount = 0;
@@ -107,11 +105,11 @@ namespace Code.TileSystem
         /// <returns></returns>
         public int GetAssignedWorkers(Building building)
         {
-            if (!_workersAssigmentses.Exists(x => x.Building.BuildingID == building.BuildingID))
+            if (!_workersAssigments.Exists(x => x.Building.BuildingID == building.BuildingID))
             {
                 return 0;
             }
-            return _workersAssigmentses.
+            return _workersAssigments.
                 Find(x => x.Building.BuildingID == building.BuildingID).BusyWorkersCount;
         }
     }
