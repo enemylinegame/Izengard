@@ -18,9 +18,9 @@ namespace CombatSystem.Views
         private Toggle _inBarrack;
         private Button _hireDismissButton;
 
-        private readonly int _number;
+        private IDefenderUnitView _unit;
+        private int _number;
         private bool _isInBarrack;
-        
 
         public bool IsInBarrack
         {
@@ -34,6 +34,10 @@ namespace CombatSystem.Views
                 _inBarrack.isOn = value;
             }
         }
+
+        public bool IsUsed { get => _unit != null; }
+
+        public IDefenderUnitView DefenderUnitView { get => _unit; }
 
 
         public DefenderSlotView(Transform slotRoot, Sprite unitSprite, int number)
@@ -66,18 +70,19 @@ namespace CombatSystem.Views
             }
         }
 
-        public void SetUnit(bool isUnitExist)
+        public void SetUnit(IDefenderUnitView unit)
         {
-            if (isUnitExist)
-            {
-                _unitIcon.sprite = _unitSprite;
-            }
-            else
-            {
-                _unitIcon.sprite = _emptySprite;
-            }
-
+            _unitIcon.sprite = _unitSprite;
+            _unit = unit;
+            _inBarrack.gameObject.SetActive(true);
             IsInBarrack = false;
+        }
+
+        public void RemoveUnit()
+        {
+            _unitIcon.sprite = _emptySprite;
+            _unit = null;
+            _inBarrack.gameObject.SetActive(false);
         }
 
     }
