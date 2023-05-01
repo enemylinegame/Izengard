@@ -48,7 +48,7 @@ namespace CombatSystem
         private float _stopDistanceSqr;
         private bool _isReload = false;
         private bool _isPositionChanged;
-        private bool _isEnabled;
+        private bool _isBarrackMode;
 
 
         public Vector3 Position
@@ -59,18 +59,18 @@ namespace CombatSystem
             }
         }
 
-        public bool IsEnabled
+        public bool IsInsideBarrack
         {
             get
             {
-                return _isEnabled;
+                return _isBarrackMode;
             }
             set
             {
-                if (_isEnabled != value)
+                if (_isBarrackMode != value)
                 {
-                    _isEnabled = value;
-                    _defender.SetActive(value);
+                    _isBarrackMode = value;
+                    _defender.SetActive(!value);
                 }
             }
         }
@@ -90,7 +90,7 @@ namespace CombatSystem
             _damageable.MeAttackedChenged += MeAttacked;
             _damageable.Init(100, 1);
             _attackAction = new DefenderAttackAction(_unitStats);
-            _isEnabled = true;
+            _isBarrackMode = true;
 
         }
 
@@ -121,7 +121,7 @@ namespace CombatSystem
 
         public void OnUpdate(float deltaTime)
         {
-            if (_isEnabled)
+            if (!_isBarrackMode)
             {
                 DefenderLogic();
             }
