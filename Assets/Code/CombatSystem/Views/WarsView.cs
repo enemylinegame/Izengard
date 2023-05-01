@@ -45,6 +45,21 @@ namespace CombatSystem.Views
 
         }
 
+        public void AddDefenderUnit(IDefenderUnitView unit)
+        {
+
+        }
+
+        public void RemoveDefenderUnit(IDefenderUnitView unit)
+        {
+            for (int i = 0; i < _slots.Length; i++)
+            {
+                if (_slots[i].DefenderUnitView == unit)
+                {
+                    _slots[i].RemoveUnit();
+                }
+            }
+        }
 
     }
 }
