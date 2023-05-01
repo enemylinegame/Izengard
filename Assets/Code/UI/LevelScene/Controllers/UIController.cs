@@ -5,6 +5,8 @@ using Code.TileSystem;
 using UnityEngine;
 using UnityEngine.UI;
 using Views.BuildBuildingsUI;
+using CombatSystem.Views;
+
 
 namespace Code.UI
 {
@@ -13,12 +15,13 @@ namespace Code.UI
         private RightUI _rightUI;
         private BottonUI _bottonUI;
         private CenterUI _centerUI;
-        
         private TileView _view;
+        private WarsView _warsView;
+
         public TileView View => _view;
         public BuildingsUIView BuildingsUIView => _bottonUI.BuildingMenu;
         public TileUIView TileUIView => _bottonUI.TileUIView;
-        
+        public WarsView WarsView => _warsView;
 
         
         public List<BuildingConfig> ButtonsBuy = new List<BuildingConfig>();
@@ -32,6 +35,8 @@ namespace Code.UI
             _rightUI = rightUI;
             _bottonUI = bottonUI;
             _centerUI = centerUI;
+
+            _warsView = new WarsView(bottonUI.WarsUIView);
             
             IsWorkUI(UIType.All, false);
             
