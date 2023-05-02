@@ -44,12 +44,12 @@ namespace CombatSystem.Views
         {
             _slotRoot = slotRoot;
             _unitSprite = unitSprite;
-            _unitIcon = _slotRoot.GetComponent<Image>();
+            _unitIcon = _slotRoot.GetComponentInChildren<Image>();
             _emptySprite = _unitIcon.sprite;
-            _inBarrack = _slotRoot.GetComponent<Toggle>();
+            _inBarrack = _slotRoot.GetComponentInChildren<Toggle>();
             _inBarrack.isOn = _isInBarrack;
             _inBarrack.onValueChanged.AddListener(InBarrackStateChanged);
-            _hireDismissButton = _slotRoot.GetComponent<Button>();
+            _hireDismissButton = _slotRoot.GetComponentInChildren<Button>();
             _hireDismissButton.onClick.AddListener(HireDissmisClick);
             _number = number;
         }
