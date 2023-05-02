@@ -3883,9 +3883,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5738856334725764685, guid: 6577460c3bfb7ce4a9e8f3fc333ebb1d, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8125484567163527315, guid: 6577460c3bfb7ce4a9e8f3fc333ebb1d, type: 3}
       propertyPath: m_Name
       value: DefenderUISlot
+      objectReference: {fileID: 0}
+    - target: {fileID: 8492650795511088116, guid: 6577460c3bfb7ce4a9e8f3fc333ebb1d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6577460c3bfb7ce4a9e8f3fc333ebb1d, type: 3}
