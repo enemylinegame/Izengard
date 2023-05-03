@@ -52,7 +52,7 @@ namespace Code.TileSystem
             _generator = buildGenerator;
             _stock = stock;
             _uiController = uiController;
-
+            _resourcesLayoutUIView = _uiController.ResourcesLayoutUIView;
             _stock.AddResourceToStock(ResourceType.Wood, 100);
             _buildingController = buildingController;
         }
@@ -71,7 +71,7 @@ namespace Code.TileSystem
             UpdateInfo(_tileModel.TileConfig);
 
             _tileResourceController = new TileResourceUIController(_resourcesLayoutUIView);
-            _tileResouceUIFactory = new TileResouceUIFactory(_resourcesLayoutUIView, _tileResourceController, _view);
+            _tileResouceUIFactory = new TileResouceUIFactory(_resourcesLayoutUIView, _tileResourceController, _tileModel);
         }
         /// <summary>
         /// Загрузка всей информации на тайл
