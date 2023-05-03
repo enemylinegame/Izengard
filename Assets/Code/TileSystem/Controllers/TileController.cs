@@ -18,6 +18,7 @@ namespace Code.TileSystem
     {
         private TileList _list;
         private TileUIView _uiView;
+        private TileModel _tileModel;
         private BaseCenterText _centerText;
         private BuildGenerator _generator;
         private GlobalStock _stock;
