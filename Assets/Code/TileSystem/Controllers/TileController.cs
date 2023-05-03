@@ -25,15 +25,14 @@ namespace Code.TileSystem
         private GlobalStock _stock;
         private List<BuildingConfig> _buildingConfigs;
         private BuildingController _buildingController;
+        private UIController _uiController;
+        private WorkerAssigmentsController _workerAssigmentsController;
         private TileResourceUIController _tileResourceController;
         private TileResouceUIFactory _tileResouceUIFactory;
         private ResourcesLayoutUIView _resourcesLayoutUIView;
-        private UIController _uiController;
-        private WorkerAssigmentsController _workerAssigmentsController;
         private int _currentlvl;
         private int _eightQuantity;
         private int _units;
-
 
         public TileConfig Config;
         public TileList List => _list;
@@ -43,7 +42,7 @@ namespace Code.TileSystem
         public TileModel TileModel => _tileView.TileModel;
         public TileView View => _tileView;
 
-        public TileController(TileList tileList, TileUIView uiView, BaseCenterText centerText, UIController uiController, 
+        public TileController(TileList tileList, TileUIView uiView, BaseCenterText centerText, UIController uiController,
             BuildGenerator buildGenerator, GlobalStock stock, BuildingController buildingController)
         {
             _workerAssigmentsController = new WorkerAssigmentsController(this);
@@ -53,10 +52,9 @@ namespace Code.TileSystem
             _generator = buildGenerator;
             _stock = stock;
             _uiController = uiController;
-            _resourcesLayoutUIView = _uiController.ResourcesLayoutUIView;
-            _stock.AddResourceToStock(ResourceType.Wood,100);
-            _buildingController = buildingController;
 
+            _stock.AddResourceToStock(ResourceType.Wood, 100);
+            _buildingController = buildingController;
         }
 
         /// <summary>
@@ -70,12 +68,10 @@ namespace Code.TileSystem
             ADDBuildUI(view.TileModel);
             view.LoadButtonsUIBuy(this, _uiController);
             _uiView.Upgrade.onClick.AddListener(() => view.LVLUp(this));
-            UpdateInfo(view.TileConfig);
-            _buildingController.ADDListMinerals(view);
+            UpdateInfo(_tileModel.TileConfig);
 
             _tileResourceController = new TileResourceUIController(_resourcesLayoutUIView);
             _tileResouceUIFactory = new TileResouceUIFactory(_resourcesLayoutUIView, _tileResourceController, _view);
-
         }
         /// <summary>
         /// Загрузка всей информации на тайл
@@ -86,7 +82,7 @@ namespace Code.TileSystem
             _eightQuantity = _tileModel.EightQuantity;
             _units = config.MaxUnits;
             _currentlvl = config.TileLvl.GetHashCode();
-            _uiView.UnitMax.text = _eightQuantity + "/"+ config.MaxUnits + " Units";
+            _uiView.UnitMax.text = _eightQuantity + "/" + config.MaxUnits + " Units";
             _uiView.Icon.sprite = config.IconTile;
         }
         public void ADDBuildUI(TileModel model)
@@ -94,7 +90,7 @@ namespace Code.TileSystem
             _uiController.Deinit();
             _buildingConfigs = model.CurrBuildingConfigs;
             _uiController.Init(_buildingConfigs);
-            
+
             foreach (var kvp in _uiController.ButtonsInMenu)
             {
                 kvp.Value.onClick.AddListener(() => BuildBuilding(kvp.Key, model));
@@ -109,7 +105,7 @@ namespace Code.TileSystem
             {
                 return;
             }
-            
+
             foreach (var resourcePrice in buildingConfig.BuildingCost)
             {
                 _stock.GetResourceFromStock(resourcePrice.ResourceType, resourcePrice.Cost);
@@ -125,7 +121,7 @@ namespace Code.TileSystem
                 _tileModel.FloodedBuildings.Add(building);
             }
         }
-        
+
         public void DestroyBuilding(List<Building> buildingConfigs, BuildingUIInfo Button, TileModel model)
         {
             foreach (var kvp in buildingConfigs)
@@ -144,15 +140,15 @@ namespace Code.TileSystem
                     GameObject.Destroy(Button.gameObject);
                     break;
                 }
-                
+
             }
         }
-        
+
         private bool IsResourcesEnough(BuildingConfig buildingConfig)
         {
             foreach (ResourcePriceModel resourcePriceModel in buildingConfig.BuildingCost)
             {
-                if (_stock.CheckResourceInStock(resourcePriceModel.ResourceType,resourcePriceModel.Cost))
+                if (_stock.CheckResourceInStock(resourcePriceModel.ResourceType, resourcePriceModel.Cost))
                 {
                     _centerText.NotificationUI("you do not have enough resources to buy", 1000);
                     return false;
@@ -171,13 +167,13 @@ namespace Code.TileSystem
             if (EightQuantity <= _units)
             {
                 _eightQuantity += EightQuantity;
-                _uiView.UnitMax.text = _eightQuantity.ToString() + "/"+ _units.ToString() + " Units";
+                _uiView.UnitMax.text = _eightQuantity.ToString() + "/" + _units.ToString() + " Units";
             }
             else
             {
                 _centerText.NotificationUI("you have hired the maximum number of units", 2000);
             }
-            
+
         }
 
         /// <summary>
@@ -189,7 +185,7 @@ namespace Code.TileSystem
             if (_eightQuantity > 0)
             {
                 _eightQuantity -= EightQuantity;
-                _uiView.UnitMax.text = _eightQuantity.ToString() + "/"+ _units.ToString() + " Units";
+                _uiView.UnitMax.text = _eightQuantity.ToString() + "/" + _units.ToString() + " Units";
             }
         }
 
@@ -201,7 +197,7 @@ namespace Code.TileSystem
             _uiController.Deinit();
             _uiView.Upgrade.onClick.RemoveAllListeners();
         }
-        
+
         public void LevelCheck()
         {
             if (CurrentLVL > _uiController.DestroyBuildingInfo.Count)
@@ -213,8 +209,8 @@ namespace Code.TileSystem
                 _uiController.BuildingsUIView.PrefabButtonClear.gameObject.SetActive(false);
             }
         }
-        
-        
+
+
         public void OnUpdate(float deltaTime)
         {
             LevelCheck();

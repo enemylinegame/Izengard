@@ -9,21 +9,21 @@ namespace Code.TileSystem
         private RectTransform _layoutTransform;
         private ResourcesLayoutUIView _resourcesLayoutUIView;
         private TileResourceUIController _tileResourceController;
-        private List<Mineral> _minerals;
+        private List<Building> _buildings;
 
-        public TileResouceUIFactory(ResourcesLayoutUIView layoutView, TileResourceUIController tileResourceController, TileView tileView)
+        public TileResouceUIFactory(ResourcesLayoutUIView layoutView, TileResourceUIController tileResourceController, TileModel tileModel)
         {
             _layoutTransform = layoutView.LayoutRectTransform;
             _resourcesLayoutUIView = layoutView;
             _tileResourceController = tileResourceController;
-            _minerals = tileView.FloodedMinerals;
+            _buildings = tileModel.FloodedBuildings;
             Init();
         }
         private void Init()
         {
-            foreach (Mineral mineral in _minerals)
+            foreach (Building building in _buildings)
             {
-                AddNewLayoutElement(mineral.MineralConfig);
+                AddNewLayoutElement(building.MineralConfig);
             }
         }
 
