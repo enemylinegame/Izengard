@@ -18,6 +18,7 @@ namespace Code.TileSystem
     {
         private TileList _list;
         private TileUIView _uiView;
+        private TileView _tileView;
         private TileModel _tileModel;
         private BaseCenterText _centerText;
         private BuildGenerator _generator;
@@ -32,6 +33,7 @@ namespace Code.TileSystem
         private int _currentlvl;
         private int _eightQuantity;
         private int _units;
+
 
         public TileConfig Config;
         public TileList List => _list;
