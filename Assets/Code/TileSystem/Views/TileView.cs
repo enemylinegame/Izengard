@@ -53,7 +53,6 @@ namespace Code.TileSystem
         //     _saveTileConfig = _tileConfig;
         //     // FillWorkerList();
         // }
-        
 
         private void Awake()
         {

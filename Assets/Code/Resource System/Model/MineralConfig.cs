@@ -17,7 +17,11 @@ namespace ResourceSystem
         public string NameOfMine => _nameOfMine;
         public int ExtractionTime => _extractionTime;
         public Sprite Icon => _icon;
-        public int CurrentMineValue => _currentMineValue;
+        public int CurrentMineValue
+        {
+            get { return _currentMineValue; }
+            set { _currentMineValue = value; }
+        }
         public TierNumber Tier => _thisMineTier;
         public ResourceType ResourceType => _resourceType;
 
