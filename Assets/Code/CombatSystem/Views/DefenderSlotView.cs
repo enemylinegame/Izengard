@@ -12,6 +12,7 @@ namespace CombatSystem.Views
         public event Action<int> OnDissmisClick;
         public event Action<bool, int> OnInBarrackChanged;
 
+        private DefenderSlotUI _uiSlot;
         private Image _unitIcon;
         private Sprite _emptySprite;
         private Sprite _unitSprite;
@@ -21,7 +22,10 @@ namespace CombatSystem.Views
 
         private IDefenderUnitView _unit;
         private int _number;
+
         private bool _isInBarrack;
+        private bool _isEnabled;
+
 
         public bool IsInBarrack
         {
@@ -38,24 +42,42 @@ namespace CombatSystem.Views
 
         public bool IsUsed { get => _unit != null; }
 
+        public bool IsEnabled
+        { 
+            get
+            {
+                return _isEnabled;
+            }
+            set
+            {
+                if (_isEnabled != value)
+                {
+                    _uiSlot.gameObject.SetActive(value);
+                    _isEnabled = value;
+                }
+            }
+        }
+
         public IDefenderUnitView DefenderUnitView { get => _unit; }
 
 
-        public DefenderSlotView(DefenderSlotUI slotRoot, Sprite unitSprite, int number)
+        public DefenderSlotView(DefenderSlotUI slot, Sprite unitSprite, int number)
         {
+            _uiSlot = slot;
             _unitSprite = unitSprite;
-            _unitIcon = slotRoot.UnitIcon;
+            _unitIcon = _uiSlot.UnitIcon;
             _emptySprite = _unitIcon.sprite;
-            _inBarrack = slotRoot.SendToBarrackToggle;
+            _inBarrack = _uiSlot.SendToBarrackToggle;
             _inBarrack.isOn = _isInBarrack;
             _inBarrack.onValueChanged.AddListener(InBarrackStateChanged);
-            _hireButton = slotRoot.HireButton;
+            _hireButton = _uiSlot.HireButton;
             _hireButton.onClick.AddListener(HireClick);
-            _dismissButton = slotRoot.DismissButton;
+            _dismissButton = _uiSlot.DismissButton;
             _dismissButton.onClick.AddListener(DissmisClick);
             _dismissButton.gameObject.SetActive(false);
 
             _number = number;
+            _isEnabled = true;
         }
 
 
@@ -80,12 +102,19 @@ namespace CombatSystem.Views
 
         public void SetUnit(IDefenderUnitView unit)
         {
-            _unitIcon.sprite = _unitSprite;
-            _unit = unit;
-            _inBarrack.gameObject.SetActive(true);
-            IsInBarrack = false;
-            _hireButton.gameObject.SetActive(false);
-            _dismissButton.gameObject.SetActive(true);
+            if (unit != null)
+            {
+                _unitIcon.sprite = _unitSprite;
+                _unit = unit;
+                _inBarrack.gameObject.SetActive(true);
+                IsInBarrack = false;
+                _hireButton.gameObject.SetActive(false);
+                _dismissButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                RemoveUnit();
+            }
         }
 
         public void RemoveUnit()
