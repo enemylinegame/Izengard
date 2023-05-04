@@ -8,15 +8,16 @@ namespace CombatSystem.Views
     public sealed class DefenderSlotView
     {
 
-        public event Action<int> OnHireDissmisClick;
+        public event Action<int> OnHireClick;
+        public event Action<int> OnDissmisClick;
         public event Action<bool, int> OnInBarrackChanged;
 
-        private Transform _slotRoot;
         private Image _unitIcon;
         private Sprite _emptySprite;
         private Sprite _unitSprite;
         private Toggle _inBarrack;
-        private Button _hireDismissButton;
+        private Button _hireButton;
+        private Button _dismissButton;
 
         private IDefenderUnitView _unit;
         private int _number;
@@ -40,29 +41,36 @@ namespace CombatSystem.Views
         public IDefenderUnitView DefenderUnitView { get => _unit; }
 
 
-        public DefenderSlotView(Transform slotRoot, Sprite unitSprite, int number)
+        public DefenderSlotView(DefenderSlotUI slotRoot, Sprite unitSprite, int number)
         {
-            _slotRoot = slotRoot;
             _unitSprite = unitSprite;
-            _unitIcon = _slotRoot.GetComponentInChildren<Image>();
+            _unitIcon = slotRoot.UnitIcon;
             _emptySprite = _unitIcon.sprite;
-            _inBarrack = _slotRoot.GetComponentInChildren<Toggle>();
+            _inBarrack = slotRoot.SendToBarrackToggle;
             _inBarrack.isOn = _isInBarrack;
             _inBarrack.onValueChanged.AddListener(InBarrackStateChanged);
-            _hireDismissButton = _slotRoot.GetComponentInChildren<Button>();
-            _hireDismissButton.onClick.AddListener(HireDissmisClick);
+            _hireButton = slotRoot.HireButton;
+            _hireButton.onClick.AddListener(HireClick);
+            _dismissButton = slotRoot.DismissButton;
+            _dismissButton.onClick.AddListener(DissmisClick);
+            _dismissButton.gameObject.SetActive(false);
+
             _number = number;
         }
 
 
-        private void HireDissmisClick()
+        private void HireClick()
         {
-            OnHireDissmisClick?.Invoke(_number);
+            OnHireClick?.Invoke(_number);
+        }
+
+        private void DissmisClick()
+        {
+            OnDissmisClick?.Invoke(_number);
         }
 
         private void InBarrackStateChanged(bool isOn)
         {
-            Debug.Log($"DefnderSlotView->InBarrackChanged: _isInBarrack = {_isInBarrack}; isOn = {isOn};");
             if (_isInBarrack != isOn)
             {
                 _isInBarrack = isOn;
@@ -76,6 +84,8 @@ namespace CombatSystem.Views
             _unit = unit;
             _inBarrack.gameObject.SetActive(true);
             IsInBarrack = false;
+            _hireButton.gameObject.SetActive(false);
+            _dismissButton.gameObject.SetActive(true);
         }
 
         public void RemoveUnit()
@@ -83,6 +93,8 @@ namespace CombatSystem.Views
             _unitIcon.sprite = _emptySprite;
             _unit = null;
             _inBarrack.gameObject.SetActive(false);
+            _dismissButton.gameObject.SetActive(false);
+            _hireButton.gameObject.SetActive(true);
         }
 
     }

@@ -20,7 +20,7 @@ namespace CombatSystem.Views
 
         private void CreateSlots()
         {
-            Transform[] slotsTransforms = _warsUIView.Slots;
+            DefenderSlotUI[] slotsTransforms = _warsUIView.Slots;
 
             _slots = new DefenderSlotView[slotsTransforms.Length];
 
@@ -28,14 +28,20 @@ namespace CombatSystem.Views
             {
                 DefenderSlotView newSlot = new DefenderSlotView(slotsTransforms[i], _warsUIView.UnitDefenderSprite,
                     i + FIRST_SLOT_NUMBER);
-                newSlot.OnHireDissmisClick += HireDissmissButtonClick;
+                newSlot.OnHireClick += HireButtonClick;
+                newSlot.OnDissmisClick += DissmissButtonClick;
                 newSlot.OnInBarrackChanged += InBarrackToggleChanged;
                 _slots[i] = newSlot;
             }
 
         }
 
-        private void HireDissmissButtonClick(int slotNumber)
+        private void HireButtonClick(int slotNumber)
+        {
+
+        }
+
+        private void DissmissButtonClick(int slotNumber)
         {
 
         }
