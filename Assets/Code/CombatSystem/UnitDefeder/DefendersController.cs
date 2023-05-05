@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Code.TileSystem;
 using Code.UI;
@@ -7,7 +6,7 @@ using UnityEngine;
 
 namespace CombatSystem
 {
-    public class DefendersController : IOnController, IOnUpdate
+    public class DefendersController : IOnController, IOnUpdate, IDefendersControll
     {
         private const float POSITION_RADIUS = 1f;
 
@@ -26,7 +25,7 @@ namespace CombatSystem
             _defenderPrefab = defenderPrefab;
         }
 
-        public DefenderUnit CreateDefenderClicked(TileView tile)
+        public DefenderUnit CreateDefender(TileView tile)
         {
             GameObject go = GameObject.Instantiate(_defenderPrefab, _unitsSpawnPosition, Quaternion.identity);
             Vector3 position = GeneratePositionNearTileCentre(tile);
