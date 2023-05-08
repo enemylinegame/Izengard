@@ -12,6 +12,8 @@ namespace CombatSystem.Views
         private DefenderSlotView[] _slots;
 
         private IReadOnlyList<IDefenderUnitView> _defendersList;
+        private IDefendersManager _defendersManager;
+
 
         private int _maxDefenders;
 
@@ -19,6 +21,7 @@ namespace CombatSystem.Views
         public WarsView(WarsUIView warsUIView)
         {
             _warsUIView = warsUIView;
+            _warsUIView.EnterToBarracks.onClick.AddListener(InBarrackButtonClick);
             CreateSlots();
         }
 
@@ -44,19 +47,47 @@ namespace CombatSystem.Views
 
         private void HireButtonClick(int slotNumber)
         {
-
+            _defendersManager?.HireDefender();
         }
 
         private void DissmissButtonClick(int slotNumber)
         {
-
+            if (_defendersList != null)
+            {
+                int index = slotNumber - FIRST_SLOT_NUMBER;
+                if (index >= 0 && index < _defendersList.Count)
+                {
+                    IDefenderUnitView unit = _defendersList[index];
+                    _defendersManager?.DismissDefender(unit);
+                }
+            }
         }
 
         private void InBarrackToggleChanged(bool isOn, int slotNumber)
         {
+            if (_defendersList != null)
+            {
+                int index = slotNumber - FIRST_SLOT_NUMBER;
+                if (index >= 0 && index < _defendersList.Count)
+                {
+                    IDefenderUnitView unit = _defendersList[index];
 
+                    if (isOn)
+                    {
+                        _defendersManager?.SendToBarrack(unit);
+                    }
+                    else
+                    {
+                        _defendersManager?.KickoutFromBarrack(unit);
+                    }
+                }
+            }
         }
 
+        private void InBarrackButtonClick()
+        {
+            _defendersManager?.BarrackButtonClick();
+        }
 
         public void SetDefenders(IReadOnlyList<IDefenderUnitView> defendersList)
         {
@@ -157,6 +188,11 @@ namespace CombatSystem.Views
             {
                 _maxDefenders = _slots.Length;
             }
+        }
+
+        public void SetDefendersManager(IDefendersManager manager)
+        {
+            _defendersManager = manager;
         }
 
     }
