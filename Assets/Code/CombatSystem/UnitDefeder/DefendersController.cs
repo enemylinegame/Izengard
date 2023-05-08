@@ -10,14 +10,14 @@ namespace CombatSystem
     {
         private const float POSITION_RADIUS = 1f;
 
-        private List<DefenderUnit> _defenderUnits; 
+        private List<DefenderUnit> _defenderUnits;
         private GameObject _defenderPrefab;
         private TileController _tilecontroller;
         private UIController _uiConroller;
         private readonly Vector3 _unitsSpawnPosition = new Vector3(200f, 0f, 200f);
 
 
-        public DefendersController(TileController tilecontroller,UIController uiConroller, GameObject defenderPrefab)
+        public DefendersController(TileController tilecontroller, UIController uiConroller, GameObject defenderPrefab)
         {
             _defenderUnits = new List<DefenderUnit>();
             _tilecontroller = tilecontroller;
@@ -39,7 +39,7 @@ namespace CombatSystem
         {
             Vector3 position = UnityEngine.Random.insideUnitSphere * POSITION_RADIUS;
             position.y = 0f;
-            return  position + tile.transform.position;
+            return position + tile.transform.position;
         }
 
         public void SendDefendersToBarrack(List<DefenderUnit> defenderUnits, TileView tile)
@@ -50,17 +50,23 @@ namespace CombatSystem
                 for (int i = 0; i < defenderUnits.Count; i++)
                 {
                     DefenderUnit unit = defenderUnits[i];
-                    unit.GoToPosition(buildingPosition);
-                    unit.OnDestinationReached += OnUnitReachedBarrack;
+                    if (unit.IsInsideBarrack == false)
+                    {
+                        unit.GoToPosition(buildingPosition);
+                        unit.OnDestinationReached += OnUnitReachedBarrack;
+                    }
                 }
             }
         }
 
         public void SendDefenderToBarrack(DefenderUnit unit, TileView tile)
         {
-            Vector3 buildingPosition = tile.transform.position;
-            unit.GoToPosition(buildingPosition);
-            unit.OnDestinationReached += OnUnitReachedBarrack;
+            if (unit.IsInsideBarrack == false)
+            {
+                Vector3 buildingPosition = tile.transform.position;
+                unit.GoToPosition(buildingPosition);
+                unit.OnDestinationReached += OnUnitReachedBarrack;
+            }
         }
 
         private void OnUnitReachedBarrack(DefenderUnit unit)

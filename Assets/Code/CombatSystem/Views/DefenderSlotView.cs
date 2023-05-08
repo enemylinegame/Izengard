@@ -29,7 +29,7 @@ namespace CombatSystem.Views
 
         public bool IsInBarrack
         {
-            get 
+            get
             {
                 return _inBarrack;
             }
@@ -43,7 +43,7 @@ namespace CombatSystem.Views
         public bool IsUsed { get => _unit != null; }
 
         public bool IsEnabled
-        { 
+        {
             get
             {
                 return _isEnabled;
@@ -75,6 +75,7 @@ namespace CombatSystem.Views
             _dismissButton = _uiSlot.DismissButton;
             _dismissButton.onClick.AddListener(DissmisClick);
             _dismissButton.gameObject.SetActive(false);
+            _inBarrack.gameObject.SetActive(false);
 
             _number = number;
             _isEnabled = true;
@@ -104,10 +105,10 @@ namespace CombatSystem.Views
         {
             if (unit != null)
             {
-                _unitIcon.sprite = _unitSprite;
+                _unitIcon.sprite = unit.GetSprite();
                 _unit = unit;
                 _inBarrack.gameObject.SetActive(true);
-                IsInBarrack = false;
+                IsInBarrack = unit.IsInsideBarrack;
                 _hireButton.gameObject.SetActive(false);
                 _dismissButton.gameObject.SetActive(true);
             }
