@@ -11,7 +11,7 @@ namespace CombatSystem.Views
         private WarsUIView _warsUIView;
         private DefenderSlotView[] _slots;
 
-        private IReadOnlyList<IDefenderUnitView> _defendersList;
+        private IReadOnlyList<DefenderUnit> _defendersList;
         private IDefendersManager _defendersManager;
 
 
@@ -57,7 +57,7 @@ namespace CombatSystem.Views
                 int index = slotNumber - FIRST_SLOT_NUMBER;
                 if (index >= 0 && index < _defendersList.Count)
                 {
-                    IDefenderUnitView unit = _defendersList[index];
+                    DefenderUnit unit = _defendersList[index];
                     _defendersManager?.DismissDefender(unit);
                 }
             }
@@ -70,7 +70,7 @@ namespace CombatSystem.Views
                 int index = slotNumber - FIRST_SLOT_NUMBER;
                 if (index >= 0 && index < _defendersList.Count)
                 {
-                    IDefenderUnitView unit = _defendersList[index];
+                    DefenderUnit unit = _defendersList[index];
 
                     if (isOn)
                     {
@@ -89,7 +89,7 @@ namespace CombatSystem.Views
             _defendersManager?.BarrackButtonClick();
         }
 
-        public void SetDefenders(IReadOnlyList<IDefenderUnitView> defendersList)
+        public void SetDefenders(IReadOnlyList<DefenderUnit> defendersList)
         {
             if (_defendersList != null)
             {

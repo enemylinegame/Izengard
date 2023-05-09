@@ -3,9 +3,9 @@
     public interface IDefendersManager
     {
         void HireDefender();
-        void DismissDefender(IDefenderUnitView unit);
-        void SendToBarrack(IDefenderUnitView unit);
-        void KickoutFromBarrack(IDefenderUnitView unit);
+        void DismissDefender(DefenderUnit unit);
+        void SendToBarrack(DefenderUnit unit);
+        void KickoutFromBarrack(DefenderUnit unit);
         void BarrackButtonClick();
     }
 }
