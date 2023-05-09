@@ -156,6 +156,47 @@ namespace CombatSystem.Views
             return counter;
         }
 
+        private void GlobalDismissButtonClick()
+        {
+            int selectedSlotsQuantity = CalculateSelectedSlots();
+            if (selectedSlotsQuantity > 0)
+            {
+                DefenderUnit[] units = new DefenderUnit[selectedSlotsQuantity];
+                int index = 0;
+                for (int i = 0; i < _slots.Length; i++)
+                {
+                    DefenderSlotView slot = _slots[i];
+                    if (slot.IsEnabled && slot.IsUsed && slot.IsSelected)
+                    {
+                        units[index] = slot.DefenderUnitView;
+                        index++;
+                    }
+                }
+                _defendersManager.DismissDefender(units);
+            }
+        }
+
+        private void ToOtherTileButtonClick()
+        {
+            Debug.Log("WarsView->ToOtherTileButtonClick: Sending to other Tile not implemented yet");
+        }
+
+        private int CalculateSelectedSlots()
+        {
+            int counter = 0;
+
+            for (int i = 0; i < _slots.Length; i++)
+            {
+                DefenderSlotView slot = _slots[i];
+                if (slot.IsEnabled && slot.IsUsed && slot.IsSelected)
+                {
+                    counter++;
+                }
+            }
+
+            return counter;
+        }
+
         public void SetDefenders(IReadOnlyList<DefenderUnit> defendersList)
         {
             if (_defendersList != null)
