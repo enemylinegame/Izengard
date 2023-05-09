@@ -19,12 +19,15 @@ namespace CombatSystem.Views
         private Toggle _inBarrack;
         private Button _hireButton;
         private Button _dismissButton;
+        private Button _iconButton;
+        private GameObject _selectedBoard;
         private DefenderUnit _unit;
 
         private int _number;
 
         private bool _isInBarrack;
         private bool _isEnabled;
+        private bool _isSelected;
 
 
         public bool IsInBarrack
@@ -58,6 +61,19 @@ namespace CombatSystem.Views
             }
         }
 
+        public bool IsSelected 
+        { 
+            get => _isSelected; 
+            set
+            {
+                if (_isSelected != value)
+                {
+                    _isSelected = value;
+                    _selectedBoard.SetActive(_isSelected);
+                }
+            }
+        }
+
         public DefenderUnit DefenderUnitView { get => _unit; }
 
 
@@ -76,6 +92,10 @@ namespace CombatSystem.Views
             _dismissButton.onClick.AddListener(DissmisClick);
             _dismissButton.gameObject.SetActive(false);
             _inBarrack.gameObject.SetActive(false);
+            _iconButton = _uiSlot.UnitIconButton;
+            _iconButton.onClick.AddListener(ImageButtonClick);
+            _selectedBoard = _uiSlot.SelectBoard;
+            _selectedBoard.SetActive(_isSelected);
 
             _number = number;
             _isEnabled = true;
@@ -98,6 +118,15 @@ namespace CombatSystem.Views
             {
                 _isInBarrack = isOn;
                 OnInBarrackChanged?.Invoke(isOn, _number);
+            }
+        }
+
+        private void ImageButtonClick()
+        {
+            if (IsUsed)
+            {
+                _isSelected = !_isSelected;
+                _selectedBoard.SetActive(_isSelected);
             }
         }
 
@@ -125,6 +154,7 @@ namespace CombatSystem.Views
             _inBarrack.gameObject.SetActive(false);
             _dismissButton.gameObject.SetActive(false);
             _hireButton.gameObject.SetActive(true);
+            IsSelected = false;
         }
 
     }
