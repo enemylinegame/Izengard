@@ -14,7 +14,6 @@ namespace Code.TileSystem
         public List<Building> FloodedBuildings { get; set; }
         public List<BuildingConfig> CurrBuildingConfigs { get; set; }
         public List<WorkerView> Workers { get; set; }
-        public List<IDefenderUnitView> IDefenderUnits { get; set; }
         public List<DefenderUnit> DefenderUnits { get; set; }
         public List<WorkersAssigments> WorkersAssigments { get; set; }
         public TileConfig SaveTileConfig { get; set; }
