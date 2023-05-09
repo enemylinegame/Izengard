@@ -12,7 +12,7 @@ namespace CombatSystem.Views
         private DefenderSlotView[] _slots;
 
         private IReadOnlyList<IDefenderUnitView> _defendersList;
-        private IDefendersManager _defendersManager;
+        public IDefendersManager DefendersManager;
 
 
         private int _maxDefenders;
@@ -47,7 +47,7 @@ namespace CombatSystem.Views
 
         private void HireButtonClick(int slotNumber)
         {
-            _defendersManager?.HireDefender();
+            DefendersManager?.HireDefender();
         }
 
         private void DissmissButtonClick(int slotNumber)
@@ -58,7 +58,7 @@ namespace CombatSystem.Views
                 if (index >= 0 && index < _defendersList.Count)
                 {
                     IDefenderUnitView unit = _defendersList[index];
-                    _defendersManager?.DismissDefender(unit);
+                    DefendersManager?.DismissDefender(unit);
                 }
             }
         }
@@ -74,11 +74,11 @@ namespace CombatSystem.Views
 
                     if (isOn)
                     {
-                        _defendersManager?.SendToBarrack(unit);
+                        DefendersManager?.SendToBarrack(unit);
                     }
                     else
                     {
-                        _defendersManager?.KickoutFromBarrack(unit);
+                        DefendersManager?.KickoutFromBarrack(unit);
                     }
                 }
             }
@@ -86,7 +86,7 @@ namespace CombatSystem.Views
 
         private void InBarrackButtonClick()
         {
-            _defendersManager?.BarrackButtonClick();
+            DefendersManager?.BarrackButtonClick();
         }
 
         public void SetDefenders(IReadOnlyList<IDefenderUnitView> defendersList)
@@ -192,7 +192,7 @@ namespace CombatSystem.Views
 
         public void SetDefendersManager(IDefendersManager manager)
         {
-            _defendersManager = manager;
+            DefendersManager = manager;
         }
 
     }

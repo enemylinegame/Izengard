@@ -65,6 +65,7 @@ namespace Code.TileSystem
             _uiView.Upgrade.onClick.RemoveAllListeners();
             _tileView = view;
             _tileModel = view.TileModel;
+            // _uiController.WarsView.SetDefenders(view.TileModel.IDefenderUnits);
             ADDBuildUI(view.TileModel);
             view.LoadButtonsUIBuy(this, _uiController);
             _uiView.Upgrade.onClick.AddListener(() => view.LVLUp(this));
