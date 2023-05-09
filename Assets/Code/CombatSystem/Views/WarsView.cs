@@ -22,6 +22,8 @@ namespace CombatSystem.Views
         {
             _warsUIView = warsUIView;
             _warsUIView.EnterToBarracks.onClick.AddListener(InBarrackButtonClick);
+            _warsUIView.DismissButton.onClick.AddListener(GlobalDismissButtonClick);
+            _warsUIView.ToOtherTileButton.onClick.AddListener(ToOtherTileButtonClick);
             CreateSlots();
         }
 
@@ -57,7 +59,7 @@ namespace CombatSystem.Views
                 int index = slotNumber - FIRST_SLOT_NUMBER;
                 if (index >= 0 && index < _defendersList.Count)
                 {
-                    DefenderUnit[] units = new DefenderUnit[0];
+                    DefenderUnit[] units = new DefenderUnit[1];
                     units[0] = _defendersList[index];
                     _defendersManager?.DismissDefender(units);
                 }
@@ -71,7 +73,7 @@ namespace CombatSystem.Views
                 int index = slotNumber - FIRST_SLOT_NUMBER;
                 if (index >= 0 && index < _defendersList.Count)
                 {
-                    DefenderUnit[] units = new DefenderUnit[0];
+                    DefenderUnit[] units = new DefenderUnit[1];
                     units[0] = _defendersList[index];
                     if (isOn)
                     {
@@ -88,6 +90,47 @@ namespace CombatSystem.Views
         private void InBarrackButtonClick()
         {
             _defendersManager?.BarrackButtonClick();
+        }
+
+        private void GlobalDismissButtonClick()
+        {
+            int selectedSlotsQuantity = CalculateSelectedSlots();
+            if (selectedSlotsQuantity > 0)
+            {
+                DefenderUnit[] units = new DefenderUnit[selectedSlotsQuantity];
+                int index = 0;
+                for (int i = 0; i < _slots.Length; i++)
+                {
+                    DefenderSlotView slot = _slots[i];
+                    if (slot.IsEnabled && slot.IsUsed && slot.IsSelected)
+                    {
+                        units[index] = slot.DefenderUnitView;
+                        index++;
+                    }
+                }
+                _defendersManager.DismissDefender(units);
+            }
+        }
+
+        private void ToOtherTileButtonClick()
+        {
+            Debug.Log("WarsView->ToOtherTileButtonClick: Sending to other Tile not implemented yet");
+        }
+
+        private int CalculateSelectedSlots()
+        {
+            int counter = 0;
+
+            for (int i = 0; i < _slots.Length; i++)
+            {
+                DefenderSlotView slot = _slots[i];
+                if (slot.IsEnabled && slot.IsUsed && slot.IsSelected)
+                {
+                    counter++;
+                }
+            }
+
+            return counter;
         }
 
         public void SetDefenders(IReadOnlyList<DefenderUnit> defendersList)
