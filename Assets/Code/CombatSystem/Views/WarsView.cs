@@ -57,8 +57,9 @@ namespace CombatSystem.Views
                 int index = slotNumber - FIRST_SLOT_NUMBER;
                 if (index >= 0 && index < _defendersList.Count)
                 {
-                    DefenderUnit unit = _defendersList[index];
-                    _defendersManager?.DismissDefender(unit);
+                    DefenderUnit[] units = new DefenderUnit[0];
+                    units[0] = _defendersList[index];
+                    _defendersManager?.DismissDefender(units);
                 }
             }
         }
@@ -70,15 +71,15 @@ namespace CombatSystem.Views
                 int index = slotNumber - FIRST_SLOT_NUMBER;
                 if (index >= 0 && index < _defendersList.Count)
                 {
-                    DefenderUnit unit = _defendersList[index];
-
+                    DefenderUnit[] units = new DefenderUnit[0];
+                    units[0] = _defendersList[index];
                     if (isOn)
                     {
-                        _defendersManager?.SendToBarrack(unit);
+                        _defendersManager?.SendToBarrack(units);
                     }
                     else
                     {
-                        _defendersManager?.KickoutFromBarrack(unit);
+                        _defendersManager?.KickoutFromBarrack(units);
                     }
                 }
             }
