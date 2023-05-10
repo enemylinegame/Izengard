@@ -60,11 +60,14 @@ namespace CombatSystem.Views
 
         private void HireButtonClick(int slotNumber)
         {
+            SendDefendersModeOff();
             _defendersManager?.HireDefender();
         }
 
         private void DissmissButtonClick(int slotNumber)
         {
+            SendDefendersModeOff();
+
             if (_defendersList != null)
             {
                 int index = slotNumber - FIRST_SLOT_NUMBER;
@@ -100,11 +103,15 @@ namespace CombatSystem.Views
 
         private void InBarrackButtonClick()
         {
+            SendDefendersModeOff();
+
             _defendersManager?.BarrackButtonClick();
         }
 
         private void GlobalDismissButtonClick()
         {
+            SendDefendersModeOff();
+
             DefenderUnit[] units = CreateSelectedDefendersArray();
             if (units.Length > 0)
             {
