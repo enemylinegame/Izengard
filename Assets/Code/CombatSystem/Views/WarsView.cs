@@ -1,21 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+using Controllers;
+using Interfaces;
+using Code.TileSystem;
+
 
 namespace CombatSystem.Views
 {
-    public sealed class WarsView
+    public sealed class WarsView : ITileSelector
     {
         private const int FIRST_SLOT_NUMBER = 1;
 
         private WarsUIView _warsUIView;
+        private InputController _inputController;
         private DefenderSlotView[] _slots;
 
         private IReadOnlyList<DefenderUnit> _defendersList;
         private IDefendersManager _defendersManager;
 
-
         private int _maxDefenders;
+
+        private bool _isSendDefendersMode;
 
 
         public WarsView(WarsUIView warsUIView)
@@ -27,6 +33,11 @@ namespace CombatSystem.Views
             CreateSlots();
         }
 
+
+        public void SetInputController(InputController inputController)
+        {
+            _inputController = inputController;
+        }
 
         private void CreateSlots()
         {
@@ -94,10 +105,25 @@ namespace CombatSystem.Views
 
         private void GlobalDismissButtonClick()
         {
+            DefenderUnit[] units = CreateSelectedDefendersArray();
+            if (units.Length > 0)
+            {
+                _defendersManager?.DismissDefender(units);
+            }
+        }
+
+        private void ToOtherTileButtonClick()
+        {
+            SendDefendersModeOn();
+        }
+
+        private DefenderUnit[] CreateSelectedDefendersArray()
+        {
             int selectedSlotsQuantity = CalculateSelectedSlots();
+            DefenderUnit[] units = new DefenderUnit[selectedSlotsQuantity];
+
             if (selectedSlotsQuantity > 0)
             {
-                DefenderUnit[] units = new DefenderUnit[selectedSlotsQuantity];
                 int index = 0;
                 for (int i = 0; i < _slots.Length; i++)
                 {
@@ -108,13 +134,10 @@ namespace CombatSystem.Views
                         index++;
                     }
                 }
-                _defendersManager?.DismissDefender(units);
+                
             }
-        }
 
-        private void ToOtherTileButtonClick()
-        {
-            Debug.Log("WarsView->ToOtherTileButtonClick: Sending to other Tile not implemented yet");
+            return units;
         }
 
         private int CalculateSelectedSlots()
@@ -237,6 +260,42 @@ namespace CombatSystem.Views
         public void SetDefendersManager(IDefendersManager manager)
         {
             _defendersManager = manager;
+        }
+
+        public void Cancel()
+        {
+            SendDefendersModeOff();
+        }
+
+        public void SelectTile(TileView tile)
+        {
+            SendDefendersModeOff();
+            if (tile != null)
+            {
+                DefenderUnit[] units = CreateSelectedDefendersArray();
+                if (units.Length > 0)
+                {
+                    _defendersManager?.SendToOtherTile(units, tile);
+                }
+            }
+        }
+
+        private void SendDefendersModeOn()
+        {
+            if (!_isSendDefendersMode)
+            {
+                _isSendDefendersMode = true;
+                _inputController.SetSpecialTileSelector(this);
+            }
+        }
+
+        private void SendDefendersModeOff()
+        {
+            if (_isSendDefendersMode)
+            {
+                _isSendDefendersMode = false;
+                _inputController.SetSpecialTileSelector(null);
+            }
         }
 
     }

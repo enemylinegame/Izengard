@@ -6,6 +6,8 @@ using Code.TileSystem;
 using Code.UI;
 using Controllers.OutPost;
 using Views.BuildBuildingsUI;
+using Interfaces;
+
 
 namespace Controllers
 {
@@ -55,6 +57,11 @@ namespace Controllers
                 }
 
             }
+
+        }
+
+        public void SetSpecialTileSelector(ITileSelector tileSelector)
+        {
 
         }
     }
