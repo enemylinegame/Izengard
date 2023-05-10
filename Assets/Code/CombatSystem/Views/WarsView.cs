@@ -165,6 +165,8 @@ namespace CombatSystem.Views
 
         public void SetDefenders(IReadOnlyList<DefenderUnit> defendersList)
         {
+            SendDefendersModeOff();
+
             if (_defendersList != null)
             {
                 ClearDefenders();
@@ -196,6 +198,8 @@ namespace CombatSystem.Views
 
         public void ClearDefenders()
         {
+            SendDefendersModeOff();
+
             for (int i = 0; i < _maxDefenders; i++)
             {
                 DefenderSlotView currentSlot = _slots[i];
