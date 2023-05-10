@@ -15,12 +15,17 @@ namespace Controllers
     {
         private TileController _tileController;
         private UIController _uiController;
+        private ITileSelector _tileSelector;
+
         private bool _isOnTile = true;
+        private bool _isSpecialMode;
+
 
         public InputController(TileController tileController, UIController uiController)
         {
             _tileController = tileController;
             _uiController = uiController;
+            _uiController.WarsView.SetInputController(this);
         }
 
 
@@ -28,8 +33,16 @@ namespace Controllers
         {
             if (Input.GetMouseButtonDown(1))
             {
-                _uiController.IsWorkUI(UIType.All, false);
-                _isOnTile = true;
+                if (!_isSpecialMode)
+                {
+                    _uiController.IsWorkUI(UIType.All, false);
+                    _isOnTile = true;
+                }
+                else
+                {
+                    _tileSelector.Cancel();
+                }
+
             }
             if (Input.GetMouseButtonDown(0))
             {
@@ -47,11 +60,18 @@ namespace Controllers
 
                     if (tile)
                     {
-                        if (_isOnTile)
+                        if (!_isSpecialMode)
                         {
-                            _uiController.IsWorkUI(UIType.Tile, true);
-                            _tileController.LoadInfo(tile);
-                            _isOnTile = false;
+                            if (_isOnTile)
+                            {
+                                _uiController.IsWorkUI(UIType.Tile, true);
+                                _tileController.LoadInfo(tile);
+                                _isOnTile = false;
+                            }
+                        }
+                        else
+                        {
+                            _tileSelector.SelectTile(tile);
                         }
                     }
                 }
@@ -62,7 +82,8 @@ namespace Controllers
 
         public void SetSpecialTileSelector(ITileSelector tileSelector)
         {
-
+            _tileSelector = tileSelector;
+            _isSpecialMode = _tileSelector != null;
         }
     }
 }
