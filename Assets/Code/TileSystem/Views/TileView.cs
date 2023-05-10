@@ -76,7 +76,7 @@ namespace Code.TileSystem
                 TileModel.CurrBuildingConfigs.AddRange(TileModel.SaveTileConfig.BuildingTirs);
                 controller.UpdateInfo(TileModel.SaveTileConfig);
                 controller.ADDBuildUI(TileModel);
-                controller.WorkerAssigmentsController.FillWorkerList();
+                controller.WorkerAssignmentsController.FillWorkerList();
             }else controller.CenterText.NotificationUI("Max LVL", 1000);
         }
         /// <summary>
@@ -84,12 +84,12 @@ namespace Code.TileSystem
         /// </summary>
         public void LoadButtonsUIBuy(TileController controller, UIController uiController)
         {
-            controller.WorkerAssigmentsController.FillWorkerList();
+            controller.WorkerAssignmentsController.FillWorkerList();
             foreach (var building in TileModel.FloodedBuildings)
             {
                 if (building.MineralConfig == null)
                 {
-                    uiController.LoadBuildingInfo(building, controller.WorkerAssigmentsController.GetAssignedWorkers(building), controller);
+                    uiController.LoadBuildingInfo(building, controller.WorkerAssignmentsController.GetAssignedWorkers(building), controller);
                 }
             }
         }

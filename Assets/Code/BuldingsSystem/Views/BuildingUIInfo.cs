@@ -44,7 +44,7 @@ namespace Views.BuildBuildingsUI
                 if (_units < 5)
                 {
                     controller.hiringUnits(1);
-                    controller.WorkerAssigmentsController.UpdateWorkerAssigment(_Types, building);
+                    controller.WorkerAssignmentsController.UpdateWorkerAssigment(_Types, building);
                     _units += 1;
                     _unitsBusy.text = _units + "/5";
                 }
@@ -55,7 +55,7 @@ namespace Views.BuildBuildingsUI
             {
                 if (_units > 0)
                 {
-                    controller.WorkerAssigmentsController.RemoveWorkerAssigment(_Types, building);
+                    controller.WorkerAssignmentsController.RemoveWorkerAssigment(_Types, building);
                     controller.RemoveFromHiringUnits(1);
                     _units -= 1;
                     _unitsBusy.text = _units + "/5";

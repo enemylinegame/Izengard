@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Code.TileSystem
 {
-    public class DefendersAssigmentsController : IDefendersManager
+    public class DefendersAssignmentsController : IDefendersManager
     {
         private TileController _tileController;
         private DefendersController _defendersController;
@@ -21,7 +21,7 @@ namespace Code.TileSystem
             set => _tileModel.EightQuantity = value;
         }
 
-        public DefendersAssigmentsController(TileController tileController, DefendersController defendersController, UIController uiController)
+        public DefendersAssignmentsController(TileController tileController, DefendersController defendersController, UIController uiController)
         {
             _tileController = tileController;
             _defendersController = defendersController;
@@ -40,7 +40,7 @@ namespace Code.TileSystem
         {
             _defendersController.SendDefenderToBarrack(unit , _tileView);
             _tileModel.DefenderUnits.Remove(unit);
-            Object.Destroy(unit.DefenderGameObject);
+            Object.Destroy(unit.DefenderGameObject);//TODO Лучше потом убрать
             _uiController.WarsView.SetDefenders(_tileModel.DefenderUnits);
         }
 

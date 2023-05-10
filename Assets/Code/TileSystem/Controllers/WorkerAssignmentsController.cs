@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Code.TileSystem
 {
-    public class WorkerAssigmentsController
+    public class WorkerAssignmentsController
     {
         private TileController _tileController;
 
@@ -18,7 +18,7 @@ namespace Code.TileSystem
             set => _tileModel.EightQuantity = value;
         }
 
-        public WorkerAssigmentsController(TileController tileController)
+        public WorkerAssignmentsController(TileController tileController)
         {
             _tileController = tileController;
         }

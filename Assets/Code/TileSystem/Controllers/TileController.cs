@@ -26,7 +26,7 @@ namespace Code.TileSystem
         private List<BuildingConfig> _buildingConfigs;
         private BuildingController _buildingController;
         private UIController _uiController;
-        private WorkerAssigmentsController _workerAssigmentsController;
+        private WorkerAssignmentsController _workerAssignmentsController;
         private TileResourceUIController _tileResourceController;
         private TileResouceUIFactory _tileResouceUIFactory;
         private ResourcesLayoutUIView _resourcesLayoutUIView;
@@ -38,14 +38,14 @@ namespace Code.TileSystem
         public TileList List => _list;
         public BaseCenterText CenterText => _centerText;
         public int CurrentLVL => _currentlvl;
-        public WorkerAssigmentsController WorkerAssigmentsController => _workerAssigmentsController;
+        public WorkerAssignmentsController WorkerAssignmentsController => _workerAssignmentsController;
         public TileModel TileModel => _tileView.TileModel;
         public TileView View => _tileView;
 
         public TileController(TileList tileList, TileUIView uiView, BaseCenterText centerText, UIController uiController,
             BuildGenerator buildGenerator, GlobalStock stock, BuildingController buildingController)
         {
-            _workerAssigmentsController = new WorkerAssigmentsController(this);
+            _workerAssignmentsController = new WorkerAssignmentsController(this);
             _centerText = centerText;
             _list = tileList;
             _uiView = uiView;
@@ -135,7 +135,7 @@ namespace Code.TileSystem
                     buildingConfigs.Remove(kvp);
                     _uiController.DestroyBuildingInfo.Remove(Button.gameObject);
                     _tileModel.FloodedBuildings.Remove(kvp);
-                    _workerAssigmentsController.RemoveAllWorkerAssigment(Button.Types, kvp, this);
+                    _workerAssignmentsController.RemoveAllWorkerAssigment(Button.Types, kvp, this);
                     _buildingController.RemoveTypeDots(model, kvp);
                     GameObject.Destroy(kvp.gameObject);
                     GameObject.Destroy(Button.gameObject);
