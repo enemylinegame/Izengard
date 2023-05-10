@@ -172,7 +172,7 @@ namespace CombatSystem.Views
                         index++;
                     }
                 }
-                _defendersManager.DismissDefender(units);
+                _defendersManager?.DismissDefender(units);
             }
         }
 
