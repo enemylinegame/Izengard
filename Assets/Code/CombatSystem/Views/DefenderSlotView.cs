@@ -11,6 +11,7 @@ namespace CombatSystem.Views
         public event Action<int> OnHireClick;
         public event Action<int> OnDissmisClick;
         public event Action<bool, int> OnInBarrackChanged;
+        public event Action<bool, int> OnSelected;
 
         private DefenderSlotUI _uiSlot;
         private Image _unitIcon;
@@ -127,6 +128,7 @@ namespace CombatSystem.Views
             {
                 _isSelected = !_isSelected;
                 _selectedBoard.SetActive(_isSelected);
+                OnSelected?.Invoke(_isSelected, _number);
             }
         }
 
