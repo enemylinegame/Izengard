@@ -12,6 +12,7 @@ namespace CombatSystem.Views
         private DefenderSlotView[] _slots;
 
         private IReadOnlyList<DefenderUnit> _defendersList;
+        private List<DefenderSlotView> _selectedSlots;
         private IDefendersManager _defendersManager;
 
 
@@ -41,10 +42,13 @@ namespace CombatSystem.Views
                 newSlot.OnHireClick += HireButtonClick;
                 newSlot.OnDissmisClick += DissmissButtonClick;
                 newSlot.OnInBarrackChanged += InBarrackToggleChanged;
+                newSlot.OnSelected += SlotSelected;
                 _slots[i] = newSlot;
             }
 
             _maxDefenders = _slots.Length;
+
+            _selectedSlots = new List<DefenderSlotView>();
         }
 
         private void HireButtonClick(int slotNumber)
@@ -89,7 +93,48 @@ namespace CombatSystem.Views
 
         private void InBarrackButtonClick()
         {
-            _defendersManager?.BarrackButtonClick();
+            List<DefenderUnit> inside = new List<DefenderUnit>();
+            List<DefenderUnit> outside = new List<DefenderUnit>();
+
+            DefenderSlotView[] slots;
+
+            if (_selectedSlots.Count > 0)
+            {
+                slots = _selectedSlots.ToArray();
+            }
+            else
+            {
+                slots = _slots;
+            }
+
+            int outsideBarrackCounter = 0;
+            for (int i = 0; i < slots.Length; i++)
+            {
+                DefenderSlotView slot = slots[i];
+                if (slot.IsEnabled && slot.IsUsed)
+                {
+                    DefenderUnit unit = slot.DefenderUnitView;
+                    if (unit.IsInsideBarrack)
+                    {
+                        inside.Add(unit);
+                    }
+                    else
+                    {
+                        outside.Add(unit);
+                        outsideBarrackCounter++;
+                    }
+                }
+            }
+
+            if (outside.Count > 0)
+            {
+                _defendersManager.SendToBarrack(outside);
+            }
+            else
+            {
+                _defendersManager.KickoutFromBarrack(inside);
+            }
+
         }
 
         private void GlobalDismissButtonClick()
@@ -108,6 +153,22 @@ namespace CombatSystem.Views
             if (isUnitsSelected)
             {
                 _defendersManager?.DismissDefender(units);
+            }
+        }
+
+        private void SlotSelected(bool isSelected, int number)
+        {
+            DefenderSlotView slot = _slots[number - FIRST_SLOT_NUMBER];
+            if (isSelected)
+            {
+                if (!_selectedSlots.Contains(slot))
+                {
+                    _selectedSlots.Add(slot);
+                }
+            }
+            else
+            {
+                _selectedSlots.Remove(slot);
             }
         }
 
