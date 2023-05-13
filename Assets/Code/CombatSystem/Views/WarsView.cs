@@ -6,19 +6,31 @@ namespace CombatSystem.Views
 {
     public sealed class WarsView
     {
+
+        private enum BarrackButtonsStatus
+        {
+            None    = 0,
+            Enter   = 1,
+            Kickout = 2
+        }
+
+
         private const int FIRST_SLOT_NUMBER = 1;
 
         private WarsUIView _warsUIView;
         private DefenderSlotView[] _slots;
-        private GameObject _enterButton;
-        private GameObject _exitButton;
+        private GameObject _enterBarrackButton;
+        private GameObject _exitBarrackButton;
 
         private IReadOnlyList<DefenderUnit> _defendersList;
         private List<DefenderSlotView> _selectedSlots;
+        private List<DefenderUnit> _unitsInsideBarrack;
+        private List<DefenderUnit> _unitsOutsideBarrack;
         private IDefendersManager _defendersManager;
 
 
         private int _maxDefenders;
+        private BarrackButtonsStatus _barrackButtonsStatus;
 
 
         public WarsView(WarsUIView warsUIView)
@@ -29,9 +41,13 @@ namespace CombatSystem.Views
             _warsUIView.DismissButton.onClick.AddListener(GlobalDismissButtonClick);
             _warsUIView.ToOtherTileButton.onClick.AddListener(ToOtherTileButtonClick);
 
-            _enterButton = _warsUIView.EnterToBarracks.gameObject;
-            _exitButton = _warsUIView.ExitFromBarracks.gameObject;
-            _exitButton.SetActive(false);
+            _enterBarrackButton = _warsUIView.EnterToBarracks.gameObject;
+            _exitBarrackButton = _warsUIView.ExitFromBarracks.gameObject;
+            _exitBarrackButton.SetActive(false);
+            _barrackButtonsStatus = BarrackButtonsStatus.Enter;
+
+            _unitsInsideBarrack = new List<DefenderUnit>();
+            _unitsOutsideBarrack = new List<DefenderUnit>();
 
             CreateSlots();
         }
@@ -101,46 +117,14 @@ namespace CombatSystem.Views
 
         private void InBarrackButtonClick()
         {
-            List<DefenderUnit> inside = new List<DefenderUnit>();
-            List<DefenderUnit> outside = new List<DefenderUnit>();
 
-            DefenderSlotView[] slots;
-
-            if (_selectedSlots.Count > 0)
+            if (_unitsOutsideBarrack.Count > 0)
             {
-                slots = _selectedSlots.ToArray();
+                _defendersManager?.SendToBarrack(_unitsOutsideBarrack);
             }
             else
             {
-                slots = _slots;
-            }
-
-            int outsideBarrackCounter = 0;
-            for (int i = 0; i < slots.Length; i++)
-            {
-                DefenderSlotView slot = slots[i];
-                if (slot.IsEnabled && slot.IsUsed)
-                {
-                    DefenderUnit unit = slot.DefenderUnitView;
-                    if (unit.IsInsideBarrack)
-                    {
-                        inside.Add(unit);
-                    }
-                    else
-                    {
-                        outside.Add(unit);
-                        outsideBarrackCounter++;
-                    }
-                }
-            }
-
-            if (outside.Count > 0)
-            {
-                _defendersManager?.SendToBarrack(outside);
-            }
-            else
-            {
-                _defendersManager?.KickoutFromBarrack(inside);
+                _defendersManager?.KickoutFromBarrack(_unitsInsideBarrack);
             }
 
         }
@@ -166,17 +150,85 @@ namespace CombatSystem.Views
 
         private void SlotSelected(bool isSelected, int number)
         {
+            bool isChanged = false;
+
             DefenderSlotView slot = _slots[number - FIRST_SLOT_NUMBER];
             if (isSelected)
             {
                 if (!_selectedSlots.Contains(slot))
                 {
                     _selectedSlots.Add(slot);
+                    isChanged = true;
                 }
             }
             else
             {
                 _selectedSlots.Remove(slot);
+                isChanged = true;
+            }
+
+            if (isChanged)
+            {
+                RecalculateDefendersLists();
+                UpdateBarracksButtonsStatus();
+            }
+        }
+
+        private void RecalculateDefendersLists()
+        {
+            _unitsInsideBarrack.Clear();
+            _unitsOutsideBarrack.Clear();
+
+            DefenderSlotView[] slots;
+
+            if (_selectedSlots.Count > 0)
+            {
+                slots = _selectedSlots.ToArray();
+            }
+            else
+            {
+                slots = _slots;
+            }
+
+            int outsideBarrackCounter = 0;
+            for (int i = 0; i < slots.Length; i++)
+            {
+                DefenderSlotView slot = slots[i];
+                if (slot.IsEnabled && slot.IsUsed)
+                {
+                    DefenderUnit unit = slot.DefenderUnitView;
+                    if (unit.IsInsideBarrack)
+                    {
+                        _unitsInsideBarrack.Add(unit);
+                    }
+                    else
+                    {
+                        _unitsOutsideBarrack.Add(unit);
+                        outsideBarrackCounter++;
+                    }
+                }
+            }
+        }
+
+        private void UpdateBarracksButtonsStatus()
+        {
+            if (_unitsOutsideBarrack.Count > 0)
+            {
+                if (_barrackButtonsStatus != BarrackButtonsStatus.Enter)
+                {
+                    _exitBarrackButton.SetActive(false);
+                    _enterBarrackButton.SetActive(true);
+                    _barrackButtonsStatus = BarrackButtonsStatus.Enter;
+                }
+            }
+            else
+            {
+                if (_barrackButtonsStatus != BarrackButtonsStatus.Kickout)
+                {
+                    _enterBarrackButton.SetActive(false);
+                    _exitBarrackButton.SetActive(true);
+                    _barrackButtonsStatus = BarrackButtonsStatus.Kickout;
+                }
             }
         }
 
@@ -212,6 +264,9 @@ namespace CombatSystem.Views
                         _slots[i].SetUnit(_defendersList[i]);
                     }
                 }
+
+                RecalculateDefendersLists();
+                UpdateBarracksButtonsStatus();
             }
 
         }
@@ -249,6 +304,9 @@ namespace CombatSystem.Views
                         }
                     }
                 }
+
+                RecalculateDefendersLists();
+                UpdateBarracksButtonsStatus();
             }
         }
 
