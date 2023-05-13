@@ -10,6 +10,8 @@ namespace CombatSystem.Views
 
         private WarsUIView _warsUIView;
         private DefenderSlotView[] _slots;
+        private GameObject _enterButton;
+        private GameObject _exitButton;
 
         private IReadOnlyList<DefenderUnit> _defendersList;
         private List<DefenderSlotView> _selectedSlots;
@@ -23,8 +25,14 @@ namespace CombatSystem.Views
         {
             _warsUIView = warsUIView;
             _warsUIView.EnterToBarracks.onClick.AddListener(InBarrackButtonClick);
+            _warsUIView.ExitFromBarracks.onClick.AddListener(InBarrackButtonClick);
             _warsUIView.DismissButton.onClick.AddListener(GlobalDismissButtonClick);
             _warsUIView.ToOtherTileButton.onClick.AddListener(ToOtherTileButtonClick);
+
+            _enterButton = _warsUIView.EnterToBarracks.gameObject;
+            _exitButton = _warsUIView.ExitFromBarracks.gameObject;
+            _exitButton.SetActive(false);
+
             CreateSlots();
         }
 
@@ -128,11 +136,11 @@ namespace CombatSystem.Views
 
             if (outside.Count > 0)
             {
-                _defendersManager.SendToBarrack(outside);
+                _defendersManager?.SendToBarrack(outside);
             }
             else
             {
-                _defendersManager.KickoutFromBarrack(inside);
+                _defendersManager?.KickoutFromBarrack(inside);
             }
 
         }
