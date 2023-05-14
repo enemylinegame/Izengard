@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Code.MovementOfWorkers.Animations;
 using Controllers.OutPost;
 using Controllers.Pool;
-using Controllers.Worker;
 using Models.BaseUnit;
 using UnityEngine;
-using Views.BaseUnit;
 using Views.Outpost;
 
 namespace Controllers.BaseUnit
@@ -27,7 +24,8 @@ namespace Controllers.BaseUnit
         #endregion
         #region UnityMethods
 
-        public BaseUnitSpawner(GameConfig gameConfig,UnitController unitController, OutpostSpawner outpostSpawner,GameObject unitPrefab)
+        public BaseUnitSpawner(GameConfig gameConfig, UnitController unitController, 
+            OutpostSpawner outpostSpawner,GameObject unitPrefab)
         {
             _whereToSpawn = new Vector3(gameConfig.MapSizeX / 2.0f + 0.3f,0,gameConfig.MapSizeY / 2.0f + 0.3f);
             _unitController = unitController;
