@@ -20,10 +20,9 @@ public class WorkerView : MonoBehaviour, IWorkerView
 
     public void GoToPlace(Vector3 place)
     {
-        _navigationAgent.SetDestination(place);
-
         _animator.ResetTrigger(IDLE);
         _animator.SetTrigger(WALK);
+        _navigationAgent.SetDestination(place);
     }
 
     public bool IsOnThePlace()
@@ -35,6 +34,14 @@ public class WorkerView : MonoBehaviour, IWorkerView
     {
         _animator.ResetTrigger(WALK);
         _animator.SetTrigger(PRODUCE_WORK);
+    }
+
+    public void DragToPlace(Vector3 place)
+    {
+        _animator.ResetTrigger(IDLE);
+        _animator.ResetTrigger(PRODUCE_WORK);
+        _animator.SetTrigger(DRAG_BACK);
+        _navigationAgent.SetDestination(place);
     }
 
     public void Idle()
@@ -57,5 +64,6 @@ public class WorkerView : MonoBehaviour, IWorkerView
     private const string IDLE = "Idle";
     private const string WALK = "Walk";
     private const string PRODUCE_WORK = "ProduceWork";
+    private const string DRAG_BACK = "DragBack";
 
 }

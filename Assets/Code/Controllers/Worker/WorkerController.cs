@@ -56,7 +56,7 @@ namespace Controllers.Worker
 
         private void BringProducts()
         {
-            _view.GoToPlace(_model.StatrtingPlace);
+            _view.DragToPlace(_model.StatrtingPlace);
         }
 
         public void OnUpdate(float deltaTime)

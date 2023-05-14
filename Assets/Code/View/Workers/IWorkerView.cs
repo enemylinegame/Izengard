@@ -8,6 +8,7 @@ public interface IWorkerView
     void GoToPlace(Vector3 place);
     bool IsOnThePlace();
     void ProduceWork();
+    void DragToPlace(Vector3 place);
     void Activate();
     void Deactivate();
 }
