@@ -26,7 +26,7 @@ public class WorkersTeamController: IOnUpdate, IDisposable
 
         _model.Workers.Add(workerController.WorkerId, workerController);
 
-        workerController.OnMissionCompleted += MissionIsCompeted;
+        workerController.OnMissionCompleted += MissionIsCompleted;
 
         workerController.GoToPlace(startPalce, targetPalce);
         return workerController.WorkerId;
@@ -39,7 +39,7 @@ public class WorkersTeamController: IOnUpdate, IDisposable
 
         _model.Workers.Add(workerController.WorkerId, workerController);
 
-        workerController.OnMissionCompleted += MissionIsCompeted;
+        workerController.OnMissionCompleted += MissionIsCompleted;
 
         workerController.GoToWorkAndReturn(startPalce, targetPalce);
         return workerController.WorkerId;
@@ -63,9 +63,9 @@ public class WorkersTeamController: IOnUpdate, IDisposable
             _model.Workers.Remove(_model.CompletedWorkers[i]);
     }
 
-    private void MissionIsCompeted(WorkerController workerController)
+    private void MissionIsCompleted(WorkerController workerController)
     {
-        workerController.OnMissionCompleted -= MissionIsCompeted;
+        workerController.OnMissionCompleted -= MissionIsCompleted;
         OnMissionCompleted.Invoke(workerController.WorkerId);
 
         _model.CompletedWorkers.Add(workerController.WorkerId);
@@ -76,7 +76,7 @@ public class WorkersTeamController: IOnUpdate, IDisposable
     public void Dispose()
     {
         foreach (var worker in _model.Workers)
-            worker.Value.OnMissionCompleted -= MissionIsCompeted;
+            worker.Value.OnMissionCompleted -= MissionIsCompleted;
     }
 
     private WorkerFactory _workerFactory;
