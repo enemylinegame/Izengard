@@ -12,9 +12,11 @@ public class WorkersTesting : MonoBehaviour
     {
         Vector3 homePosition = new Vector3(5, 0, 5);
 
-        GameObject.CreatePrimitive(PrimitiveType.Cube).transform.position = homePosition;
+        GameObject.CreatePrimitive(PrimitiveType.Cube)
+            .transform.position = homePosition;
 
-        WorkersTeamConfig config = Resources.Load<WorkersTeamConfig>("WorkersTeam");
+        WorkersTeamConfig config = 
+            Resources.Load<WorkersTeamConfig>("WorkersTeam");
 
         _controller = new WorkersTeamController(
             config);
@@ -44,7 +46,8 @@ public class WorkersTesting : MonoBehaviour
             return;
         }
 
-        Debug.Log($"Completed task {workId}, received resource: {_works[workId]}");
+        Debug.Log($"Completed task {workId}, " +
+            $"received resource: {_works[workId]}");
     }
 
     void Update()
