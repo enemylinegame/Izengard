@@ -230,7 +230,7 @@ namespace CombatSystem.Views
 
         public void ClearDefenders()
         {
-            for (int i = 0; i < _maxDefenders; i++)
+            for (int i = 0; i < _slots.Length; i++)
             {
                 DefenderSlotView currentSlot = _slots[i];
                 if (currentSlot.IsUsed)
@@ -245,21 +245,71 @@ namespace CombatSystem.Views
         {
             if (_defendersList != null)
             {
-                int defendersQuantity = _defendersList.Count;
-                for (int i = 0; i < _maxDefenders; i++)
+                RemoveFromSlotsDeletedUnits();
+
+                for (int i = 0; i < _defendersList.Count; i++)
                 {
-                    DefenderSlotView currentSlot = _slots[i];
-                    if (i < defendersQuantity)
+                    DefenderUnit searchedUnit = _defendersList[i];
+                    DefenderSlotView firstEmpty = null;
+                    bool isFound = false;
+
+                    for (int j = 0; j < _slots.Length; j++)
                     {
-                        currentSlot.SetUnit(_defendersList[i]);
-                    }
-                    else
-                    {
-                        if (currentSlot.IsUsed)
+                        DefenderSlotView slot = _slots[j];
+                        if (slot.IsUsed)
                         {
-                            currentSlot.RemoveUnit();
+                            if (slot.DefenderUnitView == searchedUnit)
+                            {
+                                isFound = true;
+                                slot.IsInBarrack = searchedUnit.IsInsideBarrack;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if (firstEmpty == null && slot.IsEnabled)
+                            {
+                                firstEmpty = slot;
+                            }
+                        }
+
+                    }
+
+                    if (!isFound)
+                    {
+                        if (firstEmpty != null)
+                        {
+                            firstEmpty.SetUnit(searchedUnit);
                         }
                     }
+
+                }
+            }
+        }
+
+        private void RemoveFromSlotsDeletedUnits()
+        {
+            for (int i = 0; i < _slots.Length; i++)
+            {
+                DefenderSlotView currentSlot = _slots[i];
+                if (currentSlot.IsUsed)
+                {
+                    bool isFound = false;
+
+                    for (int j = 0; j < _defendersList.Count; j++)
+                    {
+                        if (_defendersList[j] == currentSlot.DefenderUnitView)
+                        {
+                            isFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!isFound)
+                    {
+                        currentSlot.RemoveUnit();
+                    }
+
                 }
             }
         }
