@@ -51,6 +51,34 @@ public class WorkerView : MonoBehaviour, IWorkerView
         _animator.SetTrigger(IDLE);
     }
 
+    public void Pause()
+    {
+        _navigationAgent.isStopped = true;
+        Idle();
+    }
+
+    private void Resume(string targetAction)
+    {
+        _animator.ResetTrigger(IDLE);
+        _animator.SetTrigger(targetAction);
+        _navigationAgent.isStopped = false;
+    }
+
+    public void ResumeWalk()
+    {
+        Resume(WALK);
+    }
+
+    public void ResumeWork()
+    {
+        Resume(PRODUCE_WORK);
+    }
+
+    public void ResumeDrag()
+    {
+        Resume(DRAG_BACK);
+    }
+
     public void Activate()
     {
         gameObject.SetActive(true);

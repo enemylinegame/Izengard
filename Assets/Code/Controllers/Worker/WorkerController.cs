@@ -91,5 +91,29 @@ namespace Controllers.Worker
                 }
             }
         }
+
+        public void Pause()
+        {
+            _view.Pause();
+        }
+
+        public void Resume()
+        {
+            switch (_model.State)
+            {
+                case WorkerStates.GO_TO_HOME:
+                    _view.ResumeDrag();
+                    break;
+                case WorkerStates.GO_TO_PLACE:
+                    _view.ResumeWalk();
+                    break;
+                case WorkerStates.GO_TO_WORK:
+                    _view.ResumeWalk();
+                    break;
+                case WorkerStates.PRODUCE_WORK:
+                    _view.ResumeWork();
+                    break;
+            }
+        }
     }
 }

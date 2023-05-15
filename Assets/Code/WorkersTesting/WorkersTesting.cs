@@ -25,7 +25,6 @@ public class WorkersTesting : MonoBehaviour
 
         _works = new Dictionary<int, int>();
 
-
         _targetPlace = new Vector3(30, 0, 30);
         int resourceAmount = 0;
         _works.Add(_controller.SendWorkerToPlace(
@@ -53,6 +52,22 @@ public class WorkersTesting : MonoBehaviour
     void Update()
     {
         _controller.OnUpdate(Time.deltaTime);
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            foreach (var kvp in _works)
+                _controller.CancelWork(kvp.Key);
+        }
+        else if (Input.GetKeyDown(KeyCode.P))
+        {
+            _controller.Pause();
+            Debug.Log("Paused");
+        }
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+            _controller.Resume();
+            Debug.Log("Resumed");
+        }
     }
 
     private void OnDestroy()

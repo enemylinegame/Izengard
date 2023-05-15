@@ -45,6 +45,21 @@ public class WorkersTeamController: IOnUpdate, IDisposable
         return workerController.WorkerId;
     }
 
+    public void Pause()
+    {
+        _model.IsPaused = true;
+        foreach (var kvp in _model.Workers)
+            kvp.Value.Pause();
+    }
+
+    public void Resume()
+    {
+        foreach (var kvp in _model.Workers)
+            kvp.Value.Resume();
+
+        _model.IsPaused = false;
+    }
+
     public void CancelWork(int workerId)
     {
         if (!_model.Workers.TryGetValue(workerId, 
@@ -56,6 +71,9 @@ public class WorkersTeamController: IOnUpdate, IDisposable
 
     public void OnUpdate(float deltaTime)
     {
+        if (_model.IsPaused)
+            return;
+
         foreach (var worker  in _model.Workers)
             worker.Value.OnUpdate(deltaTime);
 
