@@ -4,116 +4,122 @@ using UnityEngine;
 
 namespace Controllers.Worker
 {
-    public sealed class WorkerController: IOnUpdate
+    public sealed class WorkerController: IOnUpdate, IDisposable
     {
-        private WorkerModel _model;
-        private IWorkerView _view;
+        public WorkerModel Model { get; private set; }
+        public IWorkerView View { get; private set; }
 
         public Action<WorkerController> OnMissionCompleted = delegate { };
 
         public WorkerController(WorkerModel workerModel, IWorkerView workerView)
         {
-            _model = workerModel;
-            _view = workerView;
+            Model = workerModel;
+            View = workerView;
         }
 
         private void InitTask(Vector3 fromPlace, Vector3 target)
         {
-            _view.Activate();
-            _model.StatrtingPlace = fromPlace;
+            View.Activate();
+            Model.StatrtingPlace = fromPlace;
 
-            _view.InitPlace(fromPlace);
-            _view.GoToPlace(target);
-            _model.State = WorkerStates.NONE;
+            View.InitPlace(fromPlace);
+            View.GoToPlace(target);
+            Model.State = WorkerStates.NONE;
         }
 
         public int GoToWorkAndReturn(Vector3 fromPlace, Vector3 placeOfWork)
         {
             InitTask(fromPlace, placeOfWork);
-            _model.State = WorkerStates.GO_TO_WORK;
-            return _model.WorkerId;
+            Model.State = WorkerStates.GO_TO_WORK;
+            return Model.WorkerId;
         }
 
         public int GoToPlace(Vector3 fromPlace, Vector3 toPlace)
         {
             InitTask(fromPlace, toPlace);
-            _model.State = WorkerStates.GO_TO_PLACE;
-            return _model.WorkerId;
+            Model.State = WorkerStates.GO_TO_PLACE;
+            return Model.WorkerId;
         }
 
         public void CancelWork()
         {
-            _model.State = WorkerStates.GO_TO_HOME;
-            _view.GoToPlace(_model.StatrtingPlace);
+            Model.State = WorkerStates.GO_TO_HOME;
+            View.GoToPlace(Model.StatrtingPlace);
         }
 
-        public int WorkerId => _model.WorkerId;
+        public int WorkerId => Model.WorkerId;
         
         private void ProduceWork()
         {
-            _view.ProduceWork();
+            View.ProduceWork();
         }
 
         private void BringProducts()
         {
-            _view.DragToPlace(_model.StatrtingPlace);
+            View.DragToPlace(Model.StatrtingPlace);
         }
 
         public void OnUpdate(float deltaTime)
         {
-            if (WorkerStates.NONE == _model.State)
+            if (WorkerStates.NONE == Model.State)
                 return;
 
-            if (WorkerStates.PRODUCE_WORK == _model.State)
+            if (WorkerStates.PRODUCE_WORK == Model.State)
             {
-                _model.WorkTimeLeft -= deltaTime;
-                if (_model.WorkTimeLeft < 0)
+                Model.WorkTimeLeft -= deltaTime;
+                if (Model.WorkTimeLeft < 0)
                 {
-                    _model.WorkTimeLeft = 0;
-                    _model.State = WorkerStates.GO_TO_HOME;
+                    Model.WorkTimeLeft = 0;
+                    Model.State = WorkerStates.GO_TO_HOME;
                     BringProducts();
                 }
             }
-            else if (_view.IsOnThePlace())
+            else if (View.IsOnThePlace())
             {
-                if (WorkerStates.GO_TO_WORK == _model.State)
+                if (WorkerStates.GO_TO_WORK == Model.State)
                 {
                     ProduceWork();
-                    _model.State = WorkerStates.PRODUCE_WORK;
-                    _model.WorkTimeLeft = _model.TimeOfWork;
+                    Model.State = WorkerStates.PRODUCE_WORK;
+                    Model.WorkTimeLeft = Model.TimeOfWork;
                 }
-                else if (WorkerStates.GO_TO_HOME == _model.State ||
-                    WorkerStates.GO_TO_PLACE == _model.State)
+                else if (WorkerStates.GO_TO_HOME == Model.State ||
+                    WorkerStates.GO_TO_PLACE == Model.State)
                 {
                     OnMissionCompleted.Invoke(this);
-                    _model.State = WorkerStates.NONE;
-                    _view.Deactivate();
+                    Model.State = WorkerStates.NONE;
+                    View.Deactivate();
                 }
             }
         }
 
         public void Pause()
         {
-            _view.Pause();
+            View.Pause();
         }
 
         public void Resume()
         {
-            switch (_model.State)
+            switch (Model.State)
             {
                 case WorkerStates.GO_TO_HOME:
-                    _view.ResumeDrag();
+                    View.ResumeDrag();
                     break;
                 case WorkerStates.GO_TO_PLACE:
-                    _view.ResumeWalk();
+                    View.ResumeWalk();
                     break;
                 case WorkerStates.GO_TO_WORK:
-                    _view.ResumeWalk();
+                    View.ResumeWalk();
                     break;
                 case WorkerStates.PRODUCE_WORK:
-                    _view.ResumeWork();
+                    View.ResumeWork();
                     break;
             }
+        }
+
+        public void Dispose()
+        {
+            Model = null;
+            View = null;
         }
     }
 }

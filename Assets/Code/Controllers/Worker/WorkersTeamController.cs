@@ -47,6 +47,9 @@ public class WorkersTeamController: IOnUpdate, IDisposable
 
     public void Pause()
     {
+        if (_model.IsPaused)
+            return;
+
         _model.IsPaused = true;
         foreach (var kvp in _model.Workers)
             kvp.Value.Pause();
@@ -54,6 +57,9 @@ public class WorkersTeamController: IOnUpdate, IDisposable
 
     public void Resume()
     {
+        if (!_model.IsPaused)
+            return;
+
         foreach (var kvp in _model.Workers)
             kvp.Value.Resume();
 
@@ -77,8 +83,25 @@ public class WorkersTeamController: IOnUpdate, IDisposable
         foreach (var worker  in _model.Workers)
             worker.Value.OnUpdate(deltaTime);
 
-        for (int i = 0; i < _model.CompletedWorkers.Count; ++ i)
-            _model.Workers.Remove(_model.CompletedWorkers[i]);
+        ClearCompletedworkers();
+    }
+
+    private void ClearCompletedworkers()
+    {
+        for (int i = 0; i < _model.CompletedWorkers.Count; ++i)
+        {
+            int workerId = _model.CompletedWorkers[i];
+            if (_model.Workers.TryGetValue(workerId, out WorkerController worker))
+            {
+                _model.Workers.Remove(workerId);
+
+                _workerFactory.ReleaseWorker(worker.View);
+
+                worker.Dispose();
+            }
+        }
+
+        _model.CompletedWorkers.Clear();
     }
 
     private void MissionIsCompleted(WorkerController workerController)
@@ -88,7 +111,6 @@ public class WorkersTeamController: IOnUpdate, IDisposable
 
         _model.CompletedWorkers.Add(workerController.WorkerId);
 
-        Debug.Log("Mission is completed!");
     }
 
     public void Dispose()

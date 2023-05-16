@@ -1,5 +1,4 @@
 using Controllers.Worker;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WorkerFactory
@@ -31,5 +30,13 @@ public class WorkerFactory
                 _config.TimeToProcessWork, _workerCounter++);
 
         return new WorkerController(workerModel, workerView);
+    }
+
+    internal void ReleaseWorker(IWorkerView view)
+    {
+        if (view is MonoBehaviour worker)
+        {
+            GameObject.Destroy(worker.gameObject);
+        }
     }
 }
