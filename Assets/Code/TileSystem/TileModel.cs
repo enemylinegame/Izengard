@@ -8,6 +8,9 @@ namespace Code.TileSystem
 {
     public class TileModel
     {
+        private const int MAX_WORKERS = 5;
+        private const int MAX_WARRIORS = 8;
+        
         public HouseType HouseType { get; set; }
         public TileConfig TileConfig { get; set; }
         public List<Dot> DotSpawns { get; set; }
@@ -17,9 +20,11 @@ namespace Code.TileSystem
         public List<DefenderUnit> DefenderUnits { get; set; }
         public List<WorkersAssigments> WorkersAssigments { get; set; }
         public TileConfig SaveTileConfig { get; set; }
-        public int EightQuantity { get; set; }
+        public int MaxWorkers => MAX_WORKERS;
+        public int MaxWarriors => MAX_WARRIORS;
+        public int CurrentUnits { get; set; }
         
-
+        
         public void Init()
         {
             SaveTileConfig = new TileConfig();

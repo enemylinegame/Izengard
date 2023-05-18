@@ -19,10 +19,10 @@ public class Building : BaseBuildAndResources
     public string NameBuiding { get; set; }
     public int BuildingID;
     
-    public void InitBuilding() => BuildingID = UnityEngine.Random.Range(0, 100);
+    public void InitBuilding() => BuildingID = UnityEngine.Random.Range(0, 1000000);
     public void InitMineral(MineralConfig mineralConfig)
     {
-        BuildingID = UnityEngine.Random.Range(0, 100);
+        BuildingID = UnityEngine.Random.Range(0, 1000000);
         new ResourceHolder(mineralConfig.ResourceType, mineralConfig.CurrentMineValue,mineralConfig.CurrentMineValue);
         MineralConfig = mineralConfig;
         ResourceType = mineralConfig.ResourceType;

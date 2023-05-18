@@ -14,7 +14,7 @@ namespace Code.TileSystem
 
         [SerializeField] private Button _resourceAddButton;
         [SerializeField] private Button _resourceRemoveButton;
-        private MineralConfig _mineralConfig;
+        private Building _building;
 
         public string ResourceCurrentValueString
         {
@@ -38,19 +38,19 @@ namespace Code.TileSystem
         {
             get { return _resourceRemoveButton; }
         }
-        public MineralConfig MineralConfig
+        public Building Building
         {
-            get { return _mineralConfig; }
+            get { return _building; }
         }
 
 
-        public void InitViewData(string resourceName, int currentValue, MineralConfig mineralConfig)
+        public void InitViewData(string resourceName, int currentValue, Building mineralConfig)
         {
             _resourceCurrentValue.text = $"{currentValue}";
             _resourceText.text = resourceName;
             _resourceMaxValue.text = "5";
 
-            _mineralConfig = mineralConfig;
+            _building = mineralConfig;
         }
     }
 }

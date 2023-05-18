@@ -1,8 +1,10 @@
-﻿using Controllers.BaseUnit;
+﻿using System.Collections.Generic;
+using Controllers.BaseUnit;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using BuildingSystem;
 using Code.TileSystem;
+using Code.TileSystem.Interfaces;
 using Code.UI;
 using Controllers.OutPost;
 using Views.BuildBuildingsUI;
@@ -13,19 +15,16 @@ namespace Controllers
 {
     public class InputController : IOnController, IOnUpdate
     {
-        private TileController _tileController;
         private UIController _uiController;
         private ITileSelector _tileSelector;
+        private List<ITileLoadInfo> _loadInfoToTheUis = new List<ITileLoadInfo>();
 
         private bool _isOnTile = true;
         private bool _isSpecialMode;
 
-
-        public InputController(TileController tileController, UIController uiController)
+        public InputController()
         {
-            _tileController = tileController;
-            _uiController = uiController;
-            _uiController.WarsView.SetInputController(this);
+            // _uiController.WarsView.SetInputController(this);
         }
 
 
@@ -35,8 +34,12 @@ namespace Controllers
             {
                 if (!_isSpecialMode)
                 {
-                    _uiController.IsWorkUI(UIType.All, false);
-                    _isOnTile = true;
+                    foreach (var selector in _loadInfoToTheUis)
+                    {
+                        selector.Cancel();
+                        _isOnTile = true;
+                    }
+                    
                 }
                 else
                 {
@@ -64,8 +67,10 @@ namespace Controllers
                         {
                             if (_isOnTile)
                             {
-                                _uiController.IsWorkUI(UIType.Tile, true);
-                                _tileController.LoadInfo(tile);
+                                foreach (var selector in _loadInfoToTheUis)
+                                {
+                                    selector.LoadInfoToTheUI(tile);
+                                }
                                 _isOnTile = false;
                             }
                         }
@@ -84,6 +89,15 @@ namespace Controllers
         {
             _tileSelector = tileSelector;
             _isSpecialMode = _tileSelector != null;
+        }
+
+        public void Add(IOnTile tile)
+        {
+            if (tile is ITileLoadInfo loadInfoToTheUI)
+            {
+                _loadInfoToTheUis.Add(loadInfoToTheUI);
+            }
+            
         }
     }
 }

@@ -12,8 +12,11 @@ namespace Code.UI
          [field: SerializeField] public Transform BuildButtonsHolder { get; set; }
          [field: SerializeField] public Button CloseBuildingsBuy { get; set; }
          
-         [field: Space, Header("Tile")]
+        [field: Space, Header("Tile")]
          [field: SerializeField] public GameObject TileByButtons { get; set; }
+        
+        [field: Space, Header("Info")]
+        [field: SerializeField] public BaseCenterText BaseCenterText { get; set; }
     }
 }
 

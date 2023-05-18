@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Code.TileSystem
 {
-    public class DefendersAssignmentsController : IDefendersManager
+    public class DefendersMenager : IDefendersManager
     {
         private TileController _tileController;
         private DefendersController _defendersController;
@@ -17,11 +17,11 @@ namespace Code.TileSystem
 
         private int _eightQuantity
         {
-            get => _tileModel.EightQuantity;
-            set => _tileModel.EightQuantity = value;
+            get => _tileModel.CurrentUnits;
+            set => _tileModel.CurrentUnits = value;
         }
 
-        public DefendersAssignmentsController(TileController tileController, DefendersController defendersController, UIController uiController)
+        public DefendersMenager(TileController tileController, DefendersController defendersController, UIController uiController)
         {
             _tileController = tileController;
             _defendersController = defendersController;
@@ -36,24 +36,29 @@ namespace Code.TileSystem
             _uiController.WarsView.SetDefenders(_tileModel.DefenderUnits);
         }
 
-        public void DismissDefender(DefenderUnit unit)
+        public void DismissDefender(DefenderUnit[] unit)
         {
-            _defendersController.SendDefenderToBarrack(unit , _tileView);
-            _tileModel.DefenderUnits.Remove(unit);
-            Object.Destroy(unit.DefenderGameObject);//TODO Лучше потом убрать
+            // _defendersController.SendDefenderToBarrack(unit , _tileView);
+            // _tileModel.DefenderUnits.Remove(unit);
+            // Object.Destroy(unit.DefenderGameObject);//TODO Лучше потом убрать
             _uiController.WarsView.SetDefenders(_tileModel.DefenderUnits);
         }
 
-        public void SendToBarrack(DefenderUnit unit)
+        public void SendToBarrack(DefenderUnit[] unit)
         {
-            _defendersController.SendDefenderToBarrack(unit, _tileView);
+            // _defendersController.SendDefenderToBarrack(unit, _tileView);
             _uiController.WarsView.SetDefenders(_tileModel.DefenderUnits);
         }
 
-        public void KickoutFromBarrack(DefenderUnit unit)
+        public void KickoutFromBarrack(DefenderUnit[] unit)
         {
-            _defendersController.KickDefenderOutOfBarrack(unit, _tileView);
+            // _defendersController.KickDefenderOutOfBarrack(unit, _tileView);
             _uiController.WarsView.SetDefenders(_tileModel.DefenderUnits);
+        }
+
+        public void SendToOtherTile(DefenderUnit[] units, TileView tile)
+        {
+            throw new System.NotImplementedException();
         }
 
         public void BarrackButtonClick()
