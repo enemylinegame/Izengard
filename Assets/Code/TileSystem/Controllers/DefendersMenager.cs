@@ -26,7 +26,7 @@ namespace Code.TileSystem
             _tileController = tileController;
             _defendersController = defendersController;
             _uiController = uiController;
-            uiController.WarsView.DefendersManager = this;
+            uiController.WarsView.SetDefendersManager(this);
         }
 
         public void HireDefender()
@@ -36,7 +36,7 @@ namespace Code.TileSystem
             _uiController.WarsView.SetDefenders(_tileModel.DefenderUnits);
         }
 
-        public void DismissDefender(DefenderUnit[] unit)
+        public void DismissDefender(List<DefenderUnit> unit)
         {
             // _defendersController.SendDefenderToBarrack(unit , _tileView);
             // _tileModel.DefenderUnits.Remove(unit);
@@ -44,19 +44,19 @@ namespace Code.TileSystem
             _uiController.WarsView.SetDefenders(_tileModel.DefenderUnits);
         }
 
-        public void SendToBarrack(DefenderUnit[] unit)
+        public void SendToBarrack(List<DefenderUnit> unit)
         {
             // _defendersController.SendDefenderToBarrack(unit, _tileView);
             _uiController.WarsView.SetDefenders(_tileModel.DefenderUnits);
         }
 
-        public void KickoutFromBarrack(DefenderUnit[] unit)
+        public void KickoutFromBarrack(List<DefenderUnit> unit)
         {
             // _defendersController.KickDefenderOutOfBarrack(unit, _tileView);
             _uiController.WarsView.SetDefenders(_tileModel.DefenderUnits);
         }
 
-        public void SendToOtherTile(DefenderUnit[] units, TileView tile)
+        public void SendToOtherTile(List<DefenderUnit> units, TileView tile)
         {
             throw new System.NotImplementedException();
         }
