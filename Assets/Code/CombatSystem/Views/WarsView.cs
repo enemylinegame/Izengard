@@ -290,6 +290,9 @@ namespace CombatSystem.Views
                 }
             }
             _defendersList = null;
+            _unitsInsideBarrack.Clear();
+            _unitsOutsideBarrack.Clear();
+            _selectedSlots.Clear();
         }
 
         public void UpdateDefenders()
@@ -336,6 +339,7 @@ namespace CombatSystem.Views
 
                 }
 
+                RemoveNotUsedSlotsFromSelected();
                 RecalculateDefendersLists();
                 UpdateBarracksButtonsStatus();
             }
@@ -368,6 +372,18 @@ namespace CombatSystem.Views
             }
         }
 
+        private void RemoveNotUsedSlotsFromSelected()
+        {
+            for (int i = 0; i < _slots.Length; i++)
+            {
+                DefenderSlotView currentSlot = _slots[i];
+                if (!currentSlot.IsUsed)
+                {
+                    _selectedSlots.Remove(currentSlot);
+                }
+            }
+        }
+        
         public void SetMexDefenders(int quantity)
         {
             for (int i = 0; i < _slots.Length; i++)
