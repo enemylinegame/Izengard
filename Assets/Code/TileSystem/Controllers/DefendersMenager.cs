@@ -1,70 +1,106 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Code.TileSystem.Interfaces;
 using Code.UI;
 using CombatSystem;
+using CombatSystem.Views;
 using UnityEngine;
 
 namespace Code.TileSystem
 {
-    public class DefendersMenager : IDefendersManager
+    public class DefendersMenager : IDefendersManager, ITileLoadInfo
     {
-        private TileController _tileController;
-        private DefendersController _defendersController;
-        private UIController _uiController;
+        private readonly TileController _tileController;
+        private readonly IDefendersControll _defendersController;
+        private readonly WarsView _warsView;
 
-        private TileModel _tileModel => _tileController.TileModel;
-        private TileView _tileView => _tileController.View;
-        private List<DefenderUnit> _defenderUnits => _tileModel.DefenderUnits;
+        
+        private TileModel SelectedTileModel => _tileController.TileModel;
+        private TileView SelectedTileView => _tileController.View;
+        
 
-        private int _eightQuantity
-        {
-            get => _tileModel.CurrentUnits;
-            set => _tileModel.CurrentUnits = value;
-        }
-
-        public DefendersMenager(TileController tileController, DefendersController defendersController, UIController uiController)
+        public DefendersMenager(TileController tileController, IDefendersControll defendersController, 
+            UIController uiController)
         {
             _tileController = tileController;
             _defendersController = defendersController;
-            _uiController = uiController;
-            uiController.WarsView.SetDefendersManager(this);
+            _warsView = uiController.WarsView;
+            _warsView.SetDefendersManager(this);
         }
 
         public void HireDefender()
         {
-            var unit = _defendersController.CreateDefender(_tileView);
-            _tileModel.DefenderUnits.Add(unit);
-            _uiController.WarsView.SetDefenders(_tileModel.DefenderUnits);
+            List<DefenderUnit> defendersOnTile = SelectedTileModel.DefenderUnits;
+            int unitsQuantity = defendersOnTile.Count;
+            if (unitsQuantity < SelectedTileModel.MaxWarriors)
+            {
+                var unit = _defendersController.CreateDefender(SelectedTileView);
+                defendersOnTile.Add(unit);
+                unit.DefenderUnitDead += DefenderDead;
+            }
+            _warsView.UpdateDefenders();
         }
 
-        public void DismissDefender(List<DefenderUnit> unit)
+        public void DismissDefender(List<DefenderUnit> units)
         {
-            // _defendersController.SendDefenderToBarrack(unit , _tileView);
-            // _tileModel.DefenderUnits.Remove(unit);
-            // Object.Destroy(unit.DefenderGameObject);//TODO Лучше потом убрать
-            _uiController.WarsView.SetDefenders(_tileModel.DefenderUnits);
+            if (units.Count > 0)
+            {
+                List<DefenderUnit> defendersOnTile = SelectedTileModel.DefenderUnits;
+
+                for (int i = 0; i < units.Count; i++)
+                {
+                    DefenderUnit defender = units[i];
+                    if (defendersOnTile.Remove(defender))
+                    {
+                        defender.DefenderUnitDead -= DefenderDead;
+                        _defendersController.DismissDefender(defender);
+                    }
+                }
+            }
+            _warsView.UpdateDefenders();            
         }
 
-        public void SendToBarrack(List<DefenderUnit> unit)
+        public void SendToBarrack(List<DefenderUnit> units)
         {
-            // _defendersController.SendDefenderToBarrack(unit, _tileView);
-            _uiController.WarsView.SetDefenders(_tileModel.DefenderUnits);
+            if (units.Count > 0)
+            {
+                _defendersController.SendDefendersToBarrack(units, SelectedTileView);
+            }
+            _warsView.UpdateDefenders();
         }
 
-        public void KickoutFromBarrack(List<DefenderUnit> unit)
+        public void KickoutFromBarrack(List<DefenderUnit> units)
         {
-            // _defendersController.KickDefenderOutOfBarrack(unit, _tileView);
-            _uiController.WarsView.SetDefenders(_tileModel.DefenderUnits);
+            if (units.Count > 0)
+            {
+                _defendersController.KickDefendersOutOfBarrack(units, SelectedTileView);
+            }
+            _warsView.UpdateDefenders();
         }
 
         public void SendToOtherTile(List<DefenderUnit> units, TileView tile)
         {
-            throw new System.NotImplementedException();
+            Debug.LogWarning("DefendersMenager->BarrackButtonClick: not implemented ");
         }
 
         public void BarrackButtonClick()
         {
-            _defendersController.SendDefendersToBarrack(_tileModel.DefenderUnits, _tileView);
-            _uiController.WarsView.SetDefenders(_tileModel.DefenderUnits);
+            Debug.LogWarning("DefendersMenager->BarrackButtonClick: not implemented ");
+        }
+
+        public void LoadInfoToTheUI(TileView tile)
+        {
+            _warsView.SetDefenders(tile.TileModel.DefenderUnits);
+        }
+
+        public void Cancel()
+        {
+            _warsView.ClearDefenders();
+        }
+
+        private void DefenderDead(DefenderUnit defender)
+        {
+            Debug.LogError("DefendersMenager->DefenderDead: not implemented ");
         }
     }
 }

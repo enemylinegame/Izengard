@@ -87,7 +87,7 @@ namespace CombatSystem
             _damageable.MeAttackedChenged += MeAttacked;
             _damageable.Init(100, 1);
             _attackAction = new DefenderAttackAction(_unitStats);
-            _isBarrackMode = true;
+            _isBarrackMode = false;
 
         }
 

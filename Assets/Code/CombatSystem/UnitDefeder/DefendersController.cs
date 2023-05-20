@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Code.TileSystem;
 using Code.UI;
@@ -89,6 +90,11 @@ namespace CombatSystem
             unit.OnDestinationReached -= OnUnitReachedBarrack;
             unit.IsInsideBarrack = false;
             SendDefenderToTilePosition(unit, tile);
+        }
+
+        public void DismissDefender(DefenderUnit unit)
+        {
+            throw new NotImplementedException();
         }
 
         private void SendDefenderToTilePosition(DefenderUnit unit, TileView tile)
