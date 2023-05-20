@@ -139,7 +139,7 @@ namespace CombatSystem.Views
                 _unitIcon.sprite = _unitSprite;
                 _unit = unit;
                 _inBarrack.gameObject.SetActive(true);
-                IsInBarrack = unit.IsInsideBarrack;
+                IsInBarrack = unit.IsInBarrack;
                 _hireButton.gameObject.SetActive(false);
                 _dismissButton.gameObject.SetActive(true);
             }

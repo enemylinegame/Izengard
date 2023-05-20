@@ -51,9 +51,9 @@ namespace CombatSystem
                 for (int i = 0; i < defenderUnits.Count; i++)
                 {
                     DefenderUnit unit = defenderUnits[i];
-                    if (unit.IsInsideBarrack == false)
+                    if (unit.IsInBarrack == false)
                     {
-                        unit.GoToPosition(buildingPosition);
+                        unit.GoToBarrack(buildingPosition);
                         unit.OnDestinationReached += OnUnitReachedBarrack;
                     }
                 }
@@ -62,10 +62,10 @@ namespace CombatSystem
 
         public void SendDefenderToBarrack(DefenderUnit unit, TileView tile)
         {
-            if (unit.IsInsideBarrack == false)
+            if (unit.IsInBarrack == false)
             {
                 Vector3 buildingPosition = tile.transform.position;
-                unit.GoToPosition(buildingPosition);
+                unit.GoToBarrack(buildingPosition);
                 unit.OnDestinationReached += OnUnitReachedBarrack;
             }
         }
@@ -73,7 +73,6 @@ namespace CombatSystem
         private void OnUnitReachedBarrack(DefenderUnit unit)
         {
             unit.OnDestinationReached -= OnUnitReachedBarrack;
-            unit.IsInsideBarrack = true;
         }
 
         public void KickDefendersOutOfBarrack(List<DefenderUnit> defenderUnits, TileView tile)
@@ -88,7 +87,7 @@ namespace CombatSystem
         public void KickDefenderOutOfBarrack(DefenderUnit unit, TileView tile)
         {
             unit.OnDestinationReached -= OnUnitReachedBarrack;
-            unit.IsInsideBarrack = false;
+            unit.Awake();
             SendDefenderToTilePosition(unit, tile);
         }
 

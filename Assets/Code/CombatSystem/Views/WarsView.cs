@@ -205,7 +205,7 @@ namespace CombatSystem.Views
                 if (slot.IsEnabled && slot.IsUsed)
                 {
                     DefenderUnit unit = slot.DefenderUnitView;
-                    if (unit.IsInsideBarrack)
+                    if (unit.IsInBarrack)
                     {
                         _unitsInsideBarrack.Add(unit);
                     }
@@ -312,7 +312,7 @@ namespace CombatSystem.Views
                             if (slot.DefenderUnitView == searchedUnit)
                             {
                                 isFound = true;
-                                slot.IsInBarrack = searchedUnit.IsInsideBarrack;
+                                slot.IsInBarrack = searchedUnit.IsInBarrack;
                                 break;
                             }
                         }
