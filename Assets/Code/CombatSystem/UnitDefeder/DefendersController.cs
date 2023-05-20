@@ -94,7 +94,7 @@ namespace CombatSystem
 
         public void DismissDefender(DefenderUnit unit)
         {
-            throw new NotImplementedException();
+            DefenderDead(unit);
         }
 
         private void SendDefenderToTilePosition(DefenderUnit unit, TileView tile)
@@ -106,6 +106,7 @@ namespace CombatSystem
         private void DefenderDead(DefenderUnit defender)
         {
             defender.DefenderUnitDead -= DefenderDead;
+            defender.OnDestinationReached -= OnUnitReachedBarrack;
             _defenderUnits.Remove(defender);
             GameObject.Destroy(defender.DefenderGameObject);
         }

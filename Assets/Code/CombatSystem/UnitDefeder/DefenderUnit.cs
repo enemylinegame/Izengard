@@ -4,30 +4,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+
 namespace CombatSystem
 {
-    public class DefenderUnitStats
-    {
-        public float _attackSpeed;
-        public int _attackDamage;
-
-        public DefenderUnitStats(float attackSpeed, int attackDamage)
-        {
-            _attackSpeed = attackSpeed;
-            _attackDamage = attackDamage;
-        }
-    }
-    
-    public enum DefenderState
-    {
-        None  = 0,
-        Going = 1,
-        Fight = 2,
-        Idle  = 3
-    }
-
     public class DefenderUnit : IDisposable, IOnUpdate
     {
+        private enum DefenderState
+        {
+            None  = 0,
+            Going = 1,
+            Fight = 2,
+            Idle  = 3
+        }
+
         public event Action<DefenderUnit> DefenderUnitDead;
         public event Action<DefenderUnit> OnDestinationReached;
 
