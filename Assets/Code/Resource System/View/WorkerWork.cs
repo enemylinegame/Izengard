@@ -1,18 +1,16 @@
-using BuildingSystem;
 using EquipmentSystem;
 using ResourceSystem;
 using ResourceSystem.SupportClases;
-using TMPro;
 using UnityEngine;
 
-public class WorkerView_old : UnitView
+public class WorkerWork
 {
     [SerializeField] private ResourceHolder _Resholder;
     [SerializeField] private ItemСarrierHolder _Itemholder;
     [SerializeField] private float _currentMineTime;
-    private BuildingTypes _type;
+    private ResourceType _type;
 
-    public BuildingTypes AssignedResource
+    public ResourceType AssignedResource
     {
         get => _type;
         set => _type = value;

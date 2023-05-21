@@ -1,24 +1,30 @@
-﻿using Controllers.BaseUnit;
+﻿using System.Collections.Generic;
+using Controllers.BaseUnit;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using BuildingSystem;
 using Code.TileSystem;
+using Code.TileSystem.Interfaces;
 using Code.UI;
 using Controllers.OutPost;
 using Views.BuildBuildingsUI;
+using Interfaces;
+
 
 namespace Controllers
 {
     public class InputController : IOnController, IOnUpdate
     {
-        private TileController _tileController;
         private UIController _uiController;
-        private bool _isOnTile = true;
+        private ITileSelector _tileSelector;
+        private List<ITileLoadInfo> _loadInfoToTheUis = new List<ITileLoadInfo>();
 
-        public InputController(TileController tileController, UIController uiController)
+        private bool _isOnTile = true;
+        private bool _isSpecialMode;
+
+        public InputController()
         {
-            _tileController = tileController;
-            _uiController = uiController;
+           
         }
 
 
@@ -26,8 +32,20 @@ namespace Controllers
         {
             if (Input.GetMouseButtonDown(1))
             {
-                _uiController.IsWorkUI(UIType.All, false);
-                _isOnTile = true;
+                if (!_isSpecialMode)
+                {
+                    foreach (var selector in _loadInfoToTheUis)
+                    {
+                        selector.Cancel();
+                        _isOnTile = true;
+                    }
+                    
+                }
+                else
+                {
+                    _tileSelector.Cancel();
+                }
+
             }
             if (Input.GetMouseButtonDown(0))
             {
@@ -45,17 +63,41 @@ namespace Controllers
 
                     if (tile)
                     {
-                        if (_isOnTile)
+                        if (!_isSpecialMode)
                         {
-                            _uiController.IsWorkUI(UIType.Tile, true);
-                            _tileController.LoadInfo(tile);
-                            _isOnTile = false;
+                            if (_isOnTile)
+                            {
+                                foreach (var selector in _loadInfoToTheUis)
+                                {
+                                    selector.LoadInfoToTheUI(tile);
+                                }
+                                _isOnTile = false;
+                            }
+                        }
+                        else
+                        {
+                            _tileSelector.SelectTile(tile);
                         }
                     }
                 }
 
             }
 
+        }
+
+        public void SetSpecialTileSelector(ITileSelector tileSelector)
+        {
+            _tileSelector = tileSelector;
+            _isSpecialMode = _tileSelector != null;
+        }
+
+        public void Add(IOnTile tile)
+        {
+            if (tile is ITileLoadInfo loadInfoToTheUI)
+            {
+                _loadInfoToTheUis.Add(loadInfoToTheUI);
+            }
+            
         }
     }
 }

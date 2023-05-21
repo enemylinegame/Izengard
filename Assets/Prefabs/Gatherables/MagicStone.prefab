@@ -91,6 +91,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8824150777167848290}
   - component: {fileID: 3281174830920654952}
+  - component: {fileID: 5533543793694222850}
   m_Layer: 6
   m_Name: MagicStone
   m_TagString: Building
@@ -129,3 +130,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &5533543793694222850
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6611631232710345216}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.4, y: 0.8051737, z: 0.4}
+  m_Center: {x: 0, y: 0.35758677, z: 0}

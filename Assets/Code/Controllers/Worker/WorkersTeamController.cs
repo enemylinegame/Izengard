@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class WorkersTeamController: IOnUpdate, IDisposable
+public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
 {
     public Action<int> OnMissionCompleted = delegate{ };
 

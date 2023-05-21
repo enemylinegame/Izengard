@@ -28,7 +28,7 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
     public bool IsDowntime { get; private set; }
 
 
-    public WaveController(GeneratorLevelController levelGenerator, RightUI rightUI, Transform btnParents, GameConfig gameConfig, BaseCenterText centerText)
+    public WaveController(GeneratorLevelController levelGenerator, UIController controller, Transform btnParents, GameConfig gameConfig)
     {
         _levelGenerator = levelGenerator;
         _btnParents = btnParents;
@@ -41,11 +41,11 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
         _combatPhaseWaiting = new CombatPhaseWaiting(_sendingEnemys);
         _combatPhaseWaiting.PhaseEnded += OnCombatPhaseEnding;
 
-        var timeCountShower = new TimerCountUI(rightUI.Timer);
+        var timeCountShower = new TimerCountUI(controller.RightUI.Timer);
         //var phasesSettings = Resources.Load<PhasesSettings>(nameof(PhasesSettings));
-        _peacefulPhaseWaiting = new PeacefulPhaseWaiting(gameConfig.PhasesSettings.PeacefulPhaseDuration, timeCountShower.TimeCountShow, centerText);
+        _peacefulPhaseWaiting = new PeacefulPhaseWaiting(gameConfig.PhasesSettings.PeacefulPhaseDuration, timeCountShower.TimeCountShow, controller.CenterUI.BaseCenterText);
         _peacefulPhaseWaiting.PhaseEnded += OnPeacefulPhaseEnding;
-        _preparatoryPhaseWaiting = new PreparatoryPhaseWaiting(gameConfig.PhasesSettings.PreparatoryPhaseDuration, timeCountShower.TimeCountShow, this, centerText);
+        _preparatoryPhaseWaiting = new PreparatoryPhaseWaiting(gameConfig.PhasesSettings.PreparatoryPhaseDuration, timeCountShower.TimeCountShow, this, controller.CenterUI.BaseCenterText);
         _preparatoryPhaseWaiting.PhaseEnded += OnPreparatoryPhaseEnding;
 
         _posibleSpawnPointsFinder = new PosibleSpawnPointsFinder(levelGenerator.SpawnedTiles);

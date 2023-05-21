@@ -51,7 +51,7 @@ namespace Wave
             _enemyAI ??= new EnemyAI(Enemy, _generatorLevelController.MainBuilding, _enemyAnimation, _bulletsController);
             _enemyAIController.AddEnemyAI(_enemyAI);
             _damageable.Init(Enemy.Stats.Health);
-            SlowlyKilling();
+            // SlowlyKilling();
         }
 
         public void Dispose()
@@ -64,7 +64,7 @@ namespace Wave
         private async void SlowlyKilling()
         {
             await Task.Delay(10000);
-            if (!UnityEditor.EditorApplication.isPlaying) return;
+            // if (!UnityEditor.EditorApplication.isPlaying) return;
             if (!Enemy.Prefab.activeSelf) return;
             KillEnemy();
         }
