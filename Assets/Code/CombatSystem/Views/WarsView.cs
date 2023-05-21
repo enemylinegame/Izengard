@@ -35,7 +35,8 @@ namespace CombatSystem.Views
         private int _maxDefenders;
         private BarrackButtonsStatus _barrackButtonsStatus;
 
-
+        private bool _isSendDefendersMode;
+        
         public WarsView(WarsUIView warsUIView, InputController inputController)
         {
             _warsUIView = warsUIView;
@@ -74,7 +75,7 @@ namespace CombatSystem.Views
                 DefenderSlotView newSlot = new DefenderSlotView(slots[i], _warsUIView.UnitDefenderSprite,
                     i + FIRST_SLOT_NUMBER);
                 newSlot.OnHireClick += HireButtonClick;
-                newSlot.OnDissmisClick += DissmissButtonClick;
+                newSlot.OnDissmisClick += DismissButtonClick;
                 newSlot.OnInBarrackChanged += InBarrackToggleChanged;
                 newSlot.OnSelected += SlotSelected;
                 _slots[i] = newSlot;
@@ -87,11 +88,14 @@ namespace CombatSystem.Views
 
         private void HireButtonClick(int slotNumber)
         {
+            SendDefendersModeOff();
             _defendersManager?.HireDefender();
         }
 
-        private void DissmissButtonClick(int slotNumber)
+        private void DismissButtonClick(int slotNumber)
         {
+            SendDefendersModeOff();
+            
             if (_defendersList != null)
             {
                 int index = slotNumber - FIRST_SLOT_NUMBER;
@@ -127,7 +131,8 @@ namespace CombatSystem.Views
 
         private void InBarrackButtonClick()
         {
-
+            SendDefendersModeOff();
+            
             if (_unitsOutsideBarrack.Count > 0)
             {
                 _defendersManager?.SendToBarrack(_unitsOutsideBarrack);
@@ -141,6 +146,8 @@ namespace CombatSystem.Views
 
         private void GlobalDismissButtonClick()
         {
+            SendDefendersModeOff();
+            
             List<DefenderUnit> units = new List<DefenderUnit>();
             bool isUnitsSelected = false;
             for (int i = 0; i < _slots.Length; i++)
@@ -148,7 +155,7 @@ namespace CombatSystem.Views
                 DefenderSlotView slot = _slots[i];
                 if (slot.IsEnabled && slot.IsUsed && slot.IsSelected)
                 {
-                    units.Add(slot.DefenderUnitView);
+                    units.Add(slot.Unit);
                     isUnitsSelected = true;
                 }
             }
@@ -206,7 +213,7 @@ namespace CombatSystem.Views
                 DefenderSlotView slot = slots[i];
                 if (slot.IsEnabled && slot.IsUsed)
                 {
-                    DefenderUnit unit = slot.DefenderUnitView;
+                    DefenderUnit unit = slot.Unit;
                     if (unit.IsInBarrack)
                     {
                         _unitsInsideBarrack.Add(unit);
@@ -244,7 +251,7 @@ namespace CombatSystem.Views
 
         private void ToOtherTileButtonClick()
         {
-            Debug.Log("WarsView->ToOtherTileButtonClick: Sending to other Tile not implemented yet");
+            SendDefendersModeOn();
         }
 
         public void SetDefenders(IReadOnlyList<DefenderUnit> defendersList)
@@ -314,7 +321,7 @@ namespace CombatSystem.Views
                         DefenderSlotView slot = _slots[j];
                         if (slot.IsUsed)
                         {
-                            if (slot.DefenderUnitView == searchedUnit)
+                            if (slot.Unit == searchedUnit)
                             {
                                 isFound = true;
                                 slot.IsInBarrack = searchedUnit.IsInBarrack;
@@ -358,7 +365,7 @@ namespace CombatSystem.Views
 
                     for (int j = 0; j < _defendersList.Count; j++)
                     {
-                        if (_defendersList[j] == currentSlot.DefenderUnitView)
+                        if (_defendersList[j] == currentSlot.Unit)
                         {
                             isFound = true;
                             break;
@@ -427,12 +434,45 @@ namespace CombatSystem.Views
 
         public void Cancel()
         {
-            
+            SendDefendersModeOff();
         }
 
         public void SelectTile(TileView tile)
         {
+            SendDefendersModeOff();
             
+            if (_selectedSlots.Count > 0)
+            {
+                List<DefenderUnit> units = new List<DefenderUnit>();
+                for (int i = 0; i < _selectedSlots.Count; i++)
+                {
+                    DefenderSlotView slot = _selectedSlots[i];
+                    if (slot.IsSelected)
+                    {
+                        units.Add(slot.Unit);
+                    }
+                }
+                
+                _defendersManager.SendToOtherTile(units, tile);
+            }
+        }
+        
+        private void SendDefendersModeOn()
+        {
+            if (!_isSendDefendersMode)
+            {
+                _isSendDefendersMode = true;
+                _inputController.SetSpecialTileSelector(this);
+            }
+        }
+
+        private void SendDefendersModeOff()
+        {
+            if (_isSendDefendersMode)
+            {
+                _isSendDefendersMode = false;
+                _inputController.SetSpecialTileSelector(null);
+            }
         }
     }
 }

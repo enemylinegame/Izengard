@@ -75,7 +75,7 @@ namespace CombatSystem.Views
             }
         }
 
-        public DefenderUnit DefenderUnitView { get => _unit; }
+        public DefenderUnit Unit { get => _unit; }
 
 
         public DefenderSlotView(DefenderSlotUI slot, Sprite unitSprite, int number)
