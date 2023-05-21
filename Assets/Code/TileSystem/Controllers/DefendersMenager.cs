@@ -36,6 +36,7 @@ namespace Code.TileSystem
             {
                 var unit = _defendersController.CreateDefender(SelectedTileView);
                 defendersOnTile.Add(unit);
+                unit.Tile = SelectedTileModel; 
                 unit.DefenderUnitDead += DefenderDead;
             }
             _warsView.UpdateDefenders();
@@ -100,7 +101,13 @@ namespace Code.TileSystem
 
         private void DefenderDead(DefenderUnit defender)
         {
-            Debug.LogError("DefendersMenager->DefenderDead: not implemented ");
+            defender.Tile.DefenderUnits.Remove(defender);
+            TileModel defendersTile = defender.Tile;
+            defender.Tile = null;
+            if (SelectedTileModel == defendersTile)
+            {
+                _warsView.UpdateDefenders();
+            }
         }
     }
 }

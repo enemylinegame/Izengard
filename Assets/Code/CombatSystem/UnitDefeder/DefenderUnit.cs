@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Code.TileSystem;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -29,6 +30,7 @@ namespace CombatSystem
         private GameObject _defender;
         private DefenderUnitStats _unitStats;
         private NavMeshAgent _agent;
+        private TileModel _tileModel;
 
         private Vector3 _defendPosition;
         private DefenderState _state;
@@ -56,6 +58,12 @@ namespace CombatSystem
             {
                 return (_state == DefenderState.GotoBarrack || _state == DefenderState.InBarrack);
             }
+        }
+
+        public TileModel Tile
+        {
+            get => _tileModel;
+            set => _tileModel = value;
         }
 
         public DefenderUnit(GameObject defender, Vector3 defendPosition)
