@@ -19,6 +19,7 @@ namespace Code.TowerShot
 	private GameObject _prefab;
 	private Vector3 _offset;
 	private Damageable _target;
+	
 	private int _index;
 	private float _curFireRate;
 	private bool IsTargert = true;
@@ -78,8 +79,8 @@ namespace Code.TowerShot
 
 		private void OnTriggerEnter(Collider other) //Это именно просто метод для экшона
 		{
-		Enemys.Add(other.GetComponent<Damageable>());
-		//Debug.Log("врагов осталось: " + Enemys.Count);
+			Enemys.Add(other.GetComponent<Damageable>());
+			Debug.Log("врагов осталось: " + Enemys.Count);
 		}
 		private void NearestObject(Transform target) // поиск ближайшего объекта
 		{
@@ -97,31 +98,31 @@ namespace Code.TowerShot
         }
 		private bool Search(Transform target) //разворот башни на цель
 		{
-		if (_config.RayOffset < 0) _config.RayOffset = 0;
+			if (_config.RayOffset < 0) _config.RayOffset = 0;
 		
-		float dist = Vector3.Distance(_view.transform.position + _offset, target.position);
-		Vector3 lookPos = target.position - _view.TurretRotation.position;
-		Debug.DrawRay(_view.TurretRotation.position,_view.Center.forward * (_view.TurretTrigger.contactOffset + _config.RayOffset));
-		Vector3 rotation = Quaternion.Lerp(_view.TurretRotation.rotation, Quaternion.LookRotation(lookPos), 1.2f * Time.deltaTime).eulerAngles;
+			float dist = Vector3.Distance(_view.transform.position + _offset, target.position);
+			Vector3 lookPos = target.position - _view.TurretRotation.position;
+			Debug.DrawRay(_view.TurretRotation.position,_view.Center.forward * (_view.TurretTrigger.contactOffset + _config.RayOffset));
+			Vector3 rotation = Quaternion.Lerp(_view.TurretRotation.rotation, Quaternion.LookRotation(lookPos), 1.2f * Time.deltaTime).eulerAngles;
 		
-		_view.TurretRotation.rotation = Quaternion.LookRotation(lookPos);
-		_view.TurretRotation.eulerAngles = rotation;
+			_view.TurretRotation.rotation = Quaternion.LookRotation(lookPos);
+			_view.TurretRotation.eulerAngles = rotation;
 		
-		if(dist > _view.TurretTrigger.contactOffset + _config.RayOffset)
-		{
-            target = null;
-			return false;
-		}
+			if(dist > _view.TurretTrigger.contactOffset + _config.RayOffset)
+			{
+				target = null;
+				return false;
+			}
 
-		if(Enemys.Count == 0)
-		{
-            target = null; 
-			return false;
-        }
+			if(Enemys.Count == 0)
+			{
+				target = null; 
+				return false;
+			}
 
-        var tt = Quaternion.Dot(_view.TurretRotation.transform.rotation, Quaternion.LookRotation(lookPos));
+			var tt = Quaternion.Dot(_view.TurretRotation.transform.rotation, Quaternion.LookRotation(lookPos));
 
-        if (Math.Abs(tt) > 0.98f) return true;
+			if (Math.Abs(tt) > 0.98f) return true;
 
             //if (IsRaycastHit(_view.Center)) return true;
             return false;
@@ -159,7 +160,7 @@ namespace Code.TowerShot
 	private void RemoveFromList(Damageable target)
 	{
 		Enemys.Remove(target);
-		//Debug.Log("врагов осталось: " + Enemys.Count);
+		Debug.Log("врагов осталось: " + Enemys.Count);
 	}
 	//private void Choice()
 	//{

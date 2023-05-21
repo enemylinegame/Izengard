@@ -10,9 +10,9 @@ public class WorkerView : UnitView
     [SerializeField] private ResourceHolder _Resholder;
     [SerializeField] private ItemСarrierHolder _Itemholder;
     [SerializeField] private float _currentMineTime;
-    private BuildingTypes _type;
+    private ResourceType _type;
 
-    public BuildingTypes AssignedResource
+    public ResourceType AssignedResource
     {
         get => _type;
         set => _type = value;

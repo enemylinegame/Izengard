@@ -19,6 +19,5 @@ namespace Views.BuildBuildingsUI
         [field: SerializeField] public Transform[] Windows { get; private set; }
         [field: SerializeField] public Transform ByBuildButtonsHolder { get; set; }
         [field: SerializeField] public Button BuyPrefabButton { get; set; }
-        [field: SerializeField] public Button BuyDefender { get; private set; } // add Nikolay Vasilev
     }
 }

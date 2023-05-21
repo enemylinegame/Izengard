@@ -1,9 +1,12 @@
+using Code.TileSystem;
 using UnityEngine;
 using static UnityEngine.Vector3;
 
 public class VoxelTile : MonoBehaviour
 {
     [SerializeField] private Sprite _iconTile;
+    
+    [field: SerializeField] public TileView TileView { get; set; }
     
     private float offset = 0.1f;
     private byte [] _tablePassAccess = new byte[4];

@@ -44,6 +44,8 @@ public class Damageable : MonoBehaviour, IHealthHolder
             {
                 _listAttackedUnits.Add(damageable);
                 damageable.DeathAction += MeAttackedDead;
+                MeAttackedChenged?.Invoke(_listAttackedUnits); // added Anton
+
                 return true;
             }
             return false;
@@ -66,6 +68,7 @@ public class Damageable : MonoBehaviour, IHealthHolder
 
     public void MakeDamage(int damage)
     {
+        Debug.Log($"Damageable->MakeDamage: gameObject = {gameObject.name}; damage = {damage}");// added Anton
         CurrentHealth -= damage;
         if (CurrentHealth <= 0)
         {

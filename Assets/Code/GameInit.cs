@@ -16,39 +16,40 @@ public class GameInit
     public GameInit(Controller controller, GameConfig gameConfig, RightUI rightUI, 
         Transform btnParents, CenterUI centerUI, BottonUI bottonUI, EndGameScreen endGameScreen, 
         TowerShotConfig towerShotConfig, BuyItemScreenView buyItemScreenView, HireSystemView hireSystemView , 
-        EquipScreenView equipScreenView, Camera camera, BaseCenterText centerText, TileUIView tileUIView, TileList tileList,
+        EquipScreenView equipScreenView, Camera camera, TileList tileList,
         GlobalResourceList globalResourceList)
     {
 
         var tiles = GetTileList.GetTiles(gameConfig);
         
         var globalResStock = new GlobalStock(globalResourceList.GlobalResourceConfigs);
-            
         var btnConroller = new BtnUIController(rightUI, gameConfig);
         var levelGenerator = new GeneratorLevelController(tiles, gameConfig, rightUI, btnConroller, btnParents, bottonUI);
-        var unitController = new UnitController();
         var buildController = new BuildGenerator(gameConfig);
-        var timeRemaining = new TimeRemainingController();
-
-        var uiController = new UIController(rightUI, bottonUI, centerUI);
-        var towershotcontroller = new TowerShotController(towerShotConfig, levelGenerator, gameConfig.Bullet);
-        var eqScreenController = new EquipScreenController(equipScreenView, camera);
-        var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, hireSystemView, levelGenerator);
-        var buildingController = new BuildingController(centerText);
+        var inputController = new InputController();
+        var uiController = new UIController(rightUI, bottonUI, centerUI, inputController);
+        var buildingController = new BuildingController(uiController, globalResStock);
         
-        var waveController = new WaveController(levelGenerator, rightUI, btnParents, gameConfig, centerText);
-        var endGameController = new EndGameController(endGameScreen, levelGenerator);
-
         if (!gameConfig.ChangeVariant)
         {
-            new ResourceGenerator(buildController.Buildings, gameConfig, levelGenerator);
+            new ResourceGenerator(buildController.Buildings, gameConfig, levelGenerator, buildingController);
         }
         else
         {
-            new ResourceGenerator(buildController.Buildings, gameConfig, levelGenerator, 2);
+            new ResourceGenerator(buildController.Buildings, gameConfig, levelGenerator, buildingController, 2);
         }
-        var tilecontroller = new TileController(tileList, tileUIView, centerText, uiController, buildController, globalResStock, buildingController);
-        var inputController = new InputController(tilecontroller, uiController);
+        var unitController = new UnitController();
+        var timeRemaining = new TimeRemainingController();
+
+        var towershotcontroller = new TowerShotController(towerShotConfig, levelGenerator, gameConfig.Bullet);
+        var eqScreenController = new EquipScreenController(equipScreenView, camera);
+        var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, hireSystemView, levelGenerator);
+        var waveController = new WaveController(levelGenerator, uiController, btnParents, gameConfig);
+        var endGameController = new EndGameController(endGameScreen, levelGenerator);
+        var tilecontroller = new TileController(tileList, uiController, buildingController, inputController);
+        var tileResourceUIController = new TileResourceUIController(uiController, inputController, tilecontroller);
+        var defenderController = new DefendersController(tilecontroller,uiController, gameConfig.Defender);
+        var defendersAssignController = new DefendersManager(tilecontroller, defenderController, uiController);
 
 
         controller.Add(btnConroller);
@@ -62,6 +63,7 @@ public class GameInit
         controller.Add(towershotcontroller);
         controller.Add(hireSystemController);
         controller.Add(tilecontroller);
+        controller.Add(defenderController);
 
         var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
         controller.Add(testDummyTargetController);

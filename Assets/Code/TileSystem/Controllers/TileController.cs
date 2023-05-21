@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using Code.BuildingSystem;
 using Code.BuldingsSystem.ScriptableObjects;
 using Code.TileSystem;
+using Code.TileSystem.Interfaces;
 using Code.UI;
+using Controllers;
+using Interfaces;
 using ResourceSystem;
 using ResourceSystem.SupportClases;
 using UnityEditor;
@@ -14,169 +17,189 @@ using Object = UnityEngine.Object;
 
 namespace Code.TileSystem
 {
-    public class TileController : IDisposable, IOnController, IOnUpdate
+    public class TileController : IDisposable, IOnController, IOnUpdate, IOnTile, ITileLoadInfo
     {
         private TileList _list;
-        private TileView _view;
         private TileUIView _uiView;
+        private TileView _tileView;
         private BaseCenterText _centerText;
-        private BuildGenerator _generator;
-        private GlobalStock _stock;
-        private List<BuildingConfig> _buildingConfigs;
         private BuildingController _buildingController;
         private UIController _uiController;
-        private int _currentlvl;
-        private int _eightQuantity;
-        private int _units;
-
-        public TileConfig Config;
+        private WorkerAssignmentsController _workerAssignmentsController;
+        private List<BuildingConfig> _buildingConfigs;
+        
+        private int _currentUnits;
+        private int _maxUnits;
+        public int CurrentLVL;
         public TileList List => _list;
         public BaseCenterText CenterText => _centerText;
-        public int CurrentLVL => _currentlvl;
-        public TileView View => _view;
+        public WorkerAssignmentsController WorkerAssignmentsController => _workerAssignmentsController;
+        public TileModel TileModel => _tileView.TileModel;
+        public TileView View => _tileView;
 
-        public TileController(TileList tileList, TileUIView uiView, BaseCenterText centerText, UIController uiController, 
-            BuildGenerator buildGenerator, GlobalStock stock, BuildingController buildingController)
+        public TileController(TileList tileList, UIController uiController, BuildingController buildingController
+            , InputController inputController)
         {
-            _centerText = centerText;
+            _workerAssignmentsController = new WorkerAssignmentsController(this);
+            _centerText = uiController.CenterUI.BaseCenterText;
             _list = tileList;
-            _uiView = uiView;
-            _generator = buildGenerator;
-            _stock = stock;
+            _uiView = uiController.BottonUI.TileUIView;
             _uiController = uiController;
-            
-            _stock.AddResourceToStock(ResourceType.Wood,100);
             _buildingController = buildingController;
+            inputController.Add(this);
         }
-
-        /// <summary>
-        /// Загрузка информации о тайле
-        /// </summary>
-        public void LoadInfo(TileView view)
+        public void LoadInfoToTheUI(TileView tile)
         {
-            _uiView.Upgrade.onClick.RemoveAllListeners();
-            _view = view;
-            ADDBuildUI(view.CurrBuildingConfigs, view);
-            view.LoadButtonsUIBuy(this, _uiController);
-            _uiView.Upgrade.onClick.AddListener(() => view.LVLUp(this));
-            UpdateInfo(view.TileConfig);
+            _tileView = tile;
+            ADDBuildUI(tile.TileModel);
+            LoadButtonsUIBuy();
+            _uiView.Upgrade.onClick.AddListener(() => tile.LVLUp(this));
+            UpdateInfo(tile.TileModel.TileConfig);
+        }
+        public void Cancel()
+        {
+            _tileView.TileModel.CurrentUnits = _currentUnits;
         }
         /// <summary>
-        /// Загрузка всей информации на тайл
+        /// Loading information about the level, the maximum number of units and tile icons
         /// </summary>
         public void UpdateInfo(TileConfig config)
         {
             _uiView.LvlText.text = config.TileLvl.GetHashCode().ToString() + " LVL";
-            _eightQuantity = _view.EightQuantity;
-            _units = config.MaxUnits;
-            _currentlvl = config.TileLvl.GetHashCode();
-            _uiView.UnitMax.text = _eightQuantity + "/"+ config.MaxUnits + " Units";
+            _currentUnits = TileModel.CurrentUnits;
+            _maxUnits = config.MaxUnits;
+            CurrentLVL = config.TileLvl.GetHashCode();
+            _uiView.UnitMax.text = _currentUnits + "/" + config.MaxUnits + " Units";
             _uiView.Icon.sprite = config.IconTile;
         }
-        public void ADDBuildUI(List<BuildingConfig> configs, TileView view)
+        
+         public void ADDBuildUI(TileModel model)
         {
             _uiController.Deinit();
-            _buildingConfigs = configs;
-            UpdateBuildings(view);
-        }
-        
-        public void UpdateBuildings(TileView view)
-        {
-            _uiController.Init(_buildingConfigs);
-            
+            _buildingConfigs = model.CurrBuildingConfigs;
+            Init(_buildingConfigs);
+
             foreach (var kvp in _uiController.ButtonsInMenu)
             {
-                kvp.Value.onClick.AddListener(() => BuildBuilding(kvp.Key, view));
+                kvp.Value.onClick.AddListener(() => _buildingController.BuildBuilding(kvp.Key, model, this));
+            }
+        }
+         
+        public void LoadButtonsUIBuy()
+        {
+            _workerAssignmentsController.FillWorkerList();
+            foreach (var building in TileModel.FloodedBuildings)
+            {
+                if (building.MineralConfig == null)
+                {
+                    LoadBuildingInfo(building, _workerAssignmentsController.GetAssignedWorkers(building));
+                }
+            }
+        }
+
+         /// <summary>
+        /// Creating buttons from the building config
+        /// </summary>
+        public void Init(List<BuildingConfig> models)
+        {
+            foreach (var building in models)
+            {
+                var button = GameObject.Instantiate(_uiController.BottonUI.BuildingMenu.BuyPrefabButton, _uiController.CenterUI.BuildButtonsHolder);
+                _uiController.ButtonsInMenu.Add(building, button);
+                CreateButtonUI(building, button);
             }
         }
         /// <summary>
-        /// Проверяет на наличие ресурса если он есть ставим здание.
+        /// Loading a saved block of information of a certain building and uploading it to the UI
         /// </summary>
-        private void BuildBuilding(BuildingConfig buildingConfig, TileView view)
+        /// <returns></returns>
+        public BuildingUIInfo LoadBuildingInfo(Building building, int Units)
         {
-            if (!IsResourcesEnough(buildingConfig))
+            var button = GameObject.Instantiate(_uiController.BottonUI.BuildingMenu.BuildingInfo, _uiController.BottonUI.BuildingMenu.ByBuildButtonsHolder);
+            var view = button.GetComponent<BuildingUIInfo>();
+            view.Icon.sprite = building.Icon.sprite;
+            view.Type.text = building.BuildingTypes.ToString();
+            view.Types = building.BuildingTypes;
+            view.UnitsBusy.text = Units +"/5";
+            view.Units = Units;
+            _uiController.DestroyBuildingInfo.Add(button, view);
+            view.DestroyBuildingInfo.onClick.AddListener((() => _buildingController.DestroyBuilding(TileModel.FloodedBuildings
+                , view, TileModel, _workerAssignmentsController)));
+            view.PlusUnit.onClick.AddListener((() => view.Hiring(true, this, building)));
+            view.MinusUnit.onClick.AddListener((() => view.Hiring(false, this, building)));
+            return view;
+        }
+        
+        private void CreateButtonUI(BuildingConfig buildingConfig, Button button)
+        {
+            var view = button.GetComponent<BuildButtonView>();
+            if (view)
             {
-                return;
+                view.BuildingName.text = buildingConfig.BuildingType.ToString();
+                foreach (var cost in buildingConfig.BuildingCost)
+                {
+                    view.CostForBuildingsUI.text += cost.ResourceType + ":" + cost.Cost + " ";
+                }
+                view.Description.text = buildingConfig.Description;
+                view.Icon.sprite = buildingConfig.Icon;
             }
+            else
+            {
+                Debug.LogError("Button field is empty");
+            }
+        }
+        
+        /// <summary>
+        /// Creating a new block of information for a specific building and uploading it to the UI
+        /// </summary>
+        /// <returns></returns>
+        public BuildingUIInfo CreateBuildingInfo(BuildingConfig config, TileModel model, Building building)
+        {
+            var button = GameObject.Instantiate(_uiController.BottonUI.BuildingMenu.BuildingInfo, _uiController.BottonUI.BuildingMenu.ByBuildButtonsHolder);
+            var view = button.GetComponent<BuildingUIInfo>();
             
-            foreach (var resourcePrice in buildingConfig.BuildingCost)
-            {
-                _stock.GetResourceFromStock(resourcePrice.ResourceType, resourcePrice.Cost);
-            }
-            var building = _buildingController.StartBuilding(view, buildingConfig);
-            if (building)
-            {
-                var info = _uiController.CreateBuildingInfo(buildingConfig, this, building);
-                building.Icon = info.Icon;
-                building.Type = info.Types;
-                _uiController.ButtonsBuy.Add(buildingConfig);
-                view.FloodedBuildings.Add(building, buildingConfig);
-            }
-        }
-        
-        public void DestroyBuilding(Dictionary<Building, BuildingConfig> buildingConfigs, BuildingUIInfo Button, TileView view)
-        {
-            foreach (var kvp in buildingConfigs)
-            {
-                if (kvp.Value.BuildingType == Button.Types)
-                {
-                    Button.DestroyBuildingInfo.onClick.RemoveAllListeners();
-                    Button.PlusUnit.onClick.RemoveAllListeners();
-                    Button.MinusUnit.onClick.RemoveAllListeners();
-                    buildingConfigs.Remove(kvp.Key);
-                    _uiController.DestroyBuildingInfo.Remove(Button.gameObject);
-                    view.FloodedBuildings.Remove(kvp.Key);
-                    _buildingController.RemoveTypeDots(view, kvp.Key);
-                    GameObject.Destroy(kvp.Key.gameObject);
-                    GameObject.Destroy(Button.gameObject);
-                    break;
-                }
-                
-            }
-        }
-        
-        private bool IsResourcesEnough(BuildingConfig buildingConfig)
-        {
-            foreach (ResourcePriceModel resourcePriceModel in buildingConfig.BuildingCost)
-            {
-                if (_stock.CheckResourceInStock(resourcePriceModel.ResourceType,resourcePriceModel.Cost))
-                {
-                    _centerText.NotificationUI("you do not have enough resources to buy", 1000);
-                    return false;
-                }
-            }
-            return true;
+            view.Icon.sprite = config.Icon;
+            view.Type.text = config.BuildingType.ToString();
+            view.Types = config.BuildingType;
+            view.UnitsBusy.text = view.Units +"/5";
+            _uiController.DestroyBuildingInfo.Add(button, view);
+            view.DestroyBuildingInfo.onClick.AddListener((() => _buildingController.DestroyBuilding(TileModel.FloodedBuildings
+                , view, TileModel, _workerAssignmentsController)));
+            view.PlusUnit.onClick.AddListener((() => view.Hiring(true, this, building)));
+            view.MinusUnit.onClick.AddListener((() => view.Hiring(false, this, building)));
+            _uiController.IsWorkUI(UIType.Buy, false);
+            return view;
         }
         #region Other
 
         /// <summary>
-        /// Этот метод для того чтобы взять юнита из тайла
+        /// This method is for taking a unit from Tile
         /// </summary>
         /// <param name="EightQuantity">кол юнитов</param>
         public void hiringUnits(int EightQuantity)
         {
-            if (EightQuantity <= _units)
+            if (EightQuantity <= _maxUnits)
             {
-                _eightQuantity += EightQuantity;
-                _uiView.UnitMax.text = _eightQuantity.ToString() + "/"+ _units.ToString() + " Units";
+                _currentUnits += EightQuantity;
+                _uiView.UnitMax.text = _currentUnits.ToString() + "/" + _maxUnits.ToString() + " Units";
             }
             else
             {
                 _centerText.NotificationUI("you have hired the maximum number of units", 2000);
             }
-            
+
         }
 
         /// <summary>
-        /// Метод для того чтобы вернуть юнита для найма
+        /// Method to return a unit for hiring
         /// </summary>
         /// <param name="EightQuantity">кол юнитов</param>
         public void RemoveFromHiringUnits(int EightQuantity)
         {
-            if (_eightQuantity > 0)
+            if (_currentUnits > 0)
             {
-                _eightQuantity -= EightQuantity;
-                _uiView.UnitMax.text = _eightQuantity.ToString() + "/"+ _units.ToString() + " Units";
+                _currentUnits -= EightQuantity;
+                _uiView.UnitMax.text = _currentUnits.ToString() + "/" + _maxUnits.ToString() + " Units";
             }
         }
 
@@ -184,21 +207,24 @@ namespace Code.TileSystem
         {
             foreach (var kvp in _uiController.ButtonsInMenu)
                 kvp.Value.onClick.RemoveAllListeners();
-            _uiController.BuildingsUIView.CloseMenuButton.onClick.RemoveAllListeners();
+            _uiController.BottonUI.BuildingMenu.CloseMenuButton.onClick.RemoveAllListeners();
             _uiController.Deinit();
             _uiView.Upgrade.onClick.RemoveAllListeners();
         }
+
         public void LevelCheck()
         {
             if (CurrentLVL > _uiController.DestroyBuildingInfo.Count)
             {
-                _uiController.BuildingsUIView.PrefabButtonClear.gameObject.SetActive(true);
+                _uiController.BottonUI.BuildingMenu.PrefabButtonClear.gameObject.SetActive(true);
             }
             else
             {
-                _uiController.BuildingsUIView.PrefabButtonClear.gameObject.SetActive(false);
+                _uiController.BottonUI.BuildingMenu.PrefabButtonClear.gameObject.SetActive(false);
             }
         }
+
+
         public void OnUpdate(float deltaTime)
         {
             LevelCheck();
