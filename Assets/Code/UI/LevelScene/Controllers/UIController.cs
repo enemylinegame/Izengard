@@ -36,7 +36,7 @@ namespace Code.UI
             _bottonUI = bottonUI;
             _centerUI = centerUI;
 
-            _warsView = new WarsView(bottonUI.WarsUIView);
+            _warsView = new WarsView(bottonUI.WarsUIView, inputController);
             
             IsWorkUI(UIType.All, false);
             

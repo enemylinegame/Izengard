@@ -8,7 +8,7 @@ using Code.TileSystem;
 
 namespace CombatSystem.Views
 {
-    public sealed class WarsView 
+    public sealed class WarsView : ITileSelector
     {
         private enum BarrackButtonsStatus
         {
@@ -30,15 +30,17 @@ namespace CombatSystem.Views
         private List<DefenderUnit> _unitsInsideBarrack;
         private List<DefenderUnit> _unitsOutsideBarrack;
         private IDefendersManager _defendersManager;
-
+        private InputController _inputController;
 
         private int _maxDefenders;
         private BarrackButtonsStatus _barrackButtonsStatus;
 
 
-        public WarsView(WarsUIView warsUIView)
+        public WarsView(WarsUIView warsUIView, InputController inputController)
         {
             _warsUIView = warsUIView;
+            _inputController = inputController;
+            
             _warsUIView.EnterToBarracks.onClick.AddListener(InBarrackButtonClick);
             _warsUIView.ExitFromBarracks.onClick.AddListener(InBarrackButtonClick);
             _warsUIView.DismissButton.onClick.AddListener(GlobalDismissButtonClick);
@@ -423,5 +425,14 @@ namespace CombatSystem.Views
             _defendersManager = manager;
         }
 
+        public void Cancel()
+        {
+            
+        }
+
+        public void SelectTile(TileView tile)
+        {
+            
+        }
     }
 }

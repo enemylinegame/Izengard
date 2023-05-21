@@ -24,7 +24,7 @@ namespace Controllers
 
         public InputController()
         {
-            // _uiController.WarsView.SetInputController(this);
+           
         }
 
 
