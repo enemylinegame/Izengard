@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Code.TileSystem
 {
-    public class DefendersMenager : IDefendersManager, ITileLoadInfo
+    public class DefendersManager : IDefendersManager, ITileLoadInfo
     {
         private readonly TileController _tileController;
         private readonly IDefendersControll _defendersController;
@@ -19,7 +19,7 @@ namespace Code.TileSystem
         private TileView SelectedTileView => _tileController.View;
         
 
-        public DefendersMenager(TileController tileController, IDefendersControll defendersController, 
+        public DefendersManager(TileController tileController, IDefendersControll defendersController, 
             UIController uiController)
         {
             _tileController = tileController;
