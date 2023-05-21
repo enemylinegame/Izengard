@@ -88,7 +88,7 @@ namespace CombatSystem
         {
             unit.OnDestinationReached -= OnUnitReachedBarrack;
             unit.Awake();
-            SendDefenderToTilePosition(unit, tile);
+            SendDefenderToTile(unit, tile);
         }
 
         public void DismissDefender(DefenderUnit unit)
@@ -96,7 +96,7 @@ namespace CombatSystem
             DefenderDead(unit);
         }
 
-        private void SendDefenderToTilePosition(DefenderUnit unit, TileView tile)
+        public void SendDefenderToTile(DefenderUnit unit, TileView tile)
         {
             Vector3 position = GeneratePositionNearTileCentre(tile);
             unit.GoToPosition(position);

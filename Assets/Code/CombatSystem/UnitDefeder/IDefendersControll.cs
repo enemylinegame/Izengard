@@ -13,6 +13,7 @@ namespace CombatSystem
         void KickDefendersOutOfBarrack(List<DefenderUnit> defenderUnits, TileView tile);
         void KickDefenderOutOfBarrack(DefenderUnit unit, TileView tile);
         void DismissDefender(DefenderUnit unit);
+        void SendDefenderToTile(DefenderUnit unit, TileView tile);
 
     }
 }

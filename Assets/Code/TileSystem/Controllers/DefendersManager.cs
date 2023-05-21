@@ -1,15 +1,18 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Code.TileSystem.Interfaces;
 using Code.UI;
 using CombatSystem;
 using CombatSystem.Views;
 using UnityEngine;
 
+
 namespace Code.TileSystem
 {
     public class DefendersManager : IDefendersManager, ITileLoadInfo
     {
+        private const string CANNOT_SEND_DEFENDER_TO_TILE = 
+            "Can't send defender to tile, target tile is full.";
+        
         private readonly TileController _tileController;
         private readonly IDefendersControll _defendersController;
         private readonly WarsView _warsView;
@@ -81,12 +84,28 @@ namespace Code.TileSystem
 
         public void SendToOtherTile(List<DefenderUnit> units, TileView tile)
         {
-            Debug.LogWarning("DefendersMenager->BarrackButtonClick: not implemented ");
+            TileModel current = SelectedTileModel;
+            TileModel other = tile.TileModel;
+            if (current != other)
+            {
+                for (int i = 0; i < units.Count; i++)
+                {
+                    DefenderUnit unit = units[i];
+                    if (!unit.IsInBarrack)
+                    {
+                        if (!SendDefenderToTile(unit, tile))
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            _warsView.UpdateDefenders();
         }
 
         public void BarrackButtonClick()
         {
-            Debug.LogWarning("DefendersMenager->BarrackButtonClick: not implemented ");
+            Debug.LogWarning("DefendersManager->BarrackButtonClick: not implemented ");
         }
 
         public void LoadInfoToTheUI(TileView tile)
@@ -108,6 +127,27 @@ namespace Code.TileSystem
             {
                 _warsView.UpdateDefenders();
             }
+        }
+
+        private bool SendDefenderToTile(DefenderUnit defender, TileView tile)
+        {
+            bool hasSent = false;
+
+            TileModel destinationTile = tile.TileModel;
+            if (destinationTile.DefenderUnits.Count < destinationTile.MaxWarriors)
+            {
+                defender.Tile.DefenderUnits.Remove(defender);
+                destinationTile.DefenderUnits.Add(defender);
+                defender.Tile = destinationTile;
+                _defendersController.SendDefenderToTile(defender, tile);
+                hasSent = true;
+            }
+            else
+            {
+                Debug.Log("DefendersManager->SendDefenderToTile: " + CANNOT_SEND_DEFENDER_TO_TILE);
+            }
+
+            return hasSent;
         }
     }
 }
