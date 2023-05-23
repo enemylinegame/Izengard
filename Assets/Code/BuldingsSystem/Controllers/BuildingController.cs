@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Code.BuldingsSystem;
 using Code.BuldingsSystem.ScriptableObjects;
 using Code.TileSystem;
 using Code.TileSystem.Interfaces;
@@ -38,68 +39,79 @@ namespace Code.BuildingSystem
             {
                 return;
             }
+            buildingConfig.BuildingCost.ForEach(resourcePrice => _stock.GetResourceFromStock(resourcePrice.ResourceType, resourcePrice.Cost));
 
-            foreach (var resourcePrice in buildingConfig.BuildingCost)
-            {
-                _stock.GetResourceFromStock(resourcePrice.ResourceType, resourcePrice.Cost);
-            }
-            var building = StartBuilding(model, buildingConfig);
-            if (building)
-            {
-                var info = controller.CreateBuildingInfo(buildingConfig, model, building);
-                building.Icon = info.Icon;
-                building.BuildingTypes = info.Types;
-                building.InitBuilding();
+            ICollectable building = StartBuilding(model, buildingConfig);
+
+            if (building == null) return;
+
+            building.InitBuilding();
+
+            BuildingUIInfo info = controller.CreateBuildingInfo(buildingConfig, model, building);
+
+            building.Icon = info.Icon.sprite;
+            building.BuildingTypes = info.BuildingType;
+    
+            _uiController.ButtonsBuy.Add(buildingConfig);
+            model.FloodedBuildings.Add(building);
+            
+            controller.LevelCheck();
+
+            Debug.Log(model.FloodedBuildings.Count);
+        }
+        
+        public void DestroyBuilding(List<ICollectable> buildings, BuildingUIInfo buildingUI, TileModel model, TileController tileController)
+        {
+            var buildingToRemove = buildings.Find(kvp => kvp.BuildingTypes == buildingUI.BuildingType);
+            
+            buildingUI.DestroyBuildingInfo.onClick.RemoveAllListeners();
+            buildingUI.PlusUnit.onClick.RemoveAllListeners();
+            buildingUI.MinusUnit.onClick.RemoveAllListeners();
                 
-                _uiController.ButtonsBuy.Add(buildingConfig);
-                model.FloodedBuildings.Add(building);
+            _uiController.DestroyBuildingInfo.Remove(buildingUI.gameObject);
+            tileController.WorkerMenager.RemoveAllWorkerAssignment(buildingUI, buildingToRemove, tileController);
+            RemoveTypeDots(model, buildingToRemove);
+                
+            buildings.Remove(buildingToRemove);
+            model.FloodedBuildings.Remove(buildingToRemove);
+                
+            GameObject.Destroy(buildingToRemove.Prefab);
+            GameObject.Destroy(buildingUI.gameObject);
+                
+            Debug.Log(model.FloodedBuildings.Count);
+                
+            tileController.LevelCheck();
+        }
+        private ICollectable StartBuilding(TileModel model, BuildingConfig config)
+        {
+            var dot = CheckDot(model);
+            if (dot == null)
+            {
+                _centerText.NotificationUI("You have built maximum buildings", 1000);
+                return null;
             }
+
+            var buildingPrefab = config.BuildingPrefab.GetComponent<Building>();
+            
+            var build = Object.Instantiate(buildingPrefab, dot.transform);
+            
+            build.BuildingTypes = config.BuildingType;
+            
+            dot.Building = build;
+            dot.IsActive = false;
+            
+            return build;
         }
 
-        public void DestroyBuilding(List<Building> buildingConfigs, BuildingUIInfo Button, TileModel model, WorkerAssignmentsController workerAssignmentsController)
+        public void RemoveTypeDots(TileModel model, ICollectable building)
         {
-            foreach (var kvp in buildingConfigs)
-            {
-                if (kvp.BuildingTypes == Button.Types)
-                {
-                    Button.DestroyBuildingInfo.onClick.RemoveAllListeners();
-                    Button.PlusUnit.onClick.RemoveAllListeners();
-                    Button.MinusUnit.onClick.RemoveAllListeners();
-                    buildingConfigs.Remove(kvp);
-                    
-                    _uiController.DestroyBuildingInfo.Remove(Button.gameObject);
-                    model.FloodedBuildings.Remove(kvp);
-                    // workerAssignmentsController.RemoveAllWorkerAssigment(Button.Types, kvp);
-                    RemoveTypeDots(model, kvp);
-                    GameObject.Destroy(kvp.gameObject);
-                    GameObject.Destroy(Button.gameObject);
-                    break;
-                }
+            var dot = model.DotSpawns.Find(x => x.Building == building);
+            if (dot == null) return;
+            
+            dot.Building.BuildingTypes = BuildingTypes.None;
+            dot.IsActive = true;
+        }
 
-            }
-        }
-        private Building StartBuilding(TileModel model, BuildingConfig config)
-        {
-            if (CheckDot(model))
-            {
-                var dot = CheckDot(model);
-                var build = Object.Instantiate(config.BuildingPrefab.GetComponent<Building>(), dot.transform);
-                build.BuildingTypes = config.BuildingType;
-                dot.IsActive = false;
-                return build;
-            }
-            _centerText.NotificationUI("You have built maximum buildings", 1000);
-            return null;
-        }
-        public void RemoveTypeDots(TileModel model, Building building)
-        {
-            if (model.DotSpawns.Exists(x => x.Building == building))
-            {
-                var dot = model.DotSpawns.Find(x => x.Building == building);
-                dot.Building.BuildingTypes = BuildingTypes.None;
-                dot.IsActive = true;
-            }
-        }
         public Dot CheckDot(TileModel model)
         {
             var cleardots = model.DotSpawns.FindAll(x => x.IsActive);

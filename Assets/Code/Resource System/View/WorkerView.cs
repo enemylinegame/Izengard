@@ -1,4 +1,5 @@
 using BuildingSystem;
+using Code.BuldingsSystem;
 using EquipmentSystem;
 using ResourceSystem;
 using ResourceSystem.SupportClases;
@@ -10,12 +11,19 @@ public class WorkerView : UnitView
     [SerializeField] private ResourceHolder _Resholder;
     [SerializeField] private ItemСarrierHolder _Itemholder;
     [SerializeField] private float _currentMineTime;
-    private ResourceType _type;
+    private BuildingTypes _buildingTypes;
+    private ResourceType _resourceType;
 
-    public ResourceType AssignedResource
+    public BuildingTypes BuildingTypes
     {
-        get => _type;
-        set => _type = value;
+        get => _buildingTypes;
+        set => _buildingTypes = value;
+    }
+
+    public ResourceType ResourceType
+    {
+        get => _resourceType;
+        set => _resourceType = value;
     }
 
    /* public void GetResurseOutOfHolder(WareHouseBuildModel model)

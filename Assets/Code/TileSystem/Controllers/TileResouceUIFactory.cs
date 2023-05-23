@@ -1,5 +1,6 @@
 ﻿using ResourceSystem;
 using System.Collections.Generic;
+using Code.BuldingsSystem;
 using Code.TileSystem.Interfaces;
 using Code.UI;
 using Controllers;
@@ -13,7 +14,7 @@ namespace Code.TileSystem
         private ResourcesLayoutUIView _resourcesLayoutUIView;
         private TileResourceUIController _tileResourceController;
         private TileController _tileController;
-        private List<Building> _buildings;
+        private List<ICollectable> _buildings;
 
         public TileResouceUIFactory(UIController uiController, TileResourceUIController tileResourceController
             , InputController inputController, TileController tileController)
@@ -36,6 +37,8 @@ namespace Code.TileSystem
 
         public void Cancel()
         {
+            if(_buildings == null) return;
+            
             var minerals = _buildings.FindAll(x => x.MineralConfig != null);
             foreach (var mineral in minerals)
             {
@@ -43,18 +46,18 @@ namespace Code.TileSystem
             }
         }
 
-        private void CreateResourceUIOnLayout(GameObject resourceUIElement, Building mineralConfig)
+        private void CreateResourceUIOnLayout(GameObject resourceUIElement, ICollectable mineralConfig)
         {
             ResourceView resourceUIObjectView;
             GameObject resourceUIObject = GameObject.Instantiate(resourceUIElement, _layoutTransform);
             resourceUIObjectView = resourceUIObject.GetComponent<ResourceView>();
-            resourceUIObjectView.InitViewData(mineralConfig.ResourceType.ToString(), _tileController.WorkerAssignmentsController.GetAssignedWorkers(mineralConfig), mineralConfig);
+            resourceUIObjectView.InitViewData(mineralConfig.ResourceType.ToString(), _tileController.WorkerMenager.GetAssignedWorkers(mineralConfig), mineralConfig);
 
             _resourcesLayoutUIView.Resources.Add(resourceUIObjectView);
             _tileResourceController.AddNewLayoutElement(resourceUIObjectView);
         }
 
-        private void AddNewLayoutElement(Building mineralConfig)
+        private void AddNewLayoutElement(ICollectable mineralConfig)
         {
             GameObject resourceUIElement = Resources.Load<GameObject>("UI/ResourceUI/Res");//TODO PLS DEL
 

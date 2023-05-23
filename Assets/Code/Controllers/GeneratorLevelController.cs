@@ -2,6 +2,8 @@ using LevelGenerator;
 using LevelGenerator.Interfaces;
 using System;
 using System.Collections.Generic;
+using Code.BuildingSystem;
+using Code.TileSystem;
 using Code.TowerShot;
 using Code.UI;
 using UnityEngine;
@@ -62,7 +64,6 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
         _rightUI.ButtonSelectTileSecond.gameObject.SetActive(false);
         _rightUI.ButtonSelectTileThird.gameObject.SetActive(false);
         _rightUI.ButtonHireUnits.gameObject.SetActive(true);
-        // _bottonUI.BuildingMenu.OpenMenuButton.gameObject.SetActive(true);
 
         PlaceMainTower();
         SetTileNumZone(_tileSetter.FirstTileGridPosition);
@@ -82,6 +83,7 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
         if (mainBuilding != null)
         {
             TowerShot = mainBuilding.GetComponentInChildren<TowerShotBehavior>();
+            firstTile.TileView.TileModel.HouseType = HouseType.Eco;
         }
         MainBuilding.Init(1000);
     }

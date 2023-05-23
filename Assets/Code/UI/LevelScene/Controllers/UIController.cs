@@ -44,6 +44,8 @@ namespace Code.UI
             _centerUI.CloseBuildingsBuy.onClick.AddListener((() => IsWorkUI(UIType.Buy, false)));
             inputController.Add(this);
             _warsView.SetInputController(inputController);
+            
+            CenterUI.TIleSelection.Back.onClick.AddListener(() => IsWorkUI(UIType.TileSel, false));
         }
         /// <summary>
         /// Включение/отключение любой части UI
@@ -70,6 +72,8 @@ namespace Code.UI
                 case UIType.Сonfirmation:
                     break;
                 case UIType.Unit:
+                case UIType.TileSel:
+                    _centerUI.TIleSelection.gameObject.SetActive(isOn);
                     break;
             }
         }
@@ -110,6 +114,7 @@ namespace Code.UI
 
         public void LoadInfoToTheUI(TileView tile)
         {
+            if(tile.TileModel.HouseType == HouseType.None) return;
             IsWorkUI(UIType.Tile, true);
             _warsView.SetDefenders(tile.TileModel.DefenderUnits);
         }
@@ -129,5 +134,6 @@ namespace Code.UI
         Сonfirmation,
         Tile,
         Unit,
+        TileSel,
     }
 }

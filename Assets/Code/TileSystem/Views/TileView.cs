@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Code.BuildingSystem;
+using Code.BuldingsSystem;
 using Code.BuldingsSystem.ScriptableObjects;
 using Code.UI;
 using CombatSystem;
@@ -14,9 +15,10 @@ namespace Code.TileSystem
 {
     public class TileView : MonoBehaviour
     {
+        [SerializeField] private HouseType _houseType;
         [SerializeField] private TileConfig _tileConfig;
         [SerializeField] private List<Dot> _dotSpawns;
-        [SerializeField] private List<Building> _floodedBuildings;
+        [SerializeField] private List<ICollectable> _floodedBuildings;
         public TileModel TileModel;
         private void Awake()
         {
@@ -25,6 +27,7 @@ namespace Code.TileSystem
             TileModel.DotSpawns = _dotSpawns;
             TileModel.Init();
             _floodedBuildings = TileModel.FloodedBuildings;
+            TileModel.HouseType = _houseType;
         }
 
         /// <summary>
@@ -32,15 +35,22 @@ namespace Code.TileSystem
         /// </summary>
         public void LVLUp(TileController controller)
         {
-            if (TileModel.SaveTileConfig.TileLvl.GetHashCode() < 5)
+            int currentLevel = TileModel.SaveTileConfig.TileLvl.GetHashCode();
+            if (currentLevel < 5)
             {
-                TileModel.SaveTileConfig = controller.List.LVLList[TileModel.SaveTileConfig.TileLvl.GetHashCode()];
+                TileModel.SaveTileConfig = controller.List.LVLList[currentLevel];
                 TileModel.TileConfig = TileModel.SaveTileConfig;
                 TileModel.CurrBuildingConfigs.AddRange(TileModel.SaveTileConfig.BuildingTirs);
+                
                 controller.UpdateInfo(TileModel.SaveTileConfig);
-                controller.ADDBuildUI(TileModel);
-                controller.WorkerAssignmentsController.FillWorkerList();
-            }else controller.CenterText.NotificationUI("Max LVL", 1000);
+                controller.LoadBuildings(TileModel);
+                controller.LevelCheck();
+            }
+            else
+            {
+                controller.CenterText.NotificationUI("Max LVL", 1000);
+            }
         }
+
     }
 }
