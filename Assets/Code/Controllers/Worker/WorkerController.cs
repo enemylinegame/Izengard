@@ -1,96 +1,125 @@
-﻿using System.Collections.Generic;
-using Code.MovementOfWorkers.Animations;
-using Controllers.BaseUnit;
-using Enums.BaseUnit;
-using Models.BaseUnit;
+﻿using System;
 using UnityEngine;
-using Views.BaseUnit;
+
 
 namespace Controllers.Worker
 {
-    public sealed class WorkerController: BaseUnitController
+    public sealed class WorkerController: IOnUpdate, IDisposable
     {
-        private readonly BaseUnitModel _baseUnitModel;
-        private readonly UnitMovement _unitMovement;
-        private readonly WorkerAnimationController _unitAnimation;
-        private List<UnitHandler> _unitHandlers;
-        private List<float> _timerPositions;
-        private UnitStates _currentUnitState;
-     
+        public WorkerModel Model { get; private set; }
+        public IWorkerView View { get; private set; }
 
-        public WorkerController(BaseUnitModel baseUnitModel, UnitMovement unitMovement, WorkerAnimationController unitAnimation) :
-            base(baseUnitModel, unitMovement, unitAnimation)
+        public Action<WorkerController> OnMissionCompleted = delegate { };
+
+        public WorkerController(WorkerModel workerModel, IWorkerView workerView)
         {
-            _baseUnitModel = baseUnitModel;
-            _unitMovement = unitMovement;
-            _unitAnimation = unitAnimation;
-            _unitHandlers = new List<UnitHandler>();
-            _timerPositions = new List<float>();
+            Model = workerModel;
+            View = workerView;
         }
 
-        public override void SetStateMachine(UnitStates unitStates)
+        private void InitTask(Vector3 fromPlace, Vector3 target)
         {
-            //_unitMovement.WaitingForNextCommand = false;
-            //base.SetStateMachine(unitStates);
-            _currentUnitState = unitStates;
-            switch (_currentUnitState)
-            {
-                case UnitStates.IDLE:
-                    //Anim state, looking for target, waiting destination
-                    break;
-            
-                case UnitStates.MOVING:
-                    //AnimState
-                    break;
-                case UnitStates.DEAD:
-                    //AnimeState, destroy
-                    break;
-            }
+            View.Activate();
+            Model.StatrtingPlace = fromPlace;
+
+            View.InitPlace(fromPlace);
+            View.GoToPlace(target);
+            Model.State = WorkerStates.NONE;
         }
 
-        public override void SetUnitSequence(List<UnitStates> workerActionsList)
+        public int GoToWorkAndReturn(Vector3 fromPlace, Vector3 placeOfWork)
         {
-            int timerCount = 0;
-            foreach (var workerAction in workerActionsList)
+            InitTask(fromPlace, placeOfWork);
+            Model.State = WorkerStates.GO_TO_WORK;
+            return Model.WorkerId;
+        }
+
+        public int GoToPlace(Vector3 fromPlace, Vector3 toPlace)
+        {
+            InitTask(fromPlace, toPlace);
+            Model.State = WorkerStates.GO_TO_PLACE;
+            return Model.WorkerId;
+        }
+
+        public void CancelWork()
+        {
+            Model.State = WorkerStates.GO_TO_HOME;
+            View.GoToPlace(Model.StatrtingPlace);
+        }
+
+        public int WorkerId => Model.WorkerId;
+        
+        private void ProduceWork()
+        {
+            View.ProduceWork();
+        }
+
+        private void BringProducts()
+        {
+            View.DragToPlace(Model.StatrtingPlace);
+        }
+
+        public void OnUpdate(float deltaTime)
+        {
+            if (WorkerStates.NONE == Model.State)
+                return;
+
+            if (WorkerStates.PRODUCE_WORK == Model.State)
             {
-               
-                switch (workerAction)
+                Model.WorkTimeLeft -= deltaTime;
+                if (Model.WorkTimeLeft < 0)
                 {
-                        case UnitStates.MOVING:
-                            _unitHandlers.Add(new BaseUnitMoveHandler(_unitMovement, this));
-                            MoveCounter++;
-                            break;
-                        case UnitStates.ATTAKING:
-                            _unitHandlers.Add(new BaseUnitWaitHandler(_timerPositions[timerCount], this));
-                            timerCount++;
-                            break;
+                    Model.WorkTimeLeft = 0;
+                    Model.State = WorkerStates.GO_TO_HOME;
+                    BringProducts();
                 }
             }
-            _unitHandlers[0].Handle();
-            for (int i = 1; i < _unitHandlers.Count; i++)
+            else if (View.IsOnThePlace())
             {
-                if (i != _unitHandlers.Count)
-                    _unitHandlers[i - 1].SetNext(_unitHandlers[i]);
+                if (WorkerStates.GO_TO_WORK == Model.State)
+                {
+                    ProduceWork();
+                    Model.State = WorkerStates.PRODUCE_WORK;
+                    Model.WorkTimeLeft = Model.TimeOfWork;
+                }
+                else if (WorkerStates.GO_TO_HOME == Model.State ||
+                    WorkerStates.GO_TO_PLACE == Model.State)
+                {
+                    OnMissionCompleted.Invoke(this);
+                    Model.State = WorkerStates.NONE;
+                    View.Deactivate();
+                }
             }
-            _unitHandlers[_unitHandlers.Count - 1].SetNext(_unitHandlers[0]);
         }
 
-        public override void SetDestination(Vector3 whereToGo)
+        public void Pause()
         {
-            _unitMovement.PointWhereToGo.Add(whereToGo);
+            View.Pause();
         }
 
-        public override void SetEndTime(float time)
+        public void Resume()
         {
-            _timerPositions.Add(time);
-        }
-
-        public override void Check(float deltaTime)
-        {
-            if (CurrentUnitHandler is BaseUnitMoveHandler moveHandler)
+            switch (Model.State)
             {
-                moveHandler.OnUpdate(deltaTime);
+                case WorkerStates.GO_TO_HOME:
+                    View.ResumeDrag();
+                    break;
+                case WorkerStates.GO_TO_PLACE:
+                    View.ResumeWalk();
+                    break;
+                case WorkerStates.GO_TO_WORK:
+                    View.ResumeWalk();
+                    break;
+                case WorkerStates.PRODUCE_WORK:
+                    View.ResumeWork();
+                    break;
             }
+        }
+
+        public void Dispose()
+        {
+            Model = null;
+            View = null;
         }
     }
 }

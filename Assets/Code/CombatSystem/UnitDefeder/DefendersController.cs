@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Code.TileSystem;
 using Code.UI;
@@ -50,9 +51,9 @@ namespace CombatSystem
                 for (int i = 0; i < defenderUnits.Count; i++)
                 {
                     DefenderUnit unit = defenderUnits[i];
-                    if (unit.IsInsideBarrack == false)
+                    if (unit.IsInBarrack == false)
                     {
-                        unit.GoToPosition(buildingPosition);
+                        unit.GoToBarrack(buildingPosition);
                         unit.OnDestinationReached += OnUnitReachedBarrack;
                     }
                 }
@@ -61,10 +62,10 @@ namespace CombatSystem
 
         public void SendDefenderToBarrack(DefenderUnit unit, TileView tile)
         {
-            if (unit.IsInsideBarrack == false)
+            if (unit.IsInBarrack == false)
             {
                 Vector3 buildingPosition = tile.transform.position;
-                unit.GoToPosition(buildingPosition);
+                unit.GoToBarrack(buildingPosition);
                 unit.OnDestinationReached += OnUnitReachedBarrack;
             }
         }
@@ -72,7 +73,6 @@ namespace CombatSystem
         private void OnUnitReachedBarrack(DefenderUnit unit)
         {
             unit.OnDestinationReached -= OnUnitReachedBarrack;
-            unit.IsInsideBarrack = true;
         }
 
         public void KickDefendersOutOfBarrack(List<DefenderUnit> defenderUnits, TileView tile)
@@ -87,11 +87,16 @@ namespace CombatSystem
         public void KickDefenderOutOfBarrack(DefenderUnit unit, TileView tile)
         {
             unit.OnDestinationReached -= OnUnitReachedBarrack;
-            unit.IsInsideBarrack = false;
-            SendDefenderToTilePosition(unit, tile);
+            unit.Awake();
+            SendDefenderToTile(unit, tile);
         }
 
-        private void SendDefenderToTilePosition(DefenderUnit unit, TileView tile)
+        public void DismissDefender(DefenderUnit unit)
+        {
+            DefenderDead(unit);
+        }
+
+        public void SendDefenderToTile(DefenderUnit unit, TileView tile)
         {
             Vector3 position = GeneratePositionNearTileCentre(tile);
             unit.GoToPosition(position);
@@ -100,6 +105,7 @@ namespace CombatSystem
         private void DefenderDead(DefenderUnit defender)
         {
             defender.DefenderUnitDead -= DefenderDead;
+            defender.OnDestinationReached -= OnUnitReachedBarrack;
             _defenderUnits.Remove(defender);
             GameObject.Destroy(defender.DefenderGameObject);
         }

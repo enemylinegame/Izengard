@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Code.MovementOfWorkers.Animations;
 using Enums.BaseUnit;
 using Models.BaseUnit;
 using UnityEngine;
@@ -15,7 +14,6 @@ namespace Controllers.BaseUnit
         
         private BaseUnitModel _unitModel;
         private UnitMovement _unitMovementView;
-        private WorkerAnimationController _unitAnimation;
         public IUnitHandler CurrentUnitHandler;
         public int MoveCounter;
         private float normalizedTime = 0.0f;
@@ -24,11 +22,10 @@ namespace Controllers.BaseUnit
 
         #region Ctor
 
-        public BaseUnitController(BaseUnitModel baseUnitModel, UnitMovement unitMovement, WorkerAnimationController unitAnimation)
+        public BaseUnitController(BaseUnitModel baseUnitModel, UnitMovement unitMovement)
         {
             _unitModel = baseUnitModel;
             _unitMovementView =  unitMovement;
-            _unitAnimation = unitAnimation;
         }
 
         #endregion

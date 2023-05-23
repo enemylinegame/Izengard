@@ -11,6 +11,7 @@ namespace CombatSystem.Views
         public event Action<int> OnHireClick;
         public event Action<int> OnDissmisClick;
         public event Action<bool, int> OnInBarrackChanged;
+        public event Action<bool, int> OnSelected;
 
         private DefenderSlotUI _uiSlot;
         private Image _unitIcon;
@@ -74,7 +75,7 @@ namespace CombatSystem.Views
             }
         }
 
-        public DefenderUnit DefenderUnitView { get => _unit; }
+        public DefenderUnit Unit { get => _unit; }
 
 
         public DefenderSlotView(DefenderSlotUI slot, Sprite unitSprite, int number)
@@ -127,6 +128,7 @@ namespace CombatSystem.Views
             {
                 _isSelected = !_isSelected;
                 _selectedBoard.SetActive(_isSelected);
+                OnSelected?.Invoke(_isSelected, _number);
             }
         }
 
@@ -137,7 +139,7 @@ namespace CombatSystem.Views
                 _unitIcon.sprite = _unitSprite;
                 _unit = unit;
                 _inBarrack.gameObject.SetActive(true);
-                IsInBarrack = unit.IsInsideBarrack;
+                IsInBarrack = unit.IsInBarrack;
                 _hireButton.gameObject.SetActive(false);
                 _dismissButton.gameObject.SetActive(true);
             }

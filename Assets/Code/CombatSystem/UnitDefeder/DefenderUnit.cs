@@ -1,33 +1,24 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using Code.TileSystem;
 using UnityEngine;
 using UnityEngine.AI;
 
+
 namespace CombatSystem
 {
-    public class DefenderUnitStats
-    {
-        public float _attackSpeed;
-        public int _attackDamage;
-
-        public DefenderUnitStats(float attackSpeed, int attackDamage)
-        {
-            _attackSpeed = attackSpeed;
-            _attackDamage = attackDamage;
-        }
-    }
-    
-    public enum DefenderState
-    {
-        None  = 0,
-        Going = 1,
-        Fight = 2,
-        Idle  = 3
-    }
-
     public class DefenderUnit : IDisposable, IOnUpdate
     {
+        private enum DefenderState
+        {
+            None        = 0,
+            Going       = 1,
+            Fight       = 2,
+            Idle        = 3,
+            InBarrack   = 4,
+            GotoBarrack = 5
+        }
+
         public event Action<DefenderUnit> DefenderUnitDead;
         public event Action<DefenderUnit> OnDestinationReached;
 
@@ -39,16 +30,16 @@ namespace CombatSystem
         private GameObject _defender;
         private DefenderUnitStats _unitStats;
         private NavMeshAgent _agent;
+        private TileModel _tileModel;
 
         private Vector3 _defendPosition;
-        private DefenderState _state = DefenderState.Going;
+        private DefenderState _state;
 
         private float _tempTime = 0;
         private float _stopDistanceSqr;
         private bool _isReload = false;
         private bool _isPositionChanged;
-        private bool _isBarrackMode;
-
+        private bool _isActive;
 
         public Vector3 Position
         {
@@ -58,20 +49,21 @@ namespace CombatSystem
             }
         }
 
-        public bool IsInsideBarrack
+        /// <summary>
+        /// Going to barrack or inside barrack
+        /// </summary>
+        public bool IsInBarrack
         {
             get
             {
-                return _isBarrackMode;
+                return (_state == DefenderState.GotoBarrack || _state == DefenderState.InBarrack);
             }
-            set
-            {
-                if (_isBarrackMode != value)
-                {
-                    _isBarrackMode = value;
-                    _defender.SetActive(!value);
-                }
-            }
+        }
+
+        public TileModel Tile
+        {
+            get => _tileModel;
+            set => _tileModel = value;
         }
 
         public DefenderUnit(GameObject defender, Vector3 defendPosition)
@@ -87,8 +79,8 @@ namespace CombatSystem
             _damageable.MeAttackedChenged += MeAttacked;
             _damageable.Init(100, 1);
             _attackAction = new DefenderAttackAction(_unitStats);
-            _isBarrackMode = true;
-
+            _state = DefenderState.Going;
+            _isActive = true;
         }
 
         private void MeAttacked(List<Damageable> listMeAttackedUnits)
@@ -102,7 +94,6 @@ namespace CombatSystem
                 _state = DefenderState.Idle;
             }
             _listMeAttackedUnits = listMeAttackedUnits;
-            Debug.Log($"DefenderUnit->MeAttacked: _listMeAttackedUnits.Count = {_listMeAttackedUnits.Count}; _state = {_state}");
         }
 
         private void DefenderDead()
@@ -118,7 +109,7 @@ namespace CombatSystem
 
         public void OnUpdate(float deltaTime)
         {
-            if (!_isBarrackMode)
+            if (_isActive)
             {
                 DefenderLogic();
             }
@@ -150,7 +141,10 @@ namespace CombatSystem
 
                 if (_isPositionChanged || (_agent.remainingDistance > _agent.stoppingDistance))
                 {
-                    _state = DefenderState.Going;
+                    if (_state != DefenderState.GotoBarrack)
+                    {
+                        _state = DefenderState.Going;
+                    }
                 }
                 else
                 {
@@ -159,13 +153,18 @@ namespace CombatSystem
                         _state = DefenderState.Idle;
                         OnDestinationReached?.Invoke(this);
                     }
-
-                    _state = DefenderState.Idle;
+                    else if (_state == DefenderState.GotoBarrack)
+                    {
+                        _state = DefenderState.InBarrack;
+                        Deactivate();
+                        OnDestinationReached?.Invoke(this);
+                    }
                 }
             }
 
             switch (_state)
             {
+                case DefenderState.GotoBarrack:
                 case DefenderState.Going:
                     if (_isPositionChanged)
                     {
@@ -194,6 +193,28 @@ namespace CombatSystem
             newPosition.y = _defendPosition.y;
             _defendPosition = newPosition;
             _isPositionChanged = true;
+        }
+
+        public void GoToBarrack(Vector3 destination)
+        {
+            _state = DefenderState.GotoBarrack;
+            GoToPosition(destination);
+        }
+
+        public void Awake()
+        {
+            if (!_isActive)
+            {
+                _isActive = true;
+                _defender.SetActive(true);
+                _state = DefenderState.Idle;
+            }
+        }
+
+        private void Deactivate()
+        {
+            _isActive = false;
+            _defender.SetActive(false);
         }
     }
 
