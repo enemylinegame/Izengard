@@ -68,7 +68,7 @@ public class GameInit
         var workersTeamComtroller = new WorkersTeamController(workersTeamConfig);
 
         var tileController = new TileController(tileList, uiController, 
-            buildingController, inputController, workersTeamComtroller);
+            buildingController, inputController);
 
         var tileResourceUIController = new TileResourceUIController(
             uiController, inputController, tileController);

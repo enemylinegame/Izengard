@@ -37,10 +37,10 @@ namespace Code.TileSystem
                 _tileController.HiringUnits(1);                 
             }
 
-            var workers = _workerViews.Find(x => x.BuildingTypes == BuildingTypes.None && x.ResourceType == ResourceType.None);
+            var workers = _workerViews.Find(x => x.BuildingType == BuildingTypes.None && x.ResourceType == ResourceType.None);
             if (buildingCollectable is ICollectable buildingType)
             {
-                workers.BuildingTypes = buildingType.BuildingTypes;
+                workers.BuildingType = buildingType.BuildingTypes;
             }
             else if (buildingCollectable is ICollectable resource)
             {
@@ -50,7 +50,7 @@ namespace Code.TileSystem
         }
         public bool RemoveWorkerAssignment(IbuildingCollectable buildingCollectable, ICollectable building)
         {
-            var worker = _workerViews.Find(x => x.ResourceType == buildingCollectable.ResourceType || x.BuildingTypes == buildingCollectable.BuildingType);
+            var worker = _workerViews.Find(x => x.ResourceType == buildingCollectable.ResourceType || x.BuildingType == buildingCollectable.BuildingType);
             var workersAssigment = _workersAssigments.Find(x => x.Building.BuildingID == building.BuildingID);
             
             if (workersAssigment != null)
@@ -68,7 +68,7 @@ namespace Code.TileSystem
         
         public void RemoveAllWorkerAssignment(IbuildingCollectable buildingCollectable, ICollectable building, TileController controller)
         {
-            var worker = _workerViews.FindAll(x => x.BuildingTypes == buildingCollectable.BuildingType || x.ResourceType == buildingCollectable.ResourceType);
+            var worker = _workerViews.FindAll(x => x.BuildingType == buildingCollectable.BuildingType || x.ResourceType == buildingCollectable.ResourceType);
             var workerassign = _workersAssigments.Exists(x => x.Building.BuildingID == building.BuildingID);
             if (workerassign)
             {
@@ -98,7 +98,7 @@ namespace Code.TileSystem
         {
             var worker = new WorkerView();
             worker.ResourceType = ResourceType.None;
-            worker.BuildingTypes = BuildingTypes.None;
+            worker.BuildingType = BuildingTypes.None;
             _workerViews.Add(worker);
             _tileModel.CurrentUnits = _workerViews.Count;
         }
