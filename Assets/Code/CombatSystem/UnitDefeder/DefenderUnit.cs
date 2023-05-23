@@ -201,7 +201,7 @@ namespace CombatSystem
             GoToPosition(destination);
         }
 
-        public void Awake()
+        public void Activate()
         {
             if (!_isActive)
             {

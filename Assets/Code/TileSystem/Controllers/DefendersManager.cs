@@ -91,13 +91,11 @@ namespace Code.TileSystem
                 for (int i = 0; i < units.Count; i++)
                 {
                     DefenderUnit unit = units[i];
-                    if (!unit.IsInBarrack)
+                    if (!SendDefenderToTile(unit, tile))
                     {
-                        if (!SendDefenderToTile(unit, tile))
-                        {
-                            break;
-                        }
+                        break;
                     }
+
                 }
             }
             _warsView.UpdateDefenders();
@@ -136,6 +134,10 @@ namespace Code.TileSystem
             TileModel destinationTile = tile.TileModel;
             if (destinationTile.DefenderUnits.Count < destinationTile.MaxWarriors)
             {
+                if (defender.IsInBarrack)
+                {
+                    _defendersController.KickDefenderOutOfBarrack(defender, SelectedTileView);
+                }
                 defender.Tile.DefenderUnits.Remove(defender);
                 destinationTile.DefenderUnits.Add(defender);
                 defender.Tile = destinationTile;
