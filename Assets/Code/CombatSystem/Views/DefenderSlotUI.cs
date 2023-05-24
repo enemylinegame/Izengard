@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 
 namespace CombatSystem.Views
@@ -14,6 +13,8 @@ namespace CombatSystem.Views
         [field: SerializeField] public Button HireButton { get; private set; }
         [field: SerializeField] public Button DismissButton { get; private set; }
         [field: SerializeField] public GameObject SelectBoard { get; private set; }
+        [field: SerializeField] public GameObject HpBarRoot { get; private set; }
+        [field: SerializeField] public RectTransform HpBar { get; private set; }
 
     }
 }

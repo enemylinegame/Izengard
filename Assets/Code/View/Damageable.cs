@@ -11,7 +11,8 @@ public class Damageable : MonoBehaviour, IHealthHolder
     public Sprite Icon => _icon;
     public float CurrentHealth { get; private set; }
     public float MaxHealth {get; private set;}
-  
+
+    public event Action<float, float> OnHealthChanged; 
     public event Action DeathAction;
     public bool IsDamagableDead { get; private set; }
 
@@ -27,14 +28,6 @@ public class Damageable : MonoBehaviour, IHealthHolder
         _maxCountAttackers = maxAttackers;
     }
 
-    // private void OnCollisionEnter(Collision other) 
-    // {
-    //     if (other.collider.CompareTag("Bullet"))
-    //     {
-    //         MakeDamage(50);
-    //     }
-    // }
-
     public bool Attacked(Damageable damageable)
     {
         if (_listAttackedUnits.Count >= _maxCountAttackers) return false;
@@ -44,7 +37,7 @@ public class Damageable : MonoBehaviour, IHealthHolder
             {
                 _listAttackedUnits.Add(damageable);
                 damageable.DeathAction += MeAttackedDead;
-                MeAttackedChenged?.Invoke(_listAttackedUnits); // added Anton
+                MeAttackedChenged?.Invoke(_listAttackedUnits); 
 
                 return true;
             }
@@ -68,8 +61,9 @@ public class Damageable : MonoBehaviour, IHealthHolder
 
     public void MakeDamage(int damage)
     {
-        Debug.Log($"Damageable->MakeDamage: gameObject = {gameObject.name}; damage = {damage}");// added Anton
+        //Debug.Log($"Damageable->MakeDamage: gameObject = {gameObject.name}; damage = {damage}");// added Anton
         CurrentHealth -= damage;
+        OnHealthChanged?.Invoke(MaxHealth,CurrentHealth);
         if (CurrentHealth <= 0)
         {
             IsDamagableDead = true;

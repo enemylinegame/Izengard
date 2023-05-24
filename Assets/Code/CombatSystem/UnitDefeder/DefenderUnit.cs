@@ -12,6 +12,7 @@ namespace CombatSystem
         public event Action<DefenderUnit> DefenderUnitDead;
         public event Action<DefenderUnit> OnDestinationReached;
         public event Action<DefenderState> OnStateChanged; 
+        public event Action<float, float> OnHealthChanged; 
 
         public GameObject DefenderGameObject { get { return _defender; } }
 
@@ -72,6 +73,8 @@ namespace CombatSystem
             set => _tileModel = value;
         }
 
+        public IHealthHolder HealthHolder  => _damageable;
+        
         public DefenderUnit(GameObject defender, Vector3 defendPosition)
         {
             _unitStats = new DefenderUnitStats(1f,25);
@@ -79,6 +82,7 @@ namespace CombatSystem
             _defendPosition = defendPosition;
             _isPositionChanged = true;
             _damageable = defender.GetComponent<Damageable>();
+            _damageable.OnHealthChanged += HealthChanged;
             _agent = defender.GetComponent<NavMeshAgent>();
             _stopDistanceSqr = _agent.stoppingDistance * _agent.stoppingDistance;
             _damageable.DeathAction += DefenderDead;
@@ -231,6 +235,11 @@ namespace CombatSystem
             _defender.SetActive(false);
         }
 
+        private void HealthChanged(float maxHealth, float currentHealth)
+        {
+            OnHealthChanged?.Invoke(maxHealth,currentHealth);
+        }
+        
         private void DrawLineToTarget(Damageable target)
         {
 #if UNITY_EDITOR
