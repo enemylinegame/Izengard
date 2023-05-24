@@ -18,7 +18,7 @@ namespace Code.UI
          [field: SerializeField] public TileSelectionView TIleSelection { get; set; }
         
         [field: Space, Header("Info")]
-        [field: SerializeField] public BaseCenterText BaseCenterText { get; set; }
+        [field: SerializeField] public BaseNotificationUI BaseNotificationUI { get; set; }
     }
 }
 

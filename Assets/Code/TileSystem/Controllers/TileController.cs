@@ -6,6 +6,7 @@ using Code.BuldingsSystem.ScriptableObjects;
 using Code.TileSystem;
 using Code.TileSystem.Interfaces;
 using Code.UI;
+using Code.UI.LevelScene;
 using Controllers;
 using Interfaces;
 using ResourceSystem;
@@ -23,7 +24,7 @@ namespace Code.TileSystem
         private TileList _list;
         private TileUIView _uiView;
         private TileView _tileView;
-        private BaseCenterText _centerText;
+        private ITextVisualizationOnUI _textVisualization;
         private BuildingController _buildingController;
         private UIController _uiController;
         private WorkerMenager _workerMenager;
@@ -32,7 +33,7 @@ namespace Code.TileSystem
         private int _currentUnits;
         public int CurrentLVL;
         public TileList List => _list;
-        public BaseCenterText CenterText => _centerText;
+        public ITextVisualizationOnUI TextVisualization => _textVisualization;
         public WorkerMenager WorkerMenager => _workerMenager;
         public TileModel TileModel => _tileView.TileModel;
         public TileView View => _tileView;
@@ -41,7 +42,7 @@ namespace Code.TileSystem
             , InputController inputController)
         {
             _workerMenager = new WorkerMenager(this, uiController.BottonUI.TileUIView);
-            _centerText = uiController.CenterUI.BaseCenterText;
+            _textVisualization = uiController.CenterUI.BaseNotificationUI;
             _list = tileList;
             _uiView = uiController.BottonUI.TileUIView;
             _uiController = uiController;
@@ -94,7 +95,7 @@ namespace Code.TileSystem
             }
             else
             {
-                CenterText.NotificationUI("Max LVL", 1000);
+                TextVisualization.BasicTemporaryUIVisualization("Max LVL", 3);
             }
         }
         

@@ -44,7 +44,7 @@ namespace Code.TileSystem
             }
             else
             {
-                controller.CenterText.NotificationUI("Max LVL", 1000);
+                controller.TextVisualization.BasicTemporaryUIVisualization("Max LVL", 3);
             }
         }
 

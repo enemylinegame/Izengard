@@ -18,12 +18,12 @@ namespace Code.BuildingSystem
     public class BuildingController
     {
         private UIController _uiController;
-        private BaseCenterText _centerText;
+        private BaseNotificationUI _notificationUI;
         private GlobalStock _stock;
         public BuildingController(UIController uiController, GlobalStock stock)
         {
             _uiController = uiController;
-            _centerText = uiController.CenterUI.BaseCenterText;
+            _notificationUI = uiController.CenterUI.BaseNotificationUI;
             _stock = stock;
             _stock.AddResourceToStock(ResourceType.Wood, 100);
             _stock.AddResourceToStock(ResourceType.Iron, 100);
@@ -83,7 +83,7 @@ namespace Code.BuildingSystem
             var dot = CheckDot(model);
             if (dot == null)
             {
-                _centerText.NotificationUI("You have built maximum buildings", 1000);
+                _notificationUI.BasicTemporaryUIVisualization("You have built maximum buildings", 1000);
                 return null;
             }
 
@@ -120,7 +120,7 @@ namespace Code.BuildingSystem
             {
                 if (_stock.CheckResourceInStock(resourcePriceModel.ResourceType, resourcePriceModel.Cost))
                 {
-                    _centerText.NotificationUI("you do not have enough resources to buy", 1000);
+                    _notificationUI.BasicTemporaryUIVisualization("you do not have enough resources to buy", 1000);
                     return false;
                 }
             }
