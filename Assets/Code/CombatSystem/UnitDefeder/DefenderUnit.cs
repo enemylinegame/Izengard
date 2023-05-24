@@ -9,18 +9,9 @@ namespace CombatSystem
 {
     public class DefenderUnit : IDisposable, IOnUpdate
     {
-        private enum DefenderState
-        {
-            None        = 0,
-            Going       = 1,
-            Fight       = 2,
-            Idle        = 3,
-            InBarrack   = 4,
-            GotoBarrack = 5
-        }
-
         public event Action<DefenderUnit> DefenderUnitDead;
         public event Action<DefenderUnit> OnDestinationReached;
+        public event Action<DefenderState> OnStateChanged; 
 
         public GameObject DefenderGameObject { get { return _defender; } }
 
@@ -31,6 +22,7 @@ namespace CombatSystem
         private DefenderUnitStats _unitStats;
         private NavMeshAgent _agent;
         private TileModel _tileModel;
+        private DefenderAnimation _animation;
 
         private Vector3 _defendPosition;
         private DefenderState _state;
@@ -40,6 +32,20 @@ namespace CombatSystem
         private bool _isReload = false;
         private bool _isPositionChanged;
         private bool _isActive;
+
+
+        public DefenderState State
+        {
+            get => _state;
+            private set
+            {
+                if (_state != value)
+                {
+                    _state = value;
+                    OnStateChanged?.Invoke(_state);
+                }
+            }
+        }
 
         public Vector3 Position
         {
@@ -56,7 +62,7 @@ namespace CombatSystem
         {
             get
             {
-                return (_state == DefenderState.GotoBarrack || _state == DefenderState.InBarrack);
+                return (State == DefenderState.GotoBarrack || State == DefenderState.InBarrack);
             }
         }
 
@@ -79,7 +85,8 @@ namespace CombatSystem
             _damageable.MeAttackedChenged += MeAttacked;
             _damageable.Init(100, 1);
             _attackAction = new DefenderAttackAction(_unitStats);
-            _state = DefenderState.Going;
+            _animation = new DefenderAnimation(defender, this);
+            State = DefenderState.Going;
             _isActive = true;
         }
 
@@ -87,22 +94,24 @@ namespace CombatSystem
         {
             if (listMeAttackedUnits.Count != 0)
             {
-                _state = DefenderState.Fight;
+                State = DefenderState.Fight;
             }
             else
             {
-                _state = DefenderState.Idle;
+                State = DefenderState.Idle;
             }
             _listMeAttackedUnits = listMeAttackedUnits;
         }
 
         private void DefenderDead()
         {
+            _animation.Disable();
             DefenderUnitDead?.Invoke(this);
         }
 
         public void Dispose()
         {
+            _animation.Disable();
             _damageable.DeathAction -= DefenderDead;
             _damageable.MeAttackedChenged -= MeAttacked;
         }
@@ -141,28 +150,28 @@ namespace CombatSystem
 
                 if (_isPositionChanged || (_agent.remainingDistance > _agent.stoppingDistance))
                 {
-                    if (_state != DefenderState.GotoBarrack)
+                    if (State != DefenderState.GotoBarrack)
                     {
-                        _state = DefenderState.Going;
+                        State = DefenderState.Going;
                     }
                 }
                 else
                 {
-                    if (_state == DefenderState.Going)
+                    if (State == DefenderState.Going)
                     {
-                        _state = DefenderState.Idle;
+                        State = DefenderState.Idle;
                         OnDestinationReached?.Invoke(this);
                     }
-                    else if (_state == DefenderState.GotoBarrack)
+                    else if (State == DefenderState.GotoBarrack)
                     {
-                        _state = DefenderState.InBarrack;
+                        State = DefenderState.InBarrack;
                         Deactivate();
                         OnDestinationReached?.Invoke(this);
                     }
                 }
             }
 
-            switch (_state)
+            switch (State)
             {
                 case DefenderState.GotoBarrack:
                 case DefenderState.Going:
@@ -197,7 +206,7 @@ namespace CombatSystem
 
         public void GoToBarrack(Vector3 destination)
         {
-            _state = DefenderState.GotoBarrack;
+            State = DefenderState.GotoBarrack;
             GoToPosition(destination);
         }
 
@@ -207,7 +216,7 @@ namespace CombatSystem
             {
                 _isActive = true;
                 _defender.SetActive(true);
-                _state = DefenderState.Idle;
+                State = DefenderState.Idle;
             }
         }
 
