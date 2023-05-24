@@ -185,12 +185,17 @@ namespace CombatSystem
                 case DefenderState.Idle:
                     break;
                 case DefenderState.Fight:
-                    if (_listMeAttackedUnits.Count != 0 && !_isReload)
+                    //if (_listMeAttackedUnits.Count > 0 && !_isReload)
+                    if (_listMeAttackedUnits.Count > 0)
                     {
                         for (int i = 0; i < _listMeAttackedUnits.Count; i++)
                         {
-                            _isReload = true;
-                            _attackAction.StartAction(_listMeAttackedUnits[i]);
+                            DrawLineToTarget(_listMeAttackedUnits[i]);
+                            if (!_isReload)
+                            {
+                                _isReload = true;
+                                _attackAction.StartAction(_listMeAttackedUnits[i]);
+                            }
                         }
                     }
                     break;
@@ -224,6 +229,20 @@ namespace CombatSystem
         {
             _isActive = false;
             _defender.SetActive(false);
+        }
+
+        private void DrawLineToTarget(Damageable target)
+        {
+#if UNITY_EDITOR
+            if (target)
+            {
+                Vector3 start = _damageable.transform.position;
+                start.y += 0.25f;
+                Vector3 end = target.transform.position;
+                end.y += 0.25f;
+                Debug.DrawLine(start, end, Color.blue);
+            }
+#endif
         }
     }
 
