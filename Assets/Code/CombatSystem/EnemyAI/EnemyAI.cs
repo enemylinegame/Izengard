@@ -1,6 +1,7 @@
 using Wave;
 using UnityEngine.AI;
 using System;
+using UnityEngine;
 
 namespace CombatSystem
 {
@@ -16,6 +17,7 @@ namespace CombatSystem
         private IOnUpdate _onUpdate;
         private readonly float _attackDistance;
 
+        private Transform _enemyTransform;
 
         public bool IsActionComplete { get; private set; }
 
@@ -43,6 +45,8 @@ namespace CombatSystem
             _attack.OnComplete += OnAttackComplete;
             _checkAttackDistance.OnComplete += OnCheckAttackDistanceComplete;
 
+            _enemyTransform = unit.Prefab.transform;
+            
             StopAction();
         }
 
@@ -116,7 +120,23 @@ namespace CombatSystem
 
         public void OnUpdate(float deltaTime)
         {
+            DrawLineToTarget();
             _onUpdate?.OnUpdate(deltaTime);
         }
+
+        private void DrawLineToTarget()
+        {
+#if UNITY_EDITOR
+            if (_currentTarget)
+            {
+                Vector3 start = _enemyTransform.position;
+                start.y += 0.25f;
+                Vector3 end = _currentTarget.transform.position;
+                end.y += 0.25f;
+                Debug.DrawLine(start, end, Color.red);
+            }
+#endif
+        }
+        
     }
 }
