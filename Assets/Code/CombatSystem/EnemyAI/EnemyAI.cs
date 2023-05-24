@@ -130,9 +130,9 @@ namespace CombatSystem
             if (_currentTarget)
             {
                 Vector3 start = _enemyTransform.position;
-                start.y += 0.25f;
+                start.y += 0.30f;
                 Vector3 end = _currentTarget.transform.position;
-                end.y += 0.25f;
+                end.y += 0.30f;
                 Debug.DrawLine(start, end, Color.red);
             }
 #endif
