@@ -56,8 +56,6 @@ namespace Code.BuildingSystem
             model.FloodedBuildings.Add(building);
             
             controller.LevelCheck();
-
-            Debug.Log(model.FloodedBuildings.Count);
         }
         
         public void DestroyBuilding(List<ICollectable> buildings, BuildingUIInfo buildingUI, TileModel model, TileController tileController)
@@ -77,8 +75,6 @@ namespace Code.BuildingSystem
                 
             GameObject.Destroy(buildingToRemove.Prefab);
             GameObject.Destroy(buildingUI.gameObject);
-                
-            Debug.Log(model.FloodedBuildings.Count);
                 
             tileController.LevelCheck();
         }

@@ -30,7 +30,6 @@ namespace Code.TileSystem
         private List<BuildingConfig> _buildingConfigs;
         
         private int _currentUnits;
-        private int _maxUnits;
         public int CurrentLVL;
         public TileList List => _list;
         public BaseCenterText CenterText => _centerText;
@@ -41,7 +40,7 @@ namespace Code.TileSystem
         public TileController(TileList tileList, UIController uiController, BuildingController buildingController
             , InputController inputController)
         {
-            _workerMenager = new WorkerMenager(this);
+            _workerMenager = new WorkerMenager(this, uiController.BottonUI.TileUIView);
             _centerText = uiController.CenterUI.BaseCenterText;
             _list = tileList;
             _uiView = uiController.BottonUI.TileUIView;
@@ -58,31 +57,45 @@ namespace Code.TileSystem
 
             LoadInfo(tile);
         }
-        public void Cancel()
-        {
-            _tileView.TileModel.CurrentUnits = _currentUnits;
-        }
+        public void Cancel() { }
         
         private void LoadInfo(TileView tile)
         {
             LoadBuildings(tile.TileModel);
             
-            _uiView.Upgrade.onClick.AddListener(() => tile.LVLUp(this));
+            _uiView.Upgrade.onClick.AddListener(() => LVLUp());
             UpdateInfo(tile.TileModel.TileConfig);
+            LoadFloodedBuildings();
+            _workerMenager.FillWorkerList();
         }
-        /// <summary>
-        /// Loading information about the level, the maximum number of units and tile icons
-        /// </summary>
         public void UpdateInfo(TileConfig config)
         {
             int hashCode = config.TileLvl.GetHashCode();
             _uiView.LvlText.text = $"{hashCode} LVL";
-            _currentUnits = TileModel.CurrentUnits;
-            _maxUnits = config.MaxUnits;
             CurrentLVL = hashCode;
-            _uiView.UnitMax.text = $"{_currentUnits}/{_maxUnits} Units";
+            _uiView.UnitMax.text = $"{TileModel.CurrentWorkersUnits}/{5} Units";
             _uiView.Icon.sprite = config.IconTile;
             _uiView.NameTile.text = TileModel.HouseType.ToString();
+        }
+        
+        public void LVLUp()
+        {
+            int currentLevel = TileModel.SaveTileConfig.TileLvl.GetHashCode();
+            if (currentLevel < _list.LVLList.Count)
+            {
+                TileModel.SaveTileConfig = List.LVLList[currentLevel];
+                TileModel.TileConfig = TileModel.SaveTileConfig;
+                TileModel.CurrBuildingConfigs.AddRange(TileModel.SaveTileConfig.BuildingTirs);
+                
+                UpdateInfo(TileModel.SaveTileConfig);
+                LoadBuildings(TileModel);
+                LevelCheck();
+                WorkerMenager.FillWorkerList();
+            }
+            else
+            {
+                CenterText.NotificationUI("Max LVL", 1000);
+            }
         }
         
          public void LoadBuildings(TileModel model)
@@ -102,18 +115,17 @@ namespace Code.TileSystem
             {
                 kvp.Value.onClick.AddListener(() => _buildingController.BuildBuilding(kvp.Key, model, this));
             }
-            
-            var buildings = TileModel.FloodedBuildings.FindAll(x => x.MineralConfig == null);
-            foreach (var building in buildings)
-            {
-                var assignWorkers = _workerMenager.GetAssignedWorkers(building);
-                LoadBuildingInfo(building, assignWorkers);
-            }
          }
-        /// <summary>
-        /// Loading a saved block of information of a certain building and uploading it to the UI
-        /// </summary>
-        /// <returns></returns>
+
+         private void LoadFloodedBuildings()
+         {
+             var buildings = TileModel.FloodedBuildings.FindAll(x => x.MineralConfig == null);
+             foreach (var building in buildings)
+             {
+                 var assignWorkers = _workerMenager.GetAssignedWorkers(building);
+                 LoadBuildingInfo(building, assignWorkers);
+             }
+         }
         public BuildingUIInfo LoadBuildingInfo(ICollectable building, int units)
         {
             var button = GameObject.Instantiate(_uiController.BottonUI.BuildingMenu.BuildingInfo
@@ -124,7 +136,7 @@ namespace Code.TileSystem
             view.Type.text = building.BuildingTypes.ToString();
             view.BuildingType = building.BuildingTypes;
 
-            view.UnitsBusy.text = $"{units}/5";
+            view.UnitsBusy.text = $"{units}/{TileModel.MaxWorkers}";
             view.Units = units;
 
             var destroyButton = view.DestroyBuildingInfo;
@@ -134,6 +146,8 @@ namespace Code.TileSystem
 
             view.PlusUnit.onClick.AddListener(() => view.Hiring(true, this, building));
             view.MinusUnit.onClick.AddListener(() => view.Hiring(false, this, building));
+            
+            LevelCheck();
 
             return view;
         }
@@ -158,11 +172,6 @@ namespace Code.TileSystem
             view.Description.text = buildingConfig.Description;
             view.Icon.sprite = buildingConfig.Icon;
         }
-        
-        /// <summary>
-        /// Creating a new block of information for a specific building and uploading it to the UI
-        /// </summary>
-        /// <returns></returns>
         public BuildingUIInfo CreateBuildingInfo(BuildingConfig config, TileModel model, ICollectable building)
         {
             var button = GameObject.Instantiate(_uiController.BottonUI.BuildingMenu.BuildingInfo
@@ -171,7 +180,7 @@ namespace Code.TileSystem
             view.Icon.sprite = config.Icon;
             view.Type.text = config.BuildingType.ToString();
             view.BuildingType = config.BuildingType;
-            view.UnitsBusy.text = $"{view.Units}/5";
+            view.UnitsBusy.text = $"{view.Units}/{TileModel.MaxWorkers}";
             
             _uiController.DestroyBuildingInfo.Add(button, view);
             
@@ -183,41 +192,11 @@ namespace Code.TileSystem
             
             _uiController.IsWorkUI(UIType.Buy, false);
             
+            LevelCheck();
+
             return view;
         }
         #region Other
-
-        /// <summary>
-        /// This method is for taking a unit from Tile
-        /// </summary>
-        /// <param name="EightQuantity">кол юнитов</param>
-        public void HiringUnits(int quantityToAdd)
-        {
-            if (_currentUnits  <= _maxUnits)
-            {
-                _currentUnits += quantityToAdd;
-                _uiView.UnitMax.text = $"{_currentUnits}/{_maxUnits} Units";
-            }
-            else
-            {
-                _centerText.NotificationUI("You have hired the maximum number of units", 2000);
-            }
-        }
-
-
-        /// <summary>
-        /// Method to return a unit for hiring
-        /// </summary>
-        /// <param name="EightQuantity">кол юнитов</param>
-        public void RemoveFromHiringUnits(int EightQuantity)
-        {
-            if (_currentUnits > 0)
-            {
-                _currentUnits -= EightQuantity;
-                _uiView.UnitMax.text = $"{_currentUnits}/{_maxUnits} Units";
-            }
-        }
-
         public void Dispose()
         {
             foreach (var kvp in _uiController.ButtonsInMenu)
@@ -242,8 +221,7 @@ namespace Code.TileSystem
             _uiController.CenterUI.TIleSelection.TileEco.onClick.AddListener(() => TileType(HouseType.Eco, view));
             _uiController.CenterUI.TIleSelection.TileWar.onClick.AddListener(() => TileType(HouseType.war, view));
         }
-
-
+        
         private void TileType(HouseType type, TileView tile)
         {
             tile.TileModel.HouseType = type;
@@ -255,8 +233,6 @@ namespace Code.TileSystem
             _uiController.IsWorkUI(UIType.Tile, true);
             LoadInfo(tile);
         }
-
-        
         #endregion
     }
 }

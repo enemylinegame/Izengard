@@ -15,10 +15,8 @@ namespace Code.TileSystem
 {
     public class TileView : MonoBehaviour
     {
-        [SerializeField] private HouseType _houseType;
         [SerializeField] private TileConfig _tileConfig;
         [SerializeField] private List<Dot> _dotSpawns;
-        [SerializeField] private List<ICollectable> _floodedBuildings;
         public TileModel TileModel;
         private void Awake()
         {
@@ -26,8 +24,6 @@ namespace Code.TileSystem
             TileModel.TileConfig = _tileConfig;
             TileModel.DotSpawns = _dotSpawns;
             TileModel.Init();
-            _floodedBuildings = TileModel.FloodedBuildings;
-            TileModel.HouseType = _houseType;
         }
 
         /// <summary>

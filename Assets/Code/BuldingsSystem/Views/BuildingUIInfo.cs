@@ -41,7 +41,7 @@ namespace Views.BuildBuildingsUI
             if (hire)
             {
                 _units += isOn ? 1 : -1;
-                _unitsBusy.text = $"{_units}/5";
+                _unitsBusy.text = $"{_units}/{controller.TileModel.MaxWorkers}";
             }
         }
     }
