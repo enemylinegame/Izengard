@@ -38,10 +38,12 @@ namespace Code.TileSystem
         public TileModel TileModel => _tileView.TileModel;
         public TileView View => _tileView;
 
-        public TileController(TileList tileList, UIController uiController, BuildingController buildingController
-            , InputController inputController)
+        public TileController(TileList tileList, UIController uiController, 
+            BuildingController buildingController, 
+            InputController inputController, 
+            WorkersTeamController workersController)
         {
-            _workerMenager = new WorkerMenager(this);
+            _workerMenager = new WorkerMenager(this, workersController);
             _centerText = uiController.CenterUI.BaseCenterText;
             _list = tileList;
             _uiView = uiController.BottonUI.TileUIView;
