@@ -3753,7 +3753,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5537125970293088711, guid: 9b8418457783bd944b73b4510f5449b6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0071556848
+      value: 0.00000333786
       objectReference: {fileID: 0}
     - target: {fileID: 5537125970308451800, guid: 9b8418457783bd944b73b4510f5449b6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -4826,6 +4826,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 40348934}
     - target: {fileID: 4933606317649251105, guid: 6ddabc1fdd5d3ac429f0836da0021769, type: 3}
+      propertyPath: <BaseNotificationUI>k__BackingField
+      value: 
+      objectReference: {fileID: 1996878140}
+    - target: {fileID: 4933606317649251105, guid: 6ddabc1fdd5d3ac429f0836da0021769, type: 3}
       propertyPath: <BuildButtonsHolder>k__BackingField
       value: 
       objectReference: {fileID: 1988661486322063559}
@@ -4917,6 +4921,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9218285193195339956, guid: 6ddabc1fdd5d3ac429f0836da0021769, type: 3}
+      propertyPath: _basicText
+      value: 
+      objectReference: {fileID: 1996878138}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ddabc1fdd5d3ac429f0836da0021769, type: 3}
 --- !u!1001 &8148344211996008168

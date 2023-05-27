@@ -29,8 +29,8 @@ public class OutlineController
 
   public OutlineController(OutLineSettings config)
   {
-    _outlineMaskMaterial = config.OutlineMaskMaterial;
-    _outlineFillMaterial = config.OutlineFillMaterial;
+    _outlineMaskMaterial = Object.Instantiate(config.OutlineMaskMaterial);
+    _outlineFillMaterial = Object.Instantiate(config.OutlineFillMaterial);
     _outlineColor = config.OutLineColor;
     _outlineWidth = config.OutlineWidth;
   }

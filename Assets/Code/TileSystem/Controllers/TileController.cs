@@ -88,21 +88,20 @@ namespace Code.TileSystem
         public void LVLUp()
         {
             int currentLevel = TileModel.SaveTileConfig.TileLvl.GetHashCode();
-            if (currentLevel < _list.LVLList.Count)
+            if (currentLevel == _list.LVLList.Count)
             {
-                TileModel.SaveTileConfig = List.LVLList[currentLevel];
-                TileModel.TileConfig = TileModel.SaveTileConfig;
-                TileModel.CurrBuildingConfigs.AddRange(TileModel.SaveTileConfig.BuildingTirs);
+                TextVisualization.BasicTemporaryUIVisualization("Max LVL", 2);
+                return;
+            }
+            
+            TileModel.SaveTileConfig = List.LVLList[currentLevel];
+            TileModel.TileConfig = TileModel.SaveTileConfig;
+            TileModel.CurrBuildingConfigs.AddRange(TileModel.SaveTileConfig.BuildingTirs);
                 
-                UpdateInfo(TileModel.SaveTileConfig);
-                LoadBuildings(TileModel);
-                LevelCheck();
-                WorkerMenager.FillWorkerList();
-            }
-            else
-            {
-                TextVisualization.BasicTemporaryUIVisualization("Max LVL", 3);
-            }
+            UpdateInfo(TileModel.SaveTileConfig);
+            LoadBuildings(TileModel);
+            LevelCheck();
+            WorkerMenager.FillWorkerList();
         }
         
          public void LoadBuildings(TileModel model)
