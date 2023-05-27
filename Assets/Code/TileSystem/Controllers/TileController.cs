@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Code.BuildingSystem;
 using Code.BuldingsSystem;
 using Code.BuldingsSystem.ScriptableObjects;
+using Code.QuickOutline.Scripts;
 using Code.TileSystem;
 using Code.TileSystem.Interfaces;
 using Code.UI;
@@ -29,6 +30,7 @@ namespace Code.TileSystem
         private UIController _uiController;
         private WorkerMenager _workerMenager;
         private List<BuildingConfig> _buildingConfigs;
+        private OutlineController _outlineController;
         
         private int _currentUnits;
         public int CurrentLVL;
@@ -39,9 +41,10 @@ namespace Code.TileSystem
         public TileView View => _tileView;
 
         public TileController(TileList tileList, UIController uiController, BuildingController buildingController
-            , InputController inputController)
+            , InputController inputController, OutlineController outlineController)
         {
             _workerMenager = new WorkerMenager(this, uiController.BottonUI.TileUIView);
+            _outlineController = outlineController;
             _textVisualization = uiController.CenterUI.BaseNotificationUI;
             _list = tileList;
             _uiView = uiController.BottonUI.TileUIView;
@@ -53,12 +56,15 @@ namespace Code.TileSystem
         {
             TileTypeCheck(tile);
             _tileView = tile;
-            
+            _outlineController.EnableOutLine(tile.Renderer);
             if(tile.TileModel.HouseType == HouseType.None) return;
 
             LoadInfo(tile);
         }
-        public void Cancel() { }
+        public void Cancel()
+        {
+            _outlineController.DisableOutLine(_tileView.Renderer);
+        }
         
         private void LoadInfo(TileView tile)
         {
@@ -74,7 +80,7 @@ namespace Code.TileSystem
             int hashCode = config.TileLvl.GetHashCode();
             _uiView.LvlText.text = $"{hashCode} LVL";
             CurrentLVL = hashCode;
-            _uiView.UnitMax.text = $"{TileModel.CurrentWorkersUnits}/{5} Units";
+            _uiView.UnitMax.text = $"{TileModel.CurrentWorkersUnits}/{config.MaxUnits} Units";
             _uiView.Icon.sprite = config.IconTile;
             _uiView.NameTile.text = TileModel.HouseType.ToString();
         }
@@ -103,13 +109,25 @@ namespace Code.TileSystem
          {
             _uiController.Deinit();
             _buildingConfigs = model.CurrBuildingConfigs;
-
+            
             var buildingConfigs = _buildingConfigs.FindAll(building => building.HouseType == TileModel.HouseType);
-            foreach (var building in buildingConfigs)
+            if (TileModel.HouseType == HouseType.All)
             {
-                var button = GameObject.Instantiate(_uiController.BottonUI.BuildingMenu.BuyPrefabButton, _uiController.CenterUI.BuildButtonsHolder);
-                _uiController.ButtonsInMenu.Add(building, button);
-                CreateButtonUI(building, button);
+                foreach (var building in _buildingConfigs)
+                {
+                    var button = GameObject.Instantiate(_uiController.BottonUI.BuildingMenu.BuyPrefabButton, _uiController.CenterUI.BuildButtonsHolder);
+                    _uiController.ButtonsInMenu.Add(building, button);
+                    CreateButtonUI(building, button);
+                }
+            }
+            else
+            {
+                foreach (var building in buildingConfigs)
+                {
+                    var button = GameObject.Instantiate(_uiController.BottonUI.BuildingMenu.BuyPrefabButton, _uiController.CenterUI.BuildButtonsHolder);
+                    _uiController.ButtonsInMenu.Add(building, button);
+                    CreateButtonUI(building, button);
+                }
             }
             
             foreach (var kvp in _uiController.ButtonsInMenu)
@@ -175,15 +193,14 @@ namespace Code.TileSystem
         }
         public BuildingUIInfo CreateBuildingInfo(BuildingConfig config, TileModel model, ICollectable building)
         {
-            var button = GameObject.Instantiate(_uiController.BottonUI.BuildingMenu.BuildingInfo
+            var view = GameObject.Instantiate(_uiController.BottonUI.BuildingMenu.BuildingInfo.GetComponent<BuildingUIInfo>()
                 , _uiController.BottonUI.BuildingMenu.ByBuildButtonsHolder);
-            var view = button.GetComponent<BuildingUIInfo>();
             view.Icon.sprite = config.Icon;
             view.Type.text = config.BuildingType.ToString();
             view.BuildingType = config.BuildingType;
             view.UnitsBusy.text = $"{view.Units}/{TileModel.MaxWorkers}";
             
-            _uiController.DestroyBuildingInfo.Add(button, view);
+            _uiController.DestroyBuildingInfo.Add(view.gameObject, view);
             
             view.DestroyBuildingInfo.onClick.AddListener((() => _buildingController.DestroyBuilding(TileModel.FloodedBuildings
                 , view, TileModel, this)));

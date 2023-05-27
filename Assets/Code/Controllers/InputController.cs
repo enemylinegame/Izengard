@@ -15,20 +15,22 @@ namespace Controllers
 {
     public class InputController : IOnController, IOnUpdate
     {
-        private UIController _uiController;
+        private CenterUI _centerUI;
         private ITileSelector _tileSelector;
         private List<ITileLoadInfo> _loadInfoToTheUis = new List<ITileLoadInfo>();
 
-        private bool _isOnTile = false;
+        private bool _isOnTile = true;
         private bool _isSpecialMode;
+
+        public bool LockRightClick = false;
 
 
         public void OnUpdate(float deltaTime)
         {
+            if(LockRightClick == true) return;
+            
             if (Input.GetMouseButtonDown(1))
             {
-                if(!_isOnTile) return;
-                
                 foreach (var selector in _loadInfoToTheUis) 
                     if (!_isSpecialMode) selector.Cancel();
     
@@ -40,7 +42,7 @@ namespace Controllers
             
             if (!Input.GetMouseButtonDown(0)) return;
 
-            var bitmask = ~(1 << 3);
+            var bitmask = ~((1 << 3));
             if (!Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 100, bitmask)) return;
 
             if (EventSystem.current.IsPointerOverGameObject()) return;
@@ -50,8 +52,6 @@ namespace Controllers
             var tile = hit.collider.GetComponentInParent<TileView>();
 
             if (!tile) return;
-            
-            _isOnTile = true;
 
             if (_isSpecialMode)
             {
@@ -62,6 +62,7 @@ namespace Controllers
                 foreach (var selector in _loadInfoToTheUis)
                 {
                     selector.LoadInfoToTheUI(tile);
+                    _isOnTile = false;
                 }
             }
         }

@@ -17,6 +17,7 @@ namespace Code.UI
         private RightUI _rightUI;
         private BottonUI _bottonUI;
         private CenterUI _centerUI;
+        private InputController _inputController;
         private WarsView _warsView;
 
         public RightUI RightUI => _rightUI;
@@ -35,6 +36,7 @@ namespace Code.UI
             _rightUI = rightUI;
             _bottonUI = bottonUI;
             _centerUI = centerUI;
+            _inputController = inputController;
 
             _warsView = new WarsView(bottonUI.WarsUIView, inputController);
             
@@ -58,7 +60,6 @@ namespace Code.UI
             {
                 case UIType.All:
                     _centerUI.BuildingBuy.SetActive(isOn);
-                    _centerUI.TileByButtons.gameObject.SetActive(!isOn);
                     ClearButtonsUIBuy(isOn);
                     IsOnTileUI(isOn);
                     break;
@@ -66,13 +67,14 @@ namespace Code.UI
                     IsOnTileUI(isOn);
                     break;
                 case UIType.Buy:
+                    _inputController.LockRightClick = isOn;
                     _centerUI.BuildingBuy.SetActive(isOn);
-                    _centerUI.TileByButtons.gameObject.SetActive(!isOn);
                     break;
                 case UIType.Сonfirmation:
                     break;
                 case UIType.Unit:
                 case UIType.TileSel:
+                    _inputController.LockRightClick = isOn;
                     _centerUI.TIleSelection.gameObject.SetActive(isOn);
                     break;
             }

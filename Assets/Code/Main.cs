@@ -3,6 +3,7 @@ using ResourceSystem;
 using BuildingSystem;
 using Code;
 using Code.BuildingSystem;
+using Code.QuickOutline.Scripts;
 using Code.TileSystem;
 using Code.TowerShot;
 using Code.UI;
@@ -18,6 +19,7 @@ public class Main : MonoBehaviour
     [SerializeField] private TileList _tileList;
     [SerializeField] private GlobalResourceList _globalResourceList;
     [SerializeField] private WorkersTeamConfig _workersTeamConfig;
+    [SerializeField] private OutLineSettings _outLineSettings;
   
     [SerializeField] private TowerShotConfig _towerShotConfig;
     [Header("UI")]
@@ -45,7 +47,7 @@ public class Main : MonoBehaviour
             _rightUI,  _btnParents,_centerUI ,_bottonUI,
              _endGameScreen, _towerShotConfig, _buyItemScreenView, 
              _hireSystemView, _equipScreenView, 
-             _screenCamera, _tileList, _globalResourceList);
+             _screenCamera, _tileList, _globalResourceList, _outLineSettings);
         _controllers.OnStart();
     }
 

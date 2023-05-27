@@ -83,7 +83,7 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
         if (mainBuilding != null)
         {
             TowerShot = mainBuilding.GetComponentInChildren<TowerShotBehavior>();
-            firstTile.TileView.TileModel.HouseType = HouseType.Eco;
+            firstTile.TileView.TileModel.HouseType = HouseType.All;
         }
         MainBuilding.Init(1000);
     }

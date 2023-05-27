@@ -1,6 +1,7 @@
 
 using Code;
 using Code.BuildingSystem;
+using Code.QuickOutline.Scripts;
 using Code.TileSystem;
 using Code.TowerShot;
 using Code.UI;
@@ -17,7 +18,7 @@ public class GameInit
         RightUI rightUI, Transform btnParents, CenterUI centerUI, BottonUI bottonUI, EndGameScreen endGameScreen, 
         TowerShotConfig towerShotConfig, BuyItemScreenView buyItemScreenView, HireSystemView hireSystemView , 
         EquipScreenView equipScreenView, Camera camera, TileList tileList,
-        GlobalResourceList globalResourceList)
+        GlobalResourceList globalResourceList, OutLineSettings outLineSettings)
     {
 
         var tiles = GetTileList.GetTiles(gameConfig);
@@ -66,9 +67,11 @@ public class GameInit
             endGameScreen, levelGenerator);
         
         var workersTeamComtroller = new WorkersTeamController(workersTeamConfig);
+        
+        var outlineController = new OutlineController(outLineSettings);
 
         var tileController = new TileController(tileList, uiController, 
-            buildingController, inputController);
+            buildingController, inputController, outlineController);
 
         var tileResourceUIController = new TileResourceUIController(
             uiController, inputController, tileController);

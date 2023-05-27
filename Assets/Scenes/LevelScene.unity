@@ -531,6 +531,7 @@ MonoBehaviour:
   _tileList: {fileID: 11400000, guid: 2b94eb3998178964b8b1aa096b4b42c4, type: 2}
   _globalResourceList: {fileID: 11400000, guid: dd801d0d2bc2cab40a6492c4aba5cd12, type: 2}
   _workersTeamConfig: {fileID: 11400000, guid: 3e86790439286b948808624d1fc71ea3, type: 2}
+  _outLineSettings: {fileID: 11400000, guid: f0435a7215607a74692130a7eeab0ea7, type: 2}
   _towerShotConfig: {fileID: 11400000, guid: 434693b8852395646991acdccd102705, type: 2}
   _rightUI: {fileID: 298062939}
   _centerUI: {fileID: 584311494}
@@ -3752,7 +3753,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5537125970293088711, guid: 9b8418457783bd944b73b4510f5449b6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000012749806
+      value: 0.0071556848
       objectReference: {fileID: 0}
     - target: {fileID: 5537125970308451800, guid: 9b8418457783bd944b73b4510f5449b6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

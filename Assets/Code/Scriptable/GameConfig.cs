@@ -41,7 +41,7 @@ public class GameConfig : ScriptableObject
     [SerializeField] private float _tearTwoWeightSecondVariant = 0.23f;
     [Range(0f, 1f)]
     [SerializeField] private float _tearThirdWeightSecondVariant = 0.02f;
-    
+
     [TextArea(3, 5)] [SerializeField] private string _annotation =
         "Если выключено, то вариант Николая и сумма весов должна равняться 1, если включено, то вариант Иоанна, " +
         " 1 - сумма всех весов = вероятности спавна пустоты";

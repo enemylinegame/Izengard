@@ -12,7 +12,10 @@ namespace Code
     {
         [SerializeField]private TMP_Text _basicText;
         [SerializeField]private TMP_Text _secondaryText;
+
+        private TimeRemaining _timeRemaining;
         
+        //TODO Change "Async" on "TimeRemaining"
         public async Task BasicTemporaryUIVisualization(String text, int time)
         {
             _basicText.text = text.ToString();
@@ -44,7 +47,11 @@ namespace Code
             _secondaryText.gameObject.SetActive(IsOn);
             _secondaryText.text = "";
         }
-
+        /// <summary>
+        /// Translate Time on seconds
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
         private int translateTime(int time)
         {
             return time * 1000;

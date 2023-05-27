@@ -3,7 +3,8 @@
     public enum HouseType: int
     {
         None = 0,
-        war = 1,
-        Eco = 2
+        All = 1,
+        war = 2,
+        Eco = 3
     }
 }

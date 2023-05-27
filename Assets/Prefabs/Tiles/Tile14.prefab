@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _iconTile: {fileID: 0}
+  <TileView>k__BackingField: {fileID: 0}
 --- !u!114 &-7395538444451153175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,7 +61,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tileConfig: {fileID: 11400000, guid: 9565a228ea7f390448b26a5a1b3ef329, type: 2}
-  _curBuildingConfigs: []
+  Renderer: {fileID: 0}
+  _dotSpawns: []
 --- !u!65 &-8718361857819225159
 BoxCollider:
   m_ObjectHideFlags: 0
