@@ -42,7 +42,7 @@ namespace Controllers
             
             if (!Input.GetMouseButtonDown(0)) return;
 
-            var bitmask = ~((1 << 3));
+            var bitmask = (1 << 6);
             if (!Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 100, bitmask)) return;
 
             if (EventSystem.current.IsPointerOverGameObject()) return;
