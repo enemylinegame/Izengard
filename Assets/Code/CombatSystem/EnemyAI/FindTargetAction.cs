@@ -37,7 +37,7 @@ namespace CombatSystem
             if (CheckLayerBuildings())
             {
                 
-                var hits = Physics.SphereCastAll(_unitDamagable.transform.position, 0.4f, Vector3.forward, 
+                var hits = Physics.SphereCastAll(_unitDamagable.transform.position, 1.4f, Vector3.forward, 
                     0.01f, LayerMask.GetMask("Defenders"));
                 if (hits.Length != 0)
                 {
@@ -53,7 +53,7 @@ namespace CombatSystem
                         }
                     }
                 }
-                hits = Physics.SphereCastAll(_unitDamagable.transform.position, 0.3f, Vector3.forward, 
+                hits = Physics.SphereCastAll(_unitDamagable.transform.position, 1.3f, Vector3.forward, 
                     0.01f, LayerMask.GetMask("Buildings"));
                 if (hits.Length != 0)
                 {
