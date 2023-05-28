@@ -16,9 +16,10 @@ namespace Views.BuildBuildingsUI
         [SerializeField] private Button _destroyBuildingInfo;
         [SerializeField] private Button _plusUnit;
         [SerializeField] private Button _minusUnit;
-        private int _units;
+        private int _currentCurrentUnits;
         public BuildingTypes BuildingType { get; set; }
         public ResourceType ResourceType { get; set; }
+        public int BuildingID { get; set; }
 
         public Image Icon => _icon;
         public TMP_Text Type => _type;
@@ -26,23 +27,6 @@ namespace Views.BuildBuildingsUI
         public Button DestroyBuildingInfo => _destroyBuildingInfo;
         public Button PlusUnit => _plusUnit;
         public Button MinusUnit => _minusUnit;
-        public int Units { get => _units; set => _units = value; }
-
-
-        /// <summary>
-        /// найм юнитов для определеного типа здания
-        /// </summary>
-        public void Hiring(bool isOn, TileController controller, ICollectable building)
-        {
-            var hire = isOn 
-                ? controller.WorkerMenager.UpdateWorkerAssignment(this, building) 
-                : controller.WorkerMenager.RemoveWorkerAssignment(this, building);
-
-            if (hire)
-            {
-                _units += isOn ? 1 : -1;
-                _unitsBusy.text = $"{_units}/{controller.TileModel.MaxWorkers}";
-            }
-        }
+        public int CurrentUnits { get => _currentCurrentUnits; set => _currentCurrentUnits = value; }
     }
 }

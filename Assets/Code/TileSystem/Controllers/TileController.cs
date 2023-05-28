@@ -27,6 +27,7 @@ namespace Code.TileSystem
         private TileView _tileView;
         private ITextVisualizationOnUI _textVisualization;
         private BuildingController _buildingController;
+        private InputController _inputController;
         private UIController _uiController;
         private WorkerMenager _workerMenager;
         private List<BuildingConfig> _buildingConfigs;
@@ -50,6 +51,7 @@ namespace Code.TileSystem
             _uiView = uiController.BottonUI.TileUIView;
             _uiController = uiController;
             _buildingController = buildingController;
+            _inputController = inputController;
             inputController.Add(this);
         }
         public void LoadInfoToTheUI(TileView tile)
@@ -105,30 +107,26 @@ namespace Code.TileSystem
         }
         
          public void LoadBuildings(TileModel model)
-         {
+         { 
+             List<BuildingConfig> buildingConfigs;
             _uiController.Deinit();
             _buildingConfigs = model.CurrBuildingConfigs;
-            
-            var buildingConfigs = _buildingConfigs.FindAll(building => building.HouseType == TileModel.HouseType);
             if (TileModel.HouseType == HouseType.All)
             {
-                foreach (var building in _buildingConfigs)
-                {
-                    var button = GameObject.Instantiate(_uiController.BottonUI.BuildingMenu.BuyPrefabButton, _uiController.CenterUI.BuildButtonsHolder);
-                    _uiController.ButtonsInMenu.Add(building, button);
-                    CreateButtonUI(building, button);
-                }
+                buildingConfigs = _buildingConfigs;
             }
             else
             {
-                foreach (var building in buildingConfigs)
-                {
-                    var button = GameObject.Instantiate(_uiController.BottonUI.BuildingMenu.BuyPrefabButton, _uiController.CenterUI.BuildButtonsHolder);
-                    _uiController.ButtonsInMenu.Add(building, button);
-                    CreateButtonUI(building, button);
-                }
+                buildingConfigs = _buildingConfigs.FindAll(building => building.HouseType == TileModel.HouseType);
             }
             
+            foreach (var building in buildingConfigs)
+            {
+                var button = GameObject.Instantiate(_uiController.BottonUI.BuildingMenu.BuyPrefabButton, _uiController.CenterUI.BuildButtonsHolder);
+                _uiController.ButtonsInMenu.Add(building, button);
+                CreateButtonUI(building, button);
+            }
+
             foreach (var kvp in _uiController.ButtonsInMenu)
             {
                 kvp.Value.onClick.AddListener(() => _buildingController.BuildBuilding(kvp.Key, model, this));
@@ -155,15 +153,15 @@ namespace Code.TileSystem
             view.BuildingType = building.BuildingTypes;
 
             view.UnitsBusy.text = $"{units}/{TileModel.MaxWorkers}";
-            view.Units = units;
+            view.CurrentUnits = units;
 
             var destroyButton = view.DestroyBuildingInfo;
             _uiController.DestroyBuildingInfo.Add(button, view);
             destroyButton.onClick.AddListener(() => _buildingController.DestroyBuilding(TileModel.FloodedBuildings
                 , view, TileModel, this));
 
-            view.PlusUnit.onClick.AddListener(() => view.Hiring(true, this, building));
-            view.MinusUnit.onClick.AddListener(() => view.Hiring(false, this, building));
+            view.PlusUnit.onClick.AddListener(() => Hiring(true, view, building));
+            view.MinusUnit.onClick.AddListener(() => Hiring(false, view, building));
             
             LevelCheck();
 
@@ -197,15 +195,15 @@ namespace Code.TileSystem
             view.Icon.sprite = config.Icon;
             view.Type.text = config.BuildingType.ToString();
             view.BuildingType = config.BuildingType;
-            view.UnitsBusy.text = $"{view.Units}/{TileModel.MaxWorkers}";
+            view.UnitsBusy.text = $"{view.CurrentUnits}/{TileModel.MaxWorkers}";
             
             _uiController.DestroyBuildingInfo.Add(view.gameObject, view);
             
             view.DestroyBuildingInfo.onClick.AddListener((() => _buildingController.DestroyBuilding(TileModel.FloodedBuildings
                 , view, TileModel, this)));
             
-            view.PlusUnit.onClick.AddListener((() => view.Hiring(true, this, building)));
-            view.MinusUnit.onClick.AddListener((() => view.Hiring(false, this, building)));
+            view.PlusUnit.onClick.AddListener(() => Hiring(true, view, building));
+            view.MinusUnit.onClick.AddListener(() => Hiring(false, view, building));
             
             _uiController.IsWorkUI(UIType.Buy, false);
             
@@ -228,6 +226,22 @@ namespace Code.TileSystem
             bool levelExceedDestroyBuildingInfo = CurrentLVL > _uiController.DestroyBuildingInfo.Count;
             _uiController.BottonUI.BuildingMenu.PrefabButtonClear.gameObject.SetActive(levelExceedDestroyBuildingInfo);
         }
+        
+        /// <summary>
+        /// найм юнитов для определеного типа здания
+        /// </summary>
+        public void Hiring(bool isOn, BuildingUIInfo buildingUI, ICollectable building)
+        {
+            var hire = isOn 
+                ? _workerMenager.UpdateWorkerAssignment(buildingUI, building) 
+                : _workerMenager.RemoveWorkerAssignment(buildingUI, building);
+
+            if (!hire) return;
+            
+            buildingUI.CurrentUnits += isOn ? 1 : -1;
+            if(buildingUI.CurrentUnits <=0) buildingUI.CurrentUnits = 0;
+            buildingUI.UnitsBusy.text = $"{buildingUI.CurrentUnits}/{TileModel.MaxWorkers}";
+        }
 
         private void TileTypeCheck(TileView view)
         {
@@ -237,19 +251,32 @@ namespace Code.TileSystem
             
             _uiController.CenterUI.TIleSelection.TileEco.onClick.AddListener(() => TileType(HouseType.Eco, view));
             _uiController.CenterUI.TIleSelection.TileWar.onClick.AddListener(() => TileType(HouseType.war, view));
+            _uiController.CenterUI.TIleSelection.Back.onClick.AddListener(() => RemoveListenersTileSelection(true));
         }
         
         private void TileType(HouseType type, TileView tile)
         {
             tile.TileModel.HouseType = type;
-            
-            _uiController.CenterUI.TIleSelection.TileEco.onClick.RemoveAllListeners();
-            _uiController.CenterUI.TIleSelection.TileWar.onClick.RemoveAllListeners();
+
+            RemoveListenersTileSelection(false);
 
             _uiController.IsWorkUI(UIType.TileSel, false);
             _uiController.IsWorkUI(UIType.Tile, true);
             LoadInfo(tile);
         }
+
+        private void RemoveListenersTileSelection(bool IsBack)
+        {
+            _uiController.CenterUI.TIleSelection.TileEco.onClick.RemoveAllListeners();
+            _uiController.CenterUI.TIleSelection.TileWar.onClick.RemoveAllListeners();
+            if (IsBack)
+            {
+                _inputController.IsOnTile = true;
+                Cancel();
+            }
+            _uiController.CenterUI.TIleSelection.Back.onClick.RemoveListener(() => RemoveListenersTileSelection(true));
+        }
+
         #endregion
     }
 }

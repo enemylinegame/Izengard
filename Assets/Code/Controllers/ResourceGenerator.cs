@@ -319,7 +319,6 @@ public class ResourceGenerator : IDisposable
             var building = CreateMineralGameObject(resourceConfig, dot.transform.position);
             dot.IsActive = false;
             model.FloodedBuildings.Add(building);
-            Debug.Log(model.FloodedBuildings.Count);
         }
     }
 

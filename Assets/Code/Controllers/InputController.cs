@@ -19,9 +19,9 @@ namespace Controllers
         private ITileSelector _tileSelector;
         private List<ITileLoadInfo> _loadInfoToTheUis = new List<ITileLoadInfo>();
 
-        private bool _isOnTile = true;
         private bool _isSpecialMode;
 
+        public bool IsOnTile = true;
         public bool LockRightClick = false;
 
 
@@ -36,7 +36,7 @@ namespace Controllers
     
                 if (_isSpecialMode) _tileSelector.Cancel();
 
-                _isOnTile = !_isSpecialMode;
+                IsOnTile = !_isSpecialMode;
             }
 
             
@@ -57,12 +57,12 @@ namespace Controllers
             {
                 _tileSelector.SelectTile(tile);
             }
-            else if (_isOnTile)
+            else if (IsOnTile)
             {
                 foreach (var selector in _loadInfoToTheUis)
                 {
                     selector.LoadInfoToTheUI(tile);
-                    _isOnTile = false;
+                    IsOnTile = false;
                 }
             }
         }

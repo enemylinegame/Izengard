@@ -19,7 +19,6 @@ namespace Code.TileSystem
         
         public BuildingTypes BuildingType { get; set; }
         public ResourceType ResourceType { get; set; }
-        
         public ICollectable Building { get; set; }
 
         public string ResourceCurrentValueString

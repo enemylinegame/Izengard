@@ -5,6 +5,7 @@ using Code.BuldingsSystem.ScriptableObjects;
 using Code.TileSystem;
 using Code.TileSystem.Interfaces;
 using Code.UI;
+using Code.UI.LevelScene;
 using Controllers;
 using ResourceSystem;
 using ResourceSystem.SupportClases;
@@ -18,7 +19,7 @@ namespace Code.BuildingSystem
     public class BuildingController
     {
         private UIController _uiController;
-        private BaseNotificationUI _notificationUI;
+        private ITextVisualizationOnUI _notificationUI;
         private GlobalStock _stock;
         public BuildingController(UIController uiController, GlobalStock stock)
         {
@@ -51,6 +52,7 @@ namespace Code.BuildingSystem
 
             building.Icon = info.Icon.sprite;
             building.BuildingTypes = info.BuildingType;
+            info.BuildingID = building.BuildingID;
     
             _uiController.ButtonsBuy.Add(buildingConfig);
             model.FloodedBuildings.Add(building);
@@ -60,7 +62,7 @@ namespace Code.BuildingSystem
         
         public void DestroyBuilding(List<ICollectable> buildings, BuildingUIInfo buildingUI, TileModel model, TileController tileController)
         {
-            var buildingToRemove = buildings.Find(kvp => kvp.BuildingTypes == buildingUI.BuildingType);
+            var buildingToRemove = buildings.Find(kvp => kvp.BuildingID == buildingUI.BuildingID);
             
             buildingUI.DestroyBuildingInfo.onClick.RemoveAllListeners();
             buildingUI.PlusUnit.onClick.RemoveAllListeners();
@@ -83,7 +85,7 @@ namespace Code.BuildingSystem
             var dot = CheckDot(model);
             if (dot == null)
             {
-                _notificationUI.BasicTemporaryUIVisualization("You have built maximum buildings", 1000);
+                _notificationUI.BasicTemporaryUIVisualization("You have built maximum buildings", 1);
                 return null;
             }
 
