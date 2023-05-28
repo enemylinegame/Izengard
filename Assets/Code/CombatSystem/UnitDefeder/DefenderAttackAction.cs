@@ -16,12 +16,15 @@ namespace CombatSystem
 
         public void StartAction(Damageable target)
         {
-            Debug.Log("DefenderAttackAction->StartAction:");
+            //Debug.Log("DefenderAttackAction->StartAction:");
             target.MakeDamage(_stats._attackDamage);
             OnComplete?.Invoke(target);
         }
 
-        
+        public void ClearTarget()
+        {
+            Debug.Log("DefenderAttackAction->ClearTarget:");
+        }
     }
 
 }

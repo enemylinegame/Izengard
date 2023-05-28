@@ -7,8 +7,8 @@ namespace CombatSystem
     public interface IBulletController : IOnFixedUpdate, IDisposable
     {
         event Action<IBulletController> BulletFlightIsOver;
-        void StartFlight(Damageable target, Vector3 startPosition);
+        void StartFlight(Vector3 destination, Vector3 startPosition);
         GameObject Bullet { get; }
-        Damageable CurrentTarget { get; }
+        Vector3 CurrentTarget { get; }
     }
 }

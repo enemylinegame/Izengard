@@ -24,5 +24,9 @@ namespace CombatSystem
             }
             OnComplete?.Invoke(target);
         }
+        
+        public void ClearTarget()
+        {
+        }
     }
 }

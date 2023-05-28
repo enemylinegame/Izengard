@@ -25,6 +25,11 @@ namespace CombatSystem
         {
             OnComplete?.Invoke(CheckDistance(target));
         }
+        
+        public void ClearTarget()
+        {
+            
+        }
 
         private Damageable CheckDistance(Damageable target)
         {

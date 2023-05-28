@@ -31,6 +31,10 @@ namespace CombatSystem
             _currentTarget = target;
         }
 
+        public void ClearTarget()
+        {
+            _currentTarget = null;
+        }
 
         private void OnSearchScopeEnter()
         {

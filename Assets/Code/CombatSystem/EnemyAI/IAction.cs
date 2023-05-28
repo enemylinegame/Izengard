@@ -7,5 +7,6 @@ namespace CombatSystem
     {
         event Action<T> OnComplete;
         void StartAction(T target);
+        void ClearTarget();
     }
 }

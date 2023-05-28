@@ -28,6 +28,11 @@ namespace CombatSystem
 
             _animation.PlayAnimation(AnimationType.Attack);
         }
+        
+        public void ClearTarget()
+        {
+            _currentTarget = null;
+        }
 
         private void OnActionMoment()
         {

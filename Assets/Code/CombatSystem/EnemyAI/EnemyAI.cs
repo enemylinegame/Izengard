@@ -65,8 +65,24 @@ namespace CombatSystem
 
         private void OnFindTargetComplete(Damageable target)
         {
-            if (target == null || target.IsDamagableDead) _currentTarget = _primaryTarget;
-            else _currentTarget = target;
+            if (target == null)
+            {
+                _currentTarget = _primaryTarget;
+            }
+            else
+            {
+                _currentTarget.DeathAction -= OnTargetDestroyed;
+                if (target.IsDamagableDead)
+                {
+
+                    _currentTarget = _primaryTarget;
+                }
+                else
+                {
+                    _currentTarget = target;
+                    _currentTarget.DeathAction += OnTargetDestroyed;
+                }
+            }
             _nextAction = _planRoute;
             IsActionComplete = true;
         }
@@ -86,7 +102,10 @@ namespace CombatSystem
         {
             if (target == null || target.IsDamagableDead)
             {
-                _currentTarget = null;
+                if (_currentTarget != null)
+                {
+                    OnTargetDestroyed();
+                }
                 _nextAction = _findTarget;
                 _onUpdate = _findTarget as IOnUpdate;
             }
@@ -116,12 +135,23 @@ namespace CombatSystem
             _attack.OnComplete -= OnAttackComplete;
             _checkAttackDistance.OnComplete -= OnCheckAttackDistanceComplete;
             if (_findTarget is IDisposable disposable) disposable.Dispose();
+            if (_currentTarget != null)
+            {
+                _currentTarget.DeathAction -= OnTargetDestroyed;
+            }
         }
 
         public void OnUpdate(float deltaTime)
         {
             DrawLineToTarget();
             _onUpdate?.OnUpdate(deltaTime);
+        }
+
+        private void OnTargetDestroyed()
+        {
+            _currentTarget.DeathAction -= OnTargetDestroyed;
+            _currentTarget = null;
+            _attack.ClearTarget();
         }
 
         private void DrawLineToTarget()

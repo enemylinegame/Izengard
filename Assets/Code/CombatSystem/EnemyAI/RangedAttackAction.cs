@@ -12,12 +12,13 @@ namespace CombatSystem
         private float _actionTime;
         private Damageable _target;
         private bool _isBulletLaunched;
-
+        private bool _haveTarget;
 
         public RangedAttackAction(IBulletsController bulletsController, Enemy enemy)
         {
             _bulletsController = bulletsController;
             _enemy = enemy;
+            _haveTarget = false;
         }
 
         public void StartAction(Damageable target)
@@ -25,11 +26,22 @@ namespace CombatSystem
             _actionTime = 1 / _enemy.Stats.AttackSpeed;
             _isBulletLaunched = false;
             _target = target;
+            _haveTarget = true;
+        }
+        
+        public void ClearTarget()
+        {
+            _target = null;
+            _haveTarget = false;
         }
 
         public void OnUpdate(float deltaTime)
         {
-            if (_actionTime > 0)
+            if (!_haveTarget)
+            {
+                OnComplete?.Invoke(null);
+            }
+            else if (_actionTime > 0)
             {
                 _actionTime -= deltaTime;
                 if (_actionTime < _actionTime / 2 && !_isBulletLaunched) LaunchBullet();
@@ -41,7 +53,7 @@ namespace CombatSystem
         {
             _isBulletLaunched = true;
             var bullet = _bulletsController.BulletsPool.GetObjectFromPool();
-            bullet.StartFlight(_target, _enemy.Prefab.transform.position);
+            bullet.StartFlight(_target.transform.position, _enemy.Prefab.transform.position);
             _bulletsController.AddBullet(bullet);
             bullet.BulletFlightIsOver += BulletFlightOver;
         }
