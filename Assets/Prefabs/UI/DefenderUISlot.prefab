@@ -221,15 +221,15 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3185015427453929468}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1390949210047457900}
-  m_RootOrder: 6
+  m_Father: {fileID: 5043886648307557914}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.275}
-  m_AnchorMax: {x: 0.33600003, y: 0.37857142}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -375,7 +375,8 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1298123558320812881}
   m_Father: {fileID: 1390949210047457900}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -655,7 +656,6 @@ RectTransform:
   - {fileID: 9063782774779848462}
   - {fileID: 4887821060165311346}
   - {fileID: 5043886648307557914}
-  - {fileID: 1298123558320812881}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -682,6 +682,8 @@ MonoBehaviour:
   <HireButton>k__BackingField: {fileID: 8925042037232260351}
   <DismissButton>k__BackingField: {fileID: 2818825872828896218}
   <SelectBoard>k__BackingField: {fileID: 1773347477627874399}
+  <HpBarRoot>k__BackingField: {fileID: 6181264262230918427}
+  <HpBar>k__BackingField: {fileID: 1298123558320812881}
 --- !u!1 &8492650795511088116
 GameObject:
   m_ObjectHideFlags: 0

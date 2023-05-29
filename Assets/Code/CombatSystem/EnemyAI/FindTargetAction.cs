@@ -34,27 +34,11 @@ namespace CombatSystem
 
         private void OnSearchScopeEnter()
         {
-            //if (gameObject == null) return;
-            //if (!gameObject.CompareTag("Player")) return;
-            // current target MainTower
-            //if (gameObject.TryGetComponent(out Damageable damageable))
-            //{
-            //    if (_currentTarget == _privaryTarget)
-            //    {
-            //        if (_currentTarget != damageable)
-            //        {
-            //            if (damageable.Attacked(_unitDamagable))
-            //            {
-            //                _searchScope.gameObject.SetActive(false);
-            //                _currentTarget = damageable;
-            //            }
-            //        }
-            //    }                
-            // }
             if (CheckLayerBuildings())
             {
                 
-                var hits = Physics.SphereCastAll(_unitDamagable.transform.position, 0.4f, Vector3.forward, 0.01f, LayerMask.GetMask("Defenders"));
+                var hits = Physics.SphereCastAll(_unitDamagable.transform.position, 1.4f, Vector3.forward, 
+                    0.01f, LayerMask.GetMask("Defenders"));
                 if (hits.Length != 0)
                 {
                     foreach (var hit in hits)
@@ -69,7 +53,8 @@ namespace CombatSystem
                         }
                     }
                 }
-                hits = Physics.SphereCastAll(_unitDamagable.transform.position, 0.3f, Vector3.forward, 0.01f, LayerMask.GetMask("Buildings"));
+                hits = Physics.SphereCastAll(_unitDamagable.transform.position, 1.3f, Vector3.forward, 
+                    0.01f, LayerMask.GetMask("Buildings"));
                 if (hits.Length != 0)
                 {
                     foreach (var hit in hits)

@@ -22,6 +22,8 @@ namespace CombatSystem.Views
         private Button _dismissButton;
         private Button _iconButton;
         private GameObject _selectedBoard;
+        private GameObject _hpBarRoot;
+        private RectTransform _hpBar;
         private DefenderUnit _unit;
 
         private int _number;
@@ -97,7 +99,10 @@ namespace CombatSystem.Views
             _iconButton.onClick.AddListener(ImageButtonClick);
             _selectedBoard = _uiSlot.SelectBoard;
             _selectedBoard.SetActive(_isSelected);
-
+            _hpBarRoot = slot.HpBarRoot;
+            _hpBar = slot.HpBar;
+            
+            _hpBarRoot.SetActive(false);
             _number = number;
             _isEnabled = true;
         }
@@ -142,6 +147,9 @@ namespace CombatSystem.Views
                 IsInBarrack = unit.IsInBarrack;
                 _hireButton.gameObject.SetActive(false);
                 _dismissButton.gameObject.SetActive(true);
+                _unit.OnHealthChanged += HealthChanged;
+                _hpBarRoot.SetActive(true);
+                UpdateHealth();
             }
             else
             {
@@ -152,11 +160,30 @@ namespace CombatSystem.Views
         public void RemoveUnit()
         {
             _unitIcon.sprite = _emptySprite;
+            _hpBarRoot.SetActive(false);
+            _unit.OnHealthChanged -= HealthChanged;
             _unit = null;
             _inBarrack.gameObject.SetActive(false);
             _dismissButton.gameObject.SetActive(false);
             _hireButton.gameObject.SetActive(true);
             IsSelected = false;
+        }
+
+        private void HealthChanged(float maxHealth, float currentHealth)
+        {
+            if (maxHealth > 0.0f)
+            {
+                Vector2 anchorMax = _hpBar.anchorMax;
+                anchorMax.x = currentHealth / maxHealth;
+                _hpBar.anchorMax = anchorMax;
+                _hpBar.offsetMax = Vector2.zero;
+            }
+        }
+
+        private void UpdateHealth()
+        {
+            IHealthHolder health = _unit.HealthHolder;
+            HealthChanged(health.MaxHealth, health.CurrentHealth);
         }
 
     }

@@ -87,7 +87,7 @@ namespace CombatSystem
         public void KickDefenderOutOfBarrack(DefenderUnit unit, TileView tile)
         {
             unit.OnDestinationReached -= OnUnitReachedBarrack;
-            unit.Awake();
+            unit.Activate();
             SendDefenderToTile(unit, tile);
         }
 
