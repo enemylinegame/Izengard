@@ -45,16 +45,21 @@ namespace Code.TowerShot
                 _offset = _view.TurretTrigger.center;
             }
         }
-        for(int index = 0; index< Enemys.Count; index++)
+		
+
+		for(int index = 0; index< Enemys.Count; index++)
 		{
 			Damageable currentUnit = Enemys[index];
-			if (currentUnit.IsDamagableDead)
+
+            if (currentUnit.IsDead == true)
 			{
 				RemoveFromList(currentUnit);
 				IsTargert = true;
-				continue;
+
+                continue;
             }
-            if (IsTargert) _target = Enemys[index];
+			
+			if (IsTargert == true) _target = Enemys[index];
 			if(_target.transform != null) NearestObject(_target.transform);
 		}
 
@@ -81,9 +86,10 @@ namespace Code.TowerShot
 		{
             float dist = Mathf.Infinity;
             float currentDist = Vector3.Distance(_view.transform.position + _offset, target.transform.position);
-            if (currentDist < dist && IsTargert)
+            if (currentDist < dist && IsTargert == true)
             {
-	            IsTargert = false;
+                dist = currentDist;
+                IsTargert = false;
             }
             if (IsTargert == false)
             {

@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using CombatSystem.Interfaces;
 using UnityEngine;
 
 
-public class Damageable : MonoBehaviour, IHealthHolder
+public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
 {
     [SerializeField] private Sprite _icon;
     [SerializeField] private int _maxCountAttackers = 5;
@@ -12,9 +13,16 @@ public class Damageable : MonoBehaviour, IHealthHolder
     public float CurrentHealth { get; private set; }
     public float MaxHealth {get; private set;}
 
+    public Vector3 Position => transform.position;
+
+    //  MOK
+    public int ThreatLevel => 0;
+
     public event Action<float, float> OnHealthChanged; 
     public event Action DeathAction;
-    public bool IsDamagableDead { get; private set; }
+    public event Action<IDamageable> OnDamaged; 
+
+    public bool IsDead { get; private set; }
 
     private List<Damageable> _listAttackedUnits = new List<Damageable>();
     
@@ -24,7 +32,7 @@ public class Damageable : MonoBehaviour, IHealthHolder
     {
         CurrentHealth = maxHealth;
         MaxHealth = maxHealth;
-        IsDamagableDead = false;
+        IsDead = false;
         _maxCountAttackers = maxAttackers;
     }
 
@@ -50,7 +58,7 @@ public class Damageable : MonoBehaviour, IHealthHolder
     {
         for (int i =0; i < _listAttackedUnits.Count; i++)
         {
-            if (_listAttackedUnits[i].IsDamagableDead)
+            if (_listAttackedUnits[i].IsDead)
             {
                 _listAttackedUnits[i].DeathAction-= MeAttackedDead;
                 _listAttackedUnits.Remove(_listAttackedUnits[i]);
@@ -66,10 +74,15 @@ public class Damageable : MonoBehaviour, IHealthHolder
         OnHealthChanged?.Invoke(MaxHealth,CurrentHealth);
         if (CurrentHealth <= 0)
         {
-            IsDamagableDead = true;
+            IsDead = true;
             _listAttackedUnits.Clear();
             DeathAction?.Invoke();
             
         }
+    }
+
+    public void MakeDamage(int damage, IDamageable damageDealer)
+    {
+        
     }
 }

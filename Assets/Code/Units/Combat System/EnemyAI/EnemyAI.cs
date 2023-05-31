@@ -80,7 +80,7 @@ namespace CombatSystem
             else
             {
                 _currentTarget.DeathAction -= OnTargetDestroyed;
-                if (target.IsDamagableDead)
+                if (target.IsDead)
                 {
 
                     _currentTarget = _primaryTarget;
@@ -97,7 +97,7 @@ namespace CombatSystem
 
         private void OnPlaneRouteComplete(Damageable target)
         {
-            if (target == null || target.IsDamagableDead)
+            if (target == null || target.IsDead)
             {
                 _nextAction = _findTarget;
                 _onUpdate = _findTarget as IOnUpdate;
@@ -108,7 +108,7 @@ namespace CombatSystem
 
         private void OnAttackComplete(Damageable target)
         {
-            if (target == null || target.IsDamagableDead)
+            if (target == null || target.IsDead)
             {
                 if (_currentTarget != null)
                 {
@@ -123,7 +123,7 @@ namespace CombatSystem
 
         private void OnCheckAttackDistanceComplete(Damageable target)
         {
-            if (target != null && !target.IsDamagableDead)
+            if (target != null && !target.IsDead)
             {
                 _nextAction = _attack;
                 if (_attack is IOnUpdate update) _onUpdate = update;

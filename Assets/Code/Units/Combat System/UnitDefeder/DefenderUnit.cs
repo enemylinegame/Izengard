@@ -28,7 +28,7 @@ namespace CombatSystem
         private Vector3 _defendPosition;
         private DefenderState _state;
 
-        private float _tempTime = 0;
+        private float _reloadTimeCounter = 0;
         private float _stopDistanceSqr;
         private bool _isReload = false;
         private bool _isPositionChanged;
@@ -133,13 +133,13 @@ namespace CombatSystem
         {
             if (_isReload)
             {
-                if (_tempTime < _unitStats._attackSpeed)
+                if (_reloadTimeCounter < _unitStats._attackSpeed)
                 {
-                    _tempTime += Time.deltaTime;
+                    _reloadTimeCounter += Time.deltaTime;
                 }
                 else
                 {
-                    _tempTime = 0;
+                    _reloadTimeCounter = 0;
                     _isReload = false;
                 }
             }
