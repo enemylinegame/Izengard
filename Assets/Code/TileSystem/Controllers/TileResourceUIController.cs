@@ -83,5 +83,10 @@ namespace Code.TileSystem
             resourceView.Building.MineralConfig.CurrentMineValue = resourceValue;
             resourceView.ResourceCurrentValueString = $"{resourceValue}";
         }
+
+        ~TileResourceUIController()
+        {
+            _globalStock.ResourceValueChanged -= _topUIView.UpdateResursesCount;
+        }
     }
 }
