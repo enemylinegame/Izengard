@@ -26,7 +26,6 @@ public class TopResUiVew : MonoBehaviour
 
     public void UpdateResursesCount(ResourceType type, int count)
     {
-        Debug.Log($"{type} changed");
         switch(type)
         {
             case ResourceType.Wood:
