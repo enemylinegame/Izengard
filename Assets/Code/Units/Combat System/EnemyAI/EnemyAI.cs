@@ -28,7 +28,7 @@ namespace CombatSystem
             IBulletsController bulletsController)
         {
             _actionList = new List<IAction<Damageable>>();
-            var navmesh = unit.Prefab.GetComponent<NavMeshAgent>();
+            var navmesh = unit.RootGameObject.GetComponent<NavMeshAgent>();
             _primaryTarget = primaryTarget;
             _findTarget = new FindTargetAction(unit,primaryTarget);
             _actionList.Add(_findTarget);
@@ -52,7 +52,7 @@ namespace CombatSystem
             _attack.OnComplete += OnAttackComplete;
             _checkAttackDistance.OnComplete += OnCheckAttackDistanceComplete;
 
-            _enemyTransform = unit.Prefab.transform;
+            _enemyTransform = unit.RootGameObject.transform;
             
             StopAction();
         }

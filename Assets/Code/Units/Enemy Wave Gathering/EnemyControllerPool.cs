@@ -38,9 +38,9 @@ namespace Wave
         {
             for (int i = 0; i < _pool.Count; ++i)
             {
-                if (!_pool[i].Enemy.Prefab.activeInHierarchy)
+                if (!_pool[i].Enemy.RootGameObject.activeInHierarchy)
                 {
-                    _pool[i].Enemy.Prefab.SetActive(true);
+                    _pool[i].Enemy.RootGameObject.SetActive(true);
                     _pool[i].SpawnEnemy();
                     return _pool[i];
                 }
@@ -54,7 +54,7 @@ namespace Wave
 
         public void ReturnObjectInPool(IEnemyController enemyController)
         {
-            enemyController.Enemy.Prefab.SetActive(false);
+            enemyController.Enemy.RootGameObject.SetActive(false);
         }
 
         private IEnemyController InstantiateEnemy(EnemySettings enemy, bool isActive)

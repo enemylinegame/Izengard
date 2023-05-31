@@ -19,7 +19,7 @@ namespace CombatSystem
         public FindTargetAction(Enemy unit, Damageable privaryTarget)
         {
          //   _searchScope = unit.Prefab.GetComponentInChildren<SearchScope>(true);
-            _unitDamagable = unit.Prefab.gameObject.GetComponent<Damageable>();
+            _unitDamagable = unit.RootGameObject.gameObject.GetComponent<Damageable>();
             //_searchScope.OnTriger += OnSearchScopeEnter;
             _privaryTarget = privaryTarget;
         }
@@ -38,7 +38,7 @@ namespace CombatSystem
 
         private void OnSearchScopeEnter()
         {
-            if (CheckLayerBuildings())
+            if (CheckCurrentTargetIsBuilding())
             {
                 
                 var hits = Physics.SphereCastAll(_unitDamagable.transform.position, 1.4f, Vector3.forward, 
@@ -78,7 +78,7 @@ namespace CombatSystem
             }        
         }
 
-        private bool CheckLayerBuildings()
+        private bool CheckCurrentTargetIsBuilding()
         {
             if (_currentTarget != null)
             {

@@ -53,7 +53,7 @@ namespace CombatSystem
         {
             _isBulletLaunched = true;
             var bullet = _bulletsController.BulletsPool.GetObjectFromPool();
-            bullet.StartFlight(_target.transform.position, _enemy.Prefab.transform.position);
+            bullet.StartFlight(_target.transform.position, _enemy.RootGameObject.transform.position);
             _bulletsController.AddBullet(bullet);
             bullet.BulletFlightIsOver += BulletFlightOver;
         }
