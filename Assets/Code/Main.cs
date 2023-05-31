@@ -25,7 +25,7 @@ public class Main : MonoBehaviour
 
     [SerializeField] private CenterUI _centerUI;
     [SerializeField] private BottonUI _bottonUI;
-    [SerializeField] private TopResUiVew TopResUI;
+    [SerializeField] private TopResUiVew _topUI;
     [SerializeField] private EndGameScreen _endGameScreen;
     [SerializeField] private BuildingsUI buildingsUI;
     [Header("Equip")]
@@ -43,9 +43,9 @@ public class Main : MonoBehaviour
         _controllers = new Controller();
         new GameInit(_controllers, _gameConfig, _workersTeamConfig, 
             _rightUI,  _btnParents,_centerUI ,_bottonUI,
-             _endGameScreen, _towerShotConfig, _buyItemScreenView, 
-             _hireSystemView, _equipScreenView, 
-             _screenCamera, _tileList, _globalResourceList);
+            _topUI, _endGameScreen, _towerShotConfig,
+            _buyItemScreenView, _hireSystemView, _equipScreenView, 
+            _screenCamera, _tileList, _globalResourceList);
         _controllers.OnStart();
     }
 
