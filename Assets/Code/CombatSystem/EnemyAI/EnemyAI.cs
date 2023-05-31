@@ -1,12 +1,14 @@
 using Wave;
 using UnityEngine.AI;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CombatSystem
 {
     public class EnemyAI : IEnemyAI
     {
+        private List<IAction<Damageable>> _actionList;
         private readonly Damageable _primaryTarget;
         private Damageable _currentTarget;
         private readonly IAction<Damageable> _findTarget;
@@ -25,11 +27,14 @@ namespace CombatSystem
         public EnemyAI(Enemy unit, Damageable primaryTarget, IEnemyAnimationController animationController,
             IBulletsController bulletsController)
         {
+            _actionList = new List<IAction<Damageable>>();
             var navmesh = unit.Prefab.GetComponent<NavMeshAgent>();
             _primaryTarget = primaryTarget;
             _findTarget = new FindTargetAction(unit,primaryTarget);
+            _actionList.Add(_findTarget);
             _onUpdate = _findTarget as IOnUpdate;
             _planRoute = new PlanRouteAction(navmesh);
+            _actionList.Add(_planRoute);
             if (unit.Type == EnemyType.Archer)
             {
                 _attack = new RangedAttackAction(bulletsController, unit);
@@ -38,7 +43,9 @@ namespace CombatSystem
             {
                 _attack = new AttackAction(animationController, unit);
             }
+            _actionList.Add(_attack);
             _checkAttackDistance = new CheckAttackDistance(unit, navmesh, unit.Stats.AttackRange);
+            _actionList.Add(_checkAttackDistance);
 
             _findTarget.OnComplete += OnFindTargetComplete;
             _planRoute.OnComplete += OnPlaneRouteComplete;
@@ -58,6 +65,7 @@ namespace CombatSystem
 
         public void StopAction()
         {
+            ClearTarget();
             _nextAction = _findTarget;
             _onUpdate = _findTarget as IOnUpdate;
             _planRoute.StartAction(_primaryTarget);
@@ -149,9 +157,23 @@ namespace CombatSystem
 
         private void OnTargetDestroyed()
         {
-            _currentTarget.DeathAction -= OnTargetDestroyed;
+            Debug.Log("EnemyAI->OnTargetDestroyed:");
+            if (_currentTarget)
+            {
+                _currentTarget.DeathAction -= OnTargetDestroyed;
+            }
+            else
+            {
+                Debug.Log("EnemyAI->OnTargetDestroyed: _currentTarget == null");
+            }
+
+            ClearTarget();
+        }
+
+        public void ClearTarget()
+        {
             _currentTarget = null;
-            _attack.ClearTarget();
+            _actionList.ForEach(action => action.ClearTarget());
         }
 
         private void DrawLineToTarget()
