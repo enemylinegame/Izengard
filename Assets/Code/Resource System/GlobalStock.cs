@@ -28,6 +28,13 @@ namespace ResourceSystem
                 }
                 ResourceHolder resourceHolder  = new ResourceHolder(resourceConfig.ResourceType,resourceConfig.MaxHoldedAmount);
                 _resourceHolders.Add(resourceHolder);
+            }
+        }
+
+        public void TopPanelUIBind()
+        {
+            foreach (ResourceHolder resourceHolder in _resourceHolders)
+            {
                 ResourceValueChanged?.Invoke(resourceHolder.ResourceType, resourceHolder.CurrentAmount);
             }
         }

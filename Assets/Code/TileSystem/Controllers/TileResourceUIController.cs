@@ -27,14 +27,7 @@ namespace Code.TileSystem
             _globalStock = globalStock;
             _topUIView = topUIView;
             _globalStock.ResourceValueChanged += _topUIView.UpdateResursesCount;
-            //Debug.Log("Binded");
-            //Бинд события к UI происходит позже чем надо
-            _globalStock.GetResourceFromStock(ResourceType.Wood, 1);
-            _globalStock.GetResourceFromStock(ResourceType.Iron, 1);
-            _globalStock.GetResourceFromStock(ResourceType.Deer, 1);
-            _globalStock.AddResourceToStock(ResourceType.Wood, 1);
-            _globalStock.AddResourceToStock(ResourceType.Iron, 1);
-            _globalStock.AddResourceToStock(ResourceType.Deer, 1);
+            _globalStock.TopPanelUIBind();
             inputController.Add(this);
             
         }
