@@ -1,6 +1,7 @@
 using Controllers.Worker;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -8,40 +9,34 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
 {
     public Action<int> OnMissionCompleted = delegate{ };
 
-    public WorkersTeamController(
-        WorkersTeamConfig config)
+    public WorkersTeamController(WorkersTeamConfig config)
     {
         _workerFactory = new WorkerFactory(config);
 
-        _model = new WorkersTeamModel();
+        const float smokeBreakTime = 6.0f;
+        _workersResourceTeam = new WorkersResourceTeam(smokeBreakTime);
 
-        _model.Workers = new Dictionary<int, WorkerController>();
-        _model.CompletedWorkers = new List<int>();
+        _workersCraftTeam = new WorkersCraftTeam();
+        _freeWorkers = new Dictionary<int, WorkerController>();
     }
 
-    public int SendWorkerToPlace(Vector3 startPalce, Vector3 targetPalce)
+    public int SendWorkerToWork(Vector3 startPalce, Vector3 craftPalce)
     {
-        WorkerController workerController =
-            _workerFactory.CreateWorker();
+        WorkerController workerController = GetWorker();
 
-        _model.Workers.Add(workerController.WorkerId, workerController);
+        _workersCraftTeam.SendWorkerToWork(
+            startPalce, craftPalce, workerController);
 
-        workerController.OnMissionCompleted += MissionIsCompleted;
-
-        workerController.GoToPlace(startPalce, targetPalce);
         return workerController.WorkerId;
     }
 
-    public int SendWorkerToWork(Vector3 startPalce, Vector3 targetPalce)
+    public int SendWorkerToMine(Vector3 startPalce, Vector3 targetPalce)
     {
-        WorkerController workerController =
-            _workerFactory.CreateWorker();
+        WorkerController workerController = GetWorker();
 
-        _model.Workers.Add(workerController.WorkerId, workerController);
+        _workersResourceTeam.SendWorkerToMine(
+            startPalce, targetPalce, workerController);
 
-        workerController.OnMissionCompleted += MissionIsCompleted;
-
-        workerController.GoToWorkAndReturn(startPalce, targetPalce);
         return workerController.WorkerId;
     }
 
@@ -51,8 +46,9 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
             return;
 
         _model.IsPaused = true;
-        foreach (var kvp in _model.Workers)
-            kvp.Value.Pause();
+        
+        _workersCraftTeam.Pause();
+        _workersResourceTeam.Pause();
     }
 
     public void Resume()
@@ -60,19 +56,24 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
         if (!_model.IsPaused)
             return;
 
-        foreach (var kvp in _model.Workers)
-            kvp.Value.Resume();
-
         _model.IsPaused = false;
+
+        _workersCraftTeam.Resume();
+        _workersResourceTeam.Resume();
     }
 
     public void CancelWork(int workerId)
     {
-        if (!_model.Workers.TryGetValue(workerId, 
-            out WorkerController workerController))
-            return;
+        var worker = _workersResourceTeam.CancelWork(workerId);
+        if (null == worker)
+        {
+            worker = _workersCraftTeam.CancelWork(workerId);
+            if (null == worker)
+                return;
+        }
 
-        workerController.CancelWork();
+        worker.OnMissionCompleted += WorkerIsFree;
+        _freeWorkers.Add(worker.WorkerId, worker);
     }
 
     public void OnUpdate(float deltaTime)
@@ -80,45 +81,48 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
         if (_model.IsPaused)
             return;
 
-        foreach (var worker  in _model.Workers)
-            worker.Value.OnUpdate(deltaTime);
+        _workersResourceTeam.OnUpdate(deltaTime);
+        _workersCraftTeam.OnUpdate(deltaTime);
 
-        ClearCompletedworkers();
+        foreach (var kvp in _freeWorkers)
+            kvp.Value.OnUpdate(deltaTime);
     }
 
-    private void ClearCompletedworkers()
+    private WorkerController GetWorker()
     {
-        for (int i = 0; i < _model.CompletedWorkers.Count; ++i)
+        if (_freeWorkers.Count > 0)
         {
-            int workerId = _model.CompletedWorkers[i];
-            if (_model.Workers.TryGetValue(workerId, out WorkerController worker))
-            {
-                _model.Workers.Remove(workerId);
+            var pair = _freeWorkers.ElementAt(0);
 
-                _workerFactory.ReleaseWorker(worker.View);
+            int workerId = pair.Key;
+            var worker = pair.Value;
+            _freeWorkers.Remove(workerId);
 
-                worker.Dispose();
-            }
+            return worker;
         }
-
-        _model.CompletedWorkers.Clear();
+        return _workerFactory.CreateWorker();
     }
 
-    private void MissionIsCompleted(WorkerController workerController)
+    private void WorkerIsFree(WorkerController workerController)
     {
-        workerController.OnMissionCompleted -= MissionIsCompleted;
-        OnMissionCompleted.Invoke(workerController.WorkerId);
+        _freeWorkers.Remove(workerController.WorkerId);
+        workerController.OnMissionCompleted -= WorkerIsFree;
 
-        _model.CompletedWorkers.Add(workerController.WorkerId);
-
+        _workerFactory.ReleaseWorker(workerController.View);
+        workerController.Dispose();
     }
 
     public void Dispose()
     {
         foreach (var worker in _model.Workers)
-            worker.Value.OnMissionCompleted -= MissionIsCompleted;
+            worker.Value.OnMissionCompleted -= WorkerIsFree;
     }
 
     private WorkerFactory _workerFactory;
     private WorkersTeamModel _model;
+
+    WorkersResourceTeam _workersResourceTeam;
+    WorkersCraftTeam _workersCraftTeam;
+
+    Dictionary<int, WorkerController> _freeWorkers;
 }

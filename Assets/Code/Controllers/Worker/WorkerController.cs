@@ -21,6 +21,7 @@ namespace Controllers.Worker
         {
             View.Activate();
             Model.StatrtingPlace = fromPlace;
+            Model.TargetPlace = target;
 
             View.InitPlace(fromPlace);
             View.GoToPlace(target);
@@ -32,6 +33,11 @@ namespace Controllers.Worker
             InitTask(fromPlace, placeOfWork);
             Model.State = WorkerStates.GO_TO_WORK;
             return Model.WorkerId;
+        }
+
+        public int RepeatGoToWorkAndReturn()
+        {
+            return GoToWorkAndReturn(Model.StatrtingPlace, Model.TargetPlace);
         }
 
         public int GoToPlace(Vector3 fromPlace, Vector3 toPlace)
