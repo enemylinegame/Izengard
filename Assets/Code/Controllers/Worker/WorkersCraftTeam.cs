@@ -7,25 +7,24 @@ using UnityEngine;
 
 public class WorkersCraftTeam : IOnUpdate, IDisposable, IOnController
 {
-    public Action<int> OnMissionCompleted = delegate{ };
-
     public WorkersCraftTeam()
     {
-        
         _model = new WorkersTeamModel();
 
-        _model.Workers = new Dictionary<int, WorkerController>();
-        _model.CompletedWorkers = new List<int>();
+        _workersAreGoingToWork = new Dictionary<int, WorkingWorker>();
+        _workingWorkers = new Dictionary<int, WorkingWorker> ();
     }
 
     public int SendWorkerToWork(Vector3 startPalce, Vector3 targetPalce,
-         WorkerController workerController)
+         WorkerController workerController, IWorkerWork work)
     {
+        var workingWorker = new WorkingWorker() {
+            Worker = workerController , Work = work 
+        };
 
-        _model.Workers.Add(workerController.WorkerId, workerController);
+        _workersAreGoingToWork.Add(workerController.WorkerId, workingWorker);
 
-        workerController.OnMissionCompleted += MissionIsCompleted;
-
+        workerController.OnMissionCompleted += OnReadyToWork;
         workerController.GoToPlace(startPalce, targetPalce);
         return workerController.WorkerId;
     }
@@ -36,8 +35,8 @@ public class WorkersCraftTeam : IOnUpdate, IDisposable, IOnController
             return;
 
         _model.IsPaused = true;
-        foreach (var kvp in _model.Workers)
-            kvp.Value.Pause();
+        foreach (var kvp in _workersAreGoingToWork)
+            kvp.Value.Worker.Pause();
     }
 
     public void Resume()
@@ -45,20 +44,29 @@ public class WorkersCraftTeam : IOnUpdate, IDisposable, IOnController
         if (!_model.IsPaused)
             return;
 
-        foreach (var kvp in _model.Workers)
-            kvp.Value.Resume();
+        foreach (var kvp in _workersAreGoingToWork)
+            kvp.Value.Worker.Resume();
 
         _model.IsPaused = false;
     }
 
     public WorkerController CancelWork(int workerId)
     {
-        if (!_model.Workers.TryGetValue(workerId, 
-            out WorkerController workerController))
-            return null;
+        WorkingWorker workingWorker = null;
+        if (_workersAreGoingToWork.TryGetValue(workerId,
+            out workingWorker))
+        {
+            _workersAreGoingToWork.Remove(workingWorker.Worker.WorkerId);
+            return workingWorker.Worker;
+        }
 
-        workerController.CancelWork();
-        return workerController;
+        if (_workingWorkers.TryGetValue(workerId,
+            out workingWorker))
+        {
+            _workingWorkers.Remove(workingWorker.Worker.WorkerId);
+            return workingWorker.Worker;
+        }
+        return null;
     }
 
     public void OnUpdate(float deltaTime)
@@ -66,44 +74,41 @@ public class WorkersCraftTeam : IOnUpdate, IDisposable, IOnController
         if (_model.IsPaused)
             return;
 
-        foreach (var worker  in _model.Workers)
-            worker.Value.OnUpdate(deltaTime);
+        foreach (var worker  in _workersAreGoingToWork)
+            worker.Value.Worker.OnUpdate(deltaTime);
 
-        ClearCompletedWorkers();
+        foreach (var work in _workingWorkers)
+            work.Value.Work.Produce();
     }
 
-    private void ClearCompletedWorkers()
+    private void OnReadyToWork(WorkerController workerController)
     {
-        for (int i = 0; i < _model.CompletedWorkers.Count; ++i)
-        {
-            int workerId = _model.CompletedWorkers[i];
-            if (_model.Workers.TryGetValue(workerId, out WorkerController worker))
-            {
-                _model.Workers.Remove(workerId);
+        workerController.OnMissionCompleted -= OnReadyToWork;
+        var workerId = workerController.WorkerId;
 
-                _workerFactory.ReleaseWorker(worker.View);
+        if (!_workersAreGoingToWork.TryGetValue(
+                workerId, out WorkingWorker workingWorker))
+            return;
 
-                worker.Dispose();
-            }
-        }
-
-        _model.CompletedWorkers.Clear();
-    }
-
-    private void MissionIsCompleted(WorkerController workerController)
-    {
-        workerController.OnMissionCompleted -= MissionIsCompleted;
-        OnMissionCompleted.Invoke(workerController.WorkerId);
-
-        _model.CompletedWorkers.Add(workerController.WorkerId);
-
+        _workersAreGoingToWork.Remove(workerId);
+        _workingWorkers.Add(workerId, workingWorker);
     }
 
     public void Dispose()
     {
         foreach (var worker in _model.Workers)
-            worker.Value.OnMissionCompleted -= MissionIsCompleted;
+            worker.Value.OnMissionCompleted -= OnReadyToWork;
+    }
+
+    class WorkingWorker
+    {
+        public WorkerController Worker;
+        public IWorkerWork Work;
     }
 
     private WorkersTeamModel _model;
+
+    private Dictionary<int, WorkingWorker> _workersAreGoingToWork;
+    private Dictionary<int, WorkingWorker> _workingWorkers;
+
 }
