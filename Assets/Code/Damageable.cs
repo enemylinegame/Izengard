@@ -83,6 +83,17 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
 
     public void MakeDamage(int damage, IDamageable damageDealer)
     {
-        
+        CurrentHealth -= damage;
+        OnHealthChanged?.Invoke(MaxHealth,CurrentHealth);
+        if (CurrentHealth <= 0)
+        {
+            IsDead = true;
+            _listAttackedUnits.Clear();
+            DeathAction?.Invoke();
+        }
+        else
+        {
+            OnDamaged?.Invoke(damageDealer);
+        }
     }
 }

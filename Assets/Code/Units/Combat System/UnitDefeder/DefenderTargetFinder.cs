@@ -29,6 +29,7 @@ namespace CombatSystem
             _searchScope = defenderRoot.GetComponentInChildren<SearchScope>();
             _searchScope.OnEnter += EnemyEnter;
             _searchScope.OnExit += EnemyLeave;
+            _searchScope.SetRadius(range);
             _transform = defenderRoot.transform;
             _range = range;
             Targets = new List<IDamageable>();
