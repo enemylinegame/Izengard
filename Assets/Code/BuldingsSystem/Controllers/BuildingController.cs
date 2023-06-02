@@ -6,6 +6,7 @@ using Code.TileSystem;
 using Code.TileSystem.Interfaces;
 using Code.UI;
 using Code.UI.LevelScene;
+using CombatSystem;
 using Controllers;
 using ResourceSystem;
 using ResourceSystem.SupportClases;
@@ -21,14 +22,21 @@ namespace Code.BuildingSystem
         private UIController _uiController;
         private ITextVisualizationOnUI _notificationUI;
         private GlobalStock _stock;
-        public BuildingController(UIController uiController, GlobalStock stock)
+        private GameConfig _gameConfig;
+        
+        private readonly HashSet<DummyController> _instantiatedDummys = new HashSet<DummyController>();
+
+        public BuildingController(UIController uiController, GlobalStock stock, GameConfig gameConfig, GeneratorLevelController levelController)
         {
             _uiController = uiController;
             _notificationUI = uiController.CenterUI.BaseNotificationUI;
             _stock = stock;
+            _gameConfig = gameConfig;
             _stock.AddResourceToStock(ResourceType.Wood, 100);
             _stock.AddResourceToStock(ResourceType.Iron, 100);
             _stock.AddResourceToStock(ResourceType.Deer, 100);
+            
+            levelController.OnCombatPhaseStart += RespawnDummies;
         }
         
         /// <summary>
@@ -127,6 +135,25 @@ namespace Code.BuildingSystem
                 }
             }
             return true;
+        }
+        
+        private void RespawnDummies()
+        {
+            foreach (var dummy in _instantiatedDummys) dummy.Spawn();
+        }
+
+        public void PlaceCenterBuilding(TileView view)
+        {
+            var instaniatedDummy = UnityEngine.Object.Instantiate(_gameConfig.TestBuilding, view.transform.position, Quaternion.identity);
+            var dummyController = new DummyController(instaniatedDummy);
+            _instantiatedDummys.Add(dummyController);
+            foreach (var dummy in _instantiatedDummys) dummy.Spawn();
+        }
+        
+        public void Dispose()
+        {
+            // _levelGenerator.SpawnResources -= OnNewTile;
+            foreach (var dummyController in _instantiatedDummys) dummyController.Dispose();
         }
     }
 }

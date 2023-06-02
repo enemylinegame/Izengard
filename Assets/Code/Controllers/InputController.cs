@@ -81,5 +81,16 @@ namespace Controllers
             }
             
         }
+
+
+        public void HardOffTile()
+        {
+            foreach (var selector in _loadInfoToTheUis) 
+                if (!_isSpecialMode) selector.Cancel();
+    
+            if (_isSpecialMode) _tileSelector.Cancel();
+
+            IsOnTile = !_isSpecialMode;
+        }
     }
 }

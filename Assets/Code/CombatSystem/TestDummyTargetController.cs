@@ -20,7 +20,7 @@ namespace CombatSystem
 
             _dummyPrefab = testBuilding;//Resources.Load<GameObject>("DummyTarget");
 
-            _levelGenerator.SpawnResources += OnNewTile;
+            // _levelGenerator.SpawnResources += OnNewTile;
             _levelGenerator.OnCombatPhaseStart += RespawnDummies;
         }
 
@@ -40,7 +40,7 @@ namespace CombatSystem
 
         public void Dispose()
         {
-            _levelGenerator.SpawnResources -= OnNewTile;
+            // _levelGenerator.SpawnResources -= OnNewTile;
             foreach (var dummyController in _instantiatedDummys) dummyController.Dispose();
         }
     }

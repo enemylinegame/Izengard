@@ -35,7 +35,7 @@ public class GameInit
             rightUI, bottonUI, centerUI, inputController);
 
         var buildingController = new BuildingController(
-            uiController, globalResStock);
+            uiController, globalResStock, gameConfig, levelGenerator);
         
         if (!gameConfig.ChangeVariant)
         {

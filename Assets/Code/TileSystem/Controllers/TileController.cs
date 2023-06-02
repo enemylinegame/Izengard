@@ -259,6 +259,7 @@ namespace Code.TileSystem
             tile.TileModel.HouseType = type;
 
             RemoveListenersTileSelection(false);
+            _buildingController.PlaceCenterBuilding(tile);
 
             _uiController.IsWorkUI(UIType.TileSel, false);
             _uiController.IsWorkUI(UIType.Tile, true);
@@ -272,7 +273,7 @@ namespace Code.TileSystem
             if (IsBack)
             {
                 _inputController.IsOnTile = true;
-                Cancel();
+                _inputController.HardOffTile();
             }
             _uiController.CenterUI.TIleSelection.Back.onClick.RemoveListener(() => RemoveListenersTileSelection(true));
         }
