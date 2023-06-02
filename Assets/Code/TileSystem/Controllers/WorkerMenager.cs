@@ -48,10 +48,10 @@ namespace Code.TileSystem
             }
             else workersAssigments.BusyWorkersCount++;
 
-            var workers = _workerViews.Find(x => x.BuildingType == BuildingTypes.None 
+            var worker = _workerViews.Find(x => x.BuildingType == BuildingTypes.None 
                 && x.ResourceType == ResourceType.None || x.BuildingType == 0 && x.ResourceType == ResourceType.None);
-            workers.ResourceType = building.ResourceType;
-            workers.BuildingType = building.BuildingTypes;
+            worker.BuildingType = building.BuildingTypes;
+            worker.ResourceType = building.ResourceType;
             
             _tileModel.CurrentWorkersUnits++;
             FillWorkerList();
@@ -59,11 +59,11 @@ namespace Code.TileSystem
         }
         public bool RemoveWorkerAssignment(IbuildingCollectable buildingCollectable, ICollectable building)
         {
-            var worker = _workerViews.Find(x => x.ResourceType == buildingCollectable.ResourceType || x.BuildingType == buildingCollectable.BuildingType);
+            var worker = _workerViews.Find(x => x.ResourceType == buildingCollectable.ResourceType && x.BuildingType == buildingCollectable.BuildingType);
             var workersAssigment = _workersAssigments.Find(x => x.Building.BuildingID == building.BuildingID);
-
-            if (workersAssigment == null) return false;
-
+            
+            if (workersAssigment == null || workersAssigment.BusyWorkersCount == 0) return false;
+            
             worker.ResourceType = ResourceType.None;
             worker.BuildingType = BuildingTypes.None;
             
@@ -75,16 +75,16 @@ namespace Code.TileSystem
         
         public void RemoveAllWorkerAssignment(IbuildingCollectable buildingCollectable, ICollectable building, TileController controller)
         {
-            var worker = _workerViews.FindAll(x => x.BuildingType == buildingCollectable.BuildingType || x.ResourceType == buildingCollectable.ResourceType);
+            var workers = _workerViews.FindAll(x => x.BuildingType == buildingCollectable.BuildingType || x.ResourceType == buildingCollectable.ResourceType);
             var workerassign = _workersAssigments.Exists(x => x.Building.BuildingID == building.BuildingID);
             if (!workerassign) return;
             
             var workersAssigments = _workersAssigments.Find(x => x.Building.BuildingID == building.BuildingID);
                 
-            foreach (var kvp in worker)
+            foreach (var worker in workers)
             {
-                kvp.ResourceType = ResourceType.None;
-                kvp.BuildingType = BuildingTypes.None;
+                worker.ResourceType = ResourceType.None;
+                worker.BuildingType = BuildingTypes.None;
             }
             _tileModel.CurrentWorkersUnits -= workersAssigments.BusyWorkersCount;
             workersAssigments.BusyWorkersCount = 0;

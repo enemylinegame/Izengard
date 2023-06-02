@@ -42,8 +42,10 @@ namespace Code.UI
             
             IsWorkUI(UIType.All, false);
             
-            _bottonUI.BuildingMenu.PrefabButtonClear.onClick.AddListener((() => IsWorkUI(UIType.Buy, true)));
-            _centerUI.CloseBuildingsBuy.onClick.AddListener((() => IsWorkUI(UIType.Buy, false)));
+            _bottonUI.BuildingMenu.PrefabButtonClear.onClick.AddListener(() => IsWorkUI(UIType.Buy, true));
+            _bottonUI.BuildingMenu.PrefabButtonClear.onClick.AddListener(() => _bottonUI.BuildingMenu.PrefabButtonClear.gameObject.SetActive(false));
+            _centerUI.CloseBuildingsBuy.onClick.AddListener(() => IsWorkUI(UIType.Buy, false));
+            _centerUI.CloseBuildingsBuy.onClick.AddListener(() => _bottonUI.BuildingMenu.PrefabButtonClear.gameObject.SetActive(true));
             inputController.Add(this);
             _warsView.SetInputController(inputController);
             

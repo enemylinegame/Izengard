@@ -144,6 +144,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4661159745803449621}
   - component: {fileID: 6430095203269180812}
+  - component: {fileID: 369588156450355352}
   m_Layer: 5
   m_Name: Buldings
   m_TagString: Untagged
@@ -194,6 +195,20 @@ MonoBehaviour:
   m_Spacing: {x: 5, y: 15}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &369588156450355352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406831585378263430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 0
 --- !u!1 &2213699241608739620
 GameObject:
   m_ObjectHideFlags: 0
@@ -341,7 +356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 624fc387396944ae90bf4a27d1bee95e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _text: {fileID: 2474194045848941292}
+  _basicText: {fileID: 0}
   _secondaryText: {fileID: 0}
 --- !u!1 &2454494095644995608
 GameObject:
@@ -568,7 +583,6 @@ GameObject:
   - component: {fileID: 1076063405283724704}
   - component: {fileID: 8490077412361704643}
   - component: {fileID: 8693924968609141371}
-  - component: {fileID: 3130775683841552875}
   m_Layer: 5
   m_Name: Building Buy
   m_TagString: Untagged
@@ -635,36 +649,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 3.07
---- !u!114 &3130775683841552875
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2688834453942843772}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Content: {fileID: 4661159745803449621}
-  m_Horizontal: 0
-  m_Vertical: 1
-  m_MovementType: 1
-  m_Elasticity: 0.025
-  m_Inertia: 1
-  m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 2.99
-  m_Viewport: {fileID: 4661159745803449621}
-  m_HorizontalScrollbar: {fileID: 0}
-  m_VerticalScrollbar: {fileID: 0}
-  m_HorizontalScrollbarVisibility: 2
-  m_VerticalScrollbarVisibility: 1
-  m_HorizontalScrollbarSpacing: -3
-  m_VerticalScrollbarSpacing: -3
-  m_OnValueChanged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &4156716152955191796
 GameObject:
   m_ObjectHideFlags: 0
@@ -1102,7 +1086,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 624fc387396944ae90bf4a27d1bee95e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _text: {fileID: 7415364289806192550}
+  _basicText: {fileID: 0}
   _secondaryText: {fileID: 2474194045848941292}
 --- !u!1 &4603269734217949791
 GameObject:
@@ -1465,7 +1449,7 @@ MonoBehaviour:
   <CloseBuildingsBuy>k__BackingField: {fileID: 377216872852745270}
   <TileByButtons>k__BackingField: {fileID: 5860511040341522534}
   <TIleSelection>k__BackingField: {fileID: 2173177499746882789}
-  <BaseCenterText>k__BackingField: {fileID: 9218285193195339956}
+  <BaseNotificationUI>k__BackingField: {fileID: 0}
 --- !u!1 &6880439891499816969
 GameObject:
   m_ObjectHideFlags: 0
