@@ -21,5 +21,5 @@ MonoBehaviour:
   _buildingPrefab: {fileID: 8901040941739594243, guid: a3a22ed8d083a894aaefc4efd031b92c, type: 3}
   _tierNumber: 1
   _buildingType: 202
-  _houseType: 0
+  _houseType: 3
   _description: 

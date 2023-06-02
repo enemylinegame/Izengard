@@ -1,10 +1,12 @@
+using Code.TileSystem.Interfaces;
+using ResourceSystem;
 using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(Animator), 
     typeof(NavMeshAgent), 
     typeof(CapsuleCollider))]
-public class WorkerView : MonoBehaviour, IWorkerView
+public class WorkerView : MonoBehaviour, IWorkerView, IbuildingCollectable
 {
     [SerializeField]
     private Animator _animator;
@@ -94,4 +96,6 @@ public class WorkerView : MonoBehaviour, IWorkerView
     private const string PRODUCE_WORK = "ProduceWork";
     private const string DRAG_BACK = "DragBack";
 
+    public BuildingTypes BuildingType { get; set; }
+    public ResourceType ResourceType { get; set; }
 }

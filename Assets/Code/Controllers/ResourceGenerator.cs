@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Code.BuildingSystem;
+using Code.BuldingsSystem;
 using Code.TileSystem;
 using ResourceSystem;
 using UnityEngine;
@@ -321,7 +322,7 @@ public class ResourceGenerator : IDisposable
         }
     }
 
-    private Building CreateMineralGameObject(MineralConfig mineralConfig, Vector3 posistion)
+    private ICollectable CreateMineralGameObject(MineralConfig mineralConfig, Vector3 posistion)
     {
         GameObject _gameObject = Object.Instantiate(mineralConfig.Prefab);
         _gameObject.transform.position = new Vector3(posistion.x, 0.1f, posistion.z);

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Code.TileSystem;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,9 +15,10 @@ namespace Code.UI
          
         [field: Space, Header("Tile")]
          [field: SerializeField] public GameObject TileByButtons { get; set; }
+         [field: SerializeField] public TileSelectionView TIleSelection { get; set; }
         
         [field: Space, Header("Info")]
-        [field: SerializeField] public BaseCenterText BaseCenterText { get; set; }
+        [field: SerializeField] public BaseNotificationUI BaseNotificationUI { get; set; }
     }
 }
 

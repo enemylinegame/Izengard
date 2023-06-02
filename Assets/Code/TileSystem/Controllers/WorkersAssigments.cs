@@ -1,11 +1,13 @@
-﻿namespace Code.TileSystem
+﻿using Code.BuldingsSystem;
+
+namespace Code.TileSystem
 {
     public class WorkersAssigments
     {
-        public Building Building;
-        public int BusyWorkersCount;
+        public ICollectable Building;
+        public int BusyWorkersCount;    
 
-        public WorkersAssigments(Building building, int busyWorkersCount = 0)
+        public WorkersAssigments(ICollectable building, int busyWorkersCount = 0)
         {
             Building = building;
             BusyWorkersCount = busyWorkersCount;

@@ -15,74 +15,56 @@ namespace Controllers
 {
     public class InputController : IOnController, IOnUpdate
     {
-        private UIController _uiController;
+        private CenterUI _centerUI;
         private ITileSelector _tileSelector;
         private List<ITileLoadInfo> _loadInfoToTheUis = new List<ITileLoadInfo>();
 
-        private bool _isOnTile = true;
         private bool _isSpecialMode;
 
-        public InputController()
-        {
-           
-        }
+        public bool IsOnTile = true;
+        public bool LockRightClick = false;
 
 
         public void OnUpdate(float deltaTime)
         {
+            if(LockRightClick == true) return;
+            
             if (Input.GetMouseButtonDown(1))
             {
-                if (!_isSpecialMode)
-                {
-                    foreach (var selector in _loadInfoToTheUis)
-                    {
-                        selector.Cancel();
-                        _isOnTile = true;
-                    }
-                    
-                }
-                else
-                {
-                    _tileSelector.Cancel();
-                }
+                foreach (var selector in _loadInfoToTheUis) 
+                    if (!_isSpecialMode) selector.Cancel();
+    
+                if (_isSpecialMode) _tileSelector.Cancel();
 
+                IsOnTile = !_isSpecialMode;
             }
-            if (Input.GetMouseButtonDown(0))
+
+            
+            if (!Input.GetMouseButtonDown(0)) return;
+
+            var bitmask = (1 << 6);
+            if (!Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 100, bitmask)) return;
+
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+
+            var currBuild = hit.collider.GetComponentInParent<BuildingView>();
+            var currMine = hit.collider.GetComponentInParent<Mineral>();
+            var tile = hit.collider.GetComponentInParent<TileView>();
+
+            if (!tile) return;
+
+            if (_isSpecialMode)
             {
-                var bitmask = ~(1 << 3);
-                RaycastHit hit;
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-                if (Physics.Raycast(ray, out hit, 100, bitmask))
-                {
-                    if (EventSystem.current.IsPointerOverGameObject())
-                        return;
-                    var currBuild = hit.collider.gameObject.GetComponentInParent<BuildingView>();
-                    var currMine = hit.collider.gameObject.GetComponentInParent<Mineral>();
-                    var tile = hit.collider.gameObject.GetComponentInParent<TileView>();
-
-                    if (tile)
-                    {
-                        if (!_isSpecialMode)
-                        {
-                            if (_isOnTile)
-                            {
-                                foreach (var selector in _loadInfoToTheUis)
-                                {
-                                    selector.LoadInfoToTheUI(tile);
-                                }
-                                _isOnTile = false;
-                            }
-                        }
-                        else
-                        {
-                            _tileSelector.SelectTile(tile);
-                        }
-                    }
-                }
-
+                _tileSelector.SelectTile(tile);
             }
-
+            else if (IsOnTile)
+            {
+                foreach (var selector in _loadInfoToTheUis)
+                {
+                    selector.LoadInfoToTheUI(tile);
+                    IsOnTile = false;
+                }
+            }
         }
 
         public void SetSpecialTileSelector(ITileSelector tileSelector)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Code.BuldingsSystem;
 using Code.TileSystem.Interfaces;
 using Code.UI;
 using Controllers;
@@ -26,16 +27,14 @@ namespace Code.TileSystem
         
         public void LoadInfoToTheUI(TileView tile)
         {
-            // _resourceValueList = new List<int>();
-            foreach (ResourceView res in _uiController.Resources)
-            {
-                AddNewLayoutElement(res);
-            }
+            _uiController.Resources.ForEach(res => AddNewLayoutElement(res));
             _factory.LoadInfoToTheUI(tile);
         }
 
         public void Cancel()
         {
+            if(_uiController.Resources == null) return;
+            
             foreach (ResourceView res in _uiController.Resources)
             {
                 res.ResourceAddButton.onClick.RemoveAllListeners();
@@ -46,34 +45,32 @@ namespace Code.TileSystem
 
         public void AddNewLayoutElement(ResourceView res)
         {
-            // _resourceValueList.Add(Convert.ToInt32(res.ResourceCurrentValueString));
             res.ResourceAddButton.onClick.AddListener(() => AddResource(res));
             res.ResourceRemoveButton.onClick.AddListener(() => RemoveResource(res));
         }
-
+        
         private void AddResource(ResourceView resourceView)
         {
             int resourceValue = resourceView.ResourceCurrentValueInt;
-            if (resourceView.ResourceCurrentValueInt < MAX_RESOURCES)
+            if (resourceValue < MAX_RESOURCES && _controller.WorkerMenager.UpdateWorkerAssignment(resourceView, resourceView.Building))
             {
-                // var hire = _controller.WorkerAssignmentsController.UpdateWorkerAssigment(resourceView.Building.ResourceType, resourceView.Building);
-                // if(hire) resourceValue++;
-                
+                resourceValue++;
             }
             resourceView.Building.MineralConfig.CurrentMineValue = resourceValue;
             resourceView.ResourceCurrentValueString = $"{resourceValue}";
-            
         }
+        
         private void RemoveResource(ResourceView resourceView)
         {
             int resourceValue = resourceView.ResourceCurrentValueInt;
-            if (resourceValue > 0)
+
+            if (resourceValue > 0 && _controller.WorkerMenager.RemoveWorkerAssignment(resourceView, resourceView.Building))
             {
-                // var hire = _controller.WorkerAssignmentsController.RemoveWorkerAssigment(resourceView.Building.ResourceType, resourceView.Building);
-                // if(hire) resourceValue--;
+                resourceValue--;
             }
+
             resourceView.Building.MineralConfig.CurrentMineValue = resourceValue;
-            resourceView.ResourceCurrentValueString = $"{resourceValue}";
+            resourceView.ResourceCurrentValueString = resourceValue.ToString();
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using Code;
+using Code.UI.LevelScene;
 using TMPro;
 using Wave.Interfaces;
 
@@ -13,21 +14,21 @@ namespace Wave
         private readonly Action<float> _uiAction;
         private float _timeLeft;
         private readonly IDowntimeChecker _downtimeChecker;
-        private BaseCenterText _centerText;
+        private ITextVisualizationOnUI _notificationUI;
 
 
-        public PreparatoryPhaseWaiting(float preparatoryPhaseDuration, Action<float> uiAction, IDowntimeChecker downtimeChecker, BaseCenterText centerText)
+        public PreparatoryPhaseWaiting(float preparatoryPhaseDuration, Action<float> uiAction, IDowntimeChecker downtimeChecker, ITextVisualizationOnUI notificationUI)
         {
             _preparatoryPhaseDuration = preparatoryPhaseDuration;
             _uiAction = uiAction;
             _downtimeChecker = downtimeChecker;
-            _centerText = centerText;
+            _notificationUI = notificationUI;
         }
 
         public override void StartPhase()
         {
             base.StartPhase();
-            _centerText.NotificationUI("end of the military phase!!", 3000);
+            _notificationUI.BasicTemporaryUIVisualization("end of the military phase!!", 3);
             _timeLeft = _preparatoryPhaseDuration;
         }
 

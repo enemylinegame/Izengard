@@ -14,8 +14,8 @@ namespace Code.BuldingsSystem.ScriptableObjects
         [SerializeField] private List<ResourcePriceModel> _buildingCost;
         [SerializeField] private GameObject _buildingPrefab;
         [SerializeField] private TierNumber _tierNumber;
-        [SerializeField] private BuildingTypes _buildingType;//TODO Скорее всего не будет нужен
-        [SerializeField] private HouseType _houseType; //TODO Это Идея
+        [SerializeField] private BuildingTypes _buildingType;
+        [SerializeField] private HouseType _houseType;
         [SerializeField] private string _description;
 
         private float _buildingTime;

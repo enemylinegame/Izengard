@@ -45,7 +45,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsActive: 1
   Building: {fileID: 0}
-  Mineral: {fileID: 0}
 --- !u!1 &2635714617976320793
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,7 +90,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsActive: 1
   Building: {fileID: 0}
-  Mineral: {fileID: 0}
 --- !u!1 &3902554769916459461
 GameObject:
   m_ObjectHideFlags: 0
@@ -137,7 +135,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsActive: 1
   Building: {fileID: 0}
-  Mineral: {fileID: 0}
 --- !u!1 &4001290589669054323
 GameObject:
   m_ObjectHideFlags: 0
@@ -183,7 +180,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsActive: 1
   Building: {fileID: 0}
-  Mineral: {fileID: 0}
 --- !u!1 &5314973816092974706
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,7 +225,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsActive: 1
   Building: {fileID: 0}
-  Mineral: {fileID: 0}
 --- !u!1 &5481226159477494249
 GameObject:
   m_ObjectHideFlags: 0
@@ -275,7 +270,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsActive: 1
   Building: {fileID: 0}
-  Mineral: {fileID: 0}
 --- !u!1 &5691657273616978855
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,7 +315,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsActive: 1
   Building: {fileID: 0}
-  Mineral: {fileID: 0}
 --- !u!1 &5749648951339931143
 GameObject:
   m_ObjectHideFlags: 0
@@ -367,7 +360,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsActive: 1
   Building: {fileID: 0}
-  Mineral: {fileID: 0}
 --- !u!1 &5978876481970717367
 GameObject:
   m_ObjectHideFlags: 0
@@ -413,7 +405,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsActive: 1
   Building: {fileID: 0}
-  Mineral: {fileID: 0}
 --- !u!1 &7733323392043233299
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,6 +476,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tileConfig: {fileID: 11400000, guid: 9565a228ea7f390448b26a5a1b3ef329, type: 2}
+  Renderer: {fileID: 4960280552289664385}
   _dotSpawns:
   - {fileID: 8825121307316013691}
   - {fileID: 8085122511375791917}
@@ -496,8 +488,6 @@ MonoBehaviour:
   - {fileID: 4274617867543858075}
   - {fileID: 8797018410771152024}
   - {fileID: 2903052079816236593}
-  _floodedBuildings: []
-  _floodedMinerals: []
 --- !u!65 &-5021133366478644037
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -509,8 +499,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.5, y: 0.33, z: 2.5}
-  m_Center: {x: 0, y: 0.91, z: 0}
+  m_Size: {x: 2.7, y: 0.33, z: 2.7}
+  m_Center: {x: 0, y: 0.19, z: 0}
 --- !u!1 &8928505673802935694
 GameObject:
   m_ObjectHideFlags: 0
@@ -556,7 +546,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsActive: 1
   Building: {fileID: 0}
-  Mineral: {fileID: 0}
 --- !u!1001 &5869201121942349268
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -626,6 +615,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d10b86d110729064f9b83800f884ab74, type: 3}
+--- !u!23 &4960280552289664385 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1559903205053323349, guid: d10b86d110729064f9b83800f884ab74, type: 3}
+  m_PrefabInstance: {fileID: 5869201121942349268}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7688202247901297486 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4306123383880720026, guid: d10b86d110729064f9b83800f884ab74, type: 3}

@@ -1,5 +1,6 @@
 using System;
 using Code;
+using Code.UI.LevelScene;
 using TMPro;
 
 namespace Wave
@@ -9,20 +10,20 @@ namespace Wave
         private readonly float _peacefulPhaseDuration;
         private readonly Action<float> _uiAction;
         private float _timeLeft;
-        private BaseCenterText _centerText;
+        private ITextVisualizationOnUI _notificationUI;
         
 
-        public PeacefulPhaseWaiting(float peacefulPhaseDuration, Action<float> uiAction, BaseCenterText centerText)
+        public PeacefulPhaseWaiting(float peacefulPhaseDuration, Action<float> uiAction, ITextVisualizationOnUI notificationUI)
         {
             _peacefulPhaseDuration = peacefulPhaseDuration;
             _uiAction = uiAction;
-            _centerText = centerText;
+            _notificationUI = notificationUI;
         }
 
         public override void StartPhase()
         {
             base.StartPhase();
-            _centerText.NotificationUI("the end of the peaceful phase!!", 3000);
+            _notificationUI.BasicTemporaryUIVisualization("the end of the peaceful phase!!", 3);
             _timeLeft = _peacefulPhaseDuration;
         }
 

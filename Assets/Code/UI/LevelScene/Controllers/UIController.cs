@@ -17,6 +17,7 @@ namespace Code.UI
         private RightUI _rightUI;
         private BottonUI _bottonUI;
         private CenterUI _centerUI;
+        private InputController _inputController;
         private WarsView _warsView;
 
         public RightUI RightUI => _rightUI;
@@ -35,15 +36,20 @@ namespace Code.UI
             _rightUI = rightUI;
             _bottonUI = bottonUI;
             _centerUI = centerUI;
+            _inputController = inputController;
 
             _warsView = new WarsView(bottonUI.WarsUIView, inputController);
             
             IsWorkUI(UIType.All, false);
             
-            _bottonUI.BuildingMenu.PrefabButtonClear.onClick.AddListener((() => IsWorkUI(UIType.Buy, true)));
-            _centerUI.CloseBuildingsBuy.onClick.AddListener((() => IsWorkUI(UIType.Buy, false)));
+            _bottonUI.BuildingMenu.PrefabButtonClear.onClick.AddListener(() => IsWorkUI(UIType.Buy, true));
+            _bottonUI.BuildingMenu.PrefabButtonClear.onClick.AddListener(() => _bottonUI.BuildingMenu.PrefabButtonClear.gameObject.SetActive(false));
+            _centerUI.CloseBuildingsBuy.onClick.AddListener(() => IsWorkUI(UIType.Buy, false));
+            _centerUI.CloseBuildingsBuy.onClick.AddListener(() => _bottonUI.BuildingMenu.PrefabButtonClear.gameObject.SetActive(true));
             inputController.Add(this);
             _warsView.SetInputController(inputController);
+            
+            CenterUI.TIleSelection.Back.onClick.AddListener(() => IsWorkUI(UIType.TileSel, false));
         }
         /// <summary>
         /// Включение/отключение любой части UI
@@ -56,7 +62,6 @@ namespace Code.UI
             {
                 case UIType.All:
                     _centerUI.BuildingBuy.SetActive(isOn);
-                    _centerUI.TileByButtons.gameObject.SetActive(!isOn);
                     ClearButtonsUIBuy(isOn);
                     IsOnTileUI(isOn);
                     break;
@@ -64,12 +69,15 @@ namespace Code.UI
                     IsOnTileUI(isOn);
                     break;
                 case UIType.Buy:
+                    _inputController.LockRightClick = isOn;
                     _centerUI.BuildingBuy.SetActive(isOn);
-                    _centerUI.TileByButtons.gameObject.SetActive(!isOn);
                     break;
                 case UIType.Сonfirmation:
                     break;
                 case UIType.Unit:
+                case UIType.TileSel:
+                    _inputController.LockRightClick = isOn;
+                    _centerUI.TIleSelection.gameObject.SetActive(isOn);
                     break;
             }
         }
@@ -110,6 +118,7 @@ namespace Code.UI
 
         public void LoadInfoToTheUI(TileView tile)
         {
+            if(tile.TileModel.HouseType == HouseType.None) return;
             IsWorkUI(UIType.Tile, true);
             _warsView.SetDefenders(tile.TileModel.DefenderUnits);
         }
@@ -129,5 +138,6 @@ namespace Code.UI
         Сonfirmation,
         Tile,
         Unit,
+        TileSel,
     }
 }

@@ -1,5 +1,5 @@
 
-public enum BuildingTypes : int
+public enum BuildingTypes
 {
     None = 200,
     House = 201,

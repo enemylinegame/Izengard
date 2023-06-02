@@ -1,4 +1,6 @@
-﻿using Code.TileSystem;
+﻿using Code.BuldingsSystem;
+using Code.TileSystem;
+using Code.TileSystem.Interfaces;
 using ResourceSystem;
 using TMPro;
 using UnityEngine;
@@ -6,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Views.BuildBuildingsUI
 {
-    public class BuildingUIInfo : MonoBehaviour
+    public class BuildingUIInfo : MonoBehaviour, IbuildingCollectable
     {
         [SerializeField] private Image _icon;
         [SerializeField] private TMP_Text _type;
@@ -14,8 +16,10 @@ namespace Views.BuildBuildingsUI
         [SerializeField] private Button _destroyBuildingInfo;
         [SerializeField] private Button _plusUnit;
         [SerializeField] private Button _minusUnit;
-        private BuildingTypes _Types;
-        private int _units;
+        private int _currentCurrentUnits;
+        public BuildingTypes BuildingType { get; set; }
+        public ResourceType ResourceType { get; set; }
+        public int BuildingID { get; set; }
 
         public Image Icon => _icon;
         public TMP_Text Type => _type;
@@ -23,43 +27,6 @@ namespace Views.BuildBuildingsUI
         public Button DestroyBuildingInfo => _destroyBuildingInfo;
         public Button PlusUnit => _plusUnit;
         public Button MinusUnit => _minusUnit;
-        public int Units
-        {
-            get => _units;
-            set => _units = value;
-        }
-
-        public BuildingTypes Types
-        {
-            get => _Types;
-            set => _Types = value;
-        }
-        /// <summary>
-        /// найм юнитов для определеного типа здания
-        /// </summary>
-        public void Hiring(bool isOn, TileController controller, Building building)
-        {
-            if (isOn)
-            {
-                if (_units < 5)
-                {
-                    // controller.WorkerAssignmentsController.UpdateWorkerAssigment(_Types, building);
-                    _units += 1;
-                    _unitsBusy.text = _units + "/5";
-                }
-                
-
-            }
-            else
-            {
-                if (_units > 0)
-                {
-                    // controller.WorkerAssignmentsController.RemoveWorkerAssigment(_Types, building);
-                    _units -= 1;
-                    _unitsBusy.text = _units + "/5";
-                }
-                
-            }
-        }
+        public int CurrentUnits { get => _currentCurrentUnits; set => _currentCurrentUnits = value; }
     }
 }
