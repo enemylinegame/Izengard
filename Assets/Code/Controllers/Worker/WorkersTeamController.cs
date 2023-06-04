@@ -1,7 +1,6 @@
 using Controllers.Worker;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 
@@ -17,25 +16,27 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
         _workersResourceTeam = new WorkersResourceTeam(smokeBreakTime);
 
         _workersCraftTeam = new WorkersCraftTeam();
-        _freeWorkers = new Dictionary<int, WorkerController>();
+        _workersFreeTeam = new WorkersFreeTeam(_workerFactory);
     }
 
-    public int SendWorkerToWork(Vector3 startPalce, Vector3 craftPalce)
+    public int SendWorkerToWork(Vector3 startPalce, Vector3 craftPalce,
+           IWorkerWork beginWork, IWorkerWork work, IWorkerWork endWork)
     {
         WorkerController workerController = GetWorker();
 
         _workersCraftTeam.SendWorkerToWork(
-            startPalce, craftPalce, workerController);
+            startPalce, craftPalce, workerController, beginWork, work, endWork);
 
         return workerController.WorkerId;
     }
 
-    public int SendWorkerToMine(Vector3 startPalce, Vector3 targetPalce)
+    public int SendWorkerToMine(Vector3 startPalce, Vector3 targetPalce, 
+        IWorkerWork work)
     {
         WorkerController workerController = GetWorker();
 
         _workersResourceTeam.SendWorkerToMine(
-            startPalce, targetPalce, workerController);
+            startPalce, targetPalce, workerController, work);
 
         return workerController.WorkerId;
     }
@@ -49,6 +50,7 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
         
         _workersCraftTeam.Pause();
         _workersResourceTeam.Pause();
+        _workersFreeTeam.Pause();
     }
 
     public void Resume()
@@ -60,6 +62,7 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
 
         _workersCraftTeam.Resume();
         _workersResourceTeam.Resume();
+        _workersFreeTeam.Resume();
     }
 
     public void CancelWork(int workerId)
@@ -72,8 +75,7 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
                 return;
         }
 
-        worker.OnMissionCompleted += WorkerIsFree;
-        _freeWorkers.Add(worker.WorkerId, worker);
+        _workersFreeTeam.CancelWorker(worker);
     }
 
     public void OnUpdate(float deltaTime)
@@ -83,46 +85,37 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
 
         _workersResourceTeam.OnUpdate(deltaTime);
         _workersCraftTeam.OnUpdate(deltaTime);
-
-        foreach (var kvp in _freeWorkers)
-            kvp.Value.OnUpdate(deltaTime);
     }
 
     private WorkerController GetWorker()
     {
-        if (_freeWorkers.Count > 0)
+        WorkerController worker = null;
+        if (null != (worker = _workersFreeTeam.GetWorker()))
         {
-            var pair = _freeWorkers.ElementAt(0);
-
-            int workerId = pair.Key;
-            var worker = pair.Value;
-            _freeWorkers.Remove(workerId);
-
             return worker;
         }
         return _workerFactory.CreateWorker();
     }
 
-    private void WorkerIsFree(WorkerController workerController)
-    {
-        _freeWorkers.Remove(workerController.WorkerId);
-        workerController.OnMissionCompleted -= WorkerIsFree;
-
-        _workerFactory.ReleaseWorker(workerController.View);
-        workerController.Dispose();
-    }
-
     public void Dispose()
     {
-        foreach (var worker in _model.Workers)
-            worker.Value.OnMissionCompleted -= WorkerIsFree;
+        List<WorkerController> workers = new List<WorkerController>();
+        _workersResourceTeam.Dispose(workers);
+        _workersCraftTeam.Dispose(workers);
+        _workersFreeTeam.Dispose();
+
+        foreach (var worker in workers)
+        {
+            _workerFactory.ReleaseWorker(worker.View);
+            worker.Dispose();
+        }
+        workers.Clear();
     }
 
     private WorkerFactory _workerFactory;
     private WorkersTeamModel _model;
-
-    WorkersResourceTeam _workersResourceTeam;
-    WorkersCraftTeam _workersCraftTeam;
-
-    Dictionary<int, WorkerController> _freeWorkers;
+    
+    private WorkersResourceTeam _workersResourceTeam;
+    private WorkersCraftTeam _workersCraftTeam;
+    private WorkersFreeTeam _workersFreeTeam;
 }

@@ -5,21 +5,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class WorkersCraftTeam : IOnUpdate, IDisposable, IOnController
+public class WorkersCraftTeam : IOnUpdate, IOnController
 {
     public WorkersCraftTeam()
     {
         _model = new WorkersTeamModel();
 
-        _workersAreGoingToWork = new Dictionary<int, WorkingWorker>();
-        _workingWorkers = new Dictionary<int, WorkingWorker> ();
+        _workersAreGoingToWork = new Dictionary<int, WorkerCraftWork>();
+        _workingWorkers = new Dictionary<int, WorkerCraftWork> ();
     }
 
     public int SendWorkerToWork(Vector3 startPalce, Vector3 targetPalce,
-         WorkerController workerController, IWorkerWork work)
+         WorkerController workerController, 
+            IWorkerWork beginOfWork, IWorkerWork work, IWorkerWork endOfWork)
     {
-        var workingWorker = new WorkingWorker() {
-            Worker = workerController , Work = work 
+        var workingWorker = new WorkerCraftWork() { 
+            Worker = workerController, 
+            BeginOfWork = beginOfWork, Work = work, EndOfWork = endOfWork
         };
 
         _workersAreGoingToWork.Add(workerController.WorkerId, workingWorker);
@@ -52,21 +54,27 @@ public class WorkersCraftTeam : IOnUpdate, IDisposable, IOnController
 
     public WorkerController CancelWork(int workerId)
     {
-        WorkingWorker workingWorker = null;
+        WorkerCraftWork workingWorker = null;
         if (_workersAreGoingToWork.TryGetValue(workerId,
             out workingWorker))
         {
             _workersAreGoingToWork.Remove(workingWorker.Worker.WorkerId);
-            return workingWorker.Worker;
         }
-
-        if (_workingWorkers.TryGetValue(workerId,
+        else if (_workingWorkers.TryGetValue(workerId,
             out workingWorker))
         {
-            _workingWorkers.Remove(workingWorker.Worker.WorkerId);
-            return workingWorker.Worker;
+            _workingWorkers.Remove(workerId);
         }
-        return null;
+        else
+            return null;
+
+        workingWorker.BeginOfWork = null;
+        workingWorker.Work = null;
+        workingWorker.EndOfWork = null;
+        var worker = workingWorker.Worker;
+        workingWorker.Worker = null;
+
+        return worker;
     }
 
     public void OnUpdate(float deltaTime)
@@ -87,28 +95,47 @@ public class WorkersCraftTeam : IOnUpdate, IDisposable, IOnController
         var workerId = workerController.WorkerId;
 
         if (!_workersAreGoingToWork.TryGetValue(
-                workerId, out WorkingWorker workingWorker))
+                workerId, out WorkerCraftWork workingWorker))
             return;
 
         _workersAreGoingToWork.Remove(workerId);
         _workingWorkers.Add(workerId, workingWorker);
     }
 
-    public void Dispose()
+    private void ClearWorks(Dictionary<int, WorkerCraftWork> works, List<WorkerController> workers)
     {
-        foreach (var worker in _model.Workers)
-            worker.Value.OnMissionCompleted -= OnReadyToWork;
+        
+        foreach (var worker in works)
+        {
+            WorkerCraftWork work = worker.Value;
+            work.Worker.OnMissionCompleted -= OnReadyToWork;
+            work.BeginOfWork = null;
+            work.Work = null;
+            work.EndOfWork = null;
+
+            workers.Add(work.Worker);
+            work.Worker = null;
+        }
+        works.Clear();
     }
 
-    class WorkingWorker
+    public void Dispose(List<WorkerController> workers)
+    {
+        ClearWorks(_workersAreGoingToWork, workers);
+        ClearWorks(_workingWorkers, workers);
+    }
+
+    class WorkerCraftWork
     {
         public WorkerController Worker;
         public IWorkerWork Work;
+        public IWorkerWork BeginOfWork;
+        public IWorkerWork EndOfWork;
     }
 
     private WorkersTeamModel _model;
 
-    private Dictionary<int, WorkingWorker> _workersAreGoingToWork;
-    private Dictionary<int, WorkingWorker> _workingWorkers;
+    private Dictionary<int, WorkerCraftWork> _workersAreGoingToWork;
+    private Dictionary<int, WorkerCraftWork> _workingWorkers;
 
 }

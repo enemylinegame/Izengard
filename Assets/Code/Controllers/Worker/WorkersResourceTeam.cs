@@ -15,17 +15,22 @@ public class WorkersResourceTeam : IOnUpdate, IOnController
 
         _model = new WorkersTeamModel();
 
-        _awaitedWorkers = new Dictionary<int, AwaitedWorker>();
-        _activeWorkers = new Dictionary<int, WorkerController>();
+        _awaitedWorkers = new Dictionary<int, WorkerResourceWork>();
+        _activeWorkers = new Dictionary<int, WorkerResourceWork>();
         _readyAfterAwaiteWorkers = new List<int>();
     }
 
     public int SendWorkerToMine(Vector3 startPalce, Vector3 targetPalce, 
-        WorkerController workerController)
+        WorkerController workerController, IWorkerWork work)
     {
-        _activeWorkers.Add(workerController.WorkerId, workerController);
+        if (null == workerController || null == work || 
+                startPalce == targetPalce)
+            return -1;
 
-        workerController.OnMissionCompleted += MissionIsCompleted;
+        _activeWorkers.Add(workerController.WorkerId, new WorkerResourceWork() 
+            {Worker = workerController, Work = work, TimeToAvait = 0});
+
+        workerController.OnMissionCompleted += OnMissionIsCompleted;
 
         workerController.GoToWorkAndReturn(startPalce, targetPalce);
         return workerController.WorkerId;
@@ -38,7 +43,7 @@ public class WorkersResourceTeam : IOnUpdate, IOnController
 
         _model.IsPaused = true;
         foreach (var kvp in _activeWorkers)
-            kvp.Value.Pause();
+            kvp.Value.Worker.Pause();
     }
 
     public void Resume()
@@ -47,26 +52,32 @@ public class WorkersResourceTeam : IOnUpdate, IOnController
             return;
 
         foreach (var kvp in _activeWorkers)
-            kvp.Value.Resume();
+            kvp.Value.Worker.Resume();
 
         _model.IsPaused = false;
     }
 
     public WorkerController CancelWork(int workerId)
     {
-        /*
-        private Dictionary<int, AwaitedWorker> _awaitedWorkers;
-        private Dictionary<int, WorkerController> _activeWorkers;
-        List<int> _readyAfterAwaiteWorkers;
-
-         */
-        if (!_activeWorkers.TryGetValue(workerId, 
-            out WorkerController workerController))
+        WorkerResourceWork work = null;
+        if (_activeWorkers.TryGetValue(workerId, out work))
+        {
+            _activeWorkers.Remove(workerId);
+        }
+        else if (!_activeWorkers.TryGetValue(workerId, out work))
+        {
+            _awaitedWorkers.Remove(workerId);
+        }
+        else
             return null;
 
-        workerController.OnMissionCompleted -= MissionIsCompleted;
-        workerController.CancelWork();
-        return workerController;
+        work.Work = null;
+
+        var worker = work.Worker;
+        worker.OnMissionCompleted -= OnMissionIsCompleted;
+        worker.CancelWork();
+
+        return worker;
     }
 
     public void OnUpdate(float deltaTime)
@@ -75,7 +86,7 @@ public class WorkersResourceTeam : IOnUpdate, IOnController
             return;
 
         foreach (var worker  in _activeWorkers)
-            worker.Value.OnUpdate(deltaTime);
+            worker.Value.Worker.OnUpdate(deltaTime);
 
         CheckAwaitedWorkers(deltaTime);
         StartWorkersAfterAwait();
@@ -102,39 +113,60 @@ public class WorkersResourceTeam : IOnUpdate, IOnController
             int workerId = _readyAfterAwaiteWorkers[i];
 
             if (!_awaitedWorkers.TryGetValue(
-                    workerId, out AwaitedWorker awaitedWorker))
+                    workerId, out WorkerResourceWork awaitedWorker))
                 continue;
 
-            var workerController = awaitedWorker.Worker;
-            _activeWorkers.Add(workerId, workerController);
-            workerController.RepeatGoToWorkAndReturn();
+            _activeWorkers.Add(workerId, awaitedWorker);
+            awaitedWorker.Worker.RepeatGoToWorkAndReturn();
             _awaitedWorkers.Remove(workerId);
         }
 
         _readyAfterAwaiteWorkers.Clear();
     }
 
-    private void MissionIsCompleted(WorkerController workerController)
+    private void OnMissionIsCompleted(WorkerController workerController)
     {
         int workerId = workerController.WorkerId;
-        _awaitedWorkers.Add(workerId, 
-            new AwaitedWorker() 
-                { TimeToAvait = _smokeBreakTime, Worker = workerController });
+        if (_activeWorkers.TryGetValue(workerId, out WorkerResourceWork work))
+        {
+            _awaitedWorkers.Add(workerId, work);
+            _activeWorkers.Remove(workerId);
+            work.Work.Produce();
+        }
+    }
 
-        _activeWorkers.Remove(workerId);
+    private void ClearWorkers(Dictionary<int, WorkerResourceWork> works, 
+        List<WorkerController> workers)
+    {
+        foreach (var work in works)
+        {
+            work.Value.Worker.OnMissionCompleted -= OnMissionIsCompleted;
+            work.Value.Work = null;
+
+            workers.Add(work.Value.Worker);
+            work.Value.Worker = null;
+        }
+        workers.Clear();
+    }
+
+    public void Dispose(List<WorkerController> workers)
+    {
+        ClearWorkers(_awaitedWorkers, workers);
+        ClearWorkers(_activeWorkers, workers);
     }
 
     private WorkersTeamModel _model;
 
-    private class AwaitedWorker
+    private class WorkerResourceWork
     {
         public float TimeToAvait;
         public WorkerController Worker;
+        public IWorkerWork Work;
     }
 
-    private readonly float _smokeBreakTime = 5.0f;
+    private readonly float _smokeBreakTime;
 
-    private Dictionary<int, AwaitedWorker> _awaitedWorkers;
-    private Dictionary<int, WorkerController> _activeWorkers;
+    private Dictionary<int, WorkerResourceWork> _awaitedWorkers;
+    private Dictionary<int, WorkerResourceWork> _activeWorkers;
     List<int> _readyAfterAwaiteWorkers;
 }
