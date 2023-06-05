@@ -21,14 +21,12 @@ public class WorkersTesting : MonoBehaviour
         _controller = new WorkersTeamController(
             config);
 
-        _controller.OnMissionCompleted += OnMissionCompleted;
-
         _works = new Dictionary<int, int>();
 
         _targetPlace = new Vector3(30, 0, 30);
         int resourceAmount = 0;
-        _works.Add(_controller.SendWorkerToWork(
-            homePosition, _targetPlace), 0);
+        _works.Add(_controller.SendWorkerToMine(
+            homePosition, _targetPlace, new WorkerTestWork()), 0);
 
         _targetWorkPlace = new Vector3(30, 0, 5);
         resourceAmount = 50;
@@ -72,7 +70,6 @@ public class WorkersTesting : MonoBehaviour
 
     private void OnDestroy()
     {
-        _controller.OnMissionCompleted -= OnMissionCompleted;
         _controller.Dispose();
     }
 }

@@ -1,10 +1,5 @@
 
-using System;
-
-public class IWorkerWork
+public interface IWorkerWork
 {
-    internal void Produce()
-    {
-        throw new NotImplementedException();
-    }
+    void Produce();
 }

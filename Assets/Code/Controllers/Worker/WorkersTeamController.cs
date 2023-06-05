@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
 {
-    public Action<int> OnMissionCompleted = delegate{ };
-
     public WorkersTeamController(WorkersTeamConfig config)
     {
         _workerFactory = new WorkerFactory(config);
@@ -42,12 +40,7 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
     }
 
     public void Pause()
-    {
-        if (_model.IsPaused)
-            return;
-
-        _model.IsPaused = true;
-        
+    {        
         _workersCraftTeam.Pause();
         _workersResourceTeam.Pause();
         _workersFreeTeam.Pause();
@@ -55,11 +48,6 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
 
     public void Resume()
     {
-        if (!_model.IsPaused)
-            return;
-
-        _model.IsPaused = false;
-
         _workersCraftTeam.Resume();
         _workersResourceTeam.Resume();
         _workersFreeTeam.Resume();
@@ -80,9 +68,6 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
 
     public void OnUpdate(float deltaTime)
     {
-        if (_model.IsPaused)
-            return;
-
         _workersResourceTeam.OnUpdate(deltaTime);
         _workersCraftTeam.OnUpdate(deltaTime);
     }
@@ -113,7 +98,6 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
     }
 
     private WorkerFactory _workerFactory;
-    private WorkersTeamModel _model;
     
     private WorkersResourceTeam _workersResourceTeam;
     private WorkersCraftTeam _workersCraftTeam;

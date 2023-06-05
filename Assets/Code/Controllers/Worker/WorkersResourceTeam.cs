@@ -15,9 +15,9 @@ public class WorkersResourceTeam : IOnUpdate, IOnController
 
         _model = new WorkersTeamModel();
 
-        _awaitedWorkers = new Dictionary<int, WorkerResourceWork>();
+        _smokingWorkers = new Dictionary<int, WorkerResourceWork>();
         _activeWorkers = new Dictionary<int, WorkerResourceWork>();
-        _readyAfterAwaiteWorkers = new List<int>();
+        _readyAfterSmokeWorkers = new List<int>();
     }
 
     public int SendWorkerToMine(Vector3 startPalce, Vector3 targetPalce, 
@@ -66,7 +66,7 @@ public class WorkersResourceTeam : IOnUpdate, IOnController
         }
         else if (!_activeWorkers.TryGetValue(workerId, out work))
         {
-            _awaitedWorkers.Remove(workerId);
+            _smokingWorkers.Remove(workerId);
         }
         else
             return null;
@@ -88,50 +88,42 @@ public class WorkersResourceTeam : IOnUpdate, IOnController
         foreach (var worker  in _activeWorkers)
             worker.Value.Worker.OnUpdate(deltaTime);
 
-        CheckAwaitedWorkers(deltaTime);
-        StartWorkersAfterAwait();
+        CheckSmokingWorkers(deltaTime);
     }
 
-    private void CheckAwaitedWorkers(float deltaTime)
+    private void CheckSmokingWorkers(float deltaTime)
     {
-        foreach (var kvp in _awaitedWorkers)
+        foreach (var kvp in _smokingWorkers)
         {
             float timeToAwait = kvp.Value.TimeToAvait;
             timeToAwait -= deltaTime;
             if (timeToAwait < 0)
             {
-                _readyAfterAwaiteWorkers.Add(kvp.Key);
+                var worker = kvp.Value.Worker;
+                int workerId = worker.WorkerId;
+                
+                _activeWorkers.Add(workerId, kvp.Value);
+                worker.RepeatGoToWorkAndReturn();
+
+                _readyAfterSmokeWorkers.Add(workerId);
             }
             kvp.Value.TimeToAvait = timeToAwait;
         }
+
+        for (int i = 0; i < _readyAfterSmokeWorkers.Count; ++ i)
+            _smokingWorkers.Remove(_readyAfterSmokeWorkers[i]);
     }
 
-    private void StartWorkersAfterAwait()
-    {
-        for (int i = 0; i < _readyAfterAwaiteWorkers.Count; ++i)
-        {
-            int workerId = _readyAfterAwaiteWorkers[i];
-
-            if (!_awaitedWorkers.TryGetValue(
-                    workerId, out WorkerResourceWork awaitedWorker))
-                continue;
-
-            _activeWorkers.Add(workerId, awaitedWorker);
-            awaitedWorker.Worker.RepeatGoToWorkAndReturn();
-            _awaitedWorkers.Remove(workerId);
-        }
-
-        _readyAfterAwaiteWorkers.Clear();
-    }
-
+   
     private void OnMissionIsCompleted(WorkerController workerController)
     {
         int workerId = workerController.WorkerId;
         if (_activeWorkers.TryGetValue(workerId, out WorkerResourceWork work))
         {
-            _awaitedWorkers.Add(workerId, work);
+            _smokingWorkers.Add(workerId, work);
             _activeWorkers.Remove(workerId);
             work.Work.Produce();
+            work.TimeToAvait = _smokeBreakTime;
         }
     }
 
@@ -151,7 +143,7 @@ public class WorkersResourceTeam : IOnUpdate, IOnController
 
     public void Dispose(List<WorkerController> workers)
     {
-        ClearWorkers(_awaitedWorkers, workers);
+        ClearWorkers(_smokingWorkers, workers);
         ClearWorkers(_activeWorkers, workers);
     }
 
@@ -166,7 +158,7 @@ public class WorkersResourceTeam : IOnUpdate, IOnController
 
     private readonly float _smokeBreakTime;
 
-    private Dictionary<int, WorkerResourceWork> _awaitedWorkers;
+    private Dictionary<int, WorkerResourceWork> _smokingWorkers;
     private Dictionary<int, WorkerResourceWork> _activeWorkers;
-    List<int> _readyAfterAwaiteWorkers;
+    List<int> _readyAfterSmokeWorkers;
 }
