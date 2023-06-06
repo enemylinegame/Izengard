@@ -1,5 +1,4 @@
 using Controllers.Worker;
-using ResourceSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,7 +16,8 @@ public class WorkersResourceTeam : IOnUpdate, IOnController
 
         _smokingWorkers = new Dictionary<int, WorkerResourceWork>();
         _activeWorkers = new Dictionary<int, WorkerResourceWork>();
-        _readyAfterSmokeWorkers = new List<int>();
+        _readyToWork = new List<int>();
+        _readyToSmoke = new List<int>();
     }
 
     public int SendWorkerToMine(Vector3 startPalce, Vector3 targetPalce, 
@@ -89,6 +89,7 @@ public class WorkersResourceTeam : IOnUpdate, IOnController
             worker.Value.Worker.OnUpdate(deltaTime);
 
         CheckSmokingWorkers(deltaTime);
+        WorkersToSmokingArray();
     }
 
     private void CheckSmokingWorkers(float deltaTime)
@@ -105,26 +106,38 @@ public class WorkersResourceTeam : IOnUpdate, IOnController
                 _activeWorkers.Add(workerId, kvp.Value);
                 worker.RepeatGoToWorkAndReturn();
 
-                _readyAfterSmokeWorkers.Add(workerId);
+                _readyToWork.Add(workerId);
             }
             kvp.Value.TimeToAvait = timeToAwait;
         }
 
-        for (int i = 0; i < _readyAfterSmokeWorkers.Count; ++ i)
-            _smokingWorkers.Remove(_readyAfterSmokeWorkers[i]);
+        for (int i = 0; i < _readyToWork.Count; ++i)
+        {
+            _smokingWorkers.Remove(_readyToWork[i]);
+        }
+        _readyToWork.Clear();
     }
 
-   
+    private void WorkersToSmokingArray()
+    {
+        for (int i = 0; i < _readyToSmoke.Count; ++i)
+        {
+            int workerId = _readyToSmoke[i];
+            if (_activeWorkers.TryGetValue(workerId, out WorkerResourceWork work))
+            {
+                _activeWorkers.Remove(workerId);
+                _smokingWorkers.Add(workerId, work);
+                work.Work.Produce();
+                work.TimeToAvait = _smokeBreakTime;
+            }
+        }
+        _readyToSmoke.Clear();
+    }
+
     private void OnMissionIsCompleted(WorkerController workerController)
     {
         int workerId = workerController.WorkerId;
-        if (_activeWorkers.TryGetValue(workerId, out WorkerResourceWork work))
-        {
-            _smokingWorkers.Add(workerId, work);
-            _activeWorkers.Remove(workerId);
-            work.Work.Produce();
-            work.TimeToAvait = _smokeBreakTime;
-        }
+        _readyToSmoke.Add(workerId);
     }
 
     private void ClearWorkers(Dictionary<int, WorkerResourceWork> works, 
@@ -160,5 +173,6 @@ public class WorkersResourceTeam : IOnUpdate, IOnController
 
     private Dictionary<int, WorkerResourceWork> _smokingWorkers;
     private Dictionary<int, WorkerResourceWork> _activeWorkers;
-    List<int> _readyAfterSmokeWorkers;
+    List<int> _readyToWork;
+    List<int> _readyToSmoke;
 }
