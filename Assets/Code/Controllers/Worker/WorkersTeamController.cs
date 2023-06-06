@@ -63,13 +63,14 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
                 return;
         }
 
-        _workersFreeTeam.CancelWorker(worker);
+        _workersFreeTeam.FreeWorker(worker);
     }
 
     public void OnUpdate(float deltaTime)
     {
         _workersResourceTeam.OnUpdate(deltaTime);
         //_workersCraftTeam.OnUpdate(deltaTime);
+        _workersFreeTeam.OnUpdate(deltaTime);
     }
 
     private WorkerController GetWorker()

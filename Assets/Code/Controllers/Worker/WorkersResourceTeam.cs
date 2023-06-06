@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class WorkersResourceTeam : IOnUpdate, IOnController
+public class WorkersResourceTeam : IOnUpdate
 {
     public Action<int> OnMissionCompleted = delegate{ };
 
@@ -64,16 +64,17 @@ public class WorkersResourceTeam : IOnUpdate, IOnController
         {
             _activeWorkers.Remove(workerId);
         }
-        else if (!_activeWorkers.TryGetValue(workerId, out work))
+        else if (!_smokingWorkers.TryGetValue(workerId, out work))
         {
             _smokingWorkers.Remove(workerId);
         }
         else
             return null;
 
-        work.Work = null;
 
         var worker = work.Worker;
+        work.Work = null;
+
         worker.OnMissionCompleted -= OnMissionIsCompleted;
         worker.CancelWork();
 

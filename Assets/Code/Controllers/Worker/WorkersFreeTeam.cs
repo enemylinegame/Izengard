@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-public class WorkersFreeTeam
+public class WorkersFreeTeam: IOnUpdate
 {
     public WorkersFreeTeam(WorkerFactory workerFactory)
     {
         _model = new WorkersTeamModel();
         _workers = new Dictionary<int, WorkerController>();
+        _completedWorkers = new List<int>();
         _workerFactory = workerFactory;
     }
 
-    public void CancelWorker(
+    public void FreeWorker(
          WorkerController workerController)
     {
-        workerController.CancelWork();
         workerController.OnMissionCompleted += OnWorkerFree;
-
         _workers.Add(workerController.WorkerId, workerController);
     }
 
@@ -44,10 +43,7 @@ public class WorkersFreeTeam
 
     private void OnWorkerFree(WorkerController workerController)
     {
-        workerController.OnMissionCompleted -= OnWorkerFree;
-        var workerId = workerController.WorkerId;
-        _workerFactory.ReleaseWorker(workerController.View);
-        workerController.Dispose();
+        _completedWorkers.Add(workerController.WorkerId);
     }
 
     public WorkerController GetWorker()
@@ -78,8 +74,34 @@ public class WorkersFreeTeam
         _workers.Clear();
     }
 
+    public void OnUpdate(float deltaTime)
+    {
+        foreach (var worker in _workers)
+            worker.Value.OnUpdate(deltaTime);
+        
+        CheckCompletedWorkers();
+    }
+
+    private void CheckCompletedWorkers()
+    {
+        for (int i = 0; i < _completedWorkers.Count; ++i)
+        {
+            int workerId = _completedWorkers[i];
+            if (_workers.TryGetValue(workerId, out WorkerController worker))
+            {
+                _workers.Remove(workerId);
+                worker.OnMissionCompleted -= OnWorkerFree;
+                _workerFactory.ReleaseWorker(worker.View);
+                worker.Dispose();
+            }
+        }
+        _completedWorkers.Clear();
+    }
+
     private WorkersTeamModel _model;
 
     private Dictionary<int, WorkerController> _workers;
+    private List<int> _completedWorkers;
+
     private WorkerFactory _workerFactory;
 }
