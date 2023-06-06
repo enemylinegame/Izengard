@@ -40,7 +40,8 @@ namespace CombatSystem.DefenderStates
         public override void OnUpdate()
         {
             Vector3 position = _transform.position;
-            if ((position - _destination).sqrMagnitude <= _stopDistanceSqr)
+            position.y = _agent.destination.y;
+            if (( position - _agent.destination).sqrMagnitude <= _stopDistanceSqr)
             {
                 _agent.ResetPath();
                 _setState(DefenderState.Idle);
