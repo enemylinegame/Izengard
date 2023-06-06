@@ -15,7 +15,7 @@ using UnityEngine;
 public class GameInit
 {
     public GameInit(Controller controller, GameConfig gameConfig, WorkersTeamConfig workersTeamConfig,
-        RightUI rightUI, Transform btnParents, CenterUI centerUI, BottonUI bottonUI, EndGameScreen endGameScreen, 
+        RightUI rightUI, Transform btnParents, CenterUI centerUI, BottonUI bottonUI, TopResUiVew topUI, EndGameScreen endGameScreen, 
         TowerShotConfig towerShotConfig, BuyItemScreenView buyItemScreenView, HireSystemView hireSystemView , 
         EquipScreenView equipScreenView, Camera camera, TileList tileList,
         GlobalResourceList globalResourceList, OutLineSettings outLineSettings)
@@ -74,7 +74,7 @@ public class GameInit
             buildingController, inputController, outlineController);
 
         var tileResourceUIController = new TileResourceUIController(
-            uiController, inputController, tileController);
+            uiController, inputController, tileController, globalResStock, topUI);
 
         var defenderController = new DefendersController(
             tileController,uiController, gameConfig.Defender);

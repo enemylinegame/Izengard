@@ -4,6 +4,7 @@ using Code.BuldingsSystem;
 using Code.TileSystem.Interfaces;
 using Code.UI;
 using Controllers;
+using ResourceSystem;
 using UnityEngine;
 
 namespace Code.TileSystem
@@ -14,13 +15,20 @@ namespace Code.TileSystem
         private ResourcesLayoutUIView _uiController;
         private TileController _controller;
         private TileResouceUIFactory _factory;
+        private GlobalStock _globalStock;
+        private TopResUiVew _topUIView;
         // private List<int> _resourceValueList;
 
-        public TileResourceUIController(UIController uiController, InputController inputController, TileController controller)
+        public TileResourceUIController(UIController uiController, InputController inputController,
+            TileController controller, GlobalStock globalStock, TopResUiVew topUIView)
         {
             _uiController = uiController.BottonUI.ResourcesLayoutUIView;
             _controller = controller;
             _factory = new TileResouceUIFactory(uiController, this, inputController, controller);
+            _globalStock = globalStock;
+            _topUIView = topUIView;
+            _globalStock.ResourceValueChanged += _topUIView.UpdateResursesCount;
+            _globalStock.TopPanelUIBind();
             inputController.Add(this);
             
         }
@@ -71,6 +79,11 @@ namespace Code.TileSystem
 
             resourceView.Building.MineralConfig.CurrentMineValue = resourceValue;
             resourceView.ResourceCurrentValueString = resourceValue.ToString();
+        }
+
+        ~TileResourceUIController()
+        {
+            _globalStock.ResourceValueChanged -= _topUIView.UpdateResursesCount;
         }
     }
 }
