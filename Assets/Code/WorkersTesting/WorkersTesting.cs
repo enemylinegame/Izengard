@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class WorkersTesting : MonoBehaviour
 {
-    Dictionary<int, int> _works;
+    List<int> _works;
     Vector3 _targetWorkPlace;
-    Vector3 _targetPlace;
+    Vector3 _targetMinePlace;
 
     WorkersTeamController _controller;
     void Start()
@@ -21,30 +21,19 @@ public class WorkersTesting : MonoBehaviour
         _controller = new WorkersTeamController(
             config);
 
-        _works = new Dictionary<int, int>();
+        _works = new List<int>();
 
-        _targetPlace = new Vector3(30, 0, 30);
-        int resourceAmount = 0;
-        _works.Add(_controller.SendWorkerToMine(
-            homePosition, _targetPlace, new WorkerTestWork()), 0);
+        //_targetMinePlace = new Vector3(30, 0, 30);
+        //_works.Add(_controller.SendWorkerToMine(
+        //    homePosition, _targetPlace, new WorkerTestWork()));
 
         _targetWorkPlace = new Vector3(30, 0, 5);
-        resourceAmount = 50;
-        //_works.Add(_controller.SendWorkerToWork(
-        //    homePosition, _targetWorkPlace), resourceAmount);
-    }
-
-    private void OnMissionCompleted(int workId)
-    {
-        if (0 == _works[workId])
-        {
-            GameObject.CreatePrimitive(
-                PrimitiveType.Sphere).transform.position = _targetPlace;
-            return;
-        }
-
-        Debug.Log($"Completed task {workId}, " +
-            $"received resource: {_works[workId]}");
+        
+        _works.Add(_controller.SendWorkerToWork(
+            homePosition, _targetWorkPlace, 
+            new WorkerTestBegin(),
+            new WorkerTestWork(),
+            new WorkerTestEnd()));
     }
 
     void Update()
@@ -53,8 +42,9 @@ public class WorkersTesting : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.C))
         {
-            foreach (var kvp in _works)
-                _controller.CancelWork(kvp.Key);
+            foreach (var workerId in _works)
+                _controller.CancelWork(workerId);
+
         }
         else if (Input.GetKeyDown(KeyCode.P))
         {

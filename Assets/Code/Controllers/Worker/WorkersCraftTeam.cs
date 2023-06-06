@@ -102,7 +102,8 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
         _workingWorkers.Add(workerId, workingWorker);
     }
 
-    private void ClearWorks(Dictionary<int, WorkerCraftWork> works, List<WorkerController> workers)
+    private void ClearWorks(Dictionary<int, WorkerCraftWork> works, 
+        List<WorkerController> workers)
     {
         
         foreach (var worker in works)

@@ -64,7 +64,7 @@ public class WorkersResourceTeam : IOnUpdate
         {
             _activeWorkers.Remove(workerId);
         }
-        else if (!_smokingWorkers.TryGetValue(workerId, out work))
+        else if (_smokingWorkers.TryGetValue(workerId, out work))
         {
             _smokingWorkers.Remove(workerId);
         }

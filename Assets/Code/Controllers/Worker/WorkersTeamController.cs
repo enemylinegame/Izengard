@@ -11,9 +11,9 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
         _workerFactory = new WorkerFactory(config);
 
         const float smokeBreakTime = 6.0f;
-        _workersResourceTeam = new WorkersResourceTeam(smokeBreakTime);
 
-        //_workersCraftTeam = new WorkersCraftTeam();
+        _workersResourceTeam = new WorkersResourceTeam(smokeBreakTime);
+        _workersCraftTeam = new WorkersCraftTeam();
         _workersFreeTeam = new WorkersFreeTeam(_workerFactory);
     }
 
@@ -22,8 +22,8 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
     {
         WorkerController workerController = GetWorker();
 
-        //_workersCraftTeam.SendWorkerToWork(
-         //   startPalce, craftPalce, workerController, beginWork, work, endWork);
+        _workersCraftTeam.SendWorkerToWork(
+            startPalce, craftPalce, workerController, beginWork, work, endWork);
 
         return workerController.WorkerId;
     }
@@ -41,14 +41,14 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
 
     public void Pause()
     {        
-        //_workersCraftTeam.Pause();
+        _workersCraftTeam.Pause();
         _workersResourceTeam.Pause();
         _workersFreeTeam.Pause();
     }
 
     public void Resume()
     {
-       // _workersCraftTeam.Resume();
+        _workersCraftTeam.Resume();
         _workersResourceTeam.Resume();
         _workersFreeTeam.Resume();
     }
@@ -58,8 +58,8 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
         var worker = _workersResourceTeam.CancelWork(workerId);
         if (null == worker)
         {
-            //worker = _workersCraftTeam.CancelWork(workerId);
-           // if (null == worker)
+            worker = _workersCraftTeam.CancelWork(workerId);
+            if (null == worker)
                 return;
         }
 
@@ -69,7 +69,7 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
     public void OnUpdate(float deltaTime)
     {
         _workersResourceTeam.OnUpdate(deltaTime);
-        //_workersCraftTeam.OnUpdate(deltaTime);
+        _workersCraftTeam.OnUpdate(deltaTime);
         _workersFreeTeam.OnUpdate(deltaTime);
     }
 
@@ -87,7 +87,7 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
     {
         List<WorkerController> workers = new List<WorkerController>();
         _workersResourceTeam.Dispose(workers);
-        //_workersCraftTeam.Dispose(workers);
+        _workersCraftTeam.Dispose(workers);
         _workersFreeTeam.Dispose();
 
         foreach (var worker in workers)
@@ -101,6 +101,6 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
     private WorkerFactory _workerFactory;
     
     private WorkersResourceTeam _workersResourceTeam;
-    //private WorkersCraftTeam _workersCraftTeam;
+    private WorkersCraftTeam _workersCraftTeam;
     private WorkersFreeTeam _workersFreeTeam;
 }
