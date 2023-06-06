@@ -101,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _icon: {fileID: 0}
   _maxCountAttackers: 5
+  _threatLevel: 8
 --- !u!1 &5990043696137517501
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,13 +2,17 @@
 {
     public class DefenderUnitStats
     {
-        public float _attackSpeed;
-        public int _attackDamage;
+        public float AttackInterval;
+        public float AttackRange;
+        public int AttackDamage;
+        public int MaxHealth;
 
-        public DefenderUnitStats(float attackSpeed, int attackDamage)
+        public DefenderUnitStats(float attackInterval, float attackRange, int attackDamage, int maxHealth)
         {
-            _attackSpeed = attackSpeed;
-            _attackDamage = attackDamage;
+            AttackInterval = attackInterval;
+            AttackRange = attackRange;
+            AttackDamage = attackDamage;
+            MaxHealth = maxHealth;
         }
     }
 }

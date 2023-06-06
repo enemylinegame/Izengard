@@ -54,7 +54,7 @@ namespace CombatSystem
                     if (unit.IsInBarrack == false)
                     {
                         unit.GoToBarrack(buildingPosition);
-                        unit.OnDestinationReached += OnUnitReachedBarrack;
+                        //unit.OnDestinationReached += OnUnitReachedBarrack;
                     }
                 }
             }
@@ -66,14 +66,14 @@ namespace CombatSystem
             {
                 Vector3 buildingPosition = tile.transform.position;
                 unit.GoToBarrack(buildingPosition);
-                unit.OnDestinationReached += OnUnitReachedBarrack;
+                //unit.OnDestinationReached += OnUnitReachedBarrack;
             }
         }
 
-        private void OnUnitReachedBarrack(DefenderUnit unit)
-        {
-            unit.OnDestinationReached -= OnUnitReachedBarrack;
-        }
+        // private void OnUnitReachedBarrack(DefenderUnit unit)
+        // {
+        //     unit.OnDestinationReached -= OnUnitReachedBarrack;
+        // }
 
         public void KickDefendersOutOfBarrack(List<DefenderUnit> defenderUnits, TileView tile)
         {
@@ -86,8 +86,8 @@ namespace CombatSystem
 
         public void KickDefenderOutOfBarrack(DefenderUnit unit, TileView tile)
         {
-            unit.OnDestinationReached -= OnUnitReachedBarrack;
-            unit.Activate();
+            //unit.OnDestinationReached -= OnUnitReachedBarrack;
+            unit.ExitFromBarrack();
             SendDefenderToTile(unit, tile);
         }
 
@@ -105,7 +105,7 @@ namespace CombatSystem
         private void DefenderDead(DefenderUnit defender)
         {
             defender.DefenderUnitDead -= DefenderDead;
-            defender.OnDestinationReached -= OnUnitReachedBarrack;
+            //defender.OnDestinationReached -= OnUnitReachedBarrack;
             _defenderUnits.Remove(defender);
             GameObject.Destroy(defender.DefenderGameObject);
         }

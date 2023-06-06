@@ -14,6 +14,7 @@ namespace CombatSystem
         private const int FREQUNCY_REDUCTION_FRAMES = 5;
 
         private List<Collider> _targetsCollidersInRange;
+        private DefenderTargetsHolder _targetsHolder;
         private SearchScope _searchScope;
         private Transform _transform;
         private LayerMask _targetMask = LayerMask.NameToLayer("Enemy");
@@ -21,9 +22,8 @@ namespace CombatSystem
 
         private int _frequencyReductionCounter;
 
-        public List<IDamageable> Targets { get; private set; }
 
-        public DefenderTargetFinder(GameObject defenderRoot, float range)
+        public DefenderTargetFinder(GameObject defenderRoot, float range, DefenderTargetsHolder holder)
         {
             _targetsCollidersInRange = new List<Collider>();
             _searchScope = defenderRoot.GetComponentInChildren<SearchScope>();
@@ -32,7 +32,7 @@ namespace CombatSystem
             _searchScope.SetRadius(range);
             _transform = defenderRoot.transform;
             _range = range;
-            Targets = new List<IDamageable>();
+            _targetsHolder = holder;
         }
         
 
@@ -49,16 +49,16 @@ namespace CombatSystem
         public void Dispose()
         {
             _targetsCollidersInRange.Clear();
-            Targets.Clear();
+            _targetsHolder.TargetsInRange.Clear();
         }
 
         private void EnemyEnter(GameObject enemy)
         {
             if (enemy.TryGetComponent(out IDamageable damageable))
             {
-                if (!Targets.Contains(damageable))
+                if (!_targetsHolder.TargetsInRange.Contains(damageable))
                 {
-                    Targets.Add(damageable);
+                    _targetsHolder.TargetsInRange.Add(damageable);
                     OnNewTarget?.Invoke(damageable);
                 }
             }
@@ -68,24 +68,24 @@ namespace CombatSystem
         {
             if (enemy.TryGetComponent(out IDamageable damageable))
             {
-                if (Targets.Remove(damageable))
+                if (_targetsHolder.TargetsInRange.Remove(damageable))
                 {
-                    OnNewTarget?.Invoke(damageable);
+                    OnTargetLost?.Invoke(damageable);
                 }
             }
         }
         
-        private void DoSearch()
-        {
-            var targets = Physics.SphereCastAll(_transform.position, _range,Vector3.forward, _targetMask);
-
-            List<Collider> currentColliders = new List<Collider>();
-            for (int i = 0; i < targets.Length; i++)
-            {
-                currentColliders.Add(targets[i].collider);
-            }
-
-        }
+        // private void DoSearch()
+        // {
+        //     var targets = Physics.SphereCastAll(_transform.position, _range,Vector3.forward, _targetMask);
+        //
+        //     List<Collider> currentColliders = new List<Collider>();
+        //     for (int i = 0; i < targets.Length; i++)
+        //     {
+        //         currentColliders.Add(targets[i].collider);
+        //     }
+        //
+        // }
         
     }
 }

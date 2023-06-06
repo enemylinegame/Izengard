@@ -8,6 +8,7 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
 {
     [SerializeField] private Sprite _icon;
     [SerializeField] private int _maxCountAttackers = 5;
+    [SerializeField] private int _threatLevel = 0;
 
     public Sprite Icon => _icon;
     public float CurrentHealth { get; private set; }
@@ -15,8 +16,7 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
 
     public Vector3 Position => transform.position;
 
-    //  MOK
-    public int ThreatLevel => 0;
+    public int ThreatLevel => _threatLevel;
 
     public event Action<float, float> OnHealthChanged; 
     public event Action DeathAction;
