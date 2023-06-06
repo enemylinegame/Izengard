@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f08a583672b6eda4c8477fb15887c745, type: 3}
   m_Name: HorseT2
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 6611631232710345216, guid: 9e304982b4473154d878190830cda55c, type: 3}
-  _nameOfMine: horse mine tir 2
-  _extractionTime: 0
-  _icon: {fileID: 21300000, guid: 6f0a4c228c6ccc04ba7cf36ad92bb659, type: 3}
-  _currentMineValue: 0
-  _thisMineTier: 2
-  _resourceType: 4
+  Prefab: {fileID: 6611631232710345216, guid: 9e304982b4473154d878190830cda55c, type: 3}
+  NameOfMine: 
+  ExtractionTime: 10
+  Icon: {fileID: 0}
+  CurrentMineValue: 1000
+  Tier: 2
+  ResourceType: 4
