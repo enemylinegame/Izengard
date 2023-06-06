@@ -12,6 +12,8 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
         _model = new WorkersTeamModel();
 
         _workersAreGoingToWork = new Dictionary<int, WorkerCraftWork>();
+        _readyWorkersToWork = new List<int>();
+
         _workingWorkers = new Dictionary<int, WorkerCraftWork> ();
     }
 
@@ -68,12 +70,13 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
         else
             return null;
 
+        var worker = workingWorker.Worker;
         workingWorker.BeginOfWork = null;
         workingWorker.Work = null;
         workingWorker.EndOfWork = null;
-        var worker = workingWorker.Worker;
         workingWorker.Worker = null;
 
+        worker.CancelWork();
         return worker;
     }
 
@@ -85,21 +88,29 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
         foreach (var worker  in _workersAreGoingToWork)
             worker.Value.Worker.OnUpdate(deltaTime);
 
+        CheckReadyWorkers();
+
         foreach (var work in _workingWorkers)
             work.Value.Work.Produce();
     }
 
+    private void CheckReadyWorkers()
+    {
+        for (int i = 0; i < _readyWorkersToWork.Count; ++i)
+        {
+            int workerId = _readyWorkersToWork[i];
+            if (_workersAreGoingToWork.TryGetValue(workerId, out WorkerCraftWork work))
+            {
+                work.Worker.OnMissionCompleted -= OnReadyToWork;
+                _workersAreGoingToWork.Remove(workerId);
+                _workingWorkers.Add(workerId, work);
+            }
+        }
+    }
+
     private void OnReadyToWork(WorkerController workerController)
     {
-        workerController.OnMissionCompleted -= OnReadyToWork;
-        var workerId = workerController.WorkerId;
-
-        if (!_workersAreGoingToWork.TryGetValue(
-                workerId, out WorkerCraftWork workingWorker))
-            return;
-
-        _workersAreGoingToWork.Remove(workerId);
-        _workingWorkers.Add(workerId, workingWorker);
+        _readyWorkersToWork.Add(workerController.WorkerId);
     }
 
     private void ClearWorks(Dictionary<int, WorkerCraftWork> works, 
@@ -137,6 +148,8 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
     private WorkersTeamModel _model;
 
     private Dictionary<int, WorkerCraftWork> _workersAreGoingToWork;
+    private List<int> _readyWorkersToWork;
+
     private Dictionary<int, WorkerCraftWork> _workingWorkers;
 
 }

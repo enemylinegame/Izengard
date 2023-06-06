@@ -50,6 +50,7 @@ namespace Controllers.Worker
         public void CancelWork()
         {
             Model.State = WorkerStates.GO_TO_HOME;
+            View.Activate();
             View.GoToPlace(Model.StatrtingPlace);
         }
 

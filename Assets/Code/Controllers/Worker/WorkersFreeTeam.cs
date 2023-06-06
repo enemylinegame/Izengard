@@ -16,6 +16,9 @@ public class WorkersFreeTeam: IOnUpdate
     public void FreeWorker(
          WorkerController workerController)
     {
+        if (null == workerController)
+            return;
+
         workerController.OnMissionCompleted += OnWorkerFree;
         _workers.Add(workerController.WorkerId, workerController);
     }

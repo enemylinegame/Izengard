@@ -22,6 +22,7 @@ public class WorkerView : MonoBehaviour, IWorkerView, IbuildingCollectable
 
     public void GoToPlace(Vector3 place)
     {
+
         _animator.ResetTrigger(IDLE);
         _animator.SetTrigger(WALK);
         _navigationAgent.SetDestination(place);
