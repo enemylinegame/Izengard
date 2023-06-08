@@ -157,7 +157,7 @@ namespace CombatSystem
 
         private void OnTargetDestroyed()
         {
-            Debug.Log("EnemyAI->OnTargetDestroyed:");
+            //Debug.Log("EnemyAI->OnTargetDestroyed:");
             if (_currentTarget)
             {
                 _currentTarget.DeathAction -= OnTargetDestroyed;

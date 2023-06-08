@@ -62,7 +62,10 @@ namespace CombatSystem
         {
             _bulletsController.RemoveBullet(bullet);
             bullet.BulletFlightIsOver -= BulletFlightOver;
-            if (_target != null) _target.MakeDamage(_enemy.Stats.Attack);
+            if (_target != null)
+            {
+                _target.MakeDamage(_enemy.Stats.Attack, _enemy.MyDamagable);
+            }
         }
     }
 }

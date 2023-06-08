@@ -36,7 +36,10 @@ namespace CombatSystem
 
         private void OnActionMoment()
         {
-            if (_currentTarget != null) _currentTarget.MakeDamage(_unit.Stats.Attack);
+            if (_currentTarget != null)
+            {
+                _currentTarget.MakeDamage(_unit.Stats.Attack, _unit.MyDamagable);
+            }
             _animation.ActionMoment -= OnActionMoment;
         }
 

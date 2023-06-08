@@ -23,14 +23,14 @@ namespace Wave
         public EnemyController(EnemySettings enemySettings, GameObject enemyRootGo, GeneratorLevelController generatorLevelController,
             IEnemyAIController enemyAIController, IBulletsController bulletsController)
         {
-            Enemy = new Enemy(enemySettings, enemyRootGo);
+            _damageable = enemyRootGo.GetComponent<Damageable>();
+            _damageable.DeathAction += KillEnemy;
+            
+            Enemy = new Enemy(enemySettings, enemyRootGo, _damageable);
             _enemyAnimation = new EnemyAnimationController(Enemy);
             _generatorLevelController = generatorLevelController;
             _enemyAIController = enemyAIController;
             _bulletsController = bulletsController;
-
-            _damageable = enemyRootGo.GetComponent<Damageable>();
-            _damageable.DeathAction += KillEnemy;
         }
 
         public void KillEnemy()
