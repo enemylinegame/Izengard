@@ -19,7 +19,8 @@ namespace CombatSystem
 
         public void SetRadius(float radius)
         {
-            _sphereCollider.radius = radius;
+            Vector3 scale = transform.lossyScale;
+            _sphereCollider.radius = radius / scale.x;
         }
         
         private void OnTriggerEnter(Collider other)
