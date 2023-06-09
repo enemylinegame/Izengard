@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f08a583672b6eda4c8477fb15887c745, type: 3}
   m_Name: TextileT1
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 6611631232710345216, guid: d684e4a283cc43b41ae2e5bc2d784e81, type: 3}
-  _nameOfMine: Textile
-  _extractionTime: 0
-  _icon: {fileID: 21300000, guid: 2f06b58ed0b529547bf45753f35993d7, type: 3}
-  _currentMineValue: 0
-  _thisMineTier: 1
-  _resourceType: 6
+  Prefab: {fileID: 6611631232710345216, guid: d684e4a283cc43b41ae2e5bc2d784e81, type: 3}
+  NameOfMine: 
+  ExtractionTime: 10
+  Icon: {fileID: 0}
+  CurrentMineValue: 0
+  Tier: 1
+  ResourceType: 6
