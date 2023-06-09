@@ -1,6 +1,4 @@
 using Controllers.Worker;
-using ResourceSystem;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -70,9 +68,11 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
         else
             return null;
 
+        workingWorker.EndOfWork.Produce();
         var worker = workingWorker.Worker;
         workingWorker.BeginOfWork = null;
         workingWorker.Work = null;
+        
         workingWorker.EndOfWork = null;
         workingWorker.Worker = null;
 
@@ -102,10 +102,12 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
             if (_workersAreGoingToWork.TryGetValue(workerId, out WorkerCraftWork work))
             {
                 work.Worker.OnMissionCompleted -= OnReadyToWork;
+                work.BeginOfWork.Produce();
                 _workersAreGoingToWork.Remove(workerId);
                 _workingWorkers.Add(workerId, work);
             }
         }
+        _readyWorkersToWork.Clear();
     }
 
     private void OnReadyToWork(WorkerController workerController)
