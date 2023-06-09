@@ -13,6 +13,7 @@ namespace Code.TileSystem
     public class TileController : IDisposable, IOnController, IOnTile, ITileLoadInfo
     {
         #region Fields
+        
         private TileList _list;
         private TileUIView _uiView;
         private TileView _tileView;
@@ -26,6 +27,7 @@ namespace Code.TileSystem
         public WorkerMenager WorkerMenager => _workerMenager;
         public TileModel TileModel => _tileView.TileModel;
         public TileView View => _tileView;
+        
         #endregion
         public TileController(TileList tileList, UIController uiController, BuildingController buildingController
             , InputController inputController)
@@ -118,8 +120,8 @@ namespace Code.TileSystem
             
              _uiController.DestroyBuildingInfo.Add(view.gameObject, view);
             
-             view.DestroyBuildingInfo.onClick.AddListener((() => _buildingController.DestroyBuilding(TileModel.FloodedBuildings
-                 , view, TileModel, this)));
+             view.DestroyBuildingInfo.onClick.AddListener(() => _buildingController.DestroyBuilding(TileModel.FloodedBuildings
+                 , view, TileModel, this));
             
              view.PlusUnit.onClick.AddListener(() => Hiring(true, view, building));
              view.MinusUnit.onClick.AddListener(() => Hiring(false, view, building));

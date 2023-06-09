@@ -1,6 +1,6 @@
 ﻿using ResourceSystem;
 
-namespace Code.TileSystem
+namespace Code.BuildingSystem
 {
     public interface IbuildingCollectable
     {
