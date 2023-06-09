@@ -69,7 +69,7 @@ namespace Code.UI
                     _inputController.LockRightClick = !isOn;
                     break;
                 case UIType.Buy:
-                    _inputController.LockRightClick = !isOn;
+                    _inputController.LockRightClick = isOn;
                     _centerUI.BuildingBuy.SetActive(isOn);
                     break;
                 case UIType.Сonfirmation:

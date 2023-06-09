@@ -13,8 +13,9 @@ using UnityEngine;
 public class GameInit
 {
     public GameInit(Controller controller, GameConfig gameConfig, WorkersTeamConfig workersTeamConfig,
-        RightUI rightUI, Transform btnParents, CenterUI centerUI, BottonUI bottonUI, EndGameScreen endGameScreen, 
-        TowerShotConfig towerShotConfig, BuyItemScreenView buyItemScreenView, HireSystemView hireSystemView , 
+        RightUI rightUI, Transform btnParents, CenterUI centerUI, BottonUI bottonUI, TopResUiVew topResUiVew,
+        EndGameScreen endGameScreen,
+        TowerShotConfig towerShotConfig, BuyItemScreenView buyItemScreenView, HireSystemView hireSystemView,
         EquipScreenView equipScreenView, Camera camera, TileList tileList,
         GlobalResourceList globalResourceList, OutLineSettings outLineSettings)
     {
