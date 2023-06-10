@@ -78,13 +78,13 @@ namespace CombatSystem
 
             if (target != null)
             {
-                //isInrange = _targetHolder.TargetsInRange.Contains(_targetHolder.CurrentTarget);
-                Vector3 position = _transform.position;
-                position.y = 0.0f;
-                Vector3 targetPosition = target.Position;
-                targetPosition.y = 0.0f;
-
-                isInrange = (targetPosition - position).sqrMagnitude <= _stats.AttackRange * _stats.AttackRange;
+                isInrange = _targetHolder.TargetsInRange.Contains(_targetHolder.CurrentTarget);
+                // Vector3 position = _transform.position;
+                // position.y = 0.0f;
+                // Vector3 targetPosition = target.Position;
+                // targetPosition.y = 0.0f;
+                //
+                // isInrange = (targetPosition - position).sqrMagnitude <= _stats.AttackRange * _stats.AttackRange;
             }
             
             return isInrange;

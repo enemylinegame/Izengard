@@ -63,7 +63,7 @@ namespace CombatSystem
 
         public DefenderUnit(GameObject defender, Vector3 defendPosition)
         {
-            _unitStats = new DefenderUnitStats(1f, 0.25f,25, 100);
+            _unitStats = new DefenderUnitStats(1f, 0.2f,25, 100);
             _defender = defender;
             _defendPosition = defendPosition;
             _myDamageable = defender.GetComponent<Damageable>();
@@ -109,6 +109,7 @@ namespace CombatSystem
         {
             _currentStateExecuter.OnUpdate();
             _fightState.Reload();
+            DrawLineToTarget(_targetsHolder.CurrentTarget);
         }
 
         public void GoToPosition(Vector3 newPosition)
@@ -146,7 +147,7 @@ namespace CombatSystem
                 _attackersTargets.Add(attacker);
                 attacker.DeathAction += EnemyDead;
             }
-            
+            Debug.Log("DefenderUnit::OnDamaged: " + _state.ToString());
             _currentStateExecuter.OnDamaged(attacker);
         }
 
@@ -189,12 +190,16 @@ namespace CombatSystem
                         _currentStateExecuter = _inBarrackState;
                         break;
                 }
+
+                DefenderState oldState = _state;
                 
                 _state = newState;
+                
+                Debug.Log($"DefenderUnit::SetState: {oldState} -> {_state}");
+                
                 _currentStateExecuter.StartState();
                 OnStateChanged?.Invoke(_state);
             }
-            Debug.Log("DefenderUnit->SetState: newState = " + newState.ToString());
         }
 
         private void EnemyDead()
@@ -217,18 +222,18 @@ namespace CombatSystem
         private void ClearTargets()
         {
             _targetsHolder.CurrentTarget = null;
-            _attackersTargets.ForEach(Target => Target.DeathAction -= EnemyDead);
+            _attackersTargets.ForEach(target => target.DeathAction -= EnemyDead);
             _attackersTargets.Clear();
         }
 
-        private void DrawLineToTarget(Damageable target)
+        private void DrawLineToTarget(IDamageable target)
         {
 #if UNITY_EDITOR
-            if (target)
+            if (target != null)
             {
                 Vector3 start = _myDamageable.transform.position;
                 start.y += 0.25f;
-                Vector3 end = target.transform.position;
+                Vector3 end = target.Position;
                 end.y += 0.25f;
                 Debug.DrawLine(start, end, Color.blue);
             }

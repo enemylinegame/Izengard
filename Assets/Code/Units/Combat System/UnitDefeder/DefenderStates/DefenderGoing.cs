@@ -16,8 +16,11 @@ namespace CombatSystem.DefenderStates
 
         public Vector3 Destination
         {
-            get => _destination; 
-            set => _destination = value;
+            get => _destination;
+            set
+            {
+                _destination = value;
+            }
         }
 
         public bool AvoidFight

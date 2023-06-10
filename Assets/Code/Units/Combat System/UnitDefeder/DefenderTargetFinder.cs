@@ -59,6 +59,7 @@ namespace CombatSystem
                 if (!_targetsHolder.TargetsInRange.Contains(damageable))
                 {
                     _targetsHolder.TargetsInRange.Add(damageable);
+                    Debug.Log("DefenderTargetFinder->EnemyEnter: +");
                     OnNewTarget?.Invoke(damageable);
                 }
             }
@@ -70,6 +71,7 @@ namespace CombatSystem
             {
                 if (_targetsHolder.TargetsInRange.Remove(damageable))
                 {
+                    Debug.Log("DefenderTargetFinder->EnemyLeave: -");
                     OnTargetLost?.Invoke(damageable);
                 }
             }
