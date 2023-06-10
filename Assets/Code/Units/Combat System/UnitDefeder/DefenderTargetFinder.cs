@@ -44,6 +44,18 @@ namespace CombatSystem
             //     _frequencyReductionCounter = 0;
             //     DoSearch();
             // }
+            int quantity = _targetsHolder.TargetsInRange.Count;
+            for (int i = quantity - 1; i >= 0; i--)
+            {
+                IDamageable target = _targetsHolder.TargetsInRange[i];
+                if (target.IsDead)
+                {
+                    Debug.Log("DefenderTargetFinder->OnUpdate: target.IsDead -");
+                    _targetsHolder.TargetsInRange.RemoveAt(i);
+                    OnTargetLost?.Invoke(target);
+                }
+            }
+            
         }
 
         public void Dispose()
@@ -63,18 +75,21 @@ namespace CombatSystem
                     OnNewTarget?.Invoke(damageable);
                 }
             }
+            Debug.Log($"DefenderTargetFinder->EnemyEnter: targets: {_targetsHolder.TargetsInRange.Count}");
         }
 
         private void EnemyLeave(GameObject enemy)
         {
+            Debug.Log("DefenderTargetFinder->EnemyLeave: o ");
             if (enemy.TryGetComponent(out IDamageable damageable))
             {
                 if (_targetsHolder.TargetsInRange.Remove(damageable))
                 {
-                    Debug.Log("DefenderTargetFinder->EnemyLeave: -");
+                    Debug.Log("DefenderTargetFinder->EnemyLeave: ----");
                     OnTargetLost?.Invoke(damageable);
                 }
             }
+            Debug.Log($"DefenderTargetFinder->EnemyLeave: targets: {_targetsHolder.TargetsInRange.Count}");
         }
         
         // private void DoSearch()

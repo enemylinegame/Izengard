@@ -12,6 +12,12 @@ namespace CombatSystem.DefenderStates
             
         }
 
+
+        public override void OnUpdate()
+        {
+            
+        }
+
         public override void OnDamaged(IDamageable attacker)
         {
             _setState(DefenderState.Fight);

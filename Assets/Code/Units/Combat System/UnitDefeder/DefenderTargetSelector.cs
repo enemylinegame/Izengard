@@ -78,7 +78,7 @@ namespace CombatSystem
 
             if (target != null)
             {
-                isInrange = _targetHolder.TargetsInRange.Contains(_targetHolder.CurrentTarget);
+                isInrange = _targetHolder.TargetsInRange.Contains(target);
                 // Vector3 position = _transform.position;
                 // position.y = 0.0f;
                 // Vector3 targetPosition = target.Position;

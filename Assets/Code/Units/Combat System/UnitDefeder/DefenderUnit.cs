@@ -109,6 +109,7 @@ namespace CombatSystem
         {
             _currentStateExecuter.OnUpdate();
             _fightState.Reload();
+            _targetFinder.OnUpdate(deltaTime);
             DrawLineToTarget(_targetsHolder.CurrentTarget);
         }
 

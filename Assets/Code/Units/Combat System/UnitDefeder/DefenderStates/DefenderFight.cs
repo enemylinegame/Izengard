@@ -60,6 +60,7 @@ namespace CombatSystem.DefenderStates
         {
             if (_isAttackReady)
             {
+                _isAttackReady = false;
                 target.MakeDamage(_stats.AttackDamage, _myDamagable);
             }
         }

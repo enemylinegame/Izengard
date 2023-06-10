@@ -10,6 +10,7 @@ namespace CombatSystem.DefenderStates
         private DefenderUnitStats _stats;
         private NavMeshAgent _agent;
         private Transform _transform;
+        private Rigidbody _rigidbody;
         private Vector3 _destination;
         private float _stopDistanceSqr;
         private bool _avoidFight;
@@ -36,6 +37,7 @@ namespace CombatSystem.DefenderStates
             _stats = stats;
             _agent = agent;
             _transform = defenderUnit.DefenderGameObject.transform;
+            _rigidbody = _transform.GetComponent<Rigidbody>();
             float stopDistance = _agent.stoppingDistance;
             _stopDistanceSqr = stopDistance * stopDistance + float.Epsilon;
         }
@@ -47,8 +49,14 @@ namespace CombatSystem.DefenderStates
             if (( position - _agent.destination).sqrMagnitude <= _stopDistanceSqr)
             {
                 _agent.ResetPath();
+                //_rigidbody.velocity = Vector3.zero;
                 _setState(DefenderState.Idle);
             }
+            // else
+            // {
+            //     _agent.ResetPath();
+            //     _agent.SetDestination(_destination);
+            // }
         }
 
         public override void StartState()

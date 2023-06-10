@@ -41,6 +41,7 @@ namespace CombatSystem.DefenderStates
                 {
                     _agent.ResetPath();
                     _agent.SetDestination(target.Position);
+                    Debug.Log($"DefenderPursuit->OnUpdate: {target.Position};  {_agent.destination}");
                 }
             }
             else
