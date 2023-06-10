@@ -11,18 +11,8 @@ namespace CombatSystem.DefenderStates
         private NavMeshAgent _agent;
         private Transform _transform;
         private Rigidbody _rigidbody;
-        private Vector3 _destination;
         private float _stopDistanceSqr;
         private bool _avoidFight;
-
-        public Vector3 Destination
-        {
-            get => _destination;
-            set
-            {
-                _destination = value;
-            }
-        }
 
         public bool AvoidFight
         {
@@ -55,14 +45,14 @@ namespace CombatSystem.DefenderStates
             // else
             // {
             //     _agent.ResetPath();
-            //     _agent.SetDestination(_destination);
+            //     _agent.SetDestination(_defenderUnit.DefendPosition);
             // }
         }
 
         public override void StartState()
         {
             _agent.ResetPath();
-            _agent.SetDestination(_destination);
+            _agent.SetDestination(_defenderUnit.DefendPosition);
         }
 
         public override void OnDamaged(IDamageable attacker)

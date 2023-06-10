@@ -1,21 +1,36 @@
 ﻿using System;
 using CombatSystem.Interfaces;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace CombatSystem.DefenderStates
 {
     public class DefenderIdle : DefenderStateBase
     {
-        public DefenderIdle(DefenderUnit defenderUnit, Action<DefenderState> setStateDelegate) : 
+
+        private Transform _transform;
+        private NavMeshAgent _agent; 
+        private float _stopDistanceSqr;
+        
+        public DefenderIdle(DefenderUnit defenderUnit, Action<DefenderState> setStateDelegate, 
+            NavMeshAgent agent) : 
             base(defenderUnit, setStateDelegate)
         {
-            
+            _transform = defenderUnit.DefenderGameObject.transform;
+            _agent = agent;
+            float stopDistance = _agent.stoppingDistance;
+            _stopDistanceSqr = stopDistance * stopDistance + float.Epsilon;
         }
 
 
         public override void OnUpdate()
         {
-            
+            Vector3 position = _transform.position;
+            position.y = _defenderUnit.DefendPosition.y;
+            if (( position - _defenderUnit.DefendPosition).sqrMagnitude > _stopDistanceSqr)
+            {
+                _setState(DefenderState.Going);
+            }
         }
 
         public override void OnDamaged(IDamageable attacker)

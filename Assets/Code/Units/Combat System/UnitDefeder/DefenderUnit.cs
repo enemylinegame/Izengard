@@ -83,11 +83,10 @@ namespace CombatSystem
             _fightState = new DefenderFight(this, SetState, _unitStats, _targetsHolder, _targetSelector, _myDamageable);
             _goingState = new DefenderGoing(this, SetState, _unitStats, _agent);
             _gotoBarrackState = new DefenderGotoBarrack(this, SetState, _agent);
-            _idleState = new DefenderIdle(this, SetState);
+            _idleState = new DefenderIdle(this, SetState, _agent);
             _inBarrackState = new DefenderInBarrack(this, SetState);
             _pursuitState = new DefenderPursuit(this, SetState, _agent, _targetSelector, _targetsHolder);
 
-            _goingState.Destination = _defendPosition;
             SetState(DefenderState.Going);
         }
 
@@ -118,7 +117,6 @@ namespace CombatSystem
             ClearTargets();
             newPosition.y = _defendPosition.y;
             _defendPosition = newPosition;
-            _goingState.Destination = _defendPosition;
             _currentStateExecuter.GoToPosition(_defendPosition);
         }
 
