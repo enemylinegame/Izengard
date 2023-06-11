@@ -10,6 +10,7 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
     [SerializeField] private int _maxCountAttackers = 5;
     [SerializeField] private int _threatLevel = 0;
 
+    
     public Sprite Icon => _icon;
     public float CurrentHealth { get; private set; }
     public float MaxHealth {get; private set;}
@@ -18,6 +19,8 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
 
     public int ThreatLevel => _threatLevel;
 
+    public int NumberOfAttackers => _listAttackedUnits.Count;
+    
     public event Action<float, float> OnHealthChanged; 
     public event Action DeathAction;
     public event Action<IDamageable> OnDamaged; 
