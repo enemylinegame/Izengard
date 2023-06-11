@@ -50,7 +50,6 @@ namespace CombatSystem
                 IDamageable target = _targetsHolder.TargetsInRange[i];
                 if (target.IsDead)
                 {
-                    Debug.Log("DefenderTargetFinder->OnUpdate: target.IsDead -");
                     _targetsHolder.TargetsInRange.RemoveAt(i);
                     OnTargetLost?.Invoke(target);
                 }
@@ -71,25 +70,20 @@ namespace CombatSystem
                 if (!_targetsHolder.TargetsInRange.Contains(damageable))
                 {
                     _targetsHolder.TargetsInRange.Add(damageable);
-                    Debug.Log("DefenderTargetFinder->EnemyEnter: +");
                     OnNewTarget?.Invoke(damageable);
                 }
             }
-            Debug.Log($"DefenderTargetFinder->EnemyEnter: targets: {_targetsHolder.TargetsInRange.Count}");
         }
 
         private void EnemyLeave(GameObject enemy)
         {
-            Debug.Log("DefenderTargetFinder->EnemyLeave: o ");
             if (enemy.TryGetComponent(out IDamageable damageable))
             {
                 if (_targetsHolder.TargetsInRange.Remove(damageable))
                 {
-                    Debug.Log("DefenderTargetFinder->EnemyLeave: ----");
                     OnTargetLost?.Invoke(damageable);
                 }
             }
-            Debug.Log($"DefenderTargetFinder->EnemyLeave: targets: {_targetsHolder.TargetsInRange.Count}");
         }
         
         // private void DoSearch()
