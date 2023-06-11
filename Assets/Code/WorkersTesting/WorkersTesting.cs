@@ -29,11 +29,11 @@ public class WorkersTesting : MonoBehaviour
 
         _targetWorkPlace = new Vector3(30, 0, 5);
         
-        _works.Add(_controller.SendWorkerToWork(
-            homePosition, _targetWorkPlace, 
-            new WorkerTestBegin(),
-            new WorkerTestWork(),
-            new WorkerTestEnd()));
+        //_works.Add(_controller.SendWorkerToWork(
+        //    homePosition, _targetWorkPlace, 
+        //    new WorkerTestBegin(),
+        //    new WorkerTestWork(),
+        //    new WorkerTestEnd()));
     }
 
     void Update()

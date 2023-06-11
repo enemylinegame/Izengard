@@ -1,5 +1,5 @@
 
 public interface IWorkerWork
 {
-    void Produce();
+    void Produce(float deltaTime);
 }

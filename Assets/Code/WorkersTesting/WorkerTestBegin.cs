@@ -2,10 +2,10 @@
 
 using UnityEngine;
 
-public class WorkerTestBegin : IWorkerWork
+public class WorkerTestBegin : IWorkerTask
 {
     WorkerTestBegin()
-    { 
+    {
     }
 
     public void Produce()
@@ -13,11 +13,4 @@ public class WorkerTestBegin : IWorkerWork
         Debug.Log("WorkerTestBegin");
     }
 
-    public Resource GetResourceType()
-    { 
-    }
-
-    public void Cancel()
-    {
-    }
 }

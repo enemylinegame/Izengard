@@ -6,7 +6,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Animator), 
     typeof(NavMeshAgent), 
     typeof(CapsuleCollider))]
-public class WorkerView : MonoBehaviour, IWorkerView, IbuildingCollectable
+public class WorkerView : MonoBehaviour, IWorkerView
 {
     [SerializeField]
     private Animator _animator;
@@ -96,7 +96,4 @@ public class WorkerView : MonoBehaviour, IWorkerView, IbuildingCollectable
     private const string WALK = "Walk";
     private const string PRODUCE_WORK = "ProduceWork";
     private const string DRAG_BACK = "DragBack";
-
-    public BuildingTypes BuildingType { get; set; }
-    public ResourceType ResourceType { get; set; }
 }

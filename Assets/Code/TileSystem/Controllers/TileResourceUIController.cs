@@ -52,7 +52,8 @@ namespace Code.TileSystem
         private void AddResource(ResourceView resourceView)
         {
             int resourceValue = resourceView.ResourceCurrentValueInt;
-            if (resourceValue < MAX_RESOURCES && _controller.WorkerMenager.UpdateWorkerAssignment(resourceView, resourceView.Building))
+            if (resourceValue < MAX_RESOURCES && _controller.WorkerMenager.StartProduction(
+                resourceView, resourceView.Building))
             {
                 resourceValue++;
             }
@@ -64,7 +65,7 @@ namespace Code.TileSystem
         {
             int resourceValue = resourceView.ResourceCurrentValueInt;
 
-            if (resourceValue > 0 && _controller.WorkerMenager.RemoveWorkerAssignment(resourceView, resourceView.Building))
+            if (resourceValue > 0 && _controller.WorkerMenager.StopProduction(resourceView, resourceView.Building))
             {
                 resourceValue--;
             }

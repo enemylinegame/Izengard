@@ -21,14 +21,14 @@ public class WorkersResourceTeam : IOnUpdate
     }
 
     public int SendWorkerToMine(Vector3 startPalce, Vector3 targetPalce, 
-        WorkerController workerController, IWorkerWork work)
+        WorkerController workerController, IWorkerTask work)
     {
         if (null == workerController || null == work || 
                 startPalce == targetPalce)
             return -1;
 
         _activeWorkers.Add(workerController.WorkerId, new WorkerResourceWork() 
-            {Worker = workerController, Work = work, TimeToAvait = 0});
+            {Worker = workerController, Task = work, TimeToAvait = 0});
 
         workerController.OnMissionCompleted += OnMissionIsCompleted;
 
@@ -73,7 +73,7 @@ public class WorkersResourceTeam : IOnUpdate
 
 
         var worker = work.Worker;
-        work.Work = null;
+        work.Task = null;
 
         worker.OnMissionCompleted -= OnMissionIsCompleted;
         worker.CancelWork();
@@ -128,7 +128,7 @@ public class WorkersResourceTeam : IOnUpdate
             {
                 _activeWorkers.Remove(workerId);
                 _smokingWorkers.Add(workerId, work);
-                work.Work.Produce();
+                work.Task.Produce();
                 work.TimeToAvait = _smokeBreakTime;
             }
         }
@@ -147,7 +147,7 @@ public class WorkersResourceTeam : IOnUpdate
         foreach (var work in works)
         {
             work.Value.Worker.OnMissionCompleted -= OnMissionIsCompleted;
-            work.Value.Work = null;
+            work.Value.Task = null;
 
             workers.Add(work.Value.Worker);
             work.Value.Worker = null;
@@ -167,7 +167,7 @@ public class WorkersResourceTeam : IOnUpdate
     {
         public float TimeToAvait;
         public WorkerController Worker;
-        public IWorkerWork Work;
+        public IWorkerTask Task;
     }
 
     private readonly float _smokeBreakTime;

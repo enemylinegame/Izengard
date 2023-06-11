@@ -16,12 +16,13 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
     }
 
     public int SendWorkerToWork(Vector3 startPalce, Vector3 targetPalce,
-         WorkerController workerController, 
-            IWorkerWork beginOfWork, IWorkerWork work, IWorkerWork endOfWork)
+         WorkerController workerController,
+            IWorkerTask beginOfExersice, IWorkerWork work, 
+            IWorkerTask endOfExersice)
     {
         var workingWorker = new WorkerCraftWork() { 
             Worker = workerController, 
-            BeginOfWork = beginOfWork, Work = work, EndOfWork = endOfWork
+            BeginOfWork = beginOfExersice, Work = work, EndOfWork = endOfExersice
         };
 
         _workersAreGoingToWork.Add(workerController.WorkerId, workingWorker);
@@ -91,7 +92,7 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
         CheckReadyWorkers();
 
         foreach (var work in _workingWorkers)
-            work.Value.Work.Produce();
+            work.Value.Work.Produce(deltaTime);
     }
 
     private void CheckReadyWorkers()
@@ -143,8 +144,8 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
     {
         public WorkerController Worker;
         public IWorkerWork Work;
-        public IWorkerWork BeginOfWork;
-        public IWorkerWork EndOfWork;
+        public IWorkerTask BeginOfWork;
+        public IWorkerTask EndOfWork;
     }
 
     private WorkersTeamModel _model;

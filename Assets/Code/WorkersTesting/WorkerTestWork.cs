@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class WorkerTestWork : IWorkerWork
 {
-    public void Produce()
+    public void Produce(float deltaTime)
     {
         Debug.Log("WorkerTestWork");
     }

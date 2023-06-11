@@ -18,23 +18,24 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
     }
 
     public int SendWorkerToWork(Vector3 startPalce, Vector3 craftPalce,
-           IWorkerWork beginWork, IWorkerWork work, IWorkerWork endWork)
+           IWorkerTask beginExersice, IWorkerWork work, 
+           IWorkerTask endExersice)
     {
         WorkerController workerController = GetWorker();
 
         _workersCraftTeam.SendWorkerToWork(
-            startPalce, craftPalce, workerController, beginWork, work, endWork);
+            startPalce, craftPalce, workerController, beginExersice, work, endExersice);
 
         return workerController.WorkerId;
     }
 
     public int SendWorkerToMine(Vector3 startPalce, Vector3 targetPalce, 
-        IWorkerWork work)
+        IWorkerTask task)
     {
         WorkerController workerController = GetWorker();
 
         _workersResourceTeam.SendWorkerToMine(
-            startPalce, targetPalce, workerController, work);
+            startPalce, targetPalce, workerController, task);
 
         return workerController.WorkerId;
     }

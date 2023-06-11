@@ -29,7 +29,7 @@ namespace Code.TileSystem
         private BuildingController _buildingController;
         private InputController _inputController;
         private UIController _uiController;
-        private WorkerMenager _workerMenager;
+        private ProductionController _productionController;
         private List<BuildingConfig> _buildingConfigs;
         private OutlineController _outlineController;
         
@@ -37,14 +37,16 @@ namespace Code.TileSystem
         public int CurrentLVL;
         public TileList List => _list;
         public ITextVisualizationOnUI TextVisualization => _textVisualization;
-        public WorkerMenager WorkerMenager => _workerMenager;
+        public ProductionController WorkerMenager => _productionController;
         public TileModel TileModel => _tileView.TileModel;
         public TileView View => _tileView;
 
-        public TileController(TileList tileList, UIController uiController, BuildingController buildingController
-            , InputController inputController, OutlineController outlineController)
+        public TileController(TileList tileList, UIController uiController, 
+            BuildingController buildingController, 
+            InputController inputController, OutlineController outlineController,
+            ProductionController productionController)
         {
-            _workerMenager = new WorkerMenager(this, uiController.BottonUI.TileUIView);
+            _productionController = productionController;
             _outlineController = outlineController;
             _textVisualization = uiController.CenterUI.BaseNotificationUI;
             _list = tileList;
@@ -75,7 +77,6 @@ namespace Code.TileSystem
             _uiView.Upgrade.onClick.AddListener(() => LVLUp());
             UpdateInfo(tile.TileModel.TileConfig);
             LoadFloodedBuildings();
-            _workerMenager.FillWorkerList();
         }
         public void UpdateInfo(TileConfig config)
         {
@@ -103,7 +104,6 @@ namespace Code.TileSystem
             UpdateInfo(TileModel.SaveTileConfig);
             LoadBuildings(TileModel);
             LevelCheck();
-            WorkerMenager.FillWorkerList();
         }
         
          public void LoadBuildings(TileModel model)
@@ -138,7 +138,7 @@ namespace Code.TileSystem
              var buildings = TileModel.FloodedBuildings.FindAll(x => x.MineralConfig == null);
              foreach (var building in buildings)
              {
-                 var assignWorkers = _workerMenager.GetAssignedWorkers(building);
+                 var assignWorkers = _productionController.GetAssignedWorkers(building);
                  LoadBuildingInfo(building, assignWorkers);
              }
          }
@@ -233,8 +233,8 @@ namespace Code.TileSystem
         public void Hiring(bool isOn, BuildingUIInfo buildingUI, ICollectable building)
         {
             var hire = isOn 
-                ? _workerMenager.UpdateWorkerAssignment(buildingUI, building) 
-                : _workerMenager.RemoveWorkerAssignment(buildingUI, building);
+                ? _productionController.StartProduction(buildingUI, building) 
+                : _productionController.StopProduction(buildingUI, building);
 
             if (!hire) return;
             
