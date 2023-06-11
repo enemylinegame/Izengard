@@ -12,7 +12,7 @@ namespace CombatSystem
         public DummyController(GameObject dummy)
         {
             _dummy = dummy.GetComponent<Damageable>();
-            _dummy.Init(100);
+            _dummy.Init(100, 5);
             _dummy.DeathAction += OnDead;
         }
 
