@@ -117,6 +117,11 @@ namespace CombatSystem
             ClearTargets();
             newPosition.y = _defendPosition.y;
             _defendPosition = newPosition;
+            if (_agent.FindClosestEdge( out NavMeshHit hit))
+            {
+                _defendPosition = hit.position;
+            }
+            
             _currentStateExecuter.GoToPosition(_defendPosition);
         }
 
@@ -193,9 +198,7 @@ namespace CombatSystem
                 DefenderState oldState = _state;
                 
                 _state = newState;
-                
-                Debug.Log($"DefenderUnit::SetState: {oldState} -> {_state}");
-                
+
                 _currentStateExecuter.StartState();
                 OnStateChanged?.Invoke(_state);
             }

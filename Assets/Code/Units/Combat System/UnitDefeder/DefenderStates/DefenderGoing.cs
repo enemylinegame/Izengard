@@ -13,7 +13,9 @@ namespace CombatSystem.DefenderStates
         private Rigidbody _rigidbody;
         private float _stopDistanceSqr;
         private bool _avoidFight;
+        private bool _isDestinationChanged;
 
+        
         public bool AvoidFight
         {
             get => _avoidFight; 
@@ -34,25 +36,22 @@ namespace CombatSystem.DefenderStates
 
         public override void OnUpdate()
         {
-            Vector3 position = _transform.position;
-            position.y = _agent.destination.y;
-            if (( position - _agent.destination).sqrMagnitude <= _stopDistanceSqr)
+            if (_isDestinationChanged)
             {
-                _agent.ResetPath();
-                //_rigidbody.velocity = Vector3.zero;
+                ChangeDestination();
+            }
+            // Vector3 position = _transform.position;
+            // position.y = _agent.destination.y;
+            // if (( position - _agent.destination).sqrMagnitude <= _stopDistanceSqr)
+            if (_agent.remainingDistance <= _agent.stoppingDistance)
+            {
                 _setState(DefenderState.Idle);
             }
-            // else
-            // {
-            //     _agent.ResetPath();
-            //     _agent.SetDestination(_defenderUnit.DefendPosition);
-            // }
         }
 
         public override void StartState()
         {
-            _agent.ResetPath();
-            _agent.SetDestination(_defenderUnit.DefendPosition);
+            _isDestinationChanged = true;
         }
 
         public override void OnDamaged(IDamageable attacker)
@@ -69,7 +68,17 @@ namespace CombatSystem.DefenderStates
             _agent.ResetPath();
             _setState(DefenderState.GotoBarrack);
         }
-        
-        
+
+        public override void GoToPosition(Vector3 destination)
+        {
+             _isDestinationChanged = true;
+        }
+
+        private void ChangeDestination()
+        {
+             _agent.ResetPath();
+             _agent.SetDestination(_defenderUnit.DefendPosition);
+             _isDestinationChanged = false;
+        }
     }
 }
