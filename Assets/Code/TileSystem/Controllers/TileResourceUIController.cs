@@ -51,9 +51,12 @@ namespace Code.TileSystem
         
         private void AddResource(ResourceView resourceView)
         {
+            Vector3 workPlace = (Vector3.forward + Vector3.left) * 10.0f;
+            Debug.Log("work Place is not  received.");
+
             int resourceValue = resourceView.ResourceCurrentValueInt;
             if (resourceValue < MAX_RESOURCES && _controller.WorkerMenager.StartProduction(
-                resourceView, resourceView.Building))
+                resourceView, resourceView.Building, workPlace))
             {
                 resourceValue++;
             }
@@ -65,7 +68,7 @@ namespace Code.TileSystem
         {
             int resourceValue = resourceView.ResourceCurrentValueInt;
 
-            if (resourceValue > 0 && _controller.WorkerMenager.StopProduction(resourceView, resourceView.Building))
+            if (resourceValue > 0 && _controller.WorkerMenager.StopFirstFindedProduction(resourceView, resourceView.Building))
             {
                 resourceValue--;
             }

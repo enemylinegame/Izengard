@@ -69,7 +69,7 @@ namespace Code.BuildingSystem
             buildingUI.MinusUnit.onClick.RemoveAllListeners();
                 
             _uiController.DestroyBuildingInfo.Remove(buildingUI.gameObject);
-            tileController.WorkerMenager.RemoveAllWorkerAssignment(buildingUI, buildingToRemove, tileController);
+            tileController.WorkerMenager.StopAllFindedProductions(buildingUI, buildingToRemove);
             RemoveTypeDots(model, buildingToRemove);
                 
             buildings.Remove(buildingToRemove);

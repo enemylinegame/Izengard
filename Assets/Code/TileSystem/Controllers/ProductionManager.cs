@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using Code.BuldingsSystem;
 using Code.TileSystem.Interfaces;
 using ResourceSystem;
+using UnityEngine;
 
 namespace Code.TileSystem
 {
-    public class ProductionController: IOnUpdate, IDisposable, IOnController
+    public class ProductionManager: IOnUpdate, IDisposable, IOnController
     {
         private WorkersTeamController _teamController;
         private TileModel _tileModel;
@@ -25,7 +26,7 @@ namespace Code.TileSystem
             public int WorkId;
         }
 
-        public ProductionController(GlobalStock globalStock, 
+        public ProductionManager(GlobalStock globalStock, 
             WorkersTeamController teamController)
         {
             _maxWorks = _tileModel.MaxWorkers;
@@ -44,9 +45,11 @@ namespace Code.TileSystem
             if (_tileModel.CurrentWorkersUnits >= _maxWorks) 
                 return false;
 
-            IncreaseWorksForBuilding(building.BuildingID);
+            int workId = BeginWork(building.SpawnPosition, workPlace, 
+                buildingCollectable.ResourceType);
 
-            int workId = _teamController.SendWorkerToWork();
+            if (workId < 0)
+                return false;
 
             _worksTable.Add(new WorkDescriptor
             {
@@ -54,6 +57,8 @@ namespace Code.TileSystem
                 ResourceType = buildingCollectable.ResourceType,
                 WorkId = workId
             });
+
+            IncreaseWorksForBuilding(building.BuildingID);
 
             _tileModel.CurrentWorkersUnits++;
 
@@ -86,7 +91,7 @@ namespace Code.TileSystem
             ++_buildingsTable[buildingId];
         }
 
-        public bool StopProduction(
+        public bool StopFirstFindedProduction(
             IbuildingCollectable buildingCollectable, ICollectable building)
         {
             if (!DecreaseWorksForBuilding(building.BuildingID))
@@ -106,34 +111,36 @@ namespace Code.TileSystem
             return true;
         }
         
-        public void RemoveAllWorkerAssignment(IbuildingCollectable buildingCollectable, 
-            ICollectable building, TileController controller)
+        public void StopAllFindedProductions(
+            IbuildingCollectable buildingCollectable, ICollectable building)
         {
-            //var worker = _workerViews.FindAll(x => x.BuildingType == buildingCollectable.BuildingType || 
-            //    x.ResourceType == buildingCollectable.ResourceType);
 
-            //var workerassign = _workersAssigments.Exists(x => x.Building.BuildingID == building.BuildingID);
+            int buildingId = building.BuildingID;
+            if (!_buildingsTable.TryGetValue(buildingId, out int worksCount))
+            {
+                return;
+            }
 
-            //if (!workerassign) return;
-            
-            //var workersAssigments = _workersAssigments.Find(x => x.Building.BuildingID == building.BuildingID);
-                
-            //foreach (var kvp in worker)
-            //{
-            //    kvp.ResourceType = ResourceType.None;
-            //    kvp.BuildingType = BuildingTypes.None;
-            //}
-            //_tileModel.CurrentWorkersUnits -= workersAssigments.BusyWorkersCount;
-            //workersAssigments.BusyWorkersCount = 0;
-            //_workersAssigments.Remove(workersAssigments);
-            //workersAssigments = null;
+            _tileModel.CurrentWorkersUnits -= _buildingsTable[buildingId];
+            _buildingsTable.Remove(buildingId);
 
+            var worksToStop = _worksTable.FindAll(
+                x => x.BuildingType == buildingCollectable.BuildingType || 
+                x.ResourceType == buildingCollectable.ResourceType);
+
+            foreach (var work in worksToStop)
+            {
+                _teamController.CancelWork(work.WorkId);
+                _worksTable.Remove(work);
+            }
         }
         public int GetAssignedWorkers(ICollectable building)
         {
 
-            if (!_buildingsTable.TryGetValue(building.BuildingID, out int workersCount))
+            if (!_buildingsTable.TryGetValue(
+                building.BuildingID, out int workersCount))
                 return 0;
+
             return workersCount;
         }
 
@@ -145,6 +152,28 @@ namespace Code.TileSystem
         public void Dispose()
         {
             _teamController.Dispose();
+        }
+
+
+        private int BeginWork(Vector3 workerInitPlace, Vector3 workPlace, 
+            ResourceType resource)
+        {
+            switch (resource)
+            {
+                case ResourceType.Iron:
+                {
+
+                    break;
+                }
+                default:
+                {
+                    Debug.LogError("Unknown resource type");
+                        return -1;
+                }
+            }
+
+            return _teamController.SendWorkerToWork(
+                workerInitPlace, workPlace, null, null, null);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Code.TileSystem
         private BuildingController _buildingController;
         private InputController _inputController;
         private UIController _uiController;
-        private ProductionController _productionController;
+        private ProductionManager _productionManager;
         private List<BuildingConfig> _buildingConfigs;
         private OutlineController _outlineController;
         
@@ -37,16 +37,16 @@ namespace Code.TileSystem
         public int CurrentLVL;
         public TileList List => _list;
         public ITextVisualizationOnUI TextVisualization => _textVisualization;
-        public ProductionController WorkerMenager => _productionController;
+        public ProductionManager WorkerMenager => _productionManager;
         public TileModel TileModel => _tileView.TileModel;
         public TileView View => _tileView;
 
         public TileController(TileList tileList, UIController uiController, 
             BuildingController buildingController, 
             InputController inputController, OutlineController outlineController,
-            ProductionController productionController)
+            ProductionManager productionController)
         {
-            _productionController = productionController;
+            _productionManager = productionController;
             _outlineController = outlineController;
             _textVisualization = uiController.CenterUI.BaseNotificationUI;
             _list = tileList;
@@ -138,7 +138,7 @@ namespace Code.TileSystem
              var buildings = TileModel.FloodedBuildings.FindAll(x => x.MineralConfig == null);
              foreach (var building in buildings)
              {
-                 var assignWorkers = _productionController.GetAssignedWorkers(building);
+                 var assignWorkers = _productionManager.GetAssignedWorkers(building);
                  LoadBuildingInfo(building, assignWorkers);
              }
          }
@@ -232,9 +232,12 @@ namespace Code.TileSystem
         /// </summary>
         public void Hiring(bool isOn, BuildingUIInfo buildingUI, ICollectable building)
         {
+            Vector3 workPlace = Vector3.forward * 10.0f;
+            Debug.LogWarning("workPlace is only for test.");
+
             var hire = isOn 
-                ? _productionController.StartProduction(buildingUI, building) 
-                : _productionController.StopProduction(buildingUI, building);
+                ? _productionManager.StartProduction(buildingUI, building, workPlace) 
+                : _productionManager.StopFirstFindedProduction(buildingUI, building);
 
             if (!hire) return;
             

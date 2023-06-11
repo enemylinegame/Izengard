@@ -68,12 +68,13 @@ public class GameInit
         
         var workersTeamComtroller = new WorkersTeamController(workersTeamConfig);
 
-        var productionController = new ProductionController(globalResStock, workersTeamComtroller);
+        var productionManager = new ProductionManager(
+            globalResStock, workersTeamComtroller);
 
         var outlineController = new OutlineController(outLineSettings);
 
         var tileController = new TileController(tileList, uiController, 
-            buildingController, inputController, outlineController, productionController);
+            buildingController, inputController, outlineController, productionManager);
 
         var tileResourceUIController = new TileResourceUIController(
             uiController, inputController, tileController);
@@ -85,7 +86,7 @@ public class GameInit
             tileController, defenderController, uiController);
 
 
-        controller.Add(productionController);
+        controller.Add(workersTeamComtroller);
         controller.Add(btnConroller);
         controller.Add(levelGenerator);
         controller.Add(buildController);
