@@ -29,8 +29,6 @@ namespace CombatSystem
         private DefenderTargetSelector _targetSelector;
         private IDamageable _currentTarget;
 
-        private List<IDamageable> _attackersTargets;
-
         private DefenderFight _fightState;
         private DefenderGoing _goingState;
         private DefenderGotoBarrack _gotoBarrackState;
@@ -72,7 +70,6 @@ namespace CombatSystem
             _myDamageable.OnDamaged += OnDamaged;
             _myDamageable.Init(_unitStats.MaxHealth, 1);
             _agent = defender.GetComponent<NavMeshAgent>();
-            _attackersTargets = new List<IDamageable>();
             _animation = new DefenderAnimation(defender, this);
             _targetsHolder = new DefenderTargetsHolder();
             _targetFinder = new DefenderTargetFinder(_defender, _unitStats.AttackRange, _targetsHolder);
@@ -146,12 +143,12 @@ namespace CombatSystem
 
         private void OnDamaged(IDamageable attacker)
         {
-            if (!_attackersTargets.Contains(attacker))
+            if (!_targetsHolder.AttackingTargets.Contains(attacker))
             {
-                _attackersTargets.Add(attacker);
+                _targetsHolder.AttackingTargets.Add(attacker);
                 attacker.DeathAction += EnemyDead;
             }
-            Debug.Log("DefenderUnit::OnDamaged: " + _state.ToString());
+            //Debug.Log($"DefenderUnit::OnDamaged: {_state} ");
             _currentStateExecuter.OnDamaged(attacker);
         }
 
@@ -198,7 +195,7 @@ namespace CombatSystem
                 DefenderState oldState = _state;
                 
                 _state = newState;
-
+                //Debug.Log($"DefenderUnit->SetState: {oldState} -> {_state}");
                 _currentStateExecuter.StartState();
                 OnStateChanged?.Invoke(_state);
             }
@@ -206,12 +203,12 @@ namespace CombatSystem
 
         private void EnemyDead()
         {
-            for (int i = _attackersTargets.Count - 1; i >= 0; i--)
+            for (int i = _targetsHolder.AttackingTargets.Count - 1; i >= 0; i--)
             {
-                if (_attackersTargets[i].IsDead)
+                if (_targetsHolder.AttackingTargets[i].IsDead)
                 {
-                    _attackersTargets[i].DeathAction -= EnemyDead;
-                    _attackersTargets.RemoveAt(i);
+                    _targetsHolder.AttackingTargets[i].DeathAction -= EnemyDead;
+                    _targetsHolder.AttackingTargets.RemoveAt(i);
                 }
             }
             // _attakersTargets.RemoveAll(target =>
@@ -224,8 +221,8 @@ namespace CombatSystem
         private void ClearTargets()
         {
             _targetsHolder.CurrentTarget = null;
-            _attackersTargets.ForEach(target => target.DeathAction -= EnemyDead);
-            _attackersTargets.Clear();
+            _targetsHolder.AttackingTargets.ForEach(target => target.DeathAction -= EnemyDead);
+            _targetsHolder.AttackingTargets.Clear();
         }
 
         private void DrawLineToTarget(IDamageable target)
