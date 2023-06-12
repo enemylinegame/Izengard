@@ -155,6 +155,28 @@ namespace Code.TileSystem
         }
 
 
+        int SendWorkerToMine(Vector3 workerInitPlace, Vector3 workPlace, 
+            ResourceType resourceType)
+        {
+            int portionSize = 5;
+            IWorkerTask workerTask = new MiningProduction(
+                _globalStock, ResourceType.Iron, portionSize);
+
+            return _teamController.SendWorkerToMine(
+                workerInitPlace, workPlace, workerTask);
+        }
+
+        int SendWorkerToManufactory(Vector3 workerInitPlace, Vector3 workPlace,
+            ResourceType resourceType)
+        {
+            float efficiency = 5.0f;
+            IWorkerWork work = new ManufactoryProduction(
+                _globalStock, ResourceType.Iron, efficiency);
+
+            return _teamController.SendWorkerToWork(
+                workerInitPlace, workPlace, null, work, null);
+        }
+
         private int BeginWork(Vector3 workerInitPlace, Vector3 workPlace, 
             ResourceType resource)
         {
@@ -162,18 +184,23 @@ namespace Code.TileSystem
             {
                 case ResourceType.Iron:
                 {
-
-                    break;
+                     return SendWorkerToMine(
+                         workerInitPlace, workPlace, ResourceType.Iron);
                 }
-                default:
+                case ResourceType.Gold:
                 {
-                    Debug.LogError("Unknown resource type");
-                        return -1;
+                    return SendWorkerToMine(
+                        workerInitPlace, workPlace, ResourceType.Gold);
+                }
+                case ResourceType.Textile:
+                {
+                    return SendWorkerToManufactory
+                        (workerInitPlace, workPlace, ResourceType.Textile);
                 }
             }
 
-            return _teamController.SendWorkerToWork(
-                workerInitPlace, workPlace, null, null, null);
+            Debug.LogError("Unknown resource type");
+            return -1;
         }
     }
 }
