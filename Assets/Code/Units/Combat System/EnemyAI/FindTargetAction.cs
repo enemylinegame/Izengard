@@ -54,7 +54,7 @@ namespace CombatSystem
 
         private void OnSearchScopeEnter()
         {
-            if (CheckCurrentTargetIsBuildingOrNull())
+            //if (CheckCurrentTargetIsBuildingOrNull())
             {
                 _currentTarget = _primaryTarget;
 
@@ -67,23 +67,24 @@ namespace CombatSystem
                 for (int i = 0; i < hitsQuantity; i++)
                 {
                     GameObject current = _searchResults[i].transform.gameObject;
-                    if (current.layer == BUILDING_LAYER_NUMBER)
+
+                    if (current.TryGetComponent(out Damageable target))
                     {
-                        if (current.TryGetComponent(out Damageable target))
+                        if (!target.IsDead)
                         {
-                            if (target.NumberOfAttackers < _maxAttackToBuilding && !target.IsDead)
+                            if (current.layer == BUILDING_LAYER_NUMBER)
                             {
-                                buildings.Add(target);
+                                if (target.NumberOfAttackers < _maxAttackToBuilding)
+                                {
+                                    buildings.Add(target);
+                                }
                             }
-                        }
-                    }
-                    else
-                    {
-                        if (current.TryGetComponent(out Damageable target))
-                        {
-                            if (target.NumberOfAttackers < _maxAttackToDefender && !target.IsDead)
+                            else
                             {
-                                units.Add(target);
+                                if (_type == EnemyType.Archer || target.NumberOfAttackers < _maxAttackToDefender)
+                                {
+                                    units.Add(target);
+                                }
                             }
                         }
                     }
@@ -98,11 +99,10 @@ namespace CombatSystem
                     _currentTarget = SelectNearestTarget(buildings);
                 }
 
-                if (_currentTarget != _primaryTarget)
+                if (_currentTarget != _primaryTarget && _type != EnemyType.Archer)
                 {
                     _currentTarget.Attacked(_unitDamageable);
                 }
-                   
             }
         }
 
@@ -117,7 +117,7 @@ namespace CombatSystem
             if (_frameCount > 0)
             {
                 _frameCount--;
-                if (_frameCount == 0)
+                if (_frameCount <= 0)
                 {
                     OnSearchScopeEnter();
                     OnComplete?.Invoke(_currentTarget);
