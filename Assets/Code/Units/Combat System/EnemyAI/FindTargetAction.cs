@@ -24,7 +24,7 @@ namespace CombatSystem
         private readonly Vector3 _rayCastDirection = Vector3.forward;
         private readonly LayerMask _mask = LayerMask.GetMask("Defenders", "Buildings");
 
-        private float _searchRadius = 1.4f;
+        private float _searchRadius = 2.5f;
         private EnemyType _type;
 
         
@@ -117,7 +117,7 @@ namespace CombatSystem
             if (_frameCount > 0)
             {
                 _frameCount--;
-                if (_frameCount <= 0)
+                if (_frameCount == 0)
                 {
                     OnSearchScopeEnter();
                     OnComplete?.Invoke(_currentTarget);

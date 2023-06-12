@@ -18,6 +18,7 @@ namespace CombatSystem
         private IAction<Damageable> _nextAction;
         private IOnUpdate _onUpdate;
         private readonly float _attackDistance;
+        private readonly EnemyType _type;
 
         private Transform _enemyTransform;
 
@@ -28,6 +29,7 @@ namespace CombatSystem
             IBulletsController bulletsController)
         {
             _actionList = new List<IAction<Damageable>>();
+            _type = unit.Type;
             var navmesh = unit.RootGameObject.GetComponent<NavMeshAgent>();
             _currentTarget =_primaryTarget = primaryTarget;
             _findTarget = new FindTargetAction(unit,primaryTarget);
@@ -83,24 +85,9 @@ namespace CombatSystem
                 _currentTarget = target;
                 _currentTarget.DeathAction += OnTargetDestroyed;
             }
-
-
-            // else
-            // {
-            //     _currentTarget.DeathAction -= OnTargetDestroyed;
-            //     if (target.IsDead)
-            //     {
-            //
-            //         _currentTarget = _primaryTarget;
-            //     }
-            //     else
-            //     {
-            //         _currentTarget = target;
-            //         _currentTarget.DeathAction += OnTargetDestroyed;
-            //     }
-            // }
             _nextAction = _planRoute;
             IsActionComplete = true;
+
         }
 
         private void OnPlaneRouteComplete(Damageable target)
@@ -112,6 +99,7 @@ namespace CombatSystem
             }
             else _nextAction = _checkAttackDistance;
             IsActionComplete = true;
+
         }
 
         private void OnAttackComplete(Damageable target)
@@ -142,6 +130,7 @@ namespace CombatSystem
                 _onUpdate = _findTarget as IOnUpdate;
             }
             IsActionComplete = true;
+
         }
 
         public void Dispose()
@@ -160,12 +149,14 @@ namespace CombatSystem
         public void OnUpdate(float deltaTime)
         {
             DrawLineToTarget();
-            _onUpdate?.OnUpdate(deltaTime);
+            if (!IsActionComplete)
+            {
+                _onUpdate?.OnUpdate(deltaTime);
+            }
         }
 
         private void OnTargetDestroyed()
         {
-            //Debug.Log("EnemyAI->OnTargetDestroyed:");
             if (_currentTarget)
             {
                 _currentTarget.DeathAction -= OnTargetDestroyed;
@@ -197,6 +188,5 @@ namespace CombatSystem
             }
 #endif
         }
-        
     }
 }
