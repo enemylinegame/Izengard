@@ -29,7 +29,7 @@ namespace CombatSystem
         {
             _actionList = new List<IAction<Damageable>>();
             var navmesh = unit.RootGameObject.GetComponent<NavMeshAgent>();
-            _primaryTarget = primaryTarget;
+            _currentTarget =_primaryTarget = primaryTarget;
             _findTarget = new FindTargetAction(unit,primaryTarget);
             _actionList.Add(_findTarget);
             _onUpdate = _findTarget as IOnUpdate;
@@ -73,24 +73,32 @@ namespace CombatSystem
 
         private void OnFindTargetComplete(Damageable target)
         {
-            if (target == null)
+            if (_currentTarget != target)
             {
-                _currentTarget = _primaryTarget;
-            }
-            else
-            {
-                _currentTarget.DeathAction -= OnTargetDestroyed;
-                if (target.IsDead)
+                if (_currentTarget != null)
                 {
+                    _currentTarget.DeathAction -= OnTargetDestroyed;
+                }
 
-                    _currentTarget = _primaryTarget;
-                }
-                else
-                {
-                    _currentTarget = target;
-                    _currentTarget.DeathAction += OnTargetDestroyed;
-                }
+                _currentTarget = target;
+                _currentTarget.DeathAction += OnTargetDestroyed;
             }
+
+
+            // else
+            // {
+            //     _currentTarget.DeathAction -= OnTargetDestroyed;
+            //     if (target.IsDead)
+            //     {
+            //
+            //         _currentTarget = _primaryTarget;
+            //     }
+            //     else
+            //     {
+            //         _currentTarget = target;
+            //         _currentTarget.DeathAction += OnTargetDestroyed;
+            //     }
+            // }
             _nextAction = _planRoute;
             IsActionComplete = true;
         }
@@ -172,7 +180,7 @@ namespace CombatSystem
 
         public void ClearTarget()
         {
-            _currentTarget = null;
+            _currentTarget = _primaryTarget;
             _actionList.ForEach(action => action.ClearTarget());
         }
 

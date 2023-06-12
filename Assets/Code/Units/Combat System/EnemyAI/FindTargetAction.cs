@@ -25,7 +25,9 @@ namespace CombatSystem
         private readonly LayerMask _mask = LayerMask.GetMask("Defenders", "Buildings");
 
         private float _searchRadius = 1.4f;
+        private EnemyType _type;
 
+        
         private int _maxAttackToDefender = 1;
         private int _maxAttackToBuilding = 5;
         private int _frameCount;
@@ -35,7 +37,8 @@ namespace CombatSystem
         {
             _unitDamageable = unit.RootGameObject.GetComponent<Damageable>();
             _primaryTarget = privaryTarget;
-            _searchResults = new RaycastHit[16];
+            _type = unit.Type;
+            _searchResults = new RaycastHit[SERACH_REZULTS_SIZE];
         }
 
         public void StartAction(Damageable target)
@@ -51,7 +54,7 @@ namespace CombatSystem
 
         private void OnSearchScopeEnter()
         {
-            if (CheckCurrentTargetIsBuilding())
+            if (CheckCurrentTargetIsBuildingOrNull())
             {
                 _currentTarget = _primaryTarget;
 
@@ -68,7 +71,7 @@ namespace CombatSystem
                     {
                         if (current.TryGetComponent(out Damageable target))
                         {
-                            if (target.NumberOfAttackers < _maxAttackToBuilding)
+                            if (target.NumberOfAttackers < _maxAttackToBuilding && !target.IsDead)
                             {
                                 buildings.Add(target);
                             }
@@ -78,7 +81,7 @@ namespace CombatSystem
                     {
                         if (current.TryGetComponent(out Damageable target))
                         {
-                            if (target.NumberOfAttackers < _maxAttackToDefender)
+                            if (target.NumberOfAttackers < _maxAttackToDefender && !target.IsDead)
                             {
                                 units.Add(target);
                             }
@@ -103,13 +106,10 @@ namespace CombatSystem
             }
         }
 
-        private bool CheckCurrentTargetIsBuilding()
+        private bool CheckCurrentTargetIsBuildingOrNull()
         {
-            if (_currentTarget != null)
-            {
-                return _currentTarget.gameObject.layer == BUILDING_LAYER_NUMBER;
-            }
-            return false;
+            if (_currentTarget == null) return true;
+            return _currentTarget.gameObject.layer == BUILDING_LAYER_NUMBER;
         }
 
         public void OnUpdate(float deltaTime)
