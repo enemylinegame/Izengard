@@ -44,9 +44,12 @@ namespace Code.TileSystem
         public TileController(TileList tileList, UIController uiController, 
             BuildingController buildingController, 
             InputController inputController, OutlineController outlineController,
-            ProductionManager productionController)
+            ProductionManager productionManager)
         {
-            _productionManager = productionController;
+            _productionManager = productionManager;
+            _productionManager.SeMaxWorks(TileModel.MaxWorkers);
+            _productionManager.OnWorksCountChanged += OnWorksCountChanged;
+
             _outlineController = outlineController;
             _textVisualization = uiController.CenterUI.BaseNotificationUI;
             _list = tileList;
@@ -56,6 +59,12 @@ namespace Code.TileSystem
             _inputController = inputController;
             inputController.Add(this);
         }
+
+        private void OnWorksCountChanged(int workksCount)
+        {
+            TileModel.CurrentWorkersUnits = workksCount;
+        }
+
         public void LoadInfoToTheUI(TileView tile)
         {
             TileTypeCheck(tile);

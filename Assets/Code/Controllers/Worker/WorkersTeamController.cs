@@ -10,9 +10,7 @@ public class WorkersTeamController: IOnUpdate, IDisposable, IOnController
     {
         _workerFactory = new WorkerFactory(config);
 
-        const float smokeBreakTime = 6.0f;
-
-        _workersResourceTeam = new WorkersResourceTeam(smokeBreakTime);
+        _workersResourceTeam = new WorkersResourceTeam(config.SmokeBreakTime);
         _workersCraftTeam = new WorkersCraftTeam();
         _workersFreeTeam = new WorkersFreeTeam(_workerFactory);
     }

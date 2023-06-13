@@ -7,17 +7,20 @@ using UnityEngine;
 
 namespace Code.TileSystem
 {
-    public class ProductionManager: IOnUpdate, IDisposable, IOnController
+    public class ProductionManager : IOnUpdate, IDisposable, IOnController
     {
         private WorkersTeamController _teamController;
-        private TileModel _tileModel;
-
-        private readonly int _maxWorks;
 
         private List<WorkDescriptor> _worksTable;
         private Dictionary<int, int> _buildingsTable;
 
         private GlobalStock _globalStock;
+
+        private int _maxWorks;
+        private int _worksAccount;
+
+        private int _mineWorkerPortionSize;
+        private float _craftWorkerEfficiency;
 
         private class WorkDescriptor
         {
@@ -26,27 +29,32 @@ namespace Code.TileSystem
             public int WorkId;
         }
 
-        public ProductionManager(GlobalStock globalStock, 
-            WorkersTeamController teamController)
+        public Action<int> OnWorksCountChanged = delegate { };
+
+        public ProductionManager(GlobalStock globalStock,
+            WorkersTeamController teamController, WorkersTeamConfig workerConfig)
         {
-            _maxWorks = _tileModel.MaxWorkers;
-
-
             _teamController = teamController;
             _globalStock = globalStock;
 
             _worksTable = new List<WorkDescriptor>();
             _buildingsTable = new Dictionary<int, int>();
+
+            _maxWorks = 0;
+            _worksAccount = 0;
+
+            _mineWorkerPortionSize = workerConfig.MineWorkerPortionSize;
+            _craftWorkerEfficiency = workerConfig.CraftWorkerPerformance;
         }
 
-        public bool StartProduction(IbuildingCollectable buildingCollectable, 
-            ICollectable building, Vector3 workPlace, 
+        public bool StartProduction(IbuildingCollectable buildingCollectable,
+            ICollectable building, Vector3 workPlace,
             IWorkerPreparation preparation)
         {
-            if (_tileModel.CurrentWorkersUnits >= _maxWorks) 
+            if (_worksAccount >= _maxWorks)
                 return false;
 
-            int workId = BeginWork(building.SpawnPosition, workPlace, 
+            int workId = BeginWork(building.SpawnPosition, workPlace,
                 buildingCollectable.ResourceType, preparation);
 
             if (workId < 0)
@@ -61,9 +69,13 @@ namespace Code.TileSystem
 
             IncreaseWorksForBuilding(building.BuildingID);
 
-            _tileModel.CurrentWorkersUnits++;
-
+            OnWorksCountChanged.Invoke(++_worksAccount);
             return true;
+        }
+
+        public void SeMaxWorks(int maxWorks)
+        {
+            _maxWorks = maxWorks;
         }
 
         private bool DecreaseWorksForBuilding(int buildingId)
@@ -97,7 +109,7 @@ namespace Code.TileSystem
             if (!DecreaseWorksForBuilding(building.BuildingID))
                 return false;
 
-            WorkDescriptor work = _worksTable.Find(x => 
+            WorkDescriptor work = _worksTable.Find(x =>
                 x.ResourceType == buildingCollectable.ResourceType ||
                 x.BuildingType == buildingCollectable.BuildingType);
 
@@ -106,11 +118,11 @@ namespace Code.TileSystem
 
             _teamController.CancelWork(work.WorkId);
             _worksTable.Remove(work);
-            _tileModel.CurrentWorkersUnits--;
+            OnWorksCountChanged.Invoke(--_worksAccount);
 
             return true;
         }
-        
+
         public void StopAllFindedProductions(
             IbuildingCollectable buildingCollectable, ICollectable building)
         {
@@ -121,11 +133,13 @@ namespace Code.TileSystem
                 return;
             }
 
-            _tileModel.CurrentWorkersUnits -= _buildingsTable[buildingId];
+            _worksAccount -= _buildingsTable[buildingId];
+            OnWorksCountChanged.Invoke(_worksAccount);
+
             _buildingsTable.Remove(buildingId);
 
             var worksToStop = _worksTable.FindAll(
-                x => x.BuildingType == buildingCollectable.BuildingType || 
+                x => x.BuildingType == buildingCollectable.BuildingType ||
                 x.ResourceType == buildingCollectable.ResourceType);
 
             foreach (var work in worksToStop)
@@ -154,12 +168,12 @@ namespace Code.TileSystem
             _teamController.Dispose();
         }
 
-        private int SendWorkerToMine(Vector3 workerInitPlace, Vector3 workPlace, 
+        private int SendWorkerToMine(Vector3 workerInitPlace, Vector3 workPlace,
             ResourceType resourceType, IWorkerPreparation preparation)
         {
-            int portionSize = 5;
+            
             IWorkerTask workerTask = new MiningProduction(
-                _globalStock, resourceType, portionSize);
+                _globalStock, resourceType, _mineWorkerPortionSize);
 
             return _teamController.SendWorkerToMine(
                 workerInitPlace, workPlace, preparation, workerTask);
@@ -168,34 +182,34 @@ namespace Code.TileSystem
         private int SendWorkerToManufactory(Vector3 workerInitPlace, Vector3 workPlace,
             ResourceType resourceType, IWorkerPreparation preparation)
         {
-            float efficiency = 5.0f;
+            
             IWorkerWork work = new ManufactoryProduction(
-                _globalStock, resourceType, efficiency);
+                _globalStock, resourceType, _craftWorkerEfficiency);
 
             return _teamController.SendWorkerToWork(
                 workerInitPlace, workPlace, preparation, work);
         }
 
-        private int BeginWork(Vector3 workerInitPlace, Vector3 workPlace, 
+        private int BeginWork(Vector3 workerInitPlace, Vector3 workPlace,
             ResourceType resource, IWorkerPreparation preparation)
         {
             switch (resource)
             {
                 case ResourceType.Iron:
-                {
-                     return SendWorkerToMine(workerInitPlace, workPlace, 
-                         ResourceType.Iron, preparation);
-                }
+                    {
+                        return SendWorkerToMine(workerInitPlace, workPlace,
+                            ResourceType.Iron, preparation);
+                    }
                 case ResourceType.Gold:
-                {
-                    return SendWorkerToMine(workerInitPlace, workPlace, 
-                        ResourceType.Gold, preparation);
-                }
+                    {
+                        return SendWorkerToMine(workerInitPlace, workPlace,
+                            ResourceType.Gold, preparation);
+                    }
                 case ResourceType.Textile:
-                {
-                    return SendWorkerToManufactory(workerInitPlace, workPlace, 
-                        ResourceType.Textile, preparation);
-                }
+                    {
+                        return SendWorkerToManufactory(workerInitPlace, workPlace,
+                            ResourceType.Textile, preparation);
+                    }
             }
 
             Debug.LogError("Unknown resource type");

@@ -69,7 +69,7 @@ public class GameInit
         var workersTeamComtroller = new WorkersTeamController(workersTeamConfig);
 
         var productionManager = new ProductionManager(
-            globalResStock, workersTeamComtroller);
+            globalResStock, workersTeamComtroller, workersTeamConfig);
 
         var outlineController = new OutlineController(outLineSettings);
 

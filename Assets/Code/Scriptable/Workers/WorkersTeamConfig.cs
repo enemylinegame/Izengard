@@ -8,19 +8,26 @@ public class WorkersTeamConfig : ScriptableObject
     private float _moveSpeed;
     public float MoveSpeed => _moveSpeed;
 
-    [SerializeField]
-    private float _timeToProcessWorkSec;
-    public float TimeToProcessWork => _timeToProcessWorkSec;
-
-    [SerializeField]
-    private int _workersAmount;
-    public int WorkersAmount => _workersAmount;
 
     [SerializeField]
     private GameObject _workerPrefab;
     public GameObject WorkerPrefab => _workerPrefab;
 
+    [Header("Mine worker")]
     [SerializeField]
-    int _workersIntervalSec;
-    public float WorkersIntervalSec => _workersIntervalSec;
+    private float _smokeBreakTime;
+    public float SmokeBreakTime => _smokeBreakTime;
+
+    [SerializeField]
+    private float _timeToProcessWorkSec;
+    public float TimeToProcessWork => _timeToProcessWorkSec;
+
+    [SerializeField]
+    private int _portionSize;
+    public int MineWorkerPortionSize => _portionSize;
+
+    [Header("Craft worker")]
+    [SerializeField]
+    private float _craftWorkerPerformance;
+    public float CraftWorkerPerformance => _craftWorkerPerformance;
 }
