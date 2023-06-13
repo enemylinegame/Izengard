@@ -223,6 +223,8 @@ namespace Code.TileSystem
         #region Other
         public void Dispose()
         {
+            _productionManager.OnWorksCountChanged -= OnWorksCountChanged;
+
             foreach (var kvp in _uiController.ButtonsInMenu)
                 kvp.Value.onClick.RemoveAllListeners();
             _uiController.BottonUI.BuildingMenu.CloseMenuButton.onClick.RemoveAllListeners();
