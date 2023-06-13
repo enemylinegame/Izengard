@@ -236,8 +236,10 @@ namespace Code.TileSystem
             Debug.LogWarning("workPlace is only for test.");
 
             var hire = isOn 
-                ? _productionManager.StartProduction(buildingUI, building, workPlace) 
-                : _productionManager.StopFirstFindedProduction(buildingUI, building);
+                ? _productionManager.StartProduction(
+                    buildingUI, building, workPlace, null) 
+                : _productionManager.StopFirstFindedProduction(
+                    buildingUI, building);
 
             if (!hire) return;
             

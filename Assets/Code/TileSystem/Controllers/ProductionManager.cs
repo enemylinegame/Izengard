@@ -40,13 +40,14 @@ namespace Code.TileSystem
         }
 
         public bool StartProduction(IbuildingCollectable buildingCollectable, 
-            ICollectable building, Vector3 workPlace)
+            ICollectable building, Vector3 workPlace, 
+            IWorkerPreparation preparation)
         {
             if (_tileModel.CurrentWorkersUnits >= _maxWorks) 
                 return false;
 
             int workId = BeginWork(building.SpawnPosition, workPlace, 
-                buildingCollectable.ResourceType);
+                buildingCollectable.ResourceType, preparation);
 
             if (workId < 0)
                 return false;
@@ -70,13 +71,12 @@ namespace Code.TileSystem
             if (!_buildingsTable.ContainsKey(buildingId))
                 return false;
 
-            
-                int workersCount = --_buildingsTable[buildingId];
+            int workersCount = --_buildingsTable[buildingId];
 
-                if (workersCount <= 0)
-                    _buildingsTable.Remove(buildingId);
-                else
-                    _buildingsTable[buildingId] = workersCount;
+            if (workersCount <= 0)
+                _buildingsTable.Remove(buildingId);
+            else
+                _buildingsTable[buildingId] = workersCount;
 
             return true;
         }
@@ -154,48 +154,47 @@ namespace Code.TileSystem
             _teamController.Dispose();
         }
 
-
-        int SendWorkerToMine(Vector3 workerInitPlace, Vector3 workPlace, 
-            ResourceType resourceType)
+        private int SendWorkerToMine(Vector3 workerInitPlace, Vector3 workPlace, 
+            ResourceType resourceType, IWorkerPreparation preparation)
         {
             int portionSize = 5;
             IWorkerTask workerTask = new MiningProduction(
-                _globalStock, ResourceType.Iron, portionSize);
+                _globalStock, resourceType, portionSize);
 
             return _teamController.SendWorkerToMine(
-                workerInitPlace, workPlace, workerTask);
+                workerInitPlace, workPlace, preparation, workerTask);
         }
 
-        int SendWorkerToManufactory(Vector3 workerInitPlace, Vector3 workPlace,
-            ResourceType resourceType)
+        private int SendWorkerToManufactory(Vector3 workerInitPlace, Vector3 workPlace,
+            ResourceType resourceType, IWorkerPreparation preparation)
         {
             float efficiency = 5.0f;
             IWorkerWork work = new ManufactoryProduction(
-                _globalStock, ResourceType.Iron, efficiency);
+                _globalStock, resourceType, efficiency);
 
             return _teamController.SendWorkerToWork(
-                workerInitPlace, workPlace, null, work, null);
+                workerInitPlace, workPlace, preparation, work);
         }
 
         private int BeginWork(Vector3 workerInitPlace, Vector3 workPlace, 
-            ResourceType resource)
+            ResourceType resource, IWorkerPreparation preparation)
         {
             switch (resource)
             {
                 case ResourceType.Iron:
                 {
-                     return SendWorkerToMine(
-                         workerInitPlace, workPlace, ResourceType.Iron);
+                     return SendWorkerToMine(workerInitPlace, workPlace, 
+                         ResourceType.Iron, preparation);
                 }
                 case ResourceType.Gold:
                 {
-                    return SendWorkerToMine(
-                        workerInitPlace, workPlace, ResourceType.Gold);
+                    return SendWorkerToMine(workerInitPlace, workPlace, 
+                        ResourceType.Gold, preparation);
                 }
                 case ResourceType.Textile:
                 {
-                    return SendWorkerToManufactory
-                        (workerInitPlace, workPlace, ResourceType.Textile);
+                    return SendWorkerToManufactory(workerInitPlace, workPlace, 
+                        ResourceType.Textile, preparation);
                 }
             }
 

@@ -16,13 +16,14 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
     }
 
     public int SendWorkerToWork(Vector3 startPalce, Vector3 targetPalce,
-         WorkerController workerController,
-            IWorkerTask beginOfExersice, IWorkerWork work, 
-            IWorkerTask endOfExersice)
+         WorkerController workerController, 
+         IWorkerPreparation preparation, IWorkerWork work)
     {
+        if (null == work || null == workerController)
+            return -1;
+
         var workingWorker = new WorkerCraftWork() { 
-            Worker = workerController, 
-            BeginOfWork = beginOfExersice, Work = work, EndOfWork = endOfExersice
+            Worker = workerController, Preparation = preparation, Work = work 
         };
 
         _workersAreGoingToWork.Add(workerController.WorkerId, workingWorker);
@@ -69,12 +70,13 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
         else
             return null;
 
-        workingWorker.EndOfWork.Produce();
+        if (null != workingWorker.Preparation)
+            workingWorker.Preparation.AfterWork();
+
         var worker = workingWorker.Worker;
-        workingWorker.BeginOfWork = null;
+
+        workingWorker.Preparation = null;
         workingWorker.Work = null;
-        
-        workingWorker.EndOfWork = null;
         workingWorker.Worker = null;
 
         worker.CancelWork();
@@ -103,7 +105,10 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
             if (_workersAreGoingToWork.TryGetValue(workerId, out WorkerCraftWork work))
             {
                 work.Worker.OnMissionCompleted -= OnReadyToWork;
-                work.BeginOfWork.Produce();
+                
+                if (null != work.Preparation)
+                    work.Preparation.BeforWork();
+
                 _workersAreGoingToWork.Remove(workerId);
                 _workingWorkers.Add(workerId, work);
             }
@@ -124,9 +129,8 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
         {
             WorkerCraftWork work = worker.Value;
             work.Worker.OnMissionCompleted -= OnReadyToWork;
-            work.BeginOfWork = null;
+            work.Preparation = null;
             work.Work = null;
-            work.EndOfWork = null;
 
             workers.Add(work.Worker);
             work.Worker = null;
@@ -144,8 +148,7 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
     {
         public WorkerController Worker;
         public IWorkerWork Work;
-        public IWorkerTask BeginOfWork;
-        public IWorkerTask EndOfWork;
+        public IWorkerPreparation Preparation;
     }
 
     private WorkersTeamModel _model;
@@ -154,5 +157,4 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
     private List<int> _readyWorkersToWork;
 
     private Dictionary<int, WorkerCraftWork> _workingWorkers;
-
 }

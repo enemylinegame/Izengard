@@ -55,8 +55,9 @@ namespace Code.TileSystem
             Debug.Log("work Place is not  received.");
 
             int resourceValue = resourceView.ResourceCurrentValueInt;
-            if (resourceValue < MAX_RESOURCES && _controller.WorkerMenager.StartProduction(
-                resourceView, resourceView.Building, workPlace))
+            if (resourceValue < MAX_RESOURCES && 
+                _controller.WorkerMenager.StartProduction(
+                    resourceView, resourceView.Building, workPlace, null))
             {
                 resourceValue++;
             }
