@@ -191,20 +191,45 @@ namespace Code.TileSystem
         {
             switch (resource)
             {
+                case ResourceType.Wood:
+                    {
+                        return SendWorkerToMine(workerInitPlace, workPlace,
+                            resource, preparation);
+                    }
                 case ResourceType.Iron:
                     {
                         return SendWorkerToMine(workerInitPlace, workPlace,
-                            ResourceType.Iron, preparation);
+                            resource, preparation);
+                    }
+                case ResourceType.Deer:
+                    {
+                        return SendWorkerToMine(workerInitPlace, workPlace,
+                            resource, preparation);
+                    }
+                case ResourceType.MagicStones:
+                    {
+                        return SendWorkerToMine(workerInitPlace, workPlace,
+                            resource, preparation);
                     }
                 case ResourceType.Gold:
                     {
                         return SendWorkerToMine(workerInitPlace, workPlace,
-                            ResourceType.Gold, preparation);
+                            resource, preparation);
+                    }
+                case ResourceType.Horse:
+                    {
+                        return SendWorkerToManufactory(workerInitPlace, workPlace,
+                            resource, preparation);
                     }
                 case ResourceType.Textile:
                     {
                         return SendWorkerToManufactory(workerInitPlace, workPlace,
-                            ResourceType.Textile, preparation);
+                            resource, preparation);
+                    }
+                case ResourceType.Steel:
+                    {
+                        return SendWorkerToManufactory(workerInitPlace, workPlace,
+                            resource, preparation);
                     }
             }
 

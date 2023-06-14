@@ -46,7 +46,7 @@ namespace Code.TileSystem
         
         private void AddResource(ResourceView resourceView)
         {
-            Vector3 workPlace = Vector3.forward * 10.0f;
+            Vector3 workPlace = resourceView.Building.SpawnPosition + Vector3.forward * 10.0f;
             IWorkerPreparation workerPreparation = null;
             Debug.LogWarning("workPlace is not defined");
             Debug.LogWarning("workerPreparation is not defined");

@@ -36,9 +36,7 @@ namespace Code.TileSystem
             ProductionManager productionManager)
         {
             _productionManager = productionManager;
-            _productionManager.SeMaxWorks(TileModel.MaxWorkers);
-            _productionManager.OnWorksCountChanged += OnWorksCountChanged;
-
+            
             _textVisualization = uiController.CenterUI.BaseNotificationUI;
             _list = tileList;
             _uiView = uiController.BottonUI.TileUIView;
@@ -51,7 +49,8 @@ namespace Code.TileSystem
 
         private void OnWorksCountChanged(int workersCount)
         {
-            TileModel.CurrentWorkersUnits = workersCount;
+            if (null != TileModel)
+                TileModel.CurrentWorkersUnits = workersCount;
         }
         #region LoadAndUnloadTile
         public void LoadInfoToTheUI(TileView tile)
@@ -65,6 +64,9 @@ namespace Code.TileSystem
             LoadAllTextsFieldsAndImaged(tile.TileModel.TileConfig);
             LoadFloodedBuildings();
             LevelCheck();
+
+            _productionManager.SeMaxWorks(TileModel.MaxWorkers);
+            _productionManager.OnWorksCountChanged += OnWorksCountChanged;
         }
         public void Cancel() { }
         #endregion
@@ -166,7 +168,7 @@ namespace Code.TileSystem
          private void Hiring(bool isOn, BuildingUIInfo buildingUI, ICollectable building)
          {
 
-            Vector3 workPlace = Vector3.forward * 10.0f;
+            Vector3 workPlace = building.SpawnPosition + Vector3.right * 20.0f;
             IWorkerPreparation preparation = null;
 
             var hire = isOn
