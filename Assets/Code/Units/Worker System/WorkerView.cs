@@ -1,5 +1,3 @@
-using Code.TileSystem.Interfaces;
-using ResourceSystem;
 using UnityEngine;
 using UnityEngine.AI;
 

@@ -1,5 +1,6 @@
 ﻿using Code.UI;
 using Code.Player;
+using UnityEngine;
 
 namespace Code.TileSystem
 {
@@ -45,8 +46,15 @@ namespace Code.TileSystem
         
         private void AddResource(ResourceView resourceView)
         {
+            Vector3 workPlace = Vector3.forward * 10.0f;
+            IWorkerPreparation workerPreparation = null;
+            Debug.LogWarning("workPlace is not defined");
+            Debug.LogWarning("workerPreparation is not defined");
+
             int resourceValue = resourceView.ResourceCurrentValueInt;
-            if (resourceValue < MAX_RESOURCES && _controller.WorkerMenager.UpdateWorkerAssignment(resourceView.Building))
+            if (resourceValue < MAX_RESOURCES && 
+                _controller.WorkerMenager.StartProduction(
+                    resourceView.Building, workPlace, workerPreparation))
             {
                 resourceValue++;
             }
@@ -58,7 +66,8 @@ namespace Code.TileSystem
         {
             int resourceValue = resourceView.ResourceCurrentValueInt;
 
-            if (resourceValue > 0 && _controller.WorkerMenager.RemoveWorkerAssignment(resourceView.Building))
+            if (resourceValue > 0 && _controller.WorkerMenager.
+                StopFirstFindedProduction(resourceView.Building))
             {
                 resourceValue--;
             }

@@ -36,8 +36,13 @@ public class GameInit
         var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, hireSystemView, levelGenerator);
         var waveController = new WaveController(levelGenerator, uiController, btnParents, gameConfig);
         var endGameController = new EndGameController(endGameScreen, levelGenerator);
-        var workersTeamComtroller = new WorkersTeamController(workersTeamConfig);
-        var tileController = new TileController(tileList, uiController, buildingController, inputController);
+        
+        var workersTeamComtroller = new WorkersTeamController(
+            workersTeamConfig);
+        var productionManager = new ProductionManager(
+            globalResStock, workersTeamComtroller, workersTeamConfig);
+        var tileController = new TileController(tileList, uiController, 
+            buildingController, inputController, productionManager);
         var defenderController = new DefendersController(tileController,uiController, gameConfig.Defender);
         var tileResourceUIController = new TileResourceUIController(uiController, inputController, tileController);
         var defendersAssignController = new DefendersManager(tileController, defenderController, uiController);

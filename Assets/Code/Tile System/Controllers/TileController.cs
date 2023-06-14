@@ -21,18 +21,24 @@ namespace Code.TileSystem
         private BuildingController _buildingController;
         private InputController _inputController;
         private UIController _uiController;
-        private WorkerMenager _workerMenager;
+        private ProductionManager _productionManager;
         private List<BuildingConfig> _buildingConfigs;
         private int _currentLVL;
-        public WorkerMenager WorkerMenager => _workerMenager;
+        public ProductionManager WorkerMenager => _productionManager;
         public TileModel TileModel => _tileView.TileModel;
         public TileView View => _tileView;
         
         #endregion
-        public TileController(TileList tileList, UIController uiController, BuildingController buildingController
-            , InputController inputController)
+        public TileController(TileList tileList, 
+            UIController uiController, 
+            BuildingController buildingController, 
+            InputController inputController,
+            ProductionManager productionManager)
         {
-            _workerMenager = new WorkerMenager(this, uiController.BottonUI.TileUIView);
+            _productionManager = productionManager;
+            _productionManager.SeMaxWorks(TileModel.MaxWorkers);
+            _productionManager.OnWorksCountChanged += OnWorksCountChanged;
+
             _textVisualization = uiController.CenterUI.BaseNotificationUI;
             _list = tileList;
             _uiView = uiController.BottonUI.TileUIView;
@@ -41,6 +47,11 @@ namespace Code.TileSystem
             _inputController = inputController;
             
             inputController.Add(this);
+        }
+
+        private void OnWorksCountChanged(int workersCount)
+        {
+            TileModel.CurrentWorkersUnits = workersCount;
         }
         #region LoadAndUnloadTile
         public void LoadInfoToTheUI(TileView tile)
@@ -53,7 +64,6 @@ namespace Code.TileSystem
             _uiView.Upgrade.onClick.AddListener(LVLUp);
             LoadAllTextsFieldsAndImaged(tile.TileModel.TileConfig);
             LoadFloodedBuildings();
-            _workerMenager.FillWorkerList();
             LevelCheck();
         }
         public void Cancel() { }
@@ -155,9 +165,13 @@ namespace Code.TileSystem
          }
          private void Hiring(bool isOn, BuildingUIInfo buildingUI, ICollectable building)
          {
-             var hire = isOn 
-                 ? _workerMenager.UpdateWorkerAssignment(building) 
-                 : _workerMenager.RemoveWorkerAssignment(building);
+
+            Vector3 workPlace = Vector3.forward * 10.0f;
+            IWorkerPreparation preparation = null;
+
+            var hire = isOn
+                ? _productionManager.StartProduction(building, workPlace, preparation)
+                 : _productionManager.StopFirstFindedProduction(building);
 
              if (!hire) return;
             
@@ -170,7 +184,7 @@ namespace Code.TileSystem
              var buildings = TileModel.FloodedBuildings.FindAll(x => x.MineralConfig == null);
              foreach (var building in buildings)
              {
-                 var assignWorkers = _workerMenager.GetAssignedWorkers(building);
+                 var assignWorkers = _productionManager.GetAssignedWorkers(building);
                  LoadBuildingInfo(building, assignWorkers);
              }
          }
@@ -215,6 +229,8 @@ namespace Code.TileSystem
         #region Other
         public void Dispose()
         {
+            _productionManager.OnWorksCountChanged -= OnWorksCountChanged;
+
             foreach (var kvp in _uiController.ButtonsInMenu)
                 kvp.Value.onClick.RemoveAllListeners();
             _uiController.BottonUI.BuildingMenu.CloseMenuButton.onClick.RemoveAllListeners();
@@ -242,7 +258,6 @@ namespace Code.TileSystem
             LoadAllTextsFieldsAndImaged(TileModel.SaveTileConfig);
             LoadBuildings(TileModel);
             LevelCheck();
-            WorkerMenager.FillWorkerList();
         }
         
         private void LoadAllTextsFieldsAndImaged(TileConfig config)

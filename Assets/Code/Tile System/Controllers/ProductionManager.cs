@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Code.BuldingsSystem;
-using Code.TileSystem.Interfaces;
+using Code.BuildingSystem;
 using ResourceSystem;
 using UnityEngine;
 
@@ -47,7 +46,7 @@ namespace Code.TileSystem
             _craftWorkerEfficiency = workerConfig.CraftWorkerPerformance;
         }
 
-        public bool StartProduction(IbuildingCollectable buildingCollectable,
+        public bool StartProduction(
             ICollectable building, Vector3 workPlace,
             IWorkerPreparation preparation)
         {
@@ -55,15 +54,15 @@ namespace Code.TileSystem
                 return false;
 
             int workId = BeginWork(building.SpawnPosition, workPlace,
-                buildingCollectable.ResourceType, preparation);
+                building.ResourceType, preparation);
 
             if (workId < 0)
                 return false;
 
             _worksTable.Add(new WorkDescriptor
             {
-                BuildingType = buildingCollectable.BuildingType,
-                ResourceType = buildingCollectable.ResourceType,
+                BuildingType = building.BuildingTypes,
+                ResourceType = building.ResourceType,
                 WorkId = workId
             });
 
@@ -103,15 +102,14 @@ namespace Code.TileSystem
             ++_buildingsTable[buildingId];
         }
 
-        public bool StopFirstFindedProduction(
-            IbuildingCollectable buildingCollectable, ICollectable building)
+        public bool StopFirstFindedProduction(ICollectable building)
         {
             if (!DecreaseWorksForBuilding(building.BuildingID))
                 return false;
 
             WorkDescriptor work = _worksTable.Find(x =>
-                x.ResourceType == buildingCollectable.ResourceType ||
-                x.BuildingType == buildingCollectable.BuildingType);
+                x.ResourceType == building.ResourceType ||
+                x.BuildingType == building.BuildingTypes);
 
             if (null == work)
                 return false;
@@ -123,10 +121,8 @@ namespace Code.TileSystem
             return true;
         }
 
-        public void StopAllFindedProductions(
-            IbuildingCollectable buildingCollectable, ICollectable building)
+        public void StopAllFindedProductions(ICollectable building)
         {
-
             int buildingId = building.BuildingID;
             if (!_buildingsTable.TryGetValue(buildingId, out int worksCount))
             {
@@ -139,8 +135,8 @@ namespace Code.TileSystem
             _buildingsTable.Remove(buildingId);
 
             var worksToStop = _worksTable.FindAll(
-                x => x.BuildingType == buildingCollectable.BuildingType ||
-                x.ResourceType == buildingCollectable.ResourceType);
+                x => x.BuildingType == building.BuildingTypes ||
+                x.ResourceType == building.ResourceType);
 
             foreach (var work in worksToStop)
             {
