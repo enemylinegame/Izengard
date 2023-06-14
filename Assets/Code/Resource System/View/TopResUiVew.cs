@@ -24,7 +24,7 @@ public class TopResUiVew : MonoBehaviour
     private TextMeshProUGUI goldCount;
 
 
-    public void UpdateResursesCount(ResourceType type, float count)
+    public void UpdateResursesCount(ResourceType type, int count)
     {
         switch(type)
         {

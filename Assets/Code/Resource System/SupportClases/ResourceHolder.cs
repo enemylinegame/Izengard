@@ -36,5 +36,17 @@
         {
             _currentAmount -= value;
         }
+
+        public bool IsTypeEquals(ResourceType resourceType)
+        {
+            if (resourceType == _resourceType)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
