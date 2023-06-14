@@ -114,10 +114,10 @@ namespace CombatSystem
             ClearTargets();
             newPosition.y = _defendPosition.y;
             _defendPosition = newPosition;
-            if (_agent.FindClosestEdge( out NavMeshHit hit))
-            {
-                _defendPosition = hit.position;
-            }
+            // if (_agent.FindClosestEdge( out NavMeshHit hit))
+            // {
+            //     _defendPosition = hit.position;
+            // }
             
             _currentStateExecuter.GoToPosition(_defendPosition);
         }

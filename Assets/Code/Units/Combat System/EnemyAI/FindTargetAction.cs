@@ -54,7 +54,7 @@ namespace CombatSystem
 
         private void OnSearchScopeEnter()
         {
-            //if (CheckCurrentTargetIsBuildingOrNull())
+            if (CheckCurrentTargetIsBuildingOrNull())
             {
                 _currentTarget = _primaryTarget;
 
