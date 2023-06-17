@@ -5,19 +5,21 @@ public class ManufactoryProduction : IWorkerWork
     public ManufactoryProduction(GlobalStock stock, ResourceType resourceType, 
         float productionEfficiency)
     {
-        _productionEfficiency = productionEfficiency;
         _globalStock = stock;
+        _resourceType = resourceType;
+        _productionEfficiency = productionEfficiency;
     }
 
     public void Produce(float deltaTime)
     {
         _produced += deltaTime * _productionEfficiency;
 
-        int portion = (int)_produced;
+        float portion = UnityEngine.Mathf.Floor(_produced);
         if (portion > 0)
+        {
             _produced -= portion;
-
-        _globalStock.AddResourceToStock(_resourceType, portion);
+            _globalStock.AddResourceToStock(_resourceType, (int)portion);
+        }
     }
 
 

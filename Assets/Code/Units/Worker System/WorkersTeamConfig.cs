@@ -28,6 +28,6 @@ public class WorkersTeamConfig : ScriptableObject
 
     [Header("Craft worker")]
     [SerializeField]
-    private float _craftWorkerPerformance;
+    private float _craftWorkerPerformance;//обсудить с Николаем
     public float CraftWorkerPerformance => _craftWorkerPerformance;
 }

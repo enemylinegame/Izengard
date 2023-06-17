@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Code.TileSystem
 {
-    public class ProductionManager : IOnUpdate, IDisposable, IOnController
+    public sealed class ProductionManager : IDisposable
     {
         private WorkersTeamController _teamController;
 
@@ -15,13 +15,12 @@ namespace Code.TileSystem
 
         private GlobalStock _globalStock;
 
-        private int _maxWorks;
         private int _worksAccount;
 
         private int _mineWorkerPortionSize;
         private float _craftWorkerEfficiency;
 
-        private class WorkDescriptor
+        private sealed class WorkDescriptor
         {
             public BuildingTypes BuildingType;
             public ResourceType ResourceType;
@@ -39,19 +38,28 @@ namespace Code.TileSystem
             _worksTable = new List<WorkDescriptor>();
             _buildingsTable = new Dictionary<int, int>();
 
-            _maxWorks = 0;
             _worksAccount = 0;
 
-            _mineWorkerPortionSize = workerConfig.MineWorkerPortionSize;
+            _mineWorkerPortionSize = workerConfig.MineWorkerPortionSize;//resource config
             _craftWorkerEfficiency = workerConfig.CraftWorkerPerformance;
+        }
+
+        public bool IsThereFreeWorkers(ICollectable building)
+        {
+            if (!_buildingsTable.TryGetValue(building.BuildingID,
+                out int workersAccount))
+                return true;
+
+            if (building.MaxWorkers > workersAccount)
+                return true;
+
+            return false;
         }
 
         public bool StartProduction(
             ICollectable building, Vector3 workPlace,
             IWorkerPreparation preparation)
         {
-            if (_worksAccount >= _maxWorks)
-                return false;
 
             int workId = BeginWork(building.SpawnPosition, workPlace,
                 building.ResourceType, preparation);
@@ -66,15 +74,10 @@ namespace Code.TileSystem
                 WorkId = workId
             });
 
-            IncreaseWorksForBuilding(building.BuildingID);
+            IncreaseWorksForBuilding(building.BuildingID);//workers jobs
 
             OnWorksCountChanged.Invoke(++_worksAccount);
             return true;
-        }
-
-        public void SeMaxWorks(int maxWorks)
-        {
-            _maxWorks = maxWorks;
         }
 
         private bool DecreaseWorksForBuilding(int buildingId)
@@ -92,6 +95,15 @@ namespace Code.TileSystem
             return true;
         }
 
+        public bool IsThereBuisyWorkers(ICollectable building)
+        {
+            if (!_buildingsTable.TryGetValue(
+                building.BuildingID, out int worksCount))
+                return false;
+
+            return worksCount > 0 ? true : false;
+        }
+
         private void IncreaseWorksForBuilding(int buildingId)
         {
             if (!_buildingsTable.ContainsKey(buildingId))
@@ -102,32 +114,28 @@ namespace Code.TileSystem
             ++_buildingsTable[buildingId];
         }
 
-        public bool StopFirstFindedProduction(ICollectable building)
+        public void StopFirstFindedWorker(ICollectable building)
         {
             if (!DecreaseWorksForBuilding(building.BuildingID))
-                return false;
+                return;
 
             WorkDescriptor work = _worksTable.Find(x =>
                 x.ResourceType == building.ResourceType ||
                 x.BuildingType == building.BuildingTypes);
 
             if (null == work)
-                return false;
+                return;
 
             _teamController.CancelWork(work.WorkId);
             _worksTable.Remove(work);
             OnWorksCountChanged.Invoke(--_worksAccount);
-
-            return true;
         }
 
         public void StopAllFindedProductions(ICollectable building)
         {
             int buildingId = building.BuildingID;
             if (!_buildingsTable.TryGetValue(buildingId, out int worksCount))
-            {
                 return;
-            }
 
             _worksAccount -= _buildingsTable[buildingId];
             OnWorksCountChanged.Invoke(_worksAccount);
@@ -146,7 +154,6 @@ namespace Code.TileSystem
         }
         public int GetAssignedWorkers(ICollectable building)
         {
-
             if (!_buildingsTable.TryGetValue(
                 building.BuildingID, out int workersCount))
                 return 0;
@@ -154,20 +161,20 @@ namespace Code.TileSystem
             return workersCount;
         }
 
-        public void OnUpdate(float deltaTime)
-        {
-            _teamController.OnUpdate(deltaTime);
-        }
-
         public void Dispose()
         {
             _teamController.Dispose();
+            _teamController = null;
+
+            _worksTable.Clear();
+            _worksTable = null;
+            _buildingsTable.Clear();
+            _buildingsTable = null;
         }
 
         private int SendWorkerToMine(Vector3 workerInitPlace, Vector3 workPlace,
-            ResourceType resourceType, IWorkerPreparation preparation)
+            ResourceType resourceType, IWorkerPreparation preparation)//Generic
         {
-            
             IWorkerTask workerTask = new MiningProduction(
                 _globalStock, resourceType, _mineWorkerPortionSize);
 

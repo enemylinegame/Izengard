@@ -41,7 +41,15 @@ namespace ResourceSystem
 
         public void AddResourceToStock(ResourceType resourceType, int value)
         {
-            ResourceHolder resourceHolder = _resourceHolders.Find(x => x.ResourceType == resourceType);
+            ResourceHolder resourceHolder = 
+                _resourceHolders.Find(x => x.ResourceType == resourceType);
+
+            if (null == resourceHolder)
+            {
+                Debug.LogError("Unknown resource Type!");
+                return;
+            }
+
             resourceHolder.AddResource(value);
             ResourceCountChanged(resourceType, resourceHolder.CurrentAmount);
         }

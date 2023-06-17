@@ -14,9 +14,7 @@ namespace Code.TileSystem
         public List<Dot> DotSpawns { get; set; }
         public List<ICollectable> FloodedBuildings { get; set; }
         public List<BuildingConfig> CurrBuildingConfigs { get; set; }
-        public List<WorkerView> Workers { get; set; }
         public List<DefenderUnit> DefenderUnits { get; set; }
-        public List<WorkersAssigments> WorkersAssigments { get; set; }
         public TileConfig SaveTileConfig { get; set; }
         public int MaxWorkers => MAX_WORKERS;
         public int MaxWarriors => MAX_WARRIORS;
@@ -28,8 +26,6 @@ namespace Code.TileSystem
             SaveTileConfig = new TileConfig();
             CurrBuildingConfigs = new List<BuildingConfig>(TileConfig.BuildingTirs);
             FloodedBuildings = new List<ICollectable>();
-            Workers = new List<WorkerView>();
-            WorkersAssigments = new List<WorkersAssigments>();
             DefenderUnits = new List<DefenderUnit>();
             SaveTileConfig = TileConfig;
         }
