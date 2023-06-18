@@ -65,7 +65,6 @@ namespace Code.TileSystem
             LoadFloodedBuildings();
             LevelCheck();
 
-            _productionManager.SeMaxWorks(TileModel.MaxWorkers);
             _productionManager.OnWorksCountChanged += OnWorksCountChanged;
         }
         public void Cancel() { }
@@ -121,7 +120,8 @@ namespace Code.TileSystem
 
         #endregion
         #region BuildingInfoAndHiring
-        public BuildingUIInfo CreateBuildingInfo(BuildingConfig config, TileModel model, ICollectable building)
+        public BuildingUIInfo CreateBuildingInfo(BuildingConfig config, TileModel model, 
+            ICollectable building)
          {
              var view = Object.Instantiate(_uiController.BottonUI.BuildingMenu.BuildingInfo.GetComponent<BuildingUIInfo>()
                  , _uiController.BottonUI.BuildingMenu.ByBuildButtonsHolder);
@@ -167,17 +167,26 @@ namespace Code.TileSystem
          }
          private void Hiring(bool isOn, BuildingUIInfo buildingUI, ICollectable building)
          {
+            if (isOn)
+            {
+                if (!_productionManager.IsThereFreeWorkers(building))
+                    return;
 
-            Vector3 workPlace = building.SpawnPosition + Vector3.right * 20.0f;
-            IWorkerPreparation preparation = null;
+                Vector3 workPlace = building.SpawnPosition + Vector3.right * 20.0f;
+                IWorkerPreparation preparation = null;
 
-            var hire = isOn
-                ? _productionManager.StartProduction(building, workPlace, preparation)
-                 : _productionManager.StopFirstFindedProduction(building);
+                _productionManager.StartProduction(
+                    building, workPlace, preparation);
+            }
+            else
+            {
+                if (!_productionManager.IsThereBuisyWorkers(building))
+                    return;
 
-             if (!hire) return;
-            
-             buildingUI.CurrentUnits += isOn ? 1 : -1;
+                _productionManager.StopFirstFindedWorker(building);
+            }
+
+            buildingUI.CurrentUnits += isOn ? 1 : -1;
              if(buildingUI.CurrentUnits <=0) buildingUI.CurrentUnits = 0;
              buildingUI.UnitsBusy.text = $"{buildingUI.CurrentUnits}/{TileModel.MaxWorkers}";
          }

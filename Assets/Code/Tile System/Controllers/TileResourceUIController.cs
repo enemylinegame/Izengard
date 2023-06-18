@@ -11,7 +11,8 @@ namespace Code.TileSystem
         private TileController _controller;
         private TileResouceUIFactory _factory;
 
-        public TileResourceUIController(UIController uiController, InputController inputController, TileController controller)
+        public TileResourceUIController(UIController uiController, 
+            InputController inputController, TileController controller)
         {
             _uiController = uiController.BottonUI.ResourcesLayoutUIView;
             _controller = controller;
@@ -43,19 +44,20 @@ namespace Code.TileSystem
             res.ResourceAddButton.onClick.AddListener(() => AddResource(res));
             res.ResourceRemoveButton.onClick.AddListener(() => RemoveResource(res));
         }
-        
+
         private void AddResource(ResourceView resourceView)
         {
-            Vector3 workPlace = resourceView.Building.SpawnPosition + Vector3.forward * 10.0f;
-            IWorkerPreparation workerPreparation = null;
-            Debug.LogWarning("workPlace is not defined");
-            Debug.LogWarning("workerPreparation is not defined");
-
             int resourceValue = resourceView.ResourceCurrentValueInt;
-            if (resourceValue < MAX_RESOURCES && 
-                _controller.WorkerMenager.StartProduction(
-                    resourceView.Building, workPlace, workerPreparation))
+            if (resourceValue < MAX_RESOURCES &&
+                _controller.WorkerMenager.IsThereFreeWorkers(
+                    resourceView.Building))
             {
+                IWorkerPreparation workerPreparation = null;
+                Vector3 resourceLocation = 
+                    resourceView.gameObject.transform.position;
+                _controller.WorkerMenager.StartProduction(
+                    resourceView.Building, resourceLocation, workerPreparation);
+
                 resourceValue++;
             }
             resourceView.Building.MineralConfig.CurrentMineValue = resourceValue;
@@ -66,9 +68,12 @@ namespace Code.TileSystem
         {
             int resourceValue = resourceView.ResourceCurrentValueInt;
 
-            if (resourceValue > 0 && _controller.WorkerMenager.
-                StopFirstFindedProduction(resourceView.Building))
+            if (resourceValue > 0 && 
+                _controller.WorkerMenager.IsThereBuisyWorkers(
+                    resourceView.Building))
             {
+                _controller.WorkerMenager.StopFirstFindedWorker(
+                    resourceView.Building);
                 resourceValue--;
             }
 
