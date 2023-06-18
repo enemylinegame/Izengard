@@ -46,6 +46,9 @@ namespace Code.TileSystem
 
         public bool IsThereFreeWorkers(ICollectable building)
         {
+            if (0 == building.MaxWorkers)
+                return false;
+
             if (!_buildingsTable.TryGetValue(building.BuildingID,
                 out int workersAccount))
                 return true;
@@ -185,7 +188,6 @@ namespace Code.TileSystem
         private int SendWorkerToManufactory(Vector3 workerInitPlace, Vector3 workPlace,
             ResourceType resourceType, IWorkerPreparation preparation)
         {
-            
             IWorkerWork work = new ManufactoryProduction(
                 _globalStock, resourceType, _craftWorkerEfficiency);
 
