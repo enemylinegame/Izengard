@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _icon: {fileID: 21300000, guid: 49ab9b153bc773541a7ef06eeb9ec484, type: 3}
   _maxHealth: 10000
-  _name: 
+  _name: Resurse Market
   _buildingCost:
   - _resourceType: 1
     _cost: 1
@@ -23,3 +23,4 @@ MonoBehaviour:
   _buildingType: 212
   _houseType: 3
   _description: 
+  _maxWorkers: 2

@@ -101,7 +101,9 @@ namespace Code.BuildingSystem
             
             build.BuildingTypes = config.BuildingType;
             build.MaxWorkers = config.MaxWorkers;
-
+            build.BuildingTypes = config.BuildingType;
+            build.NameBuiding = config.Name;
+            
             dot.Building = build;
             dot.IsActive = false;
             

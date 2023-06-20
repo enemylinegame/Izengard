@@ -14,12 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _icon: {fileID: 21300000, guid: 2f06b58ed0b529547bf45753f35993d7, type: 3}
   _maxHealth: 1000
-  _name: 
-  _buildingCost:
-  - _resourceType: 2
-    _cost: 0
+  _name: Textile Factory
+  _buildingCost: []
   _buildingPrefab: {fileID: 8901040941739594243, guid: a3a22ed8d083a894aaefc4efd031b92c, type: 3}
   _tierNumber: 1
   _buildingType: 202
   _houseType: 3
   _description: 
+  _maxWorkers: 5

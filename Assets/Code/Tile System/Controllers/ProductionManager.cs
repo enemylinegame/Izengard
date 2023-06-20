@@ -63,6 +63,7 @@ namespace Code.TileSystem
             ICollectable building, Vector3 workPlace,
             IWorkerPreparation preparation)
         {
+
             int workId = BeginWork(building.SpawnPosition, workPlace,
                 building.ResourceType, preparation);
 
@@ -76,7 +77,7 @@ namespace Code.TileSystem
                 WorkId = workId
             });
 
-            IncreaseWorksForBuilding(building.BuildingID);//workers jobs
+            IncreaseWorksForBuilding(building.BuildingID);
 
             OnWorksCountChanged.Invoke(++_worksAccount);
             return true;
