@@ -40,7 +40,7 @@ namespace Wave
             {
                 if (!_pool[i].Enemy.RootGameObject.activeInHierarchy)
                 {
-                    _pool[i].Enemy.RootGameObject.SetActive(true);
+                    //_pool[i].Enemy.RootGameObject.SetActive(true);
                     _pool[i].SpawnEnemy();
                     return _pool[i];
                 }
