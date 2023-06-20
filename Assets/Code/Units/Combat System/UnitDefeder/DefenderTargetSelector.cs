@@ -7,16 +7,13 @@ namespace CombatSystem
 {
     public class DefenderTargetSelector
     {
-        private readonly DefenderUnitStats _stats;
         private readonly DefenderTargetsHolder _targetHolder;
         private readonly Transform _transform;
 
         
-        public DefenderTargetSelector(GameObject defenderGameObject, DefenderUnitStats stats, 
-            DefenderTargetsHolder holder)
+        public DefenderTargetSelector(GameObject defenderGameObject, DefenderTargetsHolder holder)
         {
             _transform = defenderGameObject.transform;
-            _stats = stats;
             _targetHolder = holder;
         }
         
@@ -102,28 +99,6 @@ namespace CombatSystem
 
             return selectedTarget;
         }
-        
-        // public bool IsCurrentTargetInRange()
-        // {
-        //     return IsTargetInRange(_targetHolder.CurrentTarget);
-        // }
 
-        public bool IsTargetInRange(IDamageable target)
-        {
-            bool isInrange = false;
-        
-            if (target != null)
-            {
-                Vector3 myPosition = _transform.position;
-                myPosition.y = 0.0f;
-                Vector3 targetPosition = target.Position;
-                targetPosition.y = 0.0f;
-                
-                isInrange = (targetPosition - myPosition).sqrMagnitude <= _stats.AttackRange * _stats.AttackRange;
-            }
-            
-            return isInrange;
-        }
-        
     }
 }

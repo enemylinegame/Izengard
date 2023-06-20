@@ -11,14 +11,17 @@ namespace CombatSystem.DefenderStates
         private NavMeshAgent _agent;
         private DefenderTargetSelector _targetSelector;
         private DefenderTargetsHolder _targetsHolder;
+        private DefenderTargetFinder _targetFinder;
         
         public DefenderPursuit(DefenderUnit defenderUnit, Action<DefenderState> setStateDelegate, 
-            NavMeshAgent agent, DefenderTargetSelector selector, DefenderTargetsHolder holder) : 
+            NavMeshAgent agent, DefenderTargetSelector selector, DefenderTargetsHolder holder, 
+            DefenderTargetFinder finder) : 
             base(defenderUnit, setStateDelegate)
         {
             _agent = agent;
             _targetSelector = selector;
             _targetsHolder = holder;
+            _targetFinder = finder;
         }
 
 
@@ -32,7 +35,7 @@ namespace CombatSystem.DefenderStates
 
             if (target != null && !target.IsDead )
             {
-                if (_targetSelector.IsTargetInRange(target))
+                if (_targetFinder.IsTargetInRange(target))
                 {
                     _agent.ResetPath();
                     _setState(DefenderState.Fight);

@@ -60,7 +60,7 @@ namespace CombatSystem
 
         public DefenderUnit(GameObject defender, Vector3 defendPosition)
         {
-            _unitStats = new DefenderUnitStats(1f, 0.2f,25, 100);
+            _unitStats = new DefenderUnitStats(1f, 0.3f,25, 100);
             _defender = defender;
             _defendPosition = defendPosition;
             _myDamageable = defender.GetComponent<Damageable>();
@@ -71,16 +71,17 @@ namespace CombatSystem
             _agent = defender.GetComponent<NavMeshAgent>();
             _animation = new DefenderAnimation(defender, this);
             _targetsHolder = new DefenderTargetsHolder();
-            _targetFinder = new DefenderTargetFinder(_defender, _unitStats.AttackRange, _targetsHolder);
+            _targetFinder = new DefenderTargetFinder(_defender, _unitStats.AttackRange, _targetsHolder, _unitStats);
             _targetFinder.OnTargetsDetected += AddedTargetInRange;
-            _targetSelector = new DefenderTargetSelector(_defender, _unitStats, _targetsHolder);
-
-            _fightState = new DefenderFight(this, SetState, _unitStats, _targetsHolder, _targetSelector, _myDamageable);
+            _targetSelector = new DefenderTargetSelector(_defender, _targetsHolder);
+            _fightState = new DefenderFight(this, SetState, _unitStats, _targetsHolder, _targetSelector, 
+                _myDamageable, _targetFinder);
             _goingState = new DefenderGoing(this, SetState, _unitStats, _agent);
             _gotoBarrackState = new DefenderGotoBarrack(this, SetState, _agent);
             _idleState = new DefenderIdle(this, SetState, _agent);
             _inBarrackState = new DefenderInBarrack(this, SetState);
-            _pursuitState = new DefenderPursuit(this, SetState, _agent, _targetSelector, _targetsHolder);
+            _pursuitState = new DefenderPursuit(this, SetState, _agent, _targetSelector, _targetsHolder,
+                _targetFinder);
 
             SetState(DefenderState.Going);
         }

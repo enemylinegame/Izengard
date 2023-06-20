@@ -12,6 +12,7 @@ namespace CombatSystem
 
         private const int FREQUNCY_REDUCTION_FRAMES = 5;
 
+        private readonly DefenderUnitStats _stats;
         private DefenderTargetsHolder _targetsHolder;
         private Transform _transform;
 
@@ -21,11 +22,13 @@ namespace CombatSystem
         private int _frequencyReductionCounter;
 
 
-        public DefenderTargetFinder(GameObject defenderRoot, float range, DefenderTargetsHolder holder)
+        public DefenderTargetFinder(GameObject defenderRoot, float range, DefenderTargetsHolder holder, 
+            DefenderUnitStats stats)
         {
             _transform = defenderRoot.transform;
             _range = range;
             _targetsHolder = holder;
+            _stats = stats;
         }
         
 
@@ -63,5 +66,22 @@ namespace CombatSystem
             }
         }
 
+        public bool IsTargetInRange(IDamageable target)
+        {
+            bool isInrange = false;
+        
+            if (target != null)
+            {
+                Vector3 myPosition = _transform.position;
+                myPosition.y = 0.0f;
+                Vector3 targetPosition = target.Position;
+                targetPosition.y = 0.0f;
+                
+                isInrange = (targetPosition - myPosition).sqrMagnitude <= _stats.AttackRange * _stats.AttackRange;
+            }
+            
+            return isInrange;
+        }
+        
     }
 }

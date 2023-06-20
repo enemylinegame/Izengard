@@ -11,6 +11,7 @@ namespace CombatSystem.DefenderStates
         private DefenderUnitStats _stats;
         private DefenderTargetsHolder _targetsHolder;
         private DefenderTargetSelector _targetSelector;
+        private DefenderTargetFinder _targetFinder;
         private IDamageable _myDamagable;
 
         private float _reloadTime;
@@ -20,7 +21,7 @@ namespace CombatSystem.DefenderStates
         
         public DefenderFight(DefenderUnit defenderUnit, Action<DefenderState> setStateDelegate, 
             DefenderUnitStats stats, DefenderTargetsHolder holder, DefenderTargetSelector selector, 
-            IDamageable myDamageable) : 
+            IDamageable myDamageable, DefenderTargetFinder finder) : 
             base(defenderUnit, setStateDelegate)
         {
             _stats = stats;
@@ -28,6 +29,7 @@ namespace CombatSystem.DefenderStates
             _targetsHolder = holder;
             _targetSelector = selector;
             _myDamagable = myDamageable;
+            _targetFinder = finder;
         }
 
         public void Reload()
@@ -53,7 +55,7 @@ namespace CombatSystem.DefenderStates
 
             if (target != null)
             {
-                if (_targetSelector.IsTargetInRange(target))
+                if (_targetFinder.IsTargetInRange(target))
                 {
                     AttackTarget(target);
                 }
