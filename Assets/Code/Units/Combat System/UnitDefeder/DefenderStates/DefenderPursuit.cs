@@ -30,7 +30,7 @@ namespace CombatSystem.DefenderStates
                 target = _targetSelector.SelectTarget();
             }
 
-            if (target != null)
+            if (target != null && !target.IsDead )
             {
                 if (_targetSelector.IsTargetInRange(target))
                 {
@@ -45,6 +45,10 @@ namespace CombatSystem.DefenderStates
             }
             else
             {
+                if (target != null)
+                {
+                    _targetsHolder.CurrentTarget = null;
+                }
                 _agent.ResetPath();
                 _setState(DefenderState.Going);
             }
@@ -55,15 +59,15 @@ namespace CombatSystem.DefenderStates
             _agent.ResetPath();
         }
 
-        public override void OnDamaged(IDamageable attacker)
-        {
-            _targetSelector.SelectTarget();
-        }
-
-        public override void AddedTargetInRange(IDamageable target)
-        {
-            _targetSelector.SelectTarget();
-        }
+        // public override void OnDamaged(IDamageable attacker)
+        // {
+        //     _targetSelector.SelectTarget();
+        // }
+        
+        // public override void AddedTargetInRange(IDamageable target)
+        // {
+        //     _targetSelector.SelectTarget();
+        // }
 
         public override void GoToPosition(Vector3 destination)
         {

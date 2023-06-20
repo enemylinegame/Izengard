@@ -38,7 +38,7 @@ namespace CombatSystem.DefenderStates
             _setState(DefenderState.Fight);
         }
 
-        public override void AddedTargetInRange(IDamageable target)
+        public override void AddedTargetInRange()
         {
             _setState(DefenderState.Fight);
         }

@@ -12,7 +12,6 @@ namespace CombatSystem
     public class DefenderUnit : IDisposable, IOnUpdate
     {
         public event Action<DefenderUnit> DefenderUnitDead;
-        public event Action<DefenderUnit> OnDestinationReached;
         public event Action<DefenderState> OnStateChanged; 
         public event Action<float, float> OnHealthChanged; 
 
@@ -73,8 +72,8 @@ namespace CombatSystem
             _animation = new DefenderAnimation(defender, this);
             _targetsHolder = new DefenderTargetsHolder();
             _targetFinder = new DefenderTargetFinder(_defender, _unitStats.AttackRange, _targetsHolder);
-            _targetFinder.OnNewTarget += AddedTargetInRange;
-            _targetFinder.OnTargetLost += TargetInRangeLost;
+            _targetFinder.OnTargetsDetected += AddedTargetInRange;
+            //_targetFinder.OnTargetLost += TargetInRangeLost;
             _targetSelector = new DefenderTargetSelector(_defender, _unitStats, _targetsHolder);
 
             _fightState = new DefenderFight(this, SetState, _unitStats, _targetsHolder, _targetSelector, _myDamageable);
@@ -98,26 +97,22 @@ namespace CombatSystem
             _animation.Disable();
             _myDamageable.DeathAction -= DefenderDead;
             ClearTargets();
-            _targetFinder.Dispose();
+            //_targetFinder.Dispose();
         }
 
         public void OnUpdate(float deltaTime)
         {
+            ClearAttackingTargets();
             _currentStateExecuter.OnUpdate();
-            _fightState.Reload();
             _targetFinder.OnUpdate(deltaTime);
-            DrawLineToTarget(_targetsHolder.CurrentTarget);
+            _fightState.Reload();
+            DebugDrawLineToTarget(_targetsHolder.CurrentTarget);
         }
 
         public void GoToPosition(Vector3 newPosition)
         {
             ClearTargets();
-            newPosition.y = _defendPosition.y;
             _defendPosition = newPosition;
-            // if (_agent.FindClosestEdge( out NavMeshHit hit))
-            // {
-            //     _defendPosition = hit.position;
-            // }
             
             _currentStateExecuter.GoToPosition(_defendPosition);
         }
@@ -125,7 +120,6 @@ namespace CombatSystem
         public void GoToBarrack(Vector3 destination)
         {
             ClearTargets();
-            destination.y = _defendPosition.y;
             _defendPosition = destination;
             _gotoBarrackState.BarrackPosition = _defendPosition;
             _currentStateExecuter.GoToBarrack(destination);
@@ -146,59 +140,48 @@ namespace CombatSystem
             if (!_targetsHolder.AttackingTargets.Contains(attacker))
             {
                 _targetsHolder.AttackingTargets.Add(attacker);
-                attacker.DeathAction += EnemyDead;
+            
             }
+            attacker.DeathAction += EnemyDead;
             //Debug.Log($"DefenderUnit::OnDamaged: {_state} ");
             _currentStateExecuter.OnDamaged(attacker);
         }
 
-        private void AddedTargetInRange(IDamageable target)
+        private void AddedTargetInRange()
         {
-            _currentStateExecuter.AddedTargetInRange(target);
-        }
-
-        private void TargetInRangeLost(IDamageable target)
-        {
-            if (target == _targetsHolder.CurrentTarget)
-            {
-                _targetsHolder.CurrentTarget = null;
-            }
-            _currentStateExecuter.TargetInRangeLost(target);
+            _currentStateExecuter.AddedTargetInRange();
         }
 
         private void SetState(DefenderState newState)
         {
-            if (_state != newState)
+            if (_state == newState) return;
+            switch (newState)
             {
-                switch (newState)
-                {
-                    case DefenderState.Fight:
-                        _currentStateExecuter = _fightState;
-                        break;
-                    case DefenderState.Going:
-                        _currentStateExecuter = _goingState;
-                        break;
-                    case DefenderState.Idle:
-                        _currentStateExecuter = _idleState;
-                        break;
-                    case DefenderState.Pursuit:
-                        _currentStateExecuter = _pursuitState;
-                        break;
-                    case DefenderState.GotoBarrack:
-                        _currentStateExecuter = _gotoBarrackState;
-                        break;
-                    case DefenderState.InBarrack:
-                        _currentStateExecuter = _inBarrackState;
-                        break;
-                }
-
-                DefenderState oldState = _state;
-                
-                _state = newState;
-                //Debug.Log($"DefenderUnit->SetState: {oldState} -> {_state}");
-                _currentStateExecuter.StartState();
-                OnStateChanged?.Invoke(_state);
+                case DefenderState.Fight:
+                    _currentStateExecuter = _fightState;
+                    break;
+                case DefenderState.Going:
+                    _currentStateExecuter = _goingState;
+                    break;
+                case DefenderState.Idle:
+                    _currentStateExecuter = _idleState;
+                    break;
+                case DefenderState.Pursuit:
+                    _currentStateExecuter = _pursuitState;
+                    break;
+                case DefenderState.GotoBarrack:
+                    _currentStateExecuter = _gotoBarrackState;
+                    break;
+                case DefenderState.InBarrack:
+                    _currentStateExecuter = _inBarrackState;
+                    break;
             }
+
+            DefenderState oldState = _state;
+            _state = newState;
+            //Debug.Log($"DefenderUnit->SetState: {oldState} -> {_state}");
+            _currentStateExecuter.StartState();
+            OnStateChanged?.Invoke(_state);
         }
 
         private void EnemyDead()
@@ -221,11 +204,16 @@ namespace CombatSystem
         private void ClearTargets()
         {
             _targetsHolder.CurrentTarget = null;
+            ClearAttackingTargets();
+        }
+        
+        private void ClearAttackingTargets()
+        {
             _targetsHolder.AttackingTargets.ForEach(target => target.DeathAction -= EnemyDead);
             _targetsHolder.AttackingTargets.Clear();
         }
 
-        private void DrawLineToTarget(IDamageable target)
+        private void DebugDrawLineToTarget(IDamageable target)
         {
 #if UNITY_EDITOR
             if (target != null)

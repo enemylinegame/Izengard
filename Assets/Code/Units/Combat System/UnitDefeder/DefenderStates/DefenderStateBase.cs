@@ -30,9 +30,7 @@ namespace CombatSystem.DefenderStates
         
         public virtual void OnDamaged(IDamageable attacker) { }
 
-        public virtual void AddedTargetInRange(IDamageable target) { }
-
-        public virtual void TargetInRangeLost(IDamageable target) { }
+        public virtual void AddedTargetInRange() { }
 
         public virtual void GoToPosition(Vector3 destination) { }
 

@@ -8,11 +8,11 @@ namespace CombatSystem
         public IDamageable CurrentTarget;
         public List<IDamageable> TargetsInRange;
         public List<IDamageable> AttackingTargets;
-
+        
         public DefenderTargetsHolder()
         {
-            TargetsInRange = new List<IDamageable>();
-            AttackingTargets = new List<IDamageable>();
+             TargetsInRange = new List<IDamageable>();
+             AttackingTargets = new List<IDamageable>();
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using CombatSystem.Interfaces;
+﻿using System.Collections.Generic;
+using CombatSystem.Interfaces;
 using UnityEngine;
 
 
@@ -28,63 +29,97 @@ namespace CombatSystem
         /// <returns> selected target </returns>
         public IDamageable SelectTarget()
         {
-            IDamageable selectedTarget = _targetHolder.CurrentTarget;
+            IDamageable selectedTarget = null;
+            int maxThreatLevel = 0;
 
-            if (selectedTarget == null || selectedTarget.IsDead)
+            List<IDamageable> targets = new List<IDamageable>();
+
+            SelectMaxThreatTargets(targets, _targetHolder.TargetsInRange);
+            SelectMaxThreatTargets(targets, _targetHolder.AttackingTargets);
+
+            selectedTarget = SelectNearestTarget(targets);
+
+            _targetHolder.CurrentTarget = selectedTarget;
+            return selectedTarget;
+        }
+
+        private void SelectMaxThreatTargets(List<IDamageable> toList, List<IDamageable> fromList)
+        {
+            int maxThreatLevel = 0;
+            if (toList.Count > 0)
             {
-                if (selectedTarget != null)
+                maxThreatLevel = toList[0].ThreatLevel;
+            }
+            
+            for (int i = 0; i < fromList.Count; i++)
+            {
+                IDamageable current = fromList[i];
+                if (!current.IsDead)
                 {
-                    selectedTarget = null;
-                    _targetHolder.CurrentTarget = null;
-                }
-
-                if (_targetHolder.AttackingTargets.Count > 0)
-                {
-                    selectedTarget = _targetHolder.AttackingTargets[0];
-                    _targetHolder.CurrentTarget = selectedTarget;
-                }
-                else
-                {
-                    if (_targetHolder.TargetsInRange.Count > 0)
+                    int currentThreatLevel = current.ThreatLevel;
+                    if (currentThreatLevel > maxThreatLevel)
                     {
-                        selectedTarget = _targetHolder.TargetsInRange[0];
-                        _targetHolder.CurrentTarget = selectedTarget;
+                        toList.Clear();
+                        toList.Add(current);
+                        maxThreatLevel = currentThreatLevel;
+                    }
+                    else if (currentThreatLevel == maxThreatLevel)
+                    {
+                        toList.Add(current);
                     }
                 }
             }
-            else
+        }
+
+        private IDamageable SelectNearestTarget(List<IDamageable> targets)
+        {
+            if (targets.Count == 0)
             {
-                if ( !_targetHolder.AttackingTargets.Contains(_targetHolder.CurrentTarget))
+                return null;
+            }
+
+            if (targets.Count == 1)
+            {
+                return targets[0];
+            }
+
+            IDamageable selectedTarget = targets[0];
+            Vector3 myPosition = _transform.position;
+            myPosition.y = 0.0f;
+            float minSqrDistance = float.MaxValue;
+
+            for (int i = 0; i < targets.Count; i++)
+            {
+                Vector3 targetPosition = targets[i].Position;
+                targetPosition.y = 0.0f;
+                float currentSqrDistance = (myPosition - targetPosition).sqrMagnitude;
+                if ( currentSqrDistance < minSqrDistance )
                 {
-                    if (_targetHolder.AttackingTargets.Count > 0)
-                    {
-                        selectedTarget = _targetHolder.AttackingTargets[0];
-                        _targetHolder.CurrentTarget = selectedTarget;
-                    }
+                    minSqrDistance = currentSqrDistance;
+                    selectedTarget = targets[i];
                 }
             }
 
             return selectedTarget;
         }
-
-        public bool IsCurrentTargetInRange()
-        {
-            return IsTargetInRange(_targetHolder.CurrentTarget);
-        }
+        
+        // public bool IsCurrentTargetInRange()
+        // {
+        //     return IsTargetInRange(_targetHolder.CurrentTarget);
+        // }
 
         public bool IsTargetInRange(IDamageable target)
         {
             bool isInrange = false;
-
+        
             if (target != null)
             {
-                isInrange = _targetHolder.TargetsInRange.Contains(target);
-                // Vector3 position = _transform.position;
-                // position.y = 0.0f;
-                // Vector3 targetPosition = target.Position;
-                // targetPosition.y = 0.0f;
-                //
-                // isInrange = (targetPosition - position).sqrMagnitude <= _stats.AttackRange * _stats.AttackRange;
+                Vector3 myPosition = _transform.position;
+                myPosition.y = 0.0f;
+                Vector3 targetPosition = target.Position;
+                targetPosition.y = 0.0f;
+                
+                isInrange = (targetPosition - myPosition).sqrMagnitude <= _stats.AttackRange * _stats.AttackRange;
             }
             
             return isInrange;

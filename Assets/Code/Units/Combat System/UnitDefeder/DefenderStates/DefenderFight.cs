@@ -9,7 +9,7 @@ namespace CombatSystem.DefenderStates
     {
 
         private DefenderUnitStats _stats;
-        //private DefenderTargetsHolder _targetsHolder;
+        private DefenderTargetsHolder _targetsHolder;
         private DefenderTargetSelector _targetSelector;
         private IDamageable _myDamagable;
 
@@ -20,14 +20,14 @@ namespace CombatSystem.DefenderStates
         
         public DefenderFight(DefenderUnit defenderUnit, Action<DefenderState> setStateDelegate, 
             DefenderUnitStats stats, DefenderTargetsHolder holder, DefenderTargetSelector selector, 
-            IDamageable myDamagable) : 
+            IDamageable myDamageable) : 
             base(defenderUnit, setStateDelegate)
         {
             _stats = stats;
             _reloadTime = _stats.AttackInterval;
-            //_targetsHolder = holder;
+            _targetsHolder = holder;
             _targetSelector = selector;
-            _myDamagable = myDamagable;
+            _myDamagable = myDamageable;
         }
 
         public void Reload()
@@ -45,14 +45,26 @@ namespace CombatSystem.DefenderStates
 
         public override void OnUpdate()
         {
-            IDamageable target = _targetSelector.SelectTarget();
-            if (_targetSelector.IsTargetInRange(target))
+            IDamageable target = _targetsHolder.CurrentTarget;
+            if (target == null || target.IsDead)
             {
-                AttackTarget(target);
+                target = _targetSelector.SelectTarget();
+            }
+
+            if (target != null)
+            {
+                if (_targetSelector.IsTargetInRange(target))
+                {
+                    AttackTarget(target);
+                }
+                else
+                {
+                    _setState(DefenderState.Pursuit);
+                }
             }
             else
             {
-                _setState(DefenderState.Pursuit);
+                _setState(DefenderState.Going);
             }
         }
 
@@ -74,6 +86,10 @@ namespace CombatSystem.DefenderStates
         {
             _setState(DefenderState.GotoBarrack);
         }
-        
+
+        public override void StartState()
+        {
+            _targetSelector.SelectTarget();
+        }
     }
 }
