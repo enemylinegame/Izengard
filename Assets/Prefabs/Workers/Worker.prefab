@@ -4505,6 +4505,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 9577340}
   _navigationAgent: {fileID: -1529049577106757515}
+  _distanceToBeginWork: 0.01
 --- !u!1 &188742
 GameObject:
   m_ObjectHideFlags: 0

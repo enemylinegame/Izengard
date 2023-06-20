@@ -12,6 +12,9 @@ public class WorkerView : MonoBehaviour, IWorkerView
     [SerializeField]
     private NavMeshAgent _navigationAgent;
 
+    [SerializeField]
+    private float _distanceToBeginWork;
+
     public void InitPlace(Vector3 place)
     {
         _navigationAgent.Warp(place);
@@ -28,7 +31,7 @@ public class WorkerView : MonoBehaviour, IWorkerView
 
     public bool IsOnThePlace()
     {
-        return _navigationAgent.remainingDistance < 1;
+        return _navigationAgent.remainingDistance < _distanceToBeginWork;
     }
 
     public void ProduceWork()

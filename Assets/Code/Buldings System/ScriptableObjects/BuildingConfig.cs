@@ -17,6 +17,7 @@ namespace Code.BuildingSystem
         [SerializeField] private BuildingTypes _buildingType;
         [SerializeField] private HouseType _houseType;
         [SerializeField] private string _description;
+        [SerializeField] private int _maxWorkers;
 
         private float _buildingTime;
         private float _currentHealth;
@@ -31,5 +32,7 @@ namespace Code.BuildingSystem
         public HouseType HouseType => _houseType;
         public float BuildingTime => _buildingTime;
         public string Description => _description;
+
+        public int MaxWorkers => _maxWorkers;
     }
 }

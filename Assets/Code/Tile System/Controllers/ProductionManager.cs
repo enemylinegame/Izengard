@@ -63,7 +63,6 @@ namespace Code.TileSystem
             ICollectable building, Vector3 workPlace,
             IWorkerPreparation preparation)
         {
-
             int workId = BeginWork(building.SpawnPosition, workPlace,
                 building.ResourceType, preparation);
 
@@ -134,7 +133,7 @@ namespace Code.TileSystem
             OnWorksCountChanged.Invoke(--_worksAccount);
         }
 
-        public void StopAllFindedProductions(ICollectable building)
+        public void StopAllProductions(ICollectable building)
         {
             int buildingId = building.BuildingID;
             if (!_buildingsTable.TryGetValue(buildingId, out int worksCount))
@@ -176,7 +175,7 @@ namespace Code.TileSystem
         }
 
         private int SendWorkerToMine(Vector3 workerInitPlace, Vector3 workPlace,
-            ResourceType resourceType, IWorkerPreparation preparation)//Generic
+            ResourceType resourceType, IWorkerPreparation preparation)
         {
             IWorkerTask workerTask = new MiningProduction(
                 _globalStock, resourceType, _mineWorkerPortionSize);

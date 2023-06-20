@@ -43,9 +43,10 @@ namespace Code.BuildingSystem
             {
                 return;
             }
-            buildingConfig.BuildingCost.ForEach(resourcePrice => _stock.GetResourceFromStock(resourcePrice.ResourceType, resourcePrice.Cost));
+            buildingConfig.BuildingCost.ForEach(resourcePrice => _stock.GetResourceFromStock(
+                resourcePrice.ResourceType, resourcePrice.Cost));
 
-            ICollectable building = StartBuilding(model, buildingConfig);
+            ICollectable building = CreateBuilding(model, buildingConfig);
 
             if (building == null) return;
 
@@ -72,7 +73,7 @@ namespace Code.BuildingSystem
             buildingUI.MinusUnit.onClick.RemoveAllListeners();
                 
             _uiController.DestroyBuildingInfo.Remove(buildingUI.gameObject);
-            tileController.WorkerMenager.StopAllFindedProductions(
+            tileController.WorkerMenager.StopAllProductions(
                 buildingToRemove);
 
             RemoveTypeDots(model, buildingToRemove);
@@ -85,7 +86,7 @@ namespace Code.BuildingSystem
                 
             tileController.LevelCheck();
         }
-        private ICollectable StartBuilding(TileModel model, BuildingConfig config)
+        private ICollectable CreateBuilding(TileModel model, BuildingConfig config)
         {
             var dot = CheckDot(model);
             if (dot == null)
@@ -99,7 +100,8 @@ namespace Code.BuildingSystem
             var build = Object.Instantiate(buildingPrefab, dot.transform);
             
             build.BuildingTypes = config.BuildingType;
-            
+            build.MaxWorkers = config.MaxWorkers;
+
             dot.Building = build;
             dot.IsActive = false;
             
