@@ -44,6 +44,7 @@ namespace CombatSystem
         {
             var targets = Physics.SphereCastAll(_transform.position, _range, Vector3.forward,
                 0.0f, _targetMask);
+            bool isDetected = false;
             if (targets.Length > 0)
             {
                 for (int i = 0; i < targets.Length; i++)
@@ -51,9 +52,14 @@ namespace CombatSystem
                     if (targets[i].collider.gameObject.TryGetComponent(out IDamageable damageable))
                     {
                         _targetsHolder.TargetsInRange.Add(damageable);
+                        isDetected = true;
                     }
                 }
-                OnTargetsDetected?.Invoke();
+
+                if (isDetected)
+                {
+                    OnTargetsDetected?.Invoke();
+                }
             }
         }
 

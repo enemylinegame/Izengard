@@ -73,7 +73,6 @@ namespace CombatSystem
             _targetsHolder = new DefenderTargetsHolder();
             _targetFinder = new DefenderTargetFinder(_defender, _unitStats.AttackRange, _targetsHolder);
             _targetFinder.OnTargetsDetected += AddedTargetInRange;
-            //_targetFinder.OnTargetLost += TargetInRangeLost;
             _targetSelector = new DefenderTargetSelector(_defender, _unitStats, _targetsHolder);
 
             _fightState = new DefenderFight(this, SetState, _unitStats, _targetsHolder, _targetSelector, _myDamageable);
@@ -97,7 +96,6 @@ namespace CombatSystem
             _animation.Disable();
             _myDamageable.DeathAction -= DefenderDead;
             ClearTargets();
-            //_targetFinder.Dispose();
         }
 
         public void OnUpdate(float deltaTime)
