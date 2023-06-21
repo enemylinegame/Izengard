@@ -27,6 +27,7 @@ namespace CombatSystem
         private DefenderTargetFinder _targetFinder;
         private DefenderTargetSelector _targetSelector;
         private IDamageable _currentTarget;
+        private DefenderVisualSelect _visualSelect;
 
         private DefenderFight _fightState;
         private DefenderGoing _goingState;
@@ -57,6 +58,21 @@ namespace CombatSystem
 
         public Vector3 DefendPosition => _defendPosition;
 
+        public bool IsVisualSelection
+        {
+            set
+            {
+                if (value)
+                {
+                    _visualSelect.On();
+                }
+                else
+                {
+                    _visualSelect.Off();
+                }
+            }
+        }
+        
 
         public DefenderUnit(GameObject defender, Vector3 defendPosition)
         {
@@ -82,6 +98,8 @@ namespace CombatSystem
             _inBarrackState = new DefenderInBarrack(this, SetState);
             _pursuitState = new DefenderPursuit(this, SetState, _agent, _targetSelector, _targetsHolder,
                 _targetFinder);
+            _visualSelect = new DefenderVisualSelect(defender);
+            _visualSelect.Off();
 
             SetState(DefenderState.Going);
         }
