@@ -41,6 +41,7 @@ public class GameInit
         var defenderController = new DefendersController(tileController,uiController, gameConfig.Defender);
         var tileResourceUIController = new TileResourceUIController(uiController, inputController, tileController);
         var defendersAssignController = new DefendersManager(tileController, defenderController, uiController);
+        inputController.Add(defendersAssignController);
         
         if (!gameConfig.ChangeVariant) new ResourceGenerator(/*buildController.Buildings, */gameConfig, levelGenerator, buildingController);
         else new ResourceGenerator(/*.Buildings, */gameConfig, levelGenerator, buildingController, 2);
