@@ -18,6 +18,7 @@ namespace CombatSystem
         private IAction<Damageable> _nextAction;
         private IOnUpdate _onUpdate;
         private readonly float _attackDistance;
+        private readonly EnemyType _type;
 
         private Transform _enemyTransform;
 
@@ -28,8 +29,9 @@ namespace CombatSystem
             IBulletsController bulletsController)
         {
             _actionList = new List<IAction<Damageable>>();
-            var navmesh = unit.Prefab.GetComponent<NavMeshAgent>();
-            _primaryTarget = primaryTarget;
+            _type = unit.Type;
+            var navmesh = unit.RootGameObject.GetComponent<NavMeshAgent>();
+            _currentTarget =_primaryTarget = primaryTarget;
             _findTarget = new FindTargetAction(unit,primaryTarget);
             _actionList.Add(_findTarget);
             _onUpdate = _findTarget as IOnUpdate;
@@ -52,7 +54,7 @@ namespace CombatSystem
             _attack.OnComplete += OnAttackComplete;
             _checkAttackDistance.OnComplete += OnCheckAttackDistanceComplete;
 
-            _enemyTransform = unit.Prefab.transform;
+            _enemyTransform = unit.RootGameObject.transform;
             
             StopAction();
         }
@@ -73,42 +75,36 @@ namespace CombatSystem
 
         private void OnFindTargetComplete(Damageable target)
         {
-            if (target == null)
+            if (_currentTarget != target)
             {
-                _currentTarget = _primaryTarget;
-            }
-            else
-            {
-                _currentTarget.DeathAction -= OnTargetDestroyed;
-                if (target.IsDamagableDead)
+                if (_currentTarget != null)
                 {
+                    _currentTarget.DeathAction -= OnTargetDestroyed;
+                }
 
-                    _currentTarget = _primaryTarget;
-                }
-                else
-                {
-                    _currentTarget = target;
-                    _currentTarget.DeathAction += OnTargetDestroyed;
-                }
+                _currentTarget = target;
+                _currentTarget.DeathAction += OnTargetDestroyed;
             }
             _nextAction = _planRoute;
             IsActionComplete = true;
+
         }
 
         private void OnPlaneRouteComplete(Damageable target)
         {
-            if (target == null || target.IsDamagableDead)
+            if (target == null || target.IsDead)
             {
                 _nextAction = _findTarget;
                 _onUpdate = _findTarget as IOnUpdate;
             }
             else _nextAction = _checkAttackDistance;
             IsActionComplete = true;
+
         }
 
         private void OnAttackComplete(Damageable target)
         {
-            if (target == null || target.IsDamagableDead)
+            if (target == null || target.IsDead)
             {
                 if (_currentTarget != null)
                 {
@@ -123,7 +119,7 @@ namespace CombatSystem
 
         private void OnCheckAttackDistanceComplete(Damageable target)
         {
-            if (target != null && !target.IsDamagableDead)
+            if (target != null && !target.IsDead)
             {
                 _nextAction = _attack;
                 if (_attack is IOnUpdate update) _onUpdate = update;
@@ -134,6 +130,7 @@ namespace CombatSystem
                 _onUpdate = _findTarget as IOnUpdate;
             }
             IsActionComplete = true;
+
         }
 
         public void Dispose()
@@ -152,12 +149,14 @@ namespace CombatSystem
         public void OnUpdate(float deltaTime)
         {
             DrawLineToTarget();
-            _onUpdate?.OnUpdate(deltaTime);
+            if (!IsActionComplete)
+            {
+                _onUpdate?.OnUpdate(deltaTime);
+            }
         }
 
         private void OnTargetDestroyed()
         {
-            Debug.Log("EnemyAI->OnTargetDestroyed:");
             if (_currentTarget)
             {
                 _currentTarget.DeathAction -= OnTargetDestroyed;
@@ -172,7 +171,7 @@ namespace CombatSystem
 
         public void ClearTarget()
         {
-            _currentTarget = null;
+            _currentTarget = _primaryTarget;
             _actionList.ForEach(action => action.ClearTarget());
         }
 
@@ -189,6 +188,5 @@ namespace CombatSystem
             }
 #endif
         }
-        
     }
 }

@@ -17,7 +17,7 @@ MonoBehaviour:
     Health: 75
     Attack: 10
     AttackSpeed: 1.5
-    AttackRange: 1
+    AttackRange: 1.5
     RunSpeed: 1
     Cost: 5
     Gold: 5

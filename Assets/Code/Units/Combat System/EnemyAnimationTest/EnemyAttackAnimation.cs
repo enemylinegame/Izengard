@@ -29,7 +29,7 @@ namespace CombatSystem
             if (_isStartMoving)
             {
                 _currentDashPosition += DASH_SPEED * deltaTime;
-                _unit.Prefab.transform.Translate(Vector3.forward * DASH_SPEED * deltaTime);
+                _unit.RootGameObject.transform.Translate(Vector3.forward * DASH_SPEED * deltaTime);
                 if (_currentDashPosition > DASH_DISTANCE)
                 {
                     _isStartMoving = false;
@@ -41,16 +41,16 @@ namespace CombatSystem
                 _currentDashPosition -= DASH_SPEED * deltaTime;
                 if (_currentDashPosition < 0)
                 {
-                    _unit.Prefab.transform.localPosition = _startPosition;
+                    _unit.RootGameObject.transform.localPosition = _startPosition;
                     AnimationComplete?.Invoke();
                 }
-                _unit.Prefab.transform.Translate(Vector3.back * DASH_SPEED * deltaTime);
+                _unit.RootGameObject.transform.Translate(Vector3.back * DASH_SPEED * deltaTime);
             }
         }
 
         public void PlayAnimation()
         {
-            _startPosition = _unit.Prefab.transform.localPosition;
+            _startPosition = _unit.RootGameObject.transform.localPosition;
             _currentDashPosition = 0;
             _isStartMoving = true;
         }

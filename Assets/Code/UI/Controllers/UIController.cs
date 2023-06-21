@@ -45,7 +45,6 @@ namespace Code.UI
             _centerUI.CloseBuildingsBuy.onClick.AddListener(() => IsWorkUI(UIType.Buy, false));
             _centerUI.CloseBuildingsBuy.onClick.AddListener(() => _bottonUI.BuildingMenu.PrefabButtonClear.gameObject.SetActive(true));
             inputController.Add(this);
-            //_warsView.SetInputController(inputController);
             
             CenterUI.TIleSelection.Back.onClick.AddListener(() => IsWorkUI(UIType.TileSel, false));
         }
@@ -123,7 +122,6 @@ namespace Code.UI
         {
             if(tile.TileModel.HouseType == HouseType.None) return;
             IsWorkUI(UIType.Tile, true);
-            _warsView.SetDefenders(tile.TileModel.DefenderUnits);
         }
 
         public void Cancel()

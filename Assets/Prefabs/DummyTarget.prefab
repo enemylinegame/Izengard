@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1012487368215033113}
   - component: {fileID: 3617237778266156342}
   - component: {fileID: 8520136139173329557}
+  - component: {fileID: 6631571133617532654}
   m_Layer: 10
   m_Name: DummyTarget
   m_TagString: Player
@@ -129,6 +130,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _icon: {fileID: 0}
   _maxCountAttackers: 5
+  _threatLevel: 0
+--- !u!114 &6631571133617532654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8048208380929675822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 0
+  m_IgnoreFromBuild: 1
+  m_AffectedAgents: ffffffff
 --- !u!1001 &6745009079887306128
 PrefabInstance:
   m_ObjectHideFlags: 0

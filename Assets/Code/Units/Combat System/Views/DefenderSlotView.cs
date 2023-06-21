@@ -73,6 +73,10 @@ namespace CombatSystem.Views
                 {
                     _isSelected = value;
                     _selectedBoard.SetActive(_isSelected);
+                    if (_unit != null)
+                    {
+                        _unit.IsVisualSelection = value;
+                    }
                 }
             }
         }
@@ -131,8 +135,7 @@ namespace CombatSystem.Views
         {
             if (IsUsed)
             {
-                _isSelected = !_isSelected;
-                _selectedBoard.SetActive(_isSelected);
+                IsSelected = !_isSelected;
                 OnSelected?.Invoke(_isSelected, _number);
             }
         }
@@ -159,6 +162,7 @@ namespace CombatSystem.Views
 
         public void RemoveUnit()
         {
+            IsSelected = false;
             _unitIcon.sprite = _emptySprite;
             _hpBarRoot.SetActive(false);
             _unit.OnHealthChanged -= HealthChanged;
@@ -166,7 +170,6 @@ namespace CombatSystem.Views
             _inBarrack.gameObject.SetActive(false);
             _dismissButton.gameObject.SetActive(false);
             _hireButton.gameObject.SetActive(true);
-            IsSelected = false;
         }
 
         private void HealthChanged(float maxHealth, float currentHealth)

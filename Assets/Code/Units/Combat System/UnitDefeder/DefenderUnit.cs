@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Code.TileSystem;
+using CombatSystem.DefenderStates;
+using CombatSystem.Interfaces;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,62 +12,41 @@ namespace CombatSystem
     public class DefenderUnit : IDisposable, IOnUpdate
     {
         public event Action<DefenderUnit> DefenderUnitDead;
-        public event Action<DefenderUnit> OnDestinationReached;
         public event Action<DefenderState> OnStateChanged; 
         public event Action<float, float> OnHealthChanged; 
 
         public GameObject DefenderGameObject { get { return _defender; } }
 
-        private Damageable _damageable;
-        private IAction<Damageable> _attackAction;
-        private List<Damageable> _listMeAttackedUnits = new List<Damageable>();
+        private Damageable _myDamageable;
         private GameObject _defender;
         private DefenderUnitStats _unitStats;
         private NavMeshAgent _agent;
         private TileModel _tileModel;
         private DefenderAnimation _animation;
+        private DefenderTargetsHolder _targetsHolder;
+        private DefenderTargetFinder _targetFinder;
+        private DefenderTargetSelector _targetSelector;
+        private IDamageable _currentTarget;
+        private DefenderVisualSelect _visualSelect;
+
+        private DefenderFight _fightState;
+        private DefenderGoing _goingState;
+        private DefenderGotoBarrack _gotoBarrackState;
+        private DefenderIdle _idleState;
+        private DefenderInBarrack _inBarrackState;
+        private DefenderPursuit _pursuitState;
+        private DefenderStateBase _currentStateExecuter;
 
         private Vector3 _defendPosition;
         private DefenderState _state;
 
-        private float _tempTime = 0;
-        private float _stopDistanceSqr;
+        private float _reloadTimeCounter = 0;
         private bool _isReload = false;
-        private bool _isPositionChanged;
-        private bool _isActive;
-
-
-        public DefenderState State
-        {
-            get => _state;
-            private set
-            {
-                if (_state != value)
-                {
-                    _state = value;
-                    OnStateChanged?.Invoke(_state);
-                }
-            }
-        }
-
-        public Vector3 Position
-        {
-            get
-            {
-                return _agent.nextPosition;
-            }
-        }
 
         /// <summary>
         /// Going to barrack or inside barrack
         /// </summary>
-        public bool IsInBarrack
-        {
-            get
-            {
-                return (State == DefenderState.GotoBarrack || State == DefenderState.InBarrack);
-            }
-        }
+        public bool IsInBarrack => (_state == DefenderState.GotoBarrack || _state == DefenderState.InBarrack);
 
         public TileModel Tile
         {
@@ -73,38 +54,54 @@ namespace CombatSystem
             set => _tileModel = value;
         }
 
-        public IHealthHolder HealthHolder  => _damageable;
+        public IHealthHolder HealthHolder  => _myDamageable;
+
+        public Vector3 DefendPosition => _defendPosition;
+
+        public bool IsVisualSelection
+        {
+            set
+            {
+                if (value)
+                {
+                    _visualSelect.On();
+                }
+                else
+                {
+                    _visualSelect.Off();
+                }
+            }
+        }
         
+
         public DefenderUnit(GameObject defender, Vector3 defendPosition)
         {
-            _unitStats = new DefenderUnitStats(1f,25);
+            _unitStats = new DefenderUnitStats(1f, 0.3f, 2.0f ,25, 100);
             _defender = defender;
             _defendPosition = defendPosition;
-            _isPositionChanged = true;
-            _damageable = defender.GetComponent<Damageable>();
-            _damageable.OnHealthChanged += HealthChanged;
+            _myDamageable = defender.GetComponent<Damageable>();
+            _myDamageable.OnHealthChanged += HealthChanged;
+            _myDamageable.DeathAction += DefenderDead;
+            _myDamageable.OnDamaged += OnDamaged;
+            _myDamageable.Init(_unitStats.MaxHealth, 1);
             _agent = defender.GetComponent<NavMeshAgent>();
-            _stopDistanceSqr = _agent.stoppingDistance * _agent.stoppingDistance;
-            _damageable.DeathAction += DefenderDead;
-            _damageable.MeAttackedChenged += MeAttacked;
-            _damageable.Init(100, 1);
-            _attackAction = new DefenderAttackAction(_unitStats);
             _animation = new DefenderAnimation(defender, this);
-            State = DefenderState.Going;
-            _isActive = true;
-        }
+            _targetsHolder = new DefenderTargetsHolder();
+            _targetFinder = new DefenderTargetFinder(_defender, _unitStats.VisionRange, _targetsHolder, _unitStats);
+            _targetFinder.OnTargetsDetected += AddedTargetInRange;
+            _targetSelector = new DefenderTargetSelector(_defender, _targetsHolder);
+            _fightState = new DefenderFight(this, SetState, _unitStats, _targetsHolder, _targetSelector, 
+                _myDamageable, _targetFinder);
+            _goingState = new DefenderGoing(this, SetState, _unitStats, _agent);
+            _gotoBarrackState = new DefenderGotoBarrack(this, SetState, _agent);
+            _idleState = new DefenderIdle(this, SetState, _agent);
+            _inBarrackState = new DefenderInBarrack(this, SetState);
+            _pursuitState = new DefenderPursuit(this, SetState, _agent, _targetSelector, _targetsHolder,
+                _targetFinder);
+            _visualSelect = new DefenderVisualSelect(defender);
+            _visualSelect.Off();
 
-        private void MeAttacked(List<Damageable> listMeAttackedUnits)
-        {
-            if (listMeAttackedUnits.Count != 0)
-            {
-                State = DefenderState.Fight;
-            }
-            else
-            {
-                State = DefenderState.Idle;
-            }
-            _listMeAttackedUnits = listMeAttackedUnits;
+            SetState(DefenderState.Going);
         }
 
         private void DefenderDead()
@@ -116,138 +113,131 @@ namespace CombatSystem
         public void Dispose()
         {
             _animation.Disable();
-            _damageable.DeathAction -= DefenderDead;
-            _damageable.MeAttackedChenged -= MeAttacked;
+            _myDamageable.DeathAction -= DefenderDead;
+            ClearTargets();
         }
 
         public void OnUpdate(float deltaTime)
         {
-            if (_isActive)
-            {
-                DefenderLogic();
-            }
-            Reload();
-        }
-
-        private void Reload()
-        {
-            if (_isReload)
-            {
-                if (_tempTime < _unitStats._attackSpeed)
-                {
-                    _tempTime += Time.deltaTime;
-                }
-                else
-                {
-                    _tempTime = 0;
-                    _isReload = false;
-                }
-            }
-        }
-
-        private void DefenderLogic()
-        {
-            if (_listMeAttackedUnits.Count == 0)
-            {
-                Vector3 currentPosition = _agent.nextPosition;
-                currentPosition.y = 0.0f;
-
-                if (_isPositionChanged || (_agent.remainingDistance > _agent.stoppingDistance))
-                {
-                    if (State != DefenderState.GotoBarrack)
-                    {
-                        State = DefenderState.Going;
-                    }
-                }
-                else
-                {
-                    if (State == DefenderState.Going)
-                    {
-                        State = DefenderState.Idle;
-                        OnDestinationReached?.Invoke(this);
-                    }
-                    else if (State == DefenderState.GotoBarrack)
-                    {
-                        State = DefenderState.InBarrack;
-                        Deactivate();
-                        OnDestinationReached?.Invoke(this);
-                    }
-                }
-            }
-
-            switch (State)
-            {
-                case DefenderState.GotoBarrack:
-                case DefenderState.Going:
-                    if (_isPositionChanged)
-                    {
-                        _agent.ResetPath();
-                        _agent.SetDestination(_defendPosition);
-                        _isPositionChanged = false;
-                    }
-                    break;
-                case DefenderState.Idle:
-                    break;
-                case DefenderState.Fight:
-                    //if (_listMeAttackedUnits.Count > 0 && !_isReload)
-                    if (_listMeAttackedUnits.Count > 0)
-                    {
-                        for (int i = 0; i < _listMeAttackedUnits.Count; i++)
-                        {
-                            DrawLineToTarget(_listMeAttackedUnits[i]);
-                            if (!_isReload)
-                            {
-                                _isReload = true;
-                                _attackAction.StartAction(_listMeAttackedUnits[i]);
-                            }
-                        }
-                    }
-                    break;
-            }
+            ClearAttackingTargets();
+            _currentStateExecuter.OnUpdate();
+            _targetFinder.OnUpdate(deltaTime);
+            _fightState.Reload();
+            DebugDrawLineToTarget(_targetsHolder.CurrentTarget);
         }
 
         public void GoToPosition(Vector3 newPosition)
         {
-            newPosition.y = _defendPosition.y;
+            ClearTargets();
             _defendPosition = newPosition;
-            _isPositionChanged = true;
+            
+            _currentStateExecuter.GoToPosition(_defendPosition);
         }
 
         public void GoToBarrack(Vector3 destination)
         {
-            State = DefenderState.GotoBarrack;
-            GoToPosition(destination);
+            ClearTargets();
+            _defendPosition = destination;
+            _gotoBarrackState.BarrackPosition = _defendPosition;
+            _currentStateExecuter.GoToBarrack(destination);
         }
 
-        public void Activate()
+        public void ExitFromBarrack()
         {
-            if (!_isActive)
-            {
-                _isActive = true;
-                _defender.SetActive(true);
-                State = DefenderState.Idle;
-            }
-        }
-
-        private void Deactivate()
-        {
-            _isActive = false;
-            _defender.SetActive(false);
+            _currentStateExecuter.ExitFromBarrack();
         }
 
         private void HealthChanged(float maxHealth, float currentHealth)
         {
             OnHealthChanged?.Invoke(maxHealth,currentHealth);
         }
+
+        private void OnDamaged(IDamageable attacker)
+        {
+            if (!_targetsHolder.AttackingTargets.Contains(attacker))
+            {
+                _targetsHolder.AttackingTargets.Add(attacker);
+            
+            }
+            attacker.DeathAction += EnemyDead;
+            //Debug.Log($"DefenderUnit::OnDamaged: {_state} ");
+            _currentStateExecuter.OnDamaged(attacker);
+        }
+
+        private void AddedTargetInRange()
+        {
+            _currentStateExecuter.AddedTargetInRange();
+        }
+
+        private void SetState(DefenderState newState)
+        {
+            if (_state == newState) return;
+            switch (newState)
+            {
+                case DefenderState.Fight:
+                    _currentStateExecuter = _fightState;
+                    break;
+                case DefenderState.Going:
+                    _currentStateExecuter = _goingState;
+                    break;
+                case DefenderState.Idle:
+                    _currentStateExecuter = _idleState;
+                    break;
+                case DefenderState.Pursuit:
+                    _currentStateExecuter = _pursuitState;
+                    break;
+                case DefenderState.GotoBarrack:
+                    _currentStateExecuter = _gotoBarrackState;
+                    break;
+                case DefenderState.InBarrack:
+                    _currentStateExecuter = _inBarrackState;
+                    break;
+            }
+
+            DefenderState oldState = _state;
+            _state = newState;
+            //Debug.Log($"DefenderUnit->SetState: {oldState} -> {_state}");
+            _currentStateExecuter.StartState();
+            OnStateChanged?.Invoke(_state);
+        }
+
+        private void EnemyDead()
+        {
+            for (int i = _targetsHolder.AttackingTargets.Count - 1; i >= 0; i--)
+            {
+                if (_targetsHolder.AttackingTargets[i].IsDead)
+                {
+                    _targetsHolder.AttackingTargets[i].DeathAction -= EnemyDead;
+                    _targetsHolder.AttackingTargets.RemoveAt(i);
+                }
+            }
+            // _attakersTargets.RemoveAll(target =>
+            // {
+            //     if (target.IsDead) target.DeathAction -= EnemyDead;
+            //     return target.IsDead;
+            // });
+        }
+
+        private void ClearTargets()
+        {
+            _targetsHolder.CurrentTarget = null;
+            ClearAttackingTargets();
+        }
         
-        private void DrawLineToTarget(Damageable target)
+        private void ClearAttackingTargets()
+        {
+            _targetsHolder.AttackingTargets.ForEach(target => target.DeathAction -= EnemyDead);
+            _targetsHolder.AttackingTargets.Clear();
+        }
+
+        private void DebugDrawLineToTarget(IDamageable target)
         {
 #if UNITY_EDITOR
-            if (target)
+            if (target != null)
             {
-                Vector3 start = _damageable.transform.position;
+                Vector3 start = _myDamageable.transform.position;
                 start.y += 0.25f;
-                Vector3 end = target.transform.position;
+                Vector3 end = target.Position;
                 end.y += 0.25f;
                 Debug.DrawLine(start, end, Color.blue);
             }

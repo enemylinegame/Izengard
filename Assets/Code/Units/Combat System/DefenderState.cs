@@ -7,6 +7,7 @@
         Fight       = 2,
         Idle        = 3,
         InBarrack   = 4,
-        GotoBarrack = 5
+        GotoBarrack = 5,
+        Pursuit     = 6
     }
 }

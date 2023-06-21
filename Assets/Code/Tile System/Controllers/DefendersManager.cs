@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Code.TileSystem
 {
-    public class DefendersManager : IDefendersManager, ITileLoadInfo
+    public class DefendersManager : IDefendersManager, ITileLoadInfo, IOnTile
     {
         private const string CANNOT_SEND_DEFENDER_TO_TILE = 
             "Can't send defender to tile, target tile is full.";

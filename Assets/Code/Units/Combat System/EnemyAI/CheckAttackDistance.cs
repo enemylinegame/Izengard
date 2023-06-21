@@ -37,7 +37,7 @@ namespace CombatSystem
             {
                 return null;
             }
-            var unitPosition = _unit.Prefab.transform.position;
+            var unitPosition = _unit.RootGameObject.transform.position;
             var targetPosition = target.transform.position;
             var distance = Vector3.Distance(targetPosition, unitPosition);
             if (distance < _attackMaxDistance)

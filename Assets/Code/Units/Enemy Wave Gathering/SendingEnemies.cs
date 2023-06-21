@@ -87,7 +87,9 @@ namespace Wave
 
         private void SetEnemyNavMesh(IEnemyController enemy, Vector3 spawnPosition)
         {
-            var navMesh = enemy.Enemy.Prefab.GetComponent<NavMeshAgent>();
+            enemy.Enemy.RootGameObject.transform.position = spawnPosition;
+            enemy.Enemy.RootGameObject.SetActive(true);
+            var navMesh = enemy.Enemy.RootGameObject.GetComponent<NavMeshAgent>();
             if (navMesh.isOnNavMesh) navMesh.ResetPath();
             navMesh.Warp(spawnPosition);
         }

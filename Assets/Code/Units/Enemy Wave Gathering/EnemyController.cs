@@ -20,17 +20,17 @@ namespace Wave
         private readonly Damageable _damageable;
 
 
-        public EnemyController(EnemySettings enemySettings, GameObject enemyPrefab, GeneratorLevelController generatorLevelController,
+        public EnemyController(EnemySettings enemySettings, GameObject enemyRootGo, GeneratorLevelController generatorLevelController,
             IEnemyAIController enemyAIController, IBulletsController bulletsController)
         {
-            Enemy = new Enemy(enemySettings, enemyPrefab);
+            _damageable = enemyRootGo.GetComponent<Damageable>();
+            _damageable.DeathAction += KillEnemy;
+            
+            Enemy = new Enemy(enemySettings, enemyRootGo, _damageable);
             _enemyAnimation = new EnemyAnimationController(Enemy);
             _generatorLevelController = generatorLevelController;
             _enemyAIController = enemyAIController;
             _bulletsController = bulletsController;
-
-            _damageable = enemyPrefab.GetComponent<Damageable>();
-            _damageable.DeathAction += KillEnemy;
         }
 
         public void KillEnemy()
@@ -58,14 +58,14 @@ namespace Wave
         {
             _enemyAI.Dispose();
             _damageable.DeathAction -= KillEnemy;
-            UnityEngine.Object.Destroy(Enemy.Prefab);
+            UnityEngine.Object.Destroy(Enemy.RootGameObject);
         }
 
         private async void SlowlyKilling()
         {
             await Task.Delay(10000);
             // if (!UnityEditor.EditorApplication.isPlaying) return;
-            if (!Enemy.Prefab.activeSelf) return;
+            if (!Enemy.RootGameObject.activeSelf) return;
             KillEnemy();
         }
     }

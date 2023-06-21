@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using Wave;
 
 
@@ -10,6 +11,7 @@ namespace CombatSystem
         private readonly IBulletsController _bulletsController;
         private readonly Enemy _enemy;
         private float _actionTime;
+        private float _timeCounter;
         private Damageable _target;
         private bool _isBulletLaunched;
         private bool _haveTarget;
@@ -24,6 +26,7 @@ namespace CombatSystem
         public void StartAction(Damageable target)
         {
             _actionTime = 1 / _enemy.Stats.AttackSpeed;
+            _timeCounter = _actionTime;
             _isBulletLaunched = false;
             _target = target;
             _haveTarget = true;
@@ -41,11 +44,11 @@ namespace CombatSystem
             {
                 OnComplete?.Invoke(null);
             }
-            else if (_actionTime > 0)
+            else if (_timeCounter > 0)
             {
-                _actionTime -= deltaTime;
-                if (_actionTime < _actionTime / 2 && !_isBulletLaunched) LaunchBullet();
-                if (_actionTime < 0) OnComplete?.Invoke(_target);
+                _timeCounter -= deltaTime;
+                if (_timeCounter < _actionTime / 2 && !_isBulletLaunched) LaunchBullet();
+                if (_timeCounter <= 0) OnComplete?.Invoke(_target);
             }
         }
 
@@ -53,7 +56,7 @@ namespace CombatSystem
         {
             _isBulletLaunched = true;
             var bullet = _bulletsController.BulletsPool.GetObjectFromPool();
-            bullet.StartFlight(_target.transform.position, _enemy.Prefab.transform.position);
+            bullet.StartFlight(_target.transform.position, _enemy.RootGameObject.transform.position);
             _bulletsController.AddBullet(bullet);
             bullet.BulletFlightIsOver += BulletFlightOver;
         }
@@ -62,7 +65,10 @@ namespace CombatSystem
         {
             _bulletsController.RemoveBullet(bullet);
             bullet.BulletFlightIsOver -= BulletFlightOver;
-            if (_target != null) _target.MakeDamage(_enemy.Stats.Attack);
+            if (_target != null)
+            {
+                _target.MakeDamage(_enemy.Stats.Attack, _enemy.MyDamagable);
+            }
         }
     }
 }

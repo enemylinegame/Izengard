@@ -7,10 +7,11 @@ namespace Wave
     {
         public readonly EnemyType Type;
         public readonly EnemyStats Stats;
-        public readonly GameObject Prefab;
+        public readonly GameObject RootGameObject;
+        public readonly Damageable MyDamagable;
 
 
-        public Enemy(EnemySettings enemySettings, GameObject prefab)
+        public Enemy(EnemySettings enemySettings, GameObject rootGO, Damageable damageable)
         {
             Type = enemySettings.Type;
             Stats = new EnemyStats
@@ -23,7 +24,8 @@ namespace Wave
                 Cost = enemySettings.Stats.Cost,
                 Gold = enemySettings.Stats.Gold
             };
-            Prefab = prefab;
+            RootGameObject = rootGO;
+            MyDamagable = damageable;
         }
     }
 }

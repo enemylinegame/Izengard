@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+
 using Wave;
 
 
@@ -7,26 +9,40 @@ namespace CombatSystem
 {
     public class FindTargetAction : IAction<Damageable>, IOnUpdate//, IDisposable
     {
-        private const byte SEARCH_FRAMES = 10;
+        private const float RAY_CAST_MAX_DISTANCE = 0.01f;
+        private const int BUILDING_LAYER_NUMBER = 10;
+        private const int SEARCH_FRAMES = 10;
+        private const int SERACH_REZULTS_SIZE = 16;
+        
         public event Action<Damageable> OnComplete;
-      //  private readonly SearchScope _searchScope;
+        
         private Damageable _currentTarget;
-        private byte _frameCount;
+        private readonly Damageable _unitDamageable;
+        private readonly Damageable _primaryTarget;
+        private RaycastHit[] _searchResults;
 
-        private Damageable _unitDamagable;
-        private Damageable _privaryTarget;
+        private readonly Vector3 _rayCastDirection = Vector3.forward;
+        private readonly LayerMask _mask = LayerMask.GetMask("Defenders", "Buildings");
 
+        private float _searchRadius = 2.5f;
+        private EnemyType _type;
+
+        
+        private int _maxAttackToDefender = 1;
+        private int _maxAttackToBuilding = 5;
+        private int _frameCount;
+        
+        
         public FindTargetAction(Enemy unit, Damageable privaryTarget)
         {
-         //   _searchScope = unit.Prefab.GetComponentInChildren<SearchScope>(true);
-            _unitDamagable = unit.Prefab.gameObject.GetComponent<Damageable>();
-            //_searchScope.OnTriger += OnSearchScopeEnter;
-            _privaryTarget = privaryTarget;
+            _unitDamageable = unit.RootGameObject.GetComponent<Damageable>();
+            _primaryTarget = privaryTarget;
+            _type = unit.Type;
+            _searchResults = new RaycastHit[SERACH_REZULTS_SIZE];
         }
 
         public void StartAction(Damageable target)
         {
-           // _searchScope.gameObject.SetActive(true);
             _frameCount = SEARCH_FRAMES;
             _currentTarget = target;
         }
@@ -38,53 +54,62 @@ namespace CombatSystem
 
         private void OnSearchScopeEnter()
         {
-            if (CheckLayerBuildings())
+            if (CheckCurrentTargetIsBuildingOrNull())
             {
-                
-                var hits = Physics.SphereCastAll(_unitDamagable.transform.position, 1.4f, Vector3.forward, 
-                    0.01f, LayerMask.GetMask("Defenders"));
-                if (hits.Length != 0)
-                {
-                    foreach (var hit in hits)
-                    {
-                        if (hit.transform.gameObject.TryGetComponent<Damageable>(out var damageable))
-                        {
-                            if (damageable.Attacked(_unitDamagable))
-                            {
-                                _currentTarget = damageable;
-                                return;
-                            }
-                        }
-                    }
-                }
-                hits = Physics.SphereCastAll(_unitDamagable.transform.position, 1.3f, Vector3.forward, 
-                    0.01f, LayerMask.GetMask("Buildings"));
-                if (hits.Length != 0)
-                {
-                    foreach (var hit in hits)
-                    {
-                        if (hit.transform.gameObject.TryGetComponent<Damageable>(out var damageable))
-                        {
-                            if (damageable.Attacked(_unitDamagable))
-                            {
-                                _currentTarget = damageable;
-                                return;
-                            }
-                        }
-                    }
+                _currentTarget = _primaryTarget;
 
-                    return;
+                int hitsQuantity = Physics.SphereCastNonAlloc(_unitDamageable.transform.position, _searchRadius,
+                    _rayCastDirection, _searchResults, RAY_CAST_MAX_DISTANCE, _mask);
+                
+                List<Damageable> buildings = new List<Damageable>();
+                List<Damageable> units = new List<Damageable>();
+
+                for (int i = 0; i < hitsQuantity; i++)
+                {
+                    GameObject current = _searchResults[i].transform.gameObject;
+
+                    if (current.TryGetComponent(out Damageable target))
+                    {
+                        if (!target.IsDead)
+                        {
+                            if (current.layer == BUILDING_LAYER_NUMBER)
+                            {
+                                if (target.NumberOfAttackers < _maxAttackToBuilding)
+                                {
+                                    buildings.Add(target);
+                                }
+                            }
+                            else
+                            {
+                                if (_type == EnemyType.Archer || target.NumberOfAttackers < _maxAttackToDefender)
+                                {
+                                    units.Add(target);
+                                }
+                            }
+                        }
+                    }
                 }
-            }        
+
+                if (units.Count > 0)
+                {
+                    _currentTarget = SelectNearestTarget(units);
+                }
+                else if (buildings.Count > 0)
+                {
+                    _currentTarget = SelectNearestTarget(buildings);
+                }
+
+                if (_currentTarget != _primaryTarget && _type != EnemyType.Archer)
+                {
+                    _currentTarget.Attacked(_unitDamageable);
+                }
+            }
         }
 
-        private bool CheckLayerBuildings()
+        private bool CheckCurrentTargetIsBuildingOrNull()
         {
-            if (_currentTarget != null)
-            {
-                if (_currentTarget.gameObject.layer == 10) return true;
-            }
-            return false;
+            if (_currentTarget == null) return true;
+            return _currentTarget.gameObject.layer == BUILDING_LAYER_NUMBER;
         }
 
         public void OnUpdate(float deltaTime)
@@ -95,12 +120,29 @@ namespace CombatSystem
                 if (_frameCount <= 0)
                 {
                     OnSearchScopeEnter();
-                //    _searchScope.gameObject.SetActive(false);
                     OnComplete?.Invoke(_currentTarget);
                 }
             }
         }
 
+        private Damageable SelectNearestTarget(List<Damageable> units)
+        {
+            Vector3 myPosition = _unitDamageable.transform.position;
+            float minSqrDistance = (units[0].Position - myPosition).sqrMagnitude;
+            Damageable selectedTarget = units[0];
+
+            for (int i = 1; i < units.Count; i++)
+            {
+                float sqrDistance = (units[i].transform.position - myPosition).sqrMagnitude;
+                if ( sqrDistance  < minSqrDistance )
+                {
+                    minSqrDistance = sqrDistance;
+                    selectedTarget = units[i];
+                }
+            }
+
+            return selectedTarget;
+        }
  
     }
 }
