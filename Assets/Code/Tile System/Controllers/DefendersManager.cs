@@ -16,27 +16,30 @@ namespace Code.TileSystem
         private readonly IDefendersControll _defendersController;
         private readonly WarsView _warsView;
 
+        private DefendersSet _defendersSet;
         
         private TileModel SelectedTileModel => _tileController.TileModel;
         private TileView SelectedTileView => _tileController.View;
         
 
         public DefendersManager(TileController tileController, IDefendersControll defendersController, 
-            UIController uiController)
+            UIController uiController, DefendersSet defendersSet)
         {
             _tileController = tileController;
             _defendersController = defendersController;
             _warsView = uiController.WarsView;
             _warsView.SetDefendersManager(this);
+            _defendersSet = defendersSet;
         }
 
         public void HireDefender()
         {
+            // TODO:  add logic to select prefab from DefendersSet
             List<DefenderUnit> defendersOnTile = SelectedTileModel.DefenderUnits;
             int unitsQuantity = defendersOnTile.Count;
             if (unitsQuantity < SelectedTileModel.MaxWarriors)
             {
-                var unit = _defendersController.CreateDefender(SelectedTileView);
+                var unit = _defendersController.CreateDefender(SelectedTileView, _defendersSet.Defenders[0]);
                 defendersOnTile.Add(unit);
                 unit.Tile = SelectedTileModel; 
                 unit.DefenderUnitDead += DefenderDead;

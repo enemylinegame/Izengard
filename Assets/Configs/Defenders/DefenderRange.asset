@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Type>k__BackingField: 2
   <UnitStats>k__BackingField:
-    AttackInterval: 0
-    AttackRange: 0
-    VisionRange: 0
-    AttackDamage: 0
-    MaxHealth: 0
-    ThreatLevel: 0
-  <Prefab>k__BackingField: {fileID: 0}
-  <Icon>k__BackingField: {fileID: 0}
+    AttackInterval: 1
+    AttackRange: 1.5
+    VisionRange: 2
+    AttackDamage: 50
+    MaxHealth: 70
+    ThreatLevel: 4
+  <Prefab>k__BackingField: {fileID: 2102001904127989955, guid: 7c1d0c9c2a3a886498fe72006ffb5936, type: 3}
+  <Icon>k__BackingField: {fileID: 21300000, guid: 45949188d9111d047887f132813a2efc, type: 3}

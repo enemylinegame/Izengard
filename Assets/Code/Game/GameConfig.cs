@@ -24,7 +24,7 @@ public class GameConfig : ScriptableObject
     [SerializeField] private BattlePhaseConfig _battlePhaseConfig;
     [SerializeField] private GlobalMineralsList _mineralConfigs;
     [SerializeField] private PhasesSettings _phasesSettings;
-    [SerializeField] private GameObject _defender;
+    [SerializeField] private DefendersSet _defendersSet;
    
    [Range(0f, 1f)]
     [SerializeField] private float _tearOneWeightVariantNik = 0.75f;
@@ -46,7 +46,7 @@ public class GameConfig : ScriptableObject
         "Если выключено, то вариант Николая и сумма весов должна равняться 1, если включено, то вариант Иоанна, " +
         " 1 - сумма всех весов = вероятности спавна пустоты";
 
-    public GameObject Defender => _defender;
+    public DefendersSet DefendersSets => _defendersSet;
     public GameObject Enemy => _enemy;
     public GameObject PrefabWarehouse => _prefabWarehouse;
 

@@ -43,9 +43,9 @@ public class GameInit
             globalResStock, workersTeamComtroller, workersTeamConfig);
         var tileController = new TileController(tileList, uiController, 
             buildingController, inputController, productionManager);
-        var defenderController = new DefendersController(tileController,uiController, gameConfig.Defender);
+        var defenderController = new DefendersController(tileController,uiController);
         var tileResourceUIController = new TileResourceUIController(uiController, inputController, tileController);
-        var defendersAssignController = new DefendersManager(tileController, defenderController, uiController);
+        var defendersAssignController = new DefendersManager(tileController, defenderController, uiController, gameConfig.DefendersSets);
         inputController.Add(defendersAssignController);
         
         if (!gameConfig.ChangeVariant) new ResourceGenerator(/*buildController.Buildings, */gameConfig, levelGenerator, buildingController);

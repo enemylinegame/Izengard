@@ -12,23 +12,21 @@ namespace CombatSystem
         private const float POSITION_RADIUS = 1f;
 
         private List<DefenderUnit> _defenderUnits;
-        private GameObject _defenderPrefab;
         private TileController _tilecontroller;
         private UIController _uiConroller;
         private readonly Vector3 _unitsSpawnPosition = new Vector3(200f, 0f, 200f);
 
 
-        public DefendersController(TileController tilecontroller, UIController uiConroller, GameObject defenderPrefab)
+        public DefendersController(TileController tilecontroller, UIController uiConroller)
         {
             _defenderUnits = new List<DefenderUnit>();
             _tilecontroller = tilecontroller;
             _uiConroller = uiConroller;
-            _defenderPrefab = defenderPrefab;
         }
 
-        public DefenderUnit CreateDefender(TileView tile)
+        public DefenderUnit CreateDefender(TileView tile, DefenderSettings settings)
         {
-            GameObject go = GameObject.Instantiate(_defenderPrefab, _unitsSpawnPosition, Quaternion.identity);
+            GameObject go = GameObject.Instantiate(settings.Prefab, _unitsSpawnPosition, Quaternion.identity);
             Vector3 position = GeneratePositionNearTileCentre(tile);
             DefenderUnit defender = new DefenderUnit(go, position);
             defender.DefenderUnitDead += DefenderDead;
