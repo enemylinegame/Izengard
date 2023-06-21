@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e003fdef70b74dabb10a4052a1e05328, type: 3}
   m_Name: DefenderRange
   m_EditorClassIdentifier: 
-  <Type>k__BackingField: 0
+  <Type>k__BackingField: 2
   <UnitStats>k__BackingField:
     AttackInterval: 0
     AttackRange: 0
