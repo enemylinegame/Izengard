@@ -10,6 +10,7 @@ namespace CombatSystem
         public float VisionRange;
         public int AttackDamage;
         public int MaxHealth;
+        public int ThreatLevel;
 
         public DefenderUnitStats(float attackInterval, float attackRange, float visionRange, int attackDamage, int maxHealth)
         {
