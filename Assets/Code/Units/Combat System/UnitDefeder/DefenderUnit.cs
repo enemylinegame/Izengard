@@ -154,14 +154,18 @@ namespace CombatSystem
 
         private void OnDamaged(IDamageable attacker)
         {
-            if (!_targetsHolder.AttackingTargets.Contains(attacker))
+            if (attacker != null)
             {
-                _targetsHolder.AttackingTargets.Add(attacker);
-            
+                if (!_targetsHolder.AttackingTargets.Contains(attacker))
+                {
+                    _targetsHolder.AttackingTargets.Add(attacker);
+
+                }
+
+                attacker.DeathAction += EnemyDead;
+                //Debug.Log($"DefenderUnit::OnDamaged: {_state} ");
+                _currentStateExecuter.OnDamaged(attacker);
             }
-            attacker.DeathAction += EnemyDead;
-            //Debug.Log($"DefenderUnit::OnDamaged: {_state} ");
-            _currentStateExecuter.OnDamaged(attacker);
         }
 
         private void AddedTargetInRange()
