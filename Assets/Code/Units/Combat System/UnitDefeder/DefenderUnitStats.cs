@@ -1,5 +1,8 @@
-﻿namespace CombatSystem
+﻿using System;
+
+namespace CombatSystem
 {
+    [Serializable]
     public class DefenderUnitStats
     {
         public float AttackInterval;
