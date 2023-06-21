@@ -76,7 +76,7 @@ namespace CombatSystem
 
         public DefenderUnit(GameObject defender, Vector3 defendPosition)
         {
-            _unitStats = new DefenderUnitStats(1f, 0.3f,25, 100);
+            _unitStats = new DefenderUnitStats(1f, 0.3f, 2.0f ,25, 100);
             _defender = defender;
             _defendPosition = defendPosition;
             _myDamageable = defender.GetComponent<Damageable>();
@@ -87,7 +87,7 @@ namespace CombatSystem
             _agent = defender.GetComponent<NavMeshAgent>();
             _animation = new DefenderAnimation(defender, this);
             _targetsHolder = new DefenderTargetsHolder();
-            _targetFinder = new DefenderTargetFinder(_defender, _unitStats.AttackRange, _targetsHolder, _unitStats);
+            _targetFinder = new DefenderTargetFinder(_defender, _unitStats.VisionRange, _targetsHolder, _unitStats);
             _targetFinder.OnTargetsDetected += AddedTargetInRange;
             _targetSelector = new DefenderTargetSelector(_defender, _targetsHolder);
             _fightState = new DefenderFight(this, SetState, _unitStats, _targetsHolder, _targetSelector, 
