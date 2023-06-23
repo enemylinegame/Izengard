@@ -8,6 +8,7 @@ namespace CombatSystem
         public float AttackInterval;
         public float AttackRange;
         public float VisionRange;
+        public float MovementSpeed;
         public int AttackDamage;
         public int MaxHealth;
         public int ThreatLevel;

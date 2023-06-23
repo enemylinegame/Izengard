@@ -20,7 +20,8 @@ namespace Code.TileSystem
         
         private TileModel SelectedTileModel => _tileController.TileModel;
         private TileView SelectedTileView => _tileController.View;
-        
+
+        private int _nextDefenderTypeIndex;
 
         public DefendersManager(TileController tileController, IDefendersControll defendersController, 
             UIController uiController, DefendersSet defendersSet)
@@ -39,7 +40,7 @@ namespace Code.TileSystem
             int unitsQuantity = defendersOnTile.Count;
             if (unitsQuantity < SelectedTileModel.MaxWarriors)
             {
-                var unit = _defendersController.CreateDefender(SelectedTileView, _defendersSet.Defenders[0]);
+                var unit = _defendersController.CreateDefender(SelectedTileView, SelectDefenderType());
                 defendersOnTile.Add(unit);
                 unit.Tile = SelectedTileModel; 
                 unit.DefenderUnitDead += DefenderDead;
@@ -153,5 +154,18 @@ namespace Code.TileSystem
 
             return hasSent;
         }
+
+        private DefenderSettings SelectDefenderType()
+        {
+            if (_nextDefenderTypeIndex >= _defendersSet.Defenders.Count)
+            {
+                _nextDefenderTypeIndex = 0;
+            }
+
+            DefenderSettings settings = _defendersSet.Defenders[_nextDefenderTypeIndex];
+            _nextDefenderTypeIndex++;
+            return settings;
+        }
+        
     }
 }

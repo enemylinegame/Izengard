@@ -28,7 +28,7 @@ namespace CombatSystem
         {
             GameObject go = GameObject.Instantiate(settings.Prefab, _unitsSpawnPosition, Quaternion.identity);
             Vector3 position = GeneratePositionNearTileCentre(tile);
-            DefenderUnit defender = new DefenderUnit(go, position);
+            DefenderUnit defender = new DefenderUnit(go, position, settings);
             defender.DefenderUnitDead += DefenderDead;
             _defenderUnits.Add(defender);
             return defender;

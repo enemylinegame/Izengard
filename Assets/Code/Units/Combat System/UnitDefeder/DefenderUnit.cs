@@ -74,9 +74,9 @@ namespace CombatSystem
         }
         
 
-        public DefenderUnit(GameObject defender, Vector3 defendPosition)
+        public DefenderUnit(GameObject defender, Vector3 defendPosition, DefenderSettings settings)
         {
-            _unitStats = new DefenderUnitStats(1f, 0.3f, 2.0f ,25, 100);
+            _unitStats = settings.UnitStats;
             _defender = defender;
             _defendPosition = defendPosition;
             _myDamageable = defender.GetComponent<Damageable>();
@@ -85,6 +85,7 @@ namespace CombatSystem
             _myDamageable.OnDamaged += OnDamaged;
             _myDamageable.Init(_unitStats.MaxHealth, 1);
             _agent = defender.GetComponent<NavMeshAgent>();
+            _agent.speed = _unitStats.MovementSpeed;
             _animation = new DefenderAnimation(defender, this);
             _targetsHolder = new DefenderTargetsHolder();
             _targetFinder = new DefenderTargetFinder(_defender, _unitStats.VisionRange, _targetsHolder, _unitStats);
