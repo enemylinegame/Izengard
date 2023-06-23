@@ -17,6 +17,7 @@ MonoBehaviour:
     AttackInterval: 1
     AttackRange: 0.3
     VisionRange: 2
+    MovementSpeed: 2
     AttackDamage: 25
     MaxHealth: 100
     ThreatLevel: 8

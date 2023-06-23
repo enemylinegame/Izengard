@@ -15,8 +15,9 @@ MonoBehaviour:
   <Type>k__BackingField: 2
   <UnitStats>k__BackingField:
     AttackInterval: 1
-    AttackRange: 1.5
+    AttackRange: 2
     VisionRange: 2
+    MovementSpeed: 2
     AttackDamage: 50
     MaxHealth: 70
     ThreatLevel: 4

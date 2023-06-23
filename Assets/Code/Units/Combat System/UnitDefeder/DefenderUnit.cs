@@ -40,8 +40,6 @@ namespace CombatSystem
         private Vector3 _defendPosition;
         private DefenderState _state;
 
-        private float _reloadTimeCounter = 0;
-        private bool _isReload = false;
 
         /// <summary>
         /// Going to barrack or inside barrack
@@ -73,12 +71,15 @@ namespace CombatSystem
             }
         }
         
+        public Sprite Icon { get; private set; }
+        
 
         public DefenderUnit(GameObject defender, Vector3 defendPosition, DefenderSettings settings)
         {
             _unitStats = settings.UnitStats;
             _defender = defender;
             _defendPosition = defendPosition;
+            Icon = settings.Icon;
             _myDamageable = defender.GetComponent<Damageable>();
             _myDamageable.OnHealthChanged += HealthChanged;
             _myDamageable.DeathAction += DefenderDead;
