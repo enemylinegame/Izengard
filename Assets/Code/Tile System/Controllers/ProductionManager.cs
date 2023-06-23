@@ -59,12 +59,12 @@ namespace Code.TileSystem
             return false;
         }
 
-        public bool StartProduction(
-            ICollectable building, Vector3 workPlace,
+        public bool StartProduction(Vector3 spawnPosition,
+            ICollectable building,
             IWorkerPreparation preparation)
         {
 
-            int workId = BeginWork(building.SpawnPosition, workPlace,
+            int workId = BeginWork(spawnPosition, building.SpawnPosition,
                 building.ResourceType, preparation);
 
             if (workId < 0)
@@ -136,6 +136,9 @@ namespace Code.TileSystem
 
         public void StopAllProductions(ICollectable building)
         {
+            if (null == building)
+                return;
+
             int buildingId = building.BuildingID;
             if (!_buildingsTable.TryGetValue(buildingId, out int worksCount))
                 return;

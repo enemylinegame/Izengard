@@ -39,7 +39,7 @@ namespace Code.TileSystem
             
             _textVisualization = uiController.CenterUI.BaseNotificationUI;
             _list = tileList;
-            _uiView = uiController.BottonUI.TileUIView;
+            _uiView = uiController.BottomUI.TileUIView;
             _uiController = uiController;
             _buildingController = buildingController;
             _inputController = inputController;
@@ -87,7 +87,7 @@ namespace Code.TileSystem
             
             foreach (var building in buildingConfigs)
             {
-                var button = Object.Instantiate(_uiController.BottonUI.BuildingMenu.BuyPrefabButton, _uiController.CenterUI.BuildButtonsHolder);
+                var button = Object.Instantiate(_uiController.BottomUI.BuildingMenu.BuyPrefabButton, _uiController.CenterUI.BuildButtonsHolder);
                 _uiController.ButtonsInMenu.Add(building, button);
                 CreateButtonUI(building, button);
             }
@@ -123,8 +123,8 @@ namespace Code.TileSystem
         public BuildingUIInfo CreateBuildingInfo(BuildingConfig config, TileModel model, 
             ICollectable building)
          {
-             var view = Object.Instantiate(_uiController.BottonUI.BuildingMenu.BuildingInfo.GetComponent<BuildingUIInfo>()
-                 , _uiController.BottonUI.BuildingMenu.ByBuildButtonsHolder);
+             var view = Object.Instantiate(_uiController.BottomUI.BuildingMenu.BuildingInfo.GetComponent<BuildingUIInfo>()
+                 , _uiController.BottomUI.BuildingMenu.ByBuildButtonsHolder);
              view.Icon.sprite = config.Icon;
              view.Type.text = config.BuildingType.ToString();
              view.BuildingType = config.BuildingType;
@@ -144,8 +144,8 @@ namespace Code.TileSystem
          }
          private void LoadBuildingInfo(ICollectable building, int units)
          {
-             var button = Object.Instantiate(_uiController.BottonUI.BuildingMenu.BuildingInfo
-                 , _uiController.BottonUI.BuildingMenu.ByBuildButtonsHolder);
+             var button = Object.Instantiate(_uiController.BottomUI.BuildingMenu.BuildingInfo
+                 , _uiController.BottomUI.BuildingMenu.ByBuildButtonsHolder);
              var view = button.GetComponent<BuildingUIInfo>();
             
              view.Icon.sprite = building.Icon;
@@ -172,11 +172,11 @@ namespace Code.TileSystem
                 if (!_productionManager.IsThereFreeWorkers(building))
                     return;
 
-                Vector3 workPlace = building.SpawnPosition + Vector3.right * 20.0f;
                 IWorkerPreparation preparation = null;
 
                 _productionManager.StartProduction(
-                    building, workPlace, preparation);
+                    _tileView.gameObject.transform.position,
+                     building, preparation);
             }
             else
             {
@@ -244,14 +244,14 @@ namespace Code.TileSystem
 
             foreach (var kvp in _uiController.ButtonsInMenu)
                 kvp.Value.onClick.RemoveAllListeners();
-            _uiController.BottonUI.BuildingMenu.CloseMenuButton.onClick.RemoveAllListeners();
+            _uiController.BottomUI.BuildingMenu.CloseMenuButton.onClick.RemoveAllListeners();
             _uiController.Deinit();
             _uiView.Upgrade.onClick.RemoveAllListeners();
         }
         public void LevelCheck()
         {
             bool levelExceedDestroyBuildingInfo = _currentLVL > _uiController.DestroyBuildingInfo.Count;
-            _uiController.BottonUI.BuildingMenu.PrefabButtonClear.gameObject.SetActive(levelExceedDestroyBuildingInfo);
+            _uiController.BottomUI.BuildingMenu.PrefabButtonClear.gameObject.SetActive(levelExceedDestroyBuildingInfo);
         }
         public void LVLUp()
         {

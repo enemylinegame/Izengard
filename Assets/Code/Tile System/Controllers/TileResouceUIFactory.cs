@@ -17,8 +17,8 @@ namespace Code.TileSystem
         public TileResouceUIFactory(UIController uiController, TileResourceUIController tileResourceController
             , TileController tileController)
         {
-            _layoutTransform = uiController.BottonUI.ResourcesLayoutUIView.LayoutRectTransform;
-            _resourcesLayoutUIView = uiController.BottonUI.ResourcesLayoutUIView;
+            _layoutTransform = uiController.BottomUI.ResourcesLayoutUIView.LayoutRectTransform;
+            _resourcesLayoutUIView = uiController.BottomUI.ResourcesLayoutUIView;
             _tileResourceController = tileResourceController;
             _tileController = tileController;
         }

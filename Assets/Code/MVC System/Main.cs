@@ -26,7 +26,7 @@ public class Main : MonoBehaviour
     [SerializeField] private RightUI _rightUI;
 
     [SerializeField] private CenterUI _centerUI;
-    [SerializeField] private BottonUI _bottonUI;
+    [SerializeField] private BottomUI _bottonUI;
     [SerializeField] private TopResUiVew _topUI;
     [SerializeField] private EndGameScreen _endGameScreen;
     [SerializeField] private BuildingsUI buildingsUI;

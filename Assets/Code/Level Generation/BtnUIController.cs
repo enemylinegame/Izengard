@@ -4,8 +4,6 @@ using Code.UI;
 public class BtnUIController : IOnController, IOnStart, IDisposable
 {
     private RightUI _rightUI;
-    private GameConfig _gameConfig;
-    
     public event Action<int> TileSelected;
     
     public BtnUIController(RightUI rightUI, GameConfig gameConfig)

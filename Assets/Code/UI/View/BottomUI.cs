@@ -5,7 +5,7 @@ using CombatSystem.Views;
 
 namespace Code.UI
 {
-    public class BottonUI : MonoBehaviour
+    public class BottomUI : MonoBehaviour
     {
         [field: SerializeField] public BuildingsUIView BuildingMenu { get; set; }
         [field: SerializeField] public TileUIView TileUIView { get; set; }

@@ -13,7 +13,7 @@ using UnityEngine;
 public class GameInit
 {
     public GameInit(Controller controller, GameConfig gameConfig, WorkersTeamConfig workersTeamConfig,
-        RightUI rightUI, Transform btnParents, CenterUI centerUI, BottonUI bottonUI, TopResUiVew topResUiVew,
+        RightUI rightUI, Transform btnParents, CenterUI centerUI, BottomUI bottomUI, TopResUiVew topResUiVew,
         EndGameScreen endGameScreen,
         TowerShotConfig towerShotConfig, BuyItemScreenView buyItemScreenView, HireSystemView hireSystemView,
         EquipScreenView equipScreenView, Camera camera, TileList tileList,
@@ -25,10 +25,14 @@ public class GameInit
         var globalResStock = new GlobalStock(globalResourceList.GlobalResourceConfigs);
         var btnConroller = new BtnUIController(rightUI, gameConfig);
         var inputController = new InputController(outlineController);
-        var uiController = new UIController(rightUI, bottonUI, centerUI, inputController);
-        var levelGenerator = new GeneratorLevelController(tiles, gameConfig, btnConroller, btnParents, uiController);
+        var uiController = new UIController(rightUI, bottomUI, centerUI, inputController);
+
+        var levelGenerator = new GeneratorLevelController(
+            tiles, gameConfig, btnConroller, btnParents, uiController);
         // var buildController = new BuildGenerator(gameConfig);
-        var buildingController = new BuildingController(uiController, globalResStock, gameConfig, levelGenerator);
+        var buildingController = new BuildingController(
+            uiController, globalResStock, gameConfig, levelGenerator);
+
         var unitController = new UnitController();
         var timeRemaining = new TimeRemainingController();
         var towershotcontroller = new TowerShotController(towerShotConfig, levelGenerator, gameConfig.Bullet);

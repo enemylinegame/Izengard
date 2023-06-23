@@ -13,13 +13,13 @@ namespace Code.UI
     public class UIController : IOnTile, ITileLoadInfo
     {
         private RightUI _rightUI;
-        private BottonUI _bottonUI;
+        private BottomUI _bottomUI;
         private CenterUI _centerUI;
         private InputController _inputController;
         private WarsView _warsView;
 
         public RightUI RightUI => _rightUI;
-        public BottonUI BottonUI => _bottonUI;
+        public BottomUI BottomUI => _bottomUI;
         public CenterUI CenterUI => _centerUI;
         public WarsView WarsView => _warsView;
 
@@ -29,21 +29,21 @@ namespace Code.UI
         /// <summary>
         /// Главный контроллер UI
         /// </summary>
-        public UIController(RightUI rightUI, BottonUI bottonUI, CenterUI centerUI, InputController inputController)
+        public UIController(RightUI rightUI, BottomUI bottomUI, CenterUI centerUI, InputController inputController)
         {
             _rightUI = rightUI;
-            _bottonUI = bottonUI;
+            _bottomUI = bottomUI;
             _centerUI = centerUI;
             _inputController = inputController;
 
-            _warsView = new WarsView(bottonUI.WarsUIView, inputController);
+            _warsView = new WarsView(bottomUI.WarsUIView, inputController);
             
             IsWorkUI(UIType.All, false);
             
-            _bottonUI.BuildingMenu.PrefabButtonClear.onClick.AddListener(() => IsWorkUI(UIType.Buy, true));
-            _bottonUI.BuildingMenu.PrefabButtonClear.onClick.AddListener(() => _bottonUI.BuildingMenu.PrefabButtonClear.gameObject.SetActive(false));
+            _bottomUI.BuildingMenu.PrefabButtonClear.onClick.AddListener(() => IsWorkUI(UIType.Buy, true));
+            _bottomUI.BuildingMenu.PrefabButtonClear.onClick.AddListener(() => _bottomUI.BuildingMenu.PrefabButtonClear.gameObject.SetActive(false));
             _centerUI.CloseBuildingsBuy.onClick.AddListener(() => IsWorkUI(UIType.Buy, false));
-            _centerUI.CloseBuildingsBuy.onClick.AddListener(() => _bottonUI.BuildingMenu.PrefabButtonClear.gameObject.SetActive(true));
+            _centerUI.CloseBuildingsBuy.onClick.AddListener(() => _bottomUI.BuildingMenu.PrefabButtonClear.gameObject.SetActive(true));
             inputController.Add(this);
             
             CenterUI.TIleSelection.Back.onClick.AddListener(() => IsWorkUI(UIType.TileSel, false));
@@ -114,8 +114,8 @@ namespace Code.UI
 
         private void IsOnTileUI(bool isOpen)
         {
-            foreach (var window in _bottonUI.BuildingMenu.Windows) window.gameObject.SetActive(isOpen);
-            _bottonUI.BuildingMenu.CloseMenuButton.gameObject.SetActive(isOpen);
+            foreach (var window in _bottomUI.BuildingMenu.Windows) window.gameObject.SetActive(isOpen);
+            _bottomUI.BuildingMenu.CloseMenuButton.gameObject.SetActive(isOpen);
         }
 
         public void LoadInfoToTheUI(TileView tile)
@@ -128,7 +128,7 @@ namespace Code.UI
         {
             IsWorkUI(UIType.All, false);
             Deinit();
-            _bottonUI.TileUIView.Upgrade.onClick.RemoveAllListeners();
+            _bottomUI.TileUIView.Upgrade.onClick.RemoveAllListeners();
         }
     }
 

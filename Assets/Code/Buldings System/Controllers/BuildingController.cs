@@ -21,7 +21,8 @@ namespace Code.BuildingSystem
         
         private readonly HashSet<DummyController> _instantiatedDummys = new HashSet<DummyController>();
 
-        public BuildingController(UIController uiController, GlobalStock stock, GameConfig gameConfig, GeneratorLevelController levelController)
+        public BuildingController(UIController uiController, GlobalStock stock, 
+            GameConfig gameConfig, GeneratorLevelController levelController)
         {
             _uiController = uiController;
             _notificationUI = uiController.CenterUI.BaseNotificationUI;
@@ -37,7 +38,8 @@ namespace Code.BuildingSystem
         /// <summary>
         /// Проверяет на наличие ресурса если он есть ставим здание.
         /// </summary>
-        public void BuildBuilding(BuildingConfig buildingConfig, TileModel model, TileController controller)
+        public void BuildBuilding(BuildingConfig buildingConfig, 
+            TileModel model, TileController controller)
         {
             if (!IsResourcesEnough(buildingConfig))
             {

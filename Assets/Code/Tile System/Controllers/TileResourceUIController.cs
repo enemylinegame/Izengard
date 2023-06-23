@@ -14,7 +14,7 @@ namespace Code.TileSystem
         public TileResourceUIController(UIController uiController, 
             InputController inputController, TileController controller)
         {
-            _uiController = uiController.BottonUI.ResourcesLayoutUIView;
+            _uiController = uiController.BottomUI.ResourcesLayoutUIView;
             _controller = controller;
             _factory = new TileResouceUIFactory(uiController, this, controller);
             inputController.Add(this);
@@ -53,10 +53,9 @@ namespace Code.TileSystem
                     resourceView.Building))
             {
                 IWorkerPreparation workerPreparation = null;
-                Vector3 resourceLocation = 
-                    resourceView.gameObject.transform.position;
                 _controller.WorkerMenager.StartProduction(
-                    resourceView.Building, resourceLocation, workerPreparation);
+                    _controller.View.transform.position,
+                    resourceView.Building, workerPreparation);
 
                 resourceValue++;
             }
