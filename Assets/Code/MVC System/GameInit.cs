@@ -4,6 +4,7 @@ using Code.QuickOutline.Scripts;
 using Code.TileSystem;
 using Code.TowerShot;
 using Code.UI;
+using Code.Units.HireDefendersSystem;
 using CombatSystem;
 using Controllers.BaseUnit;
 using EquipmentSystem;
@@ -45,7 +46,9 @@ public class GameInit
             buildingController, inputController, productionManager);
         var defenderController = new DefendersController(tileController,uiController);
         var tileResourceUIController = new TileResourceUIController(uiController, inputController, tileController);
-        var defendersAssignController = new DefendersManager(tileController, defenderController, uiController, gameConfig.DefendersSets);
+        var hireUnitView = new HireUnitView(rightUI.HireUnits);
+        var defendersAssignController = new DefendersManager(tileController, defenderController, uiController, 
+            hireUnitView, gameConfig.DefendersSets);
         inputController.Add(defendersAssignController);
         
         if (!gameConfig.ChangeVariant) new ResourceGenerator(/*buildController.Buildings, */gameConfig, levelGenerator, buildingController);

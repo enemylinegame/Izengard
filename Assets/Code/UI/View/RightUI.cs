@@ -2,6 +2,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+using Code.Units.HireDefendersSystem;
+
+
 namespace Code.UI
 {
     public class RightUI : MonoBehaviour
@@ -9,7 +12,7 @@ namespace Code.UI
         [SerializeField] private Button _buttonSelectTileFirst;
         [SerializeField] private Button _buttonSelectTileSecond;
         [SerializeField] private Button _buttonSelectTileThird;
-        [SerializeField] private Button _buttonHireUnits;
+        [SerializeField] private HireUnitUIView _hireUnits;
         [SerializeField] private TMP_Text _timer;
         
         public TMP_Text Timer => _timer;
@@ -19,7 +22,7 @@ namespace Code.UI
         public Button ButtonSelectTileSecond => _buttonSelectTileSecond;
     
         public Button ButtonSelectTileThird => _buttonSelectTileThird;
-        public Button ButtonHireUnits => _buttonHireUnits;
+        public HireUnitUIView HireUnits => _hireUnits;
 
         #region Comments
 

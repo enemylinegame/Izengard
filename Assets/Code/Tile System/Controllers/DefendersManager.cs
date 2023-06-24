@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Code.UI;
+using Code.Units.HireDefendersSystem;
 using CombatSystem;
 using CombatSystem.Views;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace Code.TileSystem
         private readonly TileController _tileController;
         private readonly IDefendersControll _defendersController;
         private readonly WarsView _warsView;
+        private readonly HireUnitView _hireUnitView;
 
         private DefendersSet _defendersSet;
         
@@ -23,29 +25,34 @@ namespace Code.TileSystem
 
         private int _nextDefenderTypeIndex;
 
+        private bool _isHireDefenderPenelOpened;
+        
+
         public DefendersManager(TileController tileController, IDefendersControll defendersController, 
-            UIController uiController, DefendersSet defendersSet)
+            UIController uiController, HireUnitView hireUnitView, DefendersSet defendersSet)
         {
             _tileController = tileController;
             _defendersController = defendersController;
             _warsView = uiController.WarsView;
             _warsView.SetDefendersManager(this);
             _defendersSet = defendersSet;
+            _hireUnitView = hireUnitView;
+            _hireUnitView.OnHireButtonClick += HireDefenderButtonClick;
+            _hireUnitView.OnCloseButtonClick += CloseHireDefenderPanel;
         }
+
+
+        #region IDefendersManager
 
         public void HireDefender()
         {
-            // TODO:  add logic to select prefab from DefendersSet
-            List<DefenderUnit> defendersOnTile = SelectedTileModel.DefenderUnits;
-            int unitsQuantity = defendersOnTile.Count;
-            if (unitsQuantity < SelectedTileModel.MaxWarriors)
+            List<Sprite> sprites = new List<Sprite>();
+            for (int i = 0; i < _defendersSet.Defenders.Count; i++)
             {
-                var unit = _defendersController.CreateDefender(SelectedTileView, SelectDefenderType());
-                defendersOnTile.Add(unit);
-                unit.Tile = SelectedTileModel; 
-                unit.DefenderUnitDead += DefenderDead;
+                sprites.Add( _defendersSet.Defenders[i].Icon);
             }
-            _warsView.UpdateDefenders();
+            _hireUnitView.Show(sprites);
+            _isHireDefenderPenelOpened = true;
         }
 
         public void DismissDefender(List<DefenderUnit> units)
@@ -64,7 +71,7 @@ namespace Code.TileSystem
                     }
                 }
             }
-            _warsView.UpdateDefenders();            
+            _warsView.UpdateDefenders();
         }
 
         public void SendToBarrack(List<DefenderUnit> units)
@@ -107,6 +114,22 @@ namespace Code.TileSystem
         public void BarrackButtonClick()
         {
             Debug.LogWarning("DefendersManager->BarrackButtonClick: not implemented ");
+        }
+        
+        #endregion
+
+        private void HireConcreteDefender(DefenderSettings settings)
+        {
+            List<DefenderUnit> defendersOnTile = SelectedTileModel.DefenderUnits;
+            int unitsQuantity = defendersOnTile.Count;
+            if (unitsQuantity < SelectedTileModel.MaxWarriors)
+            {
+                var unit = _defendersController.CreateDefender(SelectedTileView, settings);
+                defendersOnTile.Add(unit);
+                unit.Tile = SelectedTileModel; 
+                unit.DefenderUnitDead += DefenderDead;
+            }
+            _warsView.UpdateDefenders();
         }
 
         public void LoadInfoToTheUI(TileView tile)
@@ -155,17 +178,21 @@ namespace Code.TileSystem
             return hasSent;
         }
 
-        private DefenderSettings SelectDefenderType()
+        private void HireDefenderButtonClick(int index)
         {
-            if (_nextDefenderTypeIndex >= _defendersSet.Defenders.Count)
+            if (_isHireDefenderPenelOpened)
             {
-                _nextDefenderTypeIndex = 0;
+                HireConcreteDefender(_defendersSet.Defenders[index]);
             }
-
-            DefenderSettings settings = _defendersSet.Defenders[_nextDefenderTypeIndex];
-            _nextDefenderTypeIndex++;
-            return settings;
+            CloseHireDefenderPanel();
         }
+
+        private void CloseHireDefenderPanel()
+        {
+            _hireUnitView.Hide();
+            _isHireDefenderPenelOpened = false;
+        }
+ 
         
     }
 }
