@@ -132,6 +132,8 @@ namespace Code.TileSystem
             _warsView.UpdateDefenders();
         }
 
+        #region ITileLoadInfo
+        
         public void LoadInfoToTheUI(TileView tile)
         {
             _warsView.SetDefenders(tile.TileModel.DefenderUnits);
@@ -139,8 +141,11 @@ namespace Code.TileSystem
 
         public void Cancel()
         {
+            CloseHireDefenderPanel();
             _warsView.ClearDefenders();
         }
+
+        #endregion
 
         private void DefenderDead(DefenderUnit defender)
         {

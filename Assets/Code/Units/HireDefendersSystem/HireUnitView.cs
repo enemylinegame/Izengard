@@ -22,6 +22,7 @@ namespace Code.Units.HireDefendersSystem
             _hireUnitUIView = hireUnitUIView;
             _emptySlotBackground = _hireUnitUIView.HireButton.transform.GetComponent<Image>().sprite;
             _hireUnitUIView.HireButton.gameObject.SetActive(false);
+            _hireUnitUIView.Root.SetActive(false);
         }
 
         public void Show(List<Sprite> sprites)
