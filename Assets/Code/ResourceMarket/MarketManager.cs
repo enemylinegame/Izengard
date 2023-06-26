@@ -32,6 +32,8 @@ namespace ResourceMarket
         private TMP_Text woodCount;
         [SerializeField]
         private TMP_Text ironCount;
+        [SerializeField]
+        private TMP_Text marketsCount;
 
         [Header("TMP Costs")]
         [SerializeField]
@@ -114,5 +116,7 @@ namespace ResourceMarket
             }
 
         }
+
+        
     }
 }
