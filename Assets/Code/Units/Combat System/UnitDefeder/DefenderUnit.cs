@@ -74,7 +74,8 @@ namespace CombatSystem
         public Sprite Icon { get; private set; }
         
 
-        public DefenderUnit(GameObject defender, Vector3 defendPosition, DefenderSettings settings)
+        public DefenderUnit(GameObject defender, Vector3 defendPosition, DefenderSettings settings, 
+            IBulletsController bulletsController)
         {
             _unitStats = settings.UnitStats;
             _defender = defender;
@@ -92,8 +93,18 @@ namespace CombatSystem
             _targetFinder = new DefenderTargetFinder(_defender, _unitStats.VisionRange, _targetsHolder, _unitStats);
             _targetFinder.OnTargetsDetected += AddedTargetInRange;
             _targetSelector = new DefenderTargetSelector(_defender, _targetsHolder);
-            _fightState = new DefenderFight(this, SetState, _unitStats, _targetsHolder, _targetSelector, 
-                _myDamageable, _targetFinder);
+            
+            if (settings.Type == DefenderType.Range)
+            {
+                _fightState = new DefenderFightRange(this, SetState, _unitStats, _targetsHolder, _targetSelector, 
+                    _myDamageable, _targetFinder, bulletsController);
+            }
+            else
+            {
+                _fightState = new DefenderFight(this, SetState, _unitStats, _targetsHolder, _targetSelector, 
+                    _myDamageable, _targetFinder);
+            }
+
             _goingState = new DefenderGoing(this, SetState, _unitStats, _agent);
             _gotoBarrackState = new DefenderGotoBarrack(this, SetState, _agent);
             _idleState = new DefenderIdle(this, SetState, _agent);

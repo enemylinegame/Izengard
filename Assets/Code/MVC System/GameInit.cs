@@ -34,8 +34,10 @@ public class GameInit
         var timeRemaining = new TimeRemainingController();
         var towershotcontroller = new TowerShotController(towerShotConfig, levelGenerator, gameConfig.Bullet);
         var eqScreenController = new EquipScreenController(equipScreenView, camera);
-        var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, hireSystemView, levelGenerator);
-        var waveController = new WaveController(levelGenerator, uiController, btnParents, gameConfig);
+        var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, 
+            hireSystemView, levelGenerator);
+        var bulletsController = new BulletsController();
+        var waveController = new WaveController(levelGenerator, uiController, btnParents, gameConfig, bulletsController);
         var endGameController = new EndGameController(endGameScreen, levelGenerator);
         
         var workersTeamComtroller = new WorkersTeamController(
@@ -44,7 +46,7 @@ public class GameInit
             globalResStock, workersTeamComtroller, workersTeamConfig);
         var tileController = new TileController(tileList, uiController, 
             buildingController, inputController, productionManager);
-        var defenderController = new DefendersController(tileController,uiController);
+        var defenderController = new DefendersController(bulletsController);
         var tileResourceUIController = new TileResourceUIController(uiController, inputController, tileController);
         var hireUnitView = new HireUnitView(rightUI.HireUnits);
         var defendersAssignController = new DefendersManager(tileController, defenderController, uiController, 
@@ -68,6 +70,7 @@ public class GameInit
         controller.Add(hireSystemController);
         controller.Add(tileController);
         controller.Add(defenderController);
+        controller.Add(bulletsController);
 
         // var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
         // controller.Add(testDummyTargetController);
