@@ -1419,7 +1419,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 231901376}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1560844071}
+        m_TargetAssemblyTypeName: ResourceMarket.MarketItem, Assembly-CSharp
+        m_MethodName: IncreaseAmount
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 100
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &231901376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3328,7 +3340,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 457548481}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2034742534}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &457548481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10327,7 +10351,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1572862734}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1560844071}
+        m_TargetAssemblyTypeName: ResourceMarket.MarketItem, Assembly-CSharp
+        m_MethodName: DecreaseAmount
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 100
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1572862734
 MonoBehaviour:
   m_ObjectHideFlags: 0
