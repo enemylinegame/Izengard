@@ -4199,6 +4199,7 @@ GameObject:
   - component: {fileID: 1209855764}
   - component: {fileID: 1209855766}
   - component: {fileID: 1209855765}
+  - component: {fileID: 1209855767}
   m_Layer: 5
   m_Name: IronTxt
   m_TagString: Untagged
@@ -4324,6 +4325,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1209855763}
   m_CullTransparentMesh: 1
+--- !u!114 &1209855767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1209855763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecb10fd7ffead374786084c5d56ced82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _initialAmount: 200
+  _minAmount: 50
+  _exchangeRate: 200
+  _amountText: {fileID: 647504581}
+  _costText: {fileID: 115627355}
 --- !u!1 &1235326873
 GameObject:
   m_ObjectHideFlags: 0
@@ -5014,6 +5032,7 @@ GameObject:
   - component: {fileID: 1560844068}
   - component: {fileID: 1560844070}
   - component: {fileID: 1560844069}
+  - component: {fileID: 1560844071}
   m_Layer: 5
   m_Name: WoodTxt
   m_TagString: Untagged
@@ -5139,6 +5158,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1560844067}
   m_CullTransparentMesh: 1
+--- !u!114 &1560844071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1560844067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecb10fd7ffead374786084c5d56ced82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _initialAmount: 100
+  _minAmount: 50
+  _exchangeRate: 100
+  _amountText: {fileID: 1587203883}
+  _costText: {fileID: 1037858505}
 --- !u!1 &1587203881
 GameObject:
   m_ObjectHideFlags: 0
@@ -6378,6 +6414,7 @@ GameObject:
   - component: {fileID: 2034742538}
   - component: {fileID: 2034742537}
   - component: {fileID: 2034742536}
+  - component: {fileID: 2034742539}
   m_Layer: 5
   m_Name: TurboMarketUI
   m_TagString: Untagged
@@ -6414,7 +6451,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2034742534}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c748561b6eb9b6c4aabf2e2cd2c5ba2e, type: 3}
   m_Name: 
@@ -6474,6 +6511,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2034742534}
   m_CullTransparentMesh: 1
+--- !u!114 &2034742539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2034742534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5245fb81ea82ec240ba8c6e7d967185d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _initialGold: 1000
+  _goldText: {fileID: 44345}
+  _statusText: {fileID: 923224494}
+  _woodItem: {fileID: 1560844071}
+  _ironItem: {fileID: 1209855767}
+  _exchangeTierOneAmount: 10
+  _buyWoodButton: {fileID: 1286586823}
+  _buyIronButton: {fileID: 364616031}
+  _sellWoodButton: {fileID: 326691909}
+  _sellIronButton: {fileID: 1128626637}
 --- !u!1 &2069066281
 GameObject:
   m_ObjectHideFlags: 0
