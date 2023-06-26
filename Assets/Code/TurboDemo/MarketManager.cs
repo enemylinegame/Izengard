@@ -21,6 +21,7 @@ public class MarketManager : MonoBehaviour
     public int exchangeAmount;
     public int woodExchangeRate;
     public int ironExchangeRate;
+    public int marketCount;
 
 
     [Header("TMP Stock")]
