@@ -45,10 +45,10 @@ namespace ResourceMarket
 
         private void BuyWood()
         {
-            if (_currentGold >= _woodItem.ExchangeCost)
+            if (_currentGold >= _woodItem.BuyCost)
             {
                 _woodItem.IncreaseAmount(_exchangeTierOneAmount);
-                _currentGold -= _woodItem.ExchangeCost;
+                _currentGold -= _woodItem.BuyCost;
                 UpdateGoldText(_currentGold);
                 ChangeStatusText("");
             }
@@ -60,10 +60,10 @@ namespace ResourceMarket
 
         private void BuyIron()
         {
-            if (_currentGold >= _ironItem.ExchangeCost)
+            if (_currentGold >= _ironItem.BuyCost)
             {
                 _ironItem.IncreaseAmount(_exchangeTierOneAmount);
-                _currentGold -= _ironItem.ExchangeCost;
+                _currentGold -= _ironItem.BuyCost;
                 UpdateGoldText(_currentGold);
                 ChangeStatusText("");
             }
