@@ -88,12 +88,8 @@ namespace Code.TileSystem
             if (!_buildingsTable.ContainsKey(buildingId))
                 return false;
 
-            int workersCount = --_buildingsTable[buildingId];
-
-            if (workersCount <= 0)
+            if (--_buildingsTable[buildingId] <= 0)
                 _buildingsTable.Remove(buildingId);
-            else
-                _buildingsTable[buildingId] = workersCount;
 
             return true;
         }

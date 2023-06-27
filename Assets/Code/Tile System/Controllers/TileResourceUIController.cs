@@ -53,6 +53,7 @@ namespace Code.TileSystem
                     resourceView.Building))
             {
                 IWorkerPreparation workerPreparation = null;
+
                 _controller.WorkerMenager.StartProduction(
                     _controller.View.transform.position,
                     resourceView.Building, workerPreparation);

@@ -165,14 +165,25 @@ namespace Code.TileSystem
             
              LevelCheck();
          }
-         private void Hiring(bool isOn, BuildingUIInfo buildingUI, ICollectable building)
+
+        IWorkerPreparation CreateWorkAnimation(GameObject resourceView)
+        {
+            if (!resourceView.gameObject.TryGetComponent(
+                out IWorkerPreparation workerPreparation))
+                return null;
+
+            return workerPreparation;
+        }
+
+        private void Hiring(bool isOn, BuildingUIInfo buildingUI, ICollectable building)
          {
             if (isOn)
             {
                 if (!_productionManager.IsThereFreeWorkers(building))
                     return;
 
-                IWorkerPreparation preparation = null;
+                IWorkerPreparation preparation = 
+                    CreateWorkAnimation(buildingUI.gameObject);
 
                 _productionManager.StartProduction(
                     _tileView.gameObject.transform.position,
