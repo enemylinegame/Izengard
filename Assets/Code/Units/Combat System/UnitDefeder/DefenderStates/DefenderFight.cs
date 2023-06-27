@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace CombatSystem.DefenderStates
 {
-    public sealed class DefenderFight : DefenderStateBase
+    public class DefenderFight : DefenderStateBase
     {
 
-        private DefenderUnitStats _stats;
+        protected DefenderUnitStats _stats;
         private DefenderTargetsHolder _targetsHolder;
         private DefenderTargetSelector _targetSelector;
         private DefenderTargetFinder _targetFinder;
-        private IDamageable _myDamagable;
+        protected IDamageable _myDamagable;
 
         private float _reloadTime;
         private float _reloadTimeCounter;
@@ -57,7 +57,11 @@ namespace CombatSystem.DefenderStates
             {
                 if (_targetFinder.IsTargetInRange(target))
                 {
-                    AttackTarget(target);
+                    if (_isAttackReady)
+                    {
+                        _isAttackReady = false;
+                        AttackTarget(target);
+                    }
                 }
                 else
                 {
@@ -70,13 +74,9 @@ namespace CombatSystem.DefenderStates
             }
         }
 
-        private void AttackTarget(IDamageable target)
+        protected virtual void AttackTarget(IDamageable target)
         {
-            if (_isAttackReady)
-            {
-                _isAttackReady = false;
-                target.MakeDamage(_stats.AttackDamage, _myDamagable);
-            }
+            target.MakeDamage(_stats.AttackDamage, _myDamagable);
         }
 
         public override void GoToPosition(Vector3 destination)

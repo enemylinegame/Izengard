@@ -16,7 +16,6 @@ namespace CombatSystem.Views
         private DefenderSlotUI _uiSlot;
         private Image _unitIcon;
         private Sprite _emptySprite;
-        private Sprite _unitSprite;
         private Toggle _inBarrack;
         private Button _hireButton;
         private Button _dismissButton;
@@ -84,10 +83,9 @@ namespace CombatSystem.Views
         public DefenderUnit Unit { get => _unit; }
 
 
-        public DefenderSlotView(DefenderSlotUI slot, Sprite unitSprite, int number)
+        public DefenderSlotView(DefenderSlotUI slot, int number)
         {
             _uiSlot = slot;
-            _unitSprite = unitSprite;
             _unitIcon = _uiSlot.UnitIcon;
             _emptySprite = _unitIcon.sprite;
             _inBarrack = _uiSlot.SendToBarrackToggle;
@@ -144,7 +142,7 @@ namespace CombatSystem.Views
         {
             if (unit != null)
             {
-                _unitIcon.sprite = _unitSprite;
+                _unitIcon.sprite = unit.Icon;
                 _unit = unit;
                 _inBarrack.gameObject.SetActive(true);
                 IsInBarrack = unit.IsInBarrack;

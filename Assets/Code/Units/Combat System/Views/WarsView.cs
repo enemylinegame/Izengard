@@ -71,8 +71,7 @@ namespace CombatSystem.Views
 
             for (int i = 0; i < _slots.Length; i++)
             {
-                DefenderSlotView newSlot = new DefenderSlotView(slots[i], _warsUIView.UnitDefenderSprite,
-                    i + FIRST_SLOT_NUMBER);
+                DefenderSlotView newSlot = new DefenderSlotView(slots[i], i + FIRST_SLOT_NUMBER);
                 newSlot.OnHireClick += HireButtonClick;
                 newSlot.OnDissmisClick += DismissButtonClick;
                 newSlot.OnInBarrackChanged += InBarrackToggleChanged;

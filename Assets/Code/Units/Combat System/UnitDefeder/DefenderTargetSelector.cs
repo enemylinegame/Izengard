@@ -27,7 +27,6 @@ namespace CombatSystem
         public IDamageable SelectTarget()
         {
             IDamageable selectedTarget = null;
-            int maxThreatLevel = 0;
 
             List<IDamageable> targets = new List<IDamageable>();
 
