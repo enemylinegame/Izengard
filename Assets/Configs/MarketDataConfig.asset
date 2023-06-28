@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fb633d4b5585f047852bc15972c92d1, type: 3}
+  m_Name: MarketDataConfig
+  m_EditorClassIdentifier: 
+  _marketItems:
+  - ResourceType: 1
+    ExchangeAmount: 10
+    ExchangeRate: 100
+    MinExchange: 50
+    ExchangeCoef: 0.45
+    InitialAmount: 100
+    Name: Wood
+    ErrorMessage: "\u041D\u0443\u0436\u043D\u043E \u0431\u043E\u043B\u044C\u0448\u0435
+      \u0434\u0440\u0435\u0432\u0435\u0441\u0438\u043D\u044B"
+  - ResourceType: 2
+    ExchangeAmount: 10
+    ExchangeRate: 200
+    MinExchange: 50
+    ExchangeCoef: 0.45
+    InitialAmount: 200
+    Name: Iron
+    ErrorMessage: "\u041D\u0443\u0436\u043D\u043E \u0431\u043E\u043B\u044C\u0448\u0435
+      \u0436\u0435\u043B\u0435\u0437\u0430"
+  _marketBuildings: 3
+  _marketCoef: 0.05

@@ -10,14 +10,14 @@ namespace ResourceMarket
     {
         [SerializeField] private TMP_Text _itemNameText;
         [SerializeField] private TMP_Text _itemAmountText;
-        [SerializeField] private TMP_Text _itemCostText;
+        [SerializeField] private TMP_Text _itemByCostText;
+        [SerializeField] private TMP_Text _itemSellCostText;
 
         [SerializeField] private Button _byItemButton;
         [SerializeField] private Button _sellItemButton;
 
         private MarketItemModel _marketItem;
 
-        private ResourceType _resourceType;
         private Action<ResourceType> _onByItem;
         private Action<ResourceType> _onSellItem;
 
@@ -37,18 +37,19 @@ namespace ResourceMarket
         private void SetInfoData(MarketItemModel marketItem)
         {
             _itemNameText.text = marketItem.Name;
-            _itemCostText.text = $"{marketItem.ExchangeAmount} for {marketItem.ExchangeCost} gold";
+            _itemByCostText.text = $"By {marketItem.ExchangeAmount} for {marketItem.BuyCost} gold";
+            _itemSellCostText.text = $"Sell {marketItem.ExchangeAmount} for {marketItem.ExchangeCost} gold";
             UpdateAmount(marketItem.CurrentAmount);
         }
 
         private void ByItem()
         {
-            _onByItem?.Invoke(_resourceType);
+            _onByItem?.Invoke(_marketItem.ResourceType);
         }
 
         private void SellItem()
         {
-            _onSellItem?.Invoke(_resourceType);
+            _onSellItem?.Invoke(_marketItem.ResourceType);
         }
 
         public void Deinit()
@@ -72,6 +73,5 @@ namespace ResourceMarket
         {
             Deinit();
         }
-
     }
 }
