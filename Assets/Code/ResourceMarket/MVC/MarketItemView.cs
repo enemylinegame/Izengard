@@ -17,7 +17,6 @@ namespace ResourceMarket
 
         private MarketItemModel _marketItem;
 
-        private ResourceType _resourceType;
         private Action<ResourceType> _onByItem;
         private Action<ResourceType> _onSellItem;
 
@@ -43,12 +42,12 @@ namespace ResourceMarket
 
         private void ByItem()
         {
-            _onByItem?.Invoke(_resourceType);
+            _onByItem?.Invoke(_marketItem.ResourceType);
         }
 
         private void SellItem()
         {
-            _onSellItem?.Invoke(_resourceType);
+            _onSellItem?.Invoke(_marketItem.ResourceType);
         }
 
         public void Deinit()
@@ -72,6 +71,5 @@ namespace ResourceMarket
         {
             Deinit();
         }
-
     }
 }

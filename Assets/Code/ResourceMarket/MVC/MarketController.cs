@@ -7,6 +7,7 @@ namespace ResourceMarket
     public sealed class MarketController
     {
         private readonly Dictionary<ResourceType, MarketItemModel> _marketItems = new Dictionary<ResourceType, MarketItemModel>();
+
         private readonly ICustomer _customer;
         private readonly GlobalStock _stock;
         private readonly MarketView _view;
@@ -31,6 +32,9 @@ namespace ResourceMarket
 
         private void OnByItem(ResourceType resourceType)
         {
+            if (resourceType == ResourceType.None) 
+                return;
+
             var item = _marketItems[resourceType];
 
             if (_customer.Gold >= item.ExchangeCost)
@@ -48,6 +52,9 @@ namespace ResourceMarket
 
         private void OnSellItem(ResourceType resourceType)
         {
+            if (resourceType == ResourceType.None)
+                return;
+
             var item = _marketItems[resourceType];
 
             if (item.CurrentAmount > 10)

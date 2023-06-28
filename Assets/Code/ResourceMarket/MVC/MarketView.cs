@@ -46,7 +46,7 @@ namespace ResourceMarket
 
         public void UpdateGold(int currentGold)
         {
-            _goldText.text = currentGold.ToString();
+            _goldText.text = $"Gold: {currentGold}";
         }
 
         public void UpdateStatus(string message)
