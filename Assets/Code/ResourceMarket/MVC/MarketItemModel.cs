@@ -41,7 +41,11 @@ namespace ResourceMarket
 
         public int ExchangeCost
         {
-            get => _exchangeAmount * (int)(_exchangeRate * (_exchangeCoef + _marketDataProvider.MarketCoef * _marketDataProvider.MarketAmount));
+            get
+            {
+                var exchangeAdditionCoef = _exchangeRate * (_exchangeCoef + _marketDataProvider.MarketCoef * _marketDataProvider.MarketAmount);
+                return _exchangeAmount * (int)exchangeAdditionCoef;
+            }
         }
 
         public string Name => _name;

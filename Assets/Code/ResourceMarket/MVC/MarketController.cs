@@ -26,8 +26,7 @@ namespace ResourceMarket
             {
                 _marketItems[itemData.ResourceType] = new MarketItemModel(itemData, _marketDataProvider);
             }
-   
-            
+               
             _view.InitView(_marketItems.Values.ToList(), OnByItem, OnSellItem);
             
             _marketDataProvider.OnMarketAmountChange += _view.UpdateMarketAmount;
