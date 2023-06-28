@@ -11,7 +11,7 @@ namespace ResourceMarket
         private ResourceType _resourceType;
         private int _exchangeAmount;
         private int _exchangeRate;
-        private int _exchangeCoef;
+        private float _exchangeCoef;
         private int _minExchange;
         private int _currentAmount;
 
@@ -58,6 +58,7 @@ namespace ResourceMarket
             _resourceType = itemData.ResourceType;
             _exchangeAmount = itemData.ExchangeAmount;
             _exchangeRate = itemData.ExchangeRate;
+            _exchangeCoef = itemData.ExchangeCoef;
             _minExchange = itemData.MinExchange;
 
             _currentAmount = itemData.InitialAmount;

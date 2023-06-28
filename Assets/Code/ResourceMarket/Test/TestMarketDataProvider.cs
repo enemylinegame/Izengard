@@ -5,12 +5,12 @@ namespace ResourceMarket
 {
     public class TestMarketDataProvider : IMarketDataProvider
     {
-        private double _marketCoef;
+        private float _marketCoef;
         private int _marketAmount;
 
         public event Action<int> OnMarketAmountChange;
 
-        public double MarketCoef => _marketCoef;
+        public float MarketCoef => _marketCoef;
 
         public int MarketAmount 
         {
@@ -25,7 +25,7 @@ namespace ResourceMarket
             }
         }
 
-        public TestMarketDataProvider(double marketCoef, int marketAmount)
+        public TestMarketDataProvider(float marketCoef, int marketAmount)
         {
             _marketCoef = marketCoef;
             MarketAmount = marketAmount;

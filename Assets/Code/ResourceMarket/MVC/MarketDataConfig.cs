@@ -9,11 +9,11 @@ namespace ResourceMarket
     {
         [SerializeField] private List<MarketItemData> _marketItems;
         [SerializeField] private int _marketBuildings = 1;
-        [SerializeField] private double _marketCoef = 0.05;
+        [SerializeField] private float _marketCoef = 0.05f;
 
         public List<MarketItemData> MarketItemsData => _marketItems;
         public int MarketBuildings => _marketBuildings;
-        public double MarketCoef => _marketCoef;
+        public float MarketCoef => _marketCoef;
     }
 
     [System.Serializable]
@@ -24,7 +24,7 @@ namespace ResourceMarket
         public int ExchangeAmount;
         public int ExchangeRate;
         public int MinExchange;
-        public double ExchangeCoef;
+        public float ExchangeCoef;
         public int InitialAmount;
 
         public string Name;
