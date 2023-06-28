@@ -10,10 +10,12 @@ namespace ResourceMarket
         [SerializeField] private List<MarketItemData> _marketItems;
         [SerializeField] private int _marketBuildings = 1;
         [SerializeField] private float _marketCoef = 0.05f;
+        [SerializeField] private float _exchangeCoef = 0.45f;
 
         public List<MarketItemData> MarketItemsData => _marketItems;
         public int MarketBuildings => _marketBuildings;
         public float MarketCoef => _marketCoef;
+        public float ExchangeCoef => _exchangeCoef;
     }
 
     [System.Serializable]
