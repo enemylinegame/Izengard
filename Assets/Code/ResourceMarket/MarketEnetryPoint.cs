@@ -13,7 +13,8 @@ namespace ResourceMarket
         private void Start()
         {
             var customer = new TestCustomer(_initialGold);
-            _marketController = new MarketController(customer, null, _marketView, _marketData);
+            var marketProvider = new TestMarketDataProvider(_marketData.MarketCoef, _marketData.MarketBuildings);
+            _marketController = new MarketController(customer, marketProvider, _marketView, _marketData);
         }
     }
 }

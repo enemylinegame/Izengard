@@ -10,6 +10,7 @@ namespace ResourceMarket
     {
         [SerializeField] private TMP_Text _goldText;
         [SerializeField] private TMP_Text _statusText;
+        [SerializeField] private TMP_Text _marketAmountText;
 
         [SerializeField] private MarketItemView _wood;
         [SerializeField] private MarketItemView _iron;
@@ -52,6 +53,11 @@ namespace ResourceMarket
         public void UpdateStatus(string message)
         {
             _statusText.text = message;
+        }
+
+        public void UpdateMarketAmount(int marketAmount)
+        {
+            _marketAmountText.text = $"Markets: {marketAmount}";
         }
     }
 }

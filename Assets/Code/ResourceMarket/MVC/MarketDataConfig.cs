@@ -8,8 +8,12 @@ namespace ResourceMarket
     public sealed class MarketDataConfig : ScriptableObject
     {
         [SerializeField] private List<MarketItemData> _marketItems;
+        [SerializeField] private int _marketBuildings = 1;
+        [SerializeField] private double _marketCoef = 0.05;
 
         public List<MarketItemData> MarketItemsData => _marketItems;
+        public int MarketBuildings => _marketBuildings;
+        public double MarketCoef => _marketCoef;
     }
 
     [System.Serializable]
@@ -19,8 +23,9 @@ namespace ResourceMarket
         public ResourceType ResourceType;
         public int ExchangeAmount;
         public int ExchangeRate;
+        public int MinExchange;
+        public double ExchangeCoef;
         public int InitialAmount;
-        public int MinAmount;
 
         public string Name;
         public string ErrorMessage;
