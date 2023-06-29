@@ -94,7 +94,7 @@ namespace Code.TileSystem
             return true;
         }
 
-        public bool IsThereBuisyWorkers(ICollectable building)
+        public bool IsThereBusyWorkers(ICollectable building)
         {
             if (!_buildingsTable.TryGetValue(
                 building.BuildingID, out int worksCount))

@@ -54,11 +54,12 @@ namespace Code.BuildingSystem
 
             building.InitBuilding();
 
-            BuildingUIInfo info = controller.CreateBuildingInfo(buildingConfig, model, building);
+            BuildingUIInfo info = controller.CreateBuildingInfo(buildingConfig, building);
 
             building.Icon = info.Icon.sprite;
             building.BuildingTypes = info.BuildingType;
             info.BuildingID = building.BuildingID;
+            info.MaxWorkers = building.MaxWorkers;
     
             _uiController.ButtonsBuy.Add(buildingConfig);
             model.FloodedBuildings.Add(building);

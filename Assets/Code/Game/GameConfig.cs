@@ -1,6 +1,7 @@
 using Code.Scriptable;
 using CombatSystem;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Wave;
 
@@ -13,6 +14,8 @@ public class GameConfig : ScriptableObject
     [SerializeField] private GameObject _mainTower;
     [SerializeField] private GameObject _baseUnit;
     [SerializeField] private GameObject _enemy;
+    [SerializeField] private GameObject _Res;
+    [FormerlySerializedAs("_ResTopUI")] [SerializeField] private GameObject _resTopUI;
     [SerializeField] private Building _buildFirst;
     [SerializeField] private Building _buildSecond;
     [SerializeField] private VoxelTile _firstTile;
@@ -25,8 +28,8 @@ public class GameConfig : ScriptableObject
     [SerializeField] private GlobalMineralsList _mineralConfigs;
     [SerializeField] private PhasesSettings _phasesSettings;
     [SerializeField] private DefendersSet _defendersSet;
-   
-   [Range(0f, 1f)]
+
+    [Range(0f, 1f)]
     [SerializeField] private float _tearOneWeightVariantNik = 0.75f;
     [Range(0f, 1f)]
     [SerializeField] private float _tearTwoWeightVariantNik = 0.23f;
@@ -88,5 +91,7 @@ public class GameConfig : ScriptableObject
 
     public GameObject BaseUnit => _baseUnit;
     public GameObject Bullet => _bullet;
+    public GameObject Res => _Res;
+    public GameObject ResTopUI => _resTopUI;
 
 }

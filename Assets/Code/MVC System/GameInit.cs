@@ -23,7 +23,7 @@ public class GameInit
         //TODO Do not change the structure of the script
         var tiles = GetTileList.GetTiles(gameConfig);
         var outlineController = new OutlineController(outLineSettings);
-        var globalResStock = new GlobalStock(globalResourceList.GlobalResourceConfigs);
+        var globalResStock = new GlobalStock(globalResourceList.GlobalResourceConfigs, topResUiVew);
         var btnConroller = new BtnUIController(rightUI, gameConfig);
         var inputController = new InputController(outlineController);
         var uiController = new UIController(rightUI, bottomUI, centerUI, inputController);
@@ -51,7 +51,7 @@ public class GameInit
         var tileController = new TileController(tileList, uiController, 
             buildingController, inputController, productionManager);
         var defenderController = new DefendersController(bulletsController);
-        var tileResourceUIController = new TileResourceUIController(uiController, inputController, tileController);
+        var tileResourceUIController = new TileResourceUIController(uiController, inputController, tileController, gameConfig);
         var hireUnitView = new HireUnitView(rightUI.HireUnits);
         var defendersAssignController = new DefendersManager(tileController, defenderController, uiController, 
             hireUnitView, gameConfig.DefendersSets);
