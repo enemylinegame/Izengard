@@ -97,11 +97,11 @@ namespace CombatSystem.Views
             if (_defendersList != null)
             {
                 int index = slotNumber - FIRST_SLOT_NUMBER;
-                if (index >= 0 && index < _defendersList.Count)
+                if (index >= 0 && index < _slots.Length)
                 {
-                    List<DefenderUnit> units = new List<DefenderUnit>(1);
-                    units.Add(_defendersList[index]);
-                    _defendersManager?.DismissDefender(units);
+                    List<DefenderUnit> unitsToDismiss = new List<DefenderUnit>(1);
+                    unitsToDismiss.Add(_slots[index].Unit);
+                    _defendersManager?.DismissDefender(unitsToDismiss);
                 }
             }
         }
