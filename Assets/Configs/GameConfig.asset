@@ -29,6 +29,8 @@ MonoBehaviour:
   _mainTower: {fileID: 4437343820552527173, guid: f83ebf818c4168f42a870a67eb8e73b7, type: 3}
   _baseUnit: {fileID: 4278957194176336866, guid: 327741d9696b557489e748f8da1d9f0e, type: 3}
   _enemy: {fileID: 4278957194176336866, guid: 197f399d8a7e9a84b8e0484ec8604a32, type: 3}
+  _Res: {fileID: 3316622248634499761, guid: 0684f1b41578b3e48bc45237074efaf4, type: 3}
+  _resTopUI: {fileID: 8521839903881444847, guid: 35c7e10c98ef5b748a4f39e94b7c4cff, type: 3}
   _buildFirst: {fileID: 1173469307, guid: 17bebd10d20903d4e9afe753a32c4787, type: 3}
   _buildSecond: {fileID: 1173469307, guid: 83d904b6bf3982e4392967f84e8eb5f5, type: 3}
   _firstTile: {fileID: 2005405932157645919, guid: 48de6ae8042425a48833fd2dd558f6c8, type: 3}
