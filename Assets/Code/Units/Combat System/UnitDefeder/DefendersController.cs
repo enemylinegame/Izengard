@@ -82,22 +82,24 @@ namespace CombatSystem
             SendDefenderToTile(unit, tile);
         }
 
-        public void DismissDefender(DefenderUnit unit)
-        {
-            DefenderDead(unit);
-        }
-
         public void SendDefenderToTile(DefenderUnit unit, TileView tile)
         {
             Vector3 position = GeneratePositionNearTileCentre(tile);
             unit.GoToPosition(position);
         }
 
+        public void DismissDefender(DefenderUnit unit)
+        {
+            unit.DefenderUnitDead -= DefenderDead;
+            _defenderUnits.Remove(unit);
+            unit.Dismiss();
+        }
+
         private void DefenderDead(DefenderUnit defender)
         {
             defender.DefenderUnitDead -= DefenderDead;
             _defenderUnits.Remove(defender);
-            GameObject.Destroy(defender.DefenderGameObject);
+            defender.DestroyItself();
         }
 
         public void OnUpdate(float deltaTime)

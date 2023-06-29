@@ -24,7 +24,7 @@ namespace Wave
             IEnemyAIController enemyAIController, IBulletsController bulletsController)
         {
             _damageable = enemyRootGo.GetComponent<Damageable>();
-            _damageable.DeathAction += KillEnemy;
+            _damageable.OnDeath += KillEnemy;
             
             Enemy = new Enemy(enemySettings, enemyRootGo, _damageable);
             _enemyAnimation = new EnemyAnimationController(Enemy);
@@ -57,7 +57,7 @@ namespace Wave
         public void Dispose()
         {
             _enemyAI.Dispose();
-            _damageable.DeathAction -= KillEnemy;
+            _damageable.OnDeath -= KillEnemy;
             UnityEngine.Object.Destroy(Enemy.RootGameObject);
         }
 

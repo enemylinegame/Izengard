@@ -79,11 +79,11 @@ namespace CombatSystem
             {
                 if (_currentTarget != null)
                 {
-                    _currentTarget.DeathAction -= OnTargetDestroyed;
+                    _currentTarget.OnDeath -= OnTargetDestroyed;
                 }
 
                 _currentTarget = target;
-                _currentTarget.DeathAction += OnTargetDestroyed;
+                _currentTarget.OnDeath += OnTargetDestroyed;
             }
             _nextAction = _planRoute;
             IsActionComplete = true;
@@ -142,7 +142,7 @@ namespace CombatSystem
             if (_findTarget is IDisposable disposable) disposable.Dispose();
             if (_currentTarget != null)
             {
-                _currentTarget.DeathAction -= OnTargetDestroyed;
+                _currentTarget.OnDeath -= OnTargetDestroyed;
             }
         }
 
@@ -159,7 +159,7 @@ namespace CombatSystem
         {
             if (_currentTarget)
             {
-                _currentTarget.DeathAction -= OnTargetDestroyed;
+                _currentTarget.OnDeath -= OnTargetDestroyed;
             }
             else
             {
