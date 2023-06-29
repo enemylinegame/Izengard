@@ -59,7 +59,7 @@ namespace CombatSystem.DefenderStates
             if (!_avoidFight)
             {
                 _agent.ResetPath();
-                _setState(DefenderState.Fight);
+                _setState(DefenderState.Pursuit);
             }
         }
 
