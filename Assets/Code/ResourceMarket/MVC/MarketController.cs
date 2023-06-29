@@ -29,13 +29,13 @@ namespace ResourceMarket
                 _marketItems.Add(new MarketItemModel(itemData, _marketDataProvider));
             }
                
-            _view.InitView(_marketItems, OnByItem, OnSellItem);
+            _view.InitView(_marketItems, OnBuyItem, OnSellItem);
             
             _marketDataProvider.OnMarketAmountChange += _view.UpdateMarketAmount;
             _view.UpdateMarketAmount(_marketDataProvider.MarketAmount);
         }
 
-        private void OnByItem(ResourceType resourceType)
+        private void OnBuyItem(ResourceType resourceType)
         {
             if (resourceType == ResourceType.None) 
                 return;
