@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4076,7 +4076,7 @@ GameObject:
   - component: {fileID: 367150939}
   - component: {fileID: 367150938}
   m_Layer: 0
-  m_Name: MarketEnteryPoint
+  m_Name: MarketEntryPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4096,7 +4096,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _marketView: {fileID: 1011706691}
   _globalResourceList: {fileID: 11400000, guid: dd801d0d2bc2cab40a6492c4aba5cd12, type: 2}
-  _marketData: {fileID: 11400000, guid: 9d0580057d47cec4a8b1824a22274f59, type: 2}
+  _marketData: {fileID: 11400000, guid: 5f5d932c8baafe847ad1f532a9661ea5, type: 2}
   _initialGold: 500
   _initialWood: 100
   _initialIron: 100

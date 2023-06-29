@@ -13,24 +13,25 @@ MonoBehaviour:
   m_Name: MarketDataConfig
   m_EditorClassIdentifier: 
   _marketItems:
-  - ResourceType: 1
-    ExchangeAmount: 10
-    ExchangeRate: 100
-    MinExchange: 50
-    ExchangeCoef: 0.45
-    InitialAmount: 100
-    Name: Wood
-    ErrorMessage: "\u041D\u0443\u0436\u043D\u043E \u0431\u043E\u043B\u044C\u0448\u0435
+  - <TierType>k__BackingField: 1
+    <ResourceType>k__BackingField: 1
+    <InitialAmount>k__BackingField: 100
+    <ExchangeAmount>k__BackingField: 10
+    <ExchangeRate>k__BackingField: 100
+    <MinExchange>k__BackingField: 50
+    <ExchangeCoef>k__BackingField: 0.45
+    <Name>k__BackingField: Wood
+    <ErrorMessage>k__BackingField: "\u041D\u0443\u0436\u043D\u043E \u0431\u043E\u043B\u044C\u0448\u0435
       \u0434\u0440\u0435\u0432\u0435\u0441\u0438\u043D\u044B"
-  - ResourceType: 2
-    ExchangeAmount: 10
-    ExchangeRate: 200
-    MinExchange: 50
-    ExchangeCoef: 0.45
-    InitialAmount: 200
-    Name: Iron
-    ErrorMessage: "\u041D\u0443\u0436\u043D\u043E \u0431\u043E\u043B\u044C\u0448\u0435
+  - <TierType>k__BackingField: 1
+    <ResourceType>k__BackingField: 2
+    <InitialAmount>k__BackingField: 200
+    <ExchangeAmount>k__BackingField: 10
+    <ExchangeRate>k__BackingField: 200
+    <MinExchange>k__BackingField: 50
+    <ExchangeCoef>k__BackingField: 0.45
+    <Name>k__BackingField: Iron
+    <ErrorMessage>k__BackingField: "\u041D\u0443\u0436\u043D\u043E \u0431\u043E\u043B\u044C\u0448\u0435
       \u0436\u0435\u043B\u0435\u0437\u0430"
   _marketBuildings: 2
   _marketCoef: 0.05
-  _exchangeCoef: 0.45

@@ -5,7 +5,7 @@ namespace ResourceMarket
 {
     public sealed class MarketController
     {
-        private readonly List<MarketItemModel> _marketItems = new List< MarketItemModel>();
+        private readonly List<IMarketItem> _marketItems = new List<IMarketItem>();
 
         private readonly GlobalStock _stock;
         private readonly IMarketDataProvider _marketDataProvider;
@@ -26,7 +26,14 @@ namespace ResourceMarket
 
             foreach(var itemData in marketData.MarketItemsData)
             {
-                _marketItems.Add(new MarketItemModel(itemData, _marketDataProvider));
+                if(itemData.TierType == ItemTierType.Tier1)
+                {
+                    _marketItems.Add(new TierOneItemModel(itemData, _marketDataProvider));
+                }
+                else if(itemData.TierType == ItemTierType.Tier1)
+                {
+                    _marketItems.Add(new TierTwoItemModel(itemData, _marketDataProvider));
+                }               
             }
                
             _view.InitView(_marketItems, OnBuyItem, OnSellItem);
@@ -40,14 +47,14 @@ namespace ResourceMarket
             if (resourceType == ResourceType.None) 
                 return;
 
-            var item = _marketItems.Find(r => r.ResourceType == resourceType);
+            var item = _marketItems.Find(r => r.Data.ResourceType == resourceType);
 
             if (_currentGold >= item.BuyCost)
             {
                 _stock.GetResourceFromStock(ResourceType.Gold, item.BuyCost);
-                _stock.AddResourceToStock(resourceType, item.ExchangeAmount);
+                _stock.AddResourceToStock(resourceType, item.Data.ExchangeAmount);
 
-                item.DecreaseAmount(item.ExchangeAmount);
+                item.DecreaseAmount(item.Data.ExchangeAmount);
 
                 _view.UpdateStatus("");
             }
@@ -62,20 +69,20 @@ namespace ResourceMarket
             if (resourceType == ResourceType.None)
                 return;
 
-            var item = _marketItems.Find(r => r.ResourceType == resourceType);
+            var item = _marketItems.Find(r => r.Data.ResourceType == resourceType);
 
-            if (_stock.CheckResourceInStock(resourceType, item.ExchangeAmount) == false)
+            if (_stock.CheckResourceInStock(resourceType, item.Data.ExchangeAmount) == false)
             {
-                _stock.GetResourceFromStock(resourceType, item.ExchangeAmount);
+                _stock.GetResourceFromStock(resourceType, item.Data.ExchangeAmount);
                 _stock.AddResourceToStock(ResourceType.Gold, item.ExchangeCost);
 
-                item.IncreaseAmount(item.ExchangeAmount);
+                item.IncreaseAmount(item.Data.ExchangeAmount);
 
                 _view.UpdateStatus("");
             }
             else
             {
-                _view.UpdateStatus(item.ErrorMessage);
+                _view.UpdateStatus(item.Data.ErrorMessage);
             }
         }
 

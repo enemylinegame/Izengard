@@ -16,29 +16,29 @@ namespace ResourceMarket
         [SerializeField] private MarketItemView _iron;
         
         public void InitView(
-            List<MarketItemModel> items,
+            List<IMarketItem> items,
             Action<ResourceType> byItem, 
             Action<ResourceType> sellItem)
         {     
             InitItemsView(items, byItem, sellItem);
         }
 
-        private void InitItemsView(List<MarketItemModel> items, Action<ResourceType> byItem, Action<ResourceType> sellItem)
+        private void InitItemsView(List<IMarketItem> items, Action<ResourceType> buyItem, Action<ResourceType> sellItem)
         {
             foreach (var item in items)
             {
-                switch (item.ResourceType)
+                switch (item.Data.ResourceType)
                 {
                     default:
                         break;
                     case ResourceType.Wood:
                         {
-                            _wood.Init(item, byItem, sellItem);
+                            _wood.Init(item, buyItem, sellItem);
                             break;
                         }
                     case ResourceType.Iron:
                         {
-                            _iron.Init(item, byItem, sellItem);
+                            _iron.Init(item, buyItem, sellItem);
                             break;
                         }
                 }
