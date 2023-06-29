@@ -31,5 +31,6 @@ MonoBehaviour:
     Name: Iron
     ErrorMessage: "\u041D\u0443\u0436\u043D\u043E \u0431\u043E\u043B\u044C\u0448\u0435
       \u0436\u0435\u043B\u0435\u0437\u0430"
-  _marketBuildings: 3
+  _marketBuildings: 2
   _marketCoef: 0.05
+  _exchangeCoef: 0.45
