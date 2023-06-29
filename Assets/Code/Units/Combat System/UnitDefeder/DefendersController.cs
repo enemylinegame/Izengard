@@ -9,21 +9,25 @@ namespace CombatSystem
 {
     public class DefendersController : IOnController, IOnUpdate, IDefendersControll
     {
+        private const string DEFENDERS_GO_ROOT_NAME = "DefenderUnitsRoot";
         private const float POSITION_RADIUS = 1f;
 
         private List<DefenderUnit> _defenderUnits;
         private readonly Vector3 _unitsSpawnPosition = new Vector3(200f, 0f, 200f);
         private readonly IBulletsController _bulletsController;
+        private Transform _defendersRoot;
 
         public DefendersController(IBulletsController bulletsController)
         {
             _defenderUnits = new List<DefenderUnit>();
             _bulletsController = bulletsController;
+            _defendersRoot = new GameObject(DEFENDERS_GO_ROOT_NAME).transform;
         }
 
         public DefenderUnit CreateDefender(TileView tile, DefenderSettings settings)
         {
-            GameObject go = GameObject.Instantiate(settings.Prefab, _unitsSpawnPosition, Quaternion.identity);
+            GameObject go = GameObject.Instantiate(settings.Prefab,_unitsSpawnPosition, Quaternion.identity, 
+                _defendersRoot);
             Vector3 position = GeneratePositionNearTileCentre(tile);
             DefenderUnit defender = new DefenderUnit(go, position, settings, _bulletsController);
             defender.DefenderUnitDead += DefenderDead;
