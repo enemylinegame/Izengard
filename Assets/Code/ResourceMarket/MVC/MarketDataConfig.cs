@@ -17,17 +17,20 @@ namespace ResourceMarket
     }
 
     [System.Serializable]
-    public struct MarketItemData
+    public class MarketItemData : IMarketItemData
     {
+        [field: SerializeField] public ItemTierType TierType { get; private set; }
 
-        public ResourceType ResourceType;
-        public int ExchangeAmount;
-        public int ExchangeRate;
-        public int MinExchange;
-        public float ExchangeCoef;
-        public int InitialAmount;
+        [field: SerializeField] public ResourceType ResourceType { get; private set; }
+        
+        [field: SerializeField] public int InitialAmount { get; private set; } = 100;
 
-        public string Name;
-        public string ErrorMessage;
+        [field: SerializeField] public int ExchangeAmount { get; private set; } = 10;
+        [field: SerializeField] public int ExchangeRate { get; private set; } = 100;
+        [field: SerializeField] public int MinExchange { get; private set; } = 50;
+        [field: SerializeField] public float ExchangeCoef { get; private set; } = 0.45f;
+
+        [field: SerializeField] public string Name { get; private set; }
+        [field: SerializeField] public string ErrorMessage { get; private set; }
     }
 }

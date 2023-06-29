@@ -1,10 +1,9 @@
-﻿using System;
-using ResourceSystem;
+﻿using ResourceSystem;
 using UnityEngine;
 
 namespace ResourceMarket
 {
-    public sealed class MarketEnetryPoint : MonoBehaviour
+    public sealed class MarketEntryPoint : MonoBehaviour
     {
         [SerializeField] private MarketView _marketView;
         [SerializeField] private GlobalResourceList _globalResourceList;

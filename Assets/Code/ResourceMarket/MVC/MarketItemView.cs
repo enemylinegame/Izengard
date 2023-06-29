@@ -16,40 +16,40 @@ namespace ResourceMarket
         [SerializeField] private Button _byItemButton;
         [SerializeField] private Button _sellItemButton;
 
-        private MarketItemModel _marketItem;
+        private IMarketItem _marketItem;
 
         private Action<ResourceType> _onByItem;
         private Action<ResourceType> _onSellItem;
 
-        public void Init(MarketItemModel marketItem, Action<ResourceType> byItemAction, Action<ResourceType> sellItemAction)
+        public void Init(IMarketItem marketItem, Action<ResourceType> buyItemAction, Action<ResourceType> sellItemAction)
         {
             _marketItem = marketItem;
             _marketItem.OnAmountChange += UpdateAmount;
             SetInfoData(_marketItem);
 
-            _onByItem = byItemAction;
+            _onByItem = buyItemAction;
             _onSellItem = sellItemAction;
 
             _byItemButton.onClick.AddListener(ByItem);
             _sellItemButton.onClick.AddListener(SellItem);
         }
 
-        private void SetInfoData(MarketItemModel marketItem)
+        private void SetInfoData(IMarketItem marketItem)
         {
-            _itemNameText.text = marketItem.Name;
-            _itemByCostText.text = $"By {marketItem.ExchangeAmount} for {marketItem.BuyCost} gold";
-            _itemSellCostText.text = $"Sell {marketItem.ExchangeAmount} for {marketItem.ExchangeCost} gold";
+            _itemNameText.text = marketItem.Data.Name;
+            _itemByCostText.text = $"By {marketItem.Data.ExchangeAmount} for {marketItem.BuyCost} gold";
+            _itemSellCostText.text = $"Sell {marketItem.Data.ExchangeAmount} for {marketItem.ExchangeCost} gold";
             UpdateAmount(marketItem.CurrentAmount);
         }
 
         private void ByItem()
         {
-            _onByItem?.Invoke(_marketItem.ResourceType);
+            _onByItem?.Invoke(_marketItem.Data.ResourceType);
         }
 
         private void SellItem()
         {
-            _onSellItem?.Invoke(_marketItem.ResourceType);
+            _onSellItem?.Invoke(_marketItem.Data.ResourceType);
         }
 
         public void Deinit()
