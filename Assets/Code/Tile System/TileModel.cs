@@ -6,7 +6,6 @@ namespace Code.TileSystem
 {
     public class TileModel
     {
-        private const int MAX_WORKERS = 5;
         private const int MAX_WARRIORS = 8;
         
         public HouseType HouseType { get; set; }
@@ -16,7 +15,7 @@ namespace Code.TileSystem
         public List<BuildingConfig> CurrBuildingConfigs { get; set; }
         public List<DefenderUnit> DefenderUnits { get; set; }
         public TileConfig SaveTileConfig { get; set; }
-        public int MaxWorkers => MAX_WORKERS;
+        public int MaxWorkers => TileConfig.MaxUnits;
         public int MaxWarriors => MAX_WARRIORS;
         public int CurrentWorkersUnits { get; set; }
         

@@ -11,7 +11,6 @@ namespace Code.TileSystem
     {
         [SerializeField] private TMP_Text _resourceText;
         [SerializeField] private TMP_Text _resourceCurrentValue;
-        [SerializeField] private TMP_Text _resourceMaxValue;
 
         [SerializeField] private Button _resourceAddButton;
         [SerializeField] private Button _resourceRemoveButton;
@@ -48,7 +47,6 @@ namespace Code.TileSystem
         {
             _resourceCurrentValue.text = $"{currentValue}";
             _resourceText.text = resourceName;
-            _resourceMaxValue.text = "5";
 
             ResourceType = mineralConfig.ResourceType;
             Building = mineralConfig;
