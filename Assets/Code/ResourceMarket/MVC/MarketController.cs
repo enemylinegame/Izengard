@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ResourceSystem;
 
 namespace ResourceMarket
@@ -7,30 +8,36 @@ namespace ResourceMarket
     {
         private readonly List<IMarketItem> _marketItems = new List<IMarketItem>();
 
+        private readonly MarketView _view;
+        private readonly MarketCustomerController _marketCustomer;
         private readonly GlobalStock _stock;
         private readonly IMarketDataProvider _marketDataProvider;
-        private readonly MarketView _view;
+
         private int _currentGold;
 
         public MarketController(
             MarketView view,
             MarketDataConfig marketData,
+            MarketCustomerController marketCustomer,
             GlobalStock stock,
             IMarketDataProvider marketDataProvider)
         {
+            _view = view;
+            _marketCustomer = marketCustomer;
+
             _stock = stock;
             _stock.ResourceValueChanged += OnGoldChange;
+            _stock.ResourceValueChanged += _marketCustomer.UpdateResourceAmount;
 
             _marketDataProvider = marketDataProvider;
-            _view = view;
-
+         
             foreach(var itemData in marketData.MarketItemsData)
             {
-                if(itemData.TierType == ItemTierType.Tier1)
+                if(itemData.TierType == TierType.Tier1)
                 {
                     _marketItems.Add(new TierOneItemModel(itemData, _marketDataProvider));
                 }
-                else if(itemData.TierType == ItemTierType.Tier1)
+                else if(itemData.TierType == TierType.Tier1)
                 {
                     _marketItems.Add(new TierTwoItemModel(itemData, _marketDataProvider));
                 }               
@@ -40,6 +47,15 @@ namespace ResourceMarket
             
             _marketDataProvider.OnMarketAmountChange += _view.UpdateMarketAmount;
             _view.UpdateMarketAmount(_marketDataProvider.MarketAmount);
+        }
+
+        private void OnGoldChange(ResourceType resourceType, int value)
+        {
+            if (resourceType != ResourceType.Gold)
+                return;
+
+            _currentGold = value;
+            _marketCustomer.UpdateCustomerGold(_currentGold);
         }
 
         private void OnBuyItem(ResourceType resourceType)
@@ -86,13 +102,9 @@ namespace ResourceMarket
             }
         }
 
-        private void OnGoldChange(ResourceType resourceType, int value)
+        public void ShowView()
         {
-            if (resourceType != ResourceType.Gold) 
-                return;
-
-            _currentGold = value;
-            _view.UpdateGold(_currentGold);
+            _view.Show();
         }
     }
 }

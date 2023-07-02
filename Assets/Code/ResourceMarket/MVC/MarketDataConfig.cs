@@ -19,7 +19,7 @@ namespace ResourceMarket
     [System.Serializable]
     public class MarketItemData : IMarketItemData
     {
-        [field: SerializeField] public ItemTierType TierType { get; private set; }
+        [field: SerializeField] public TierType TierType { get; private set; }
 
         [field: SerializeField] public ResourceType ResourceType { get; private set; }
         
