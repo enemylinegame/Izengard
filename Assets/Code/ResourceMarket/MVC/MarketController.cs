@@ -124,6 +124,7 @@ namespace ResourceMarket
                 RestoreItemValues();
                 _timer = 0f;
             }
+           
         }
 
         private void RestoreItemValues()

@@ -13,7 +13,7 @@
         {
             get
             {
-                var exchangeAdditionCoef = _data.ExchangeRate * (_data.ExchangeCoef + _marketDataProvider.MarketCoef * _marketDataProvider.MarketAmount);
+                var exchangeAdditionCoef = _data.ExchangeRate * (_data.ExchangeCoef + _marketDataProvider.MarketCoef * (_marketDataProvider.MarketAmount));
                 return _data.ExchangeAmount * (int)exchangeAdditionCoef;
             }
         }
