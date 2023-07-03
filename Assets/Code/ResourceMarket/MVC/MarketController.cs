@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ResourceSystem;
 
 namespace ResourceMarket
@@ -12,6 +11,7 @@ namespace ResourceMarket
         private readonly MarketCustomerController _marketCustomer;
         private readonly GlobalStock _stock;
         private readonly IMarketDataProvider _marketDataProvider;
+        private readonly IMarketItemFactory _itemFactory;
 
         private int _currentGold;
 
@@ -30,23 +30,22 @@ namespace ResourceMarket
             _stock.ResourceValueChanged += _marketCustomer.UpdateResourceAmount;
 
             _marketDataProvider = marketDataProvider;
-         
-            foreach(var itemData in marketData.MarketItemsData)
-            {
-                if(itemData.TierType == TierType.Tier1)
-                {
-                    _marketItems.Add(new TierOneItemModel(itemData, _marketDataProvider));
-                }
-                else if(itemData.TierType == TierType.Tier1)
-                {
-                    _marketItems.Add(new TierTwoItemModel(itemData, _marketDataProvider));
-                }               
-            }
-               
-            _view.InitView(_marketItems, OnBuyItem, OnSellItem);
+
+            _itemFactory = new MarketItemFactory(marketData, marketDataProvider);
+
+            var tierOneItems = _itemFactory.CreateTierOneItems();
+            _marketItems.AddRange(tierOneItems);
+            var tierTwoItems = _itemFactory.CreateTierTwoItems();
+            _marketItems.AddRange(tierTwoItems);
+            var tierthreeItems = _itemFactory.CreateTierThreeItems();
+            _marketItems.AddRange(tierthreeItems);
+
+            _view.InitView(tierOneItems, tierTwoItems, tierthreeItems, OnBuyItem, OnSellItem);
             
             _marketDataProvider.OnMarketAmountChange += _view.UpdateMarketAmount;
             _view.UpdateMarketAmount(_marketDataProvider.MarketAmount);
+
+         
         }
 
         private void OnGoldChange(ResourceType resourceType, int value)

@@ -22,9 +22,10 @@ namespace ResourceMarket
         [field: SerializeField] public TierType TierType { get; private set; }
 
         [field: SerializeField] public ResourceType ResourceType { get; private set; }
-        
-        [field: SerializeField] public int InitialAmount { get; private set; } = 100;
 
+        [field: SerializeField] public Sprite Icon { get; private set; }
+
+        [field: SerializeField] public int InitialAmount { get; private set; } = 100;
         [field: SerializeField] public int ExchangeAmount { get; private set; } = 10;
         [field: SerializeField] public int ExchangeRate { get; private set; } = 100;
         [field: SerializeField] public int MinExchange { get; private set; } = 50;

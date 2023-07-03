@@ -12,18 +12,22 @@ namespace ResourceMarket
         [SerializeField] private TMP_Text _exchangeAmountText;
         [SerializeField] private TMP_Text _statusText;
         [SerializeField] private TMP_Text _marketAmountText;
-        
+        [SerializeField] private GameObject _marketItemPrefab;
+
         [Space(10)]
         [Header("Buttons")]
         [SerializeField] private Button _byItemButton;
         [SerializeField] private Button _sellItemButton;
 
-
-        [SerializeField] private MarketItemView _wood;
-        [SerializeField] private MarketItemView _iron;
+        [Space(10)]
+        [Header("Items Tier Settings")]
+        [SerializeField] private Transform _tierOnePlacement;
+        [SerializeField] private Transform _tierTwoPlacement;
+        [SerializeField] private Transform _tierThreePlacement;
 
         [SerializeField] private MarketCustomerView _customerView;
 
+        private List<MarketItemView> _itemsViewList;
         public MarketCustomerView CustomerView => _customerView;
         private ResourceType _currentSelectedType;
 
@@ -35,7 +39,9 @@ namespace ResourceMarket
         }
 
         public void InitView(
-            List<IMarketItem> items,
+            IList<IMarketItem> tierOneItems,
+            IList<IMarketItem> tierTwoItems,
+            IList<IMarketItem> tierThreeItems,
             Action<ResourceType> byItem, 
             Action<ResourceType> sellItem)
         {
@@ -52,28 +58,20 @@ namespace ResourceMarket
                     () => sellItem?.Invoke(_currentSelectedType)
                 );
 
-            InitItemsView(items);
+            _itemsViewList = new List<MarketItemView>();
+
+            CreateTierOneItemsView(tierOneItems);
         }
 
-        private void InitItemsView(List<IMarketItem> items)
+        private void CreateTierOneItemsView(IList<IMarketItem> items)
         {
             foreach (var item in items)
             {
-                switch (item.Data.ResourceType)
-                {
-                    default:
-                        break;
-                    case ResourceType.Wood:
-                        {
-                            _wood.Init(item, OnItemClicked);
-                            break;
-                        }
-                    case ResourceType.Iron:
-                        {
-                            _iron.Init(item, OnItemClicked);
-                            break;
-                        }
-                }
+                GameObject objectView = Instantiate(_marketItemPrefab, _tierOnePlacement, false);
+                MarketItemView itemView = objectView.GetComponent<MarketItemView>();
+                itemView.Init(item, OnItemClicked);
+
+                _itemsViewList.Add(itemView);
             }
         }
 
@@ -81,22 +79,16 @@ namespace ResourceMarket
         {
             _currentSelectedType = item.Data.ResourceType;
 
-            switch (_currentSelectedType)
+            foreach(var itemView in _itemsViewList)
             {
-                default:
-                    break;
-                case ResourceType.Wood:
-                    {
-                        _wood.SetSelected(true);
-                        _iron.SetSelected(false);
-                        break;
-                    }
-                case ResourceType.Iron:
-                    {
-                        _iron.SetSelected(true);
-                        _wood.SetSelected(false);
-                        break;
-                    }
+                if (itemView.CompareType(_currentSelectedType))
+                {
+                    itemView.SetSelected(true);
+                }
+                else
+                {
+                    itemView.SetSelected(false);
+                }
             }
             
             _exchangeAmount = item.Data.ExchangeAmount;
@@ -108,8 +100,10 @@ namespace ResourceMarket
         {
             _byItemButton.onClick.RemoveAllListeners();
             _sellItemButton.onClick.RemoveAllListeners();
-            _wood.Deinit();
-            _iron.Deinit();
+            foreach(var itemView in _itemsViewList)
+            {
+                itemView.Deinit();
+            }
         }
 
         public void Show() 

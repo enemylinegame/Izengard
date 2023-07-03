@@ -15,6 +15,7 @@ MonoBehaviour:
   _marketItems:
   - <TierType>k__BackingField: 1
     <ResourceType>k__BackingField: 1
+    <Icon>k__BackingField: {fileID: 21300000, guid: c2631df3315186d4bad59892113fe4ec, type: 3}
     <InitialAmount>k__BackingField: 100
     <ExchangeAmount>k__BackingField: 10
     <ExchangeRate>k__BackingField: 100
@@ -25,8 +26,9 @@ MonoBehaviour:
       \u0434\u0440\u0435\u0432\u0435\u0441\u0438\u043D\u044B"
   - <TierType>k__BackingField: 1
     <ResourceType>k__BackingField: 2
+    <Icon>k__BackingField: {fileID: 21300000, guid: e8c9b14f7edbf1a449494ff3b7cb888f, type: 3}
     <InitialAmount>k__BackingField: 200
-    <ExchangeAmount>k__BackingField: 10
+    <ExchangeAmount>k__BackingField: 12
     <ExchangeRate>k__BackingField: 200
     <MinExchange>k__BackingField: 50
     <ExchangeCoef>k__BackingField: 0.45

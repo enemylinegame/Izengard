@@ -8,6 +8,7 @@ namespace ResourceMarket
 {
     public sealed class MarketItemView :  MonoBehaviour
     {
+        [SerializeField] private Image _icon;
         [SerializeField] private TMP_Text _itemNameText;
         [SerializeField] private TMP_Text _itemAmountText;
         [SerializeField] private TMP_Text _itemByCostText;
@@ -34,6 +35,7 @@ namespace ResourceMarket
 
         private void SetInfoData(IMarketItem marketItem)
         {
+            _icon.sprite = marketItem.Data.Icon;
             _itemNameText.text = marketItem.Data.Name;
             _itemByCostText.text = $"Buy: {marketItem.BuyCost}";
             _itemSellCostText.text = $"Sell: {marketItem.ExchangeCost}";
@@ -44,6 +46,9 @@ namespace ResourceMarket
         {
             _onclickItem?.Invoke(_marketItem);
         }
+
+        public bool CompareType(ResourceType type) 
+            => _marketItem.Data.ResourceType == type; 
 
         public void SetSelected(bool isSelected) 
         {
