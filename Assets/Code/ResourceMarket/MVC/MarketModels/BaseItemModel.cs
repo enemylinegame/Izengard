@@ -19,6 +19,7 @@ namespace ResourceMarket
                 if (_currentAmount != value)
                 {
                     _currentAmount = Mathf.Clamp(value, 0, int.MaxValue);
+                    OnAmountChange?.Invoke(_currentAmount);
                 }
             }
         }
@@ -27,7 +28,7 @@ namespace ResourceMarket
 
         public abstract int ExchangeCost { get; }
 
-        public abstract event Action<int> OnAmountChange;
+        public event Action<int> OnAmountChange;
 
         public BaseItemModel(IMarketItemData data)
         {
@@ -39,5 +40,7 @@ namespace ResourceMarket
         public abstract void DecreaseAmount(int amount);
 
         public abstract void IncreaseAmount(int amount);
+
+        public abstract void RestoreValue();
     }
 }

@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ResourceSystem;
+using UnityEngine;
 
 namespace ResourceMarket
 {
-    public sealed class MarketController
+    public sealed class MarketController : IOnUpdate
     {
         private readonly List<IMarketItem> _marketItems = new List<IMarketItem>();
 
@@ -12,7 +14,10 @@ namespace ResourceMarket
         private readonly GlobalStock _stock;
         private readonly IMarketDataProvider _marketDataProvider;
         private readonly IMarketItemFactory _itemFactory;
-
+        
+        private float _timer = 0f;
+        private float _restoreDelay;
+        
         private int _currentGold;
 
         public MarketController(
@@ -40,12 +45,17 @@ namespace ResourceMarket
             var tierthreeItems = _itemFactory.CreateTierThreeItems();
             _marketItems.AddRange(tierthreeItems);
 
-            _view.InitView(tierOneItems, tierTwoItems, tierthreeItems, OnBuyItem, OnSellItem);
+            _view.InitView(
+                marketData.MarketTierData, 
+                tierOneItems, 
+                tierTwoItems, 
+                tierthreeItems, 
+                OnBuyItem, OnSellItem);
             
             _marketDataProvider.OnMarketAmountChange += _view.UpdateMarketAmount;
             _view.UpdateMarketAmount(_marketDataProvider.MarketAmount);
 
-         
+            _restoreDelay = marketData.MarketRestoreValueDelay;
         }
 
         private void OnGoldChange(ResourceType resourceType, int value)
@@ -104,6 +114,26 @@ namespace ResourceMarket
         public void ShowView()
         {
             _view.Show();
+        }
+
+
+        public void OnUpdate(float deltaTime)
+        {
+            _timer += deltaTime;
+
+            if (_timer >= _restoreDelay)
+            {
+                RestoreItemValues();
+                _timer = 0f;
+            }
+        }
+
+        private void RestoreItemValues()
+        {
+            foreach(var item in _marketItems)
+            {
+                item.RestoreValue();
+            }
         }
     }
 }

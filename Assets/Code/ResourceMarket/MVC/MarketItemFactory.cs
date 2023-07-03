@@ -23,13 +23,12 @@ namespace ResourceMarket
         {
             return GetItemsByTier(TierType.Tier1);
         }
-
-        public IList<IMarketItem> CreateTierThreeItems()
+        public IList<IMarketItem> CreateTierTwoItems()
         {
             return GetItemsByTier(TierType.Tier2);
         }
 
-        public IList<IMarketItem> CreateTierTwoItems()
+        public IList<IMarketItem> CreateTierThreeItems()
         {
             return GetItemsByTier(TierType.Tier3);
         }
@@ -40,13 +39,26 @@ namespace ResourceMarket
 
             foreach (var itemData in _config.MarketItemsData)
             {
-                if (itemData.TierType == tier)
+                if(itemData.TierType == tier)
                 {
-                    result.Add(new TierOneItemModel(itemData, _marketDataProvider));
-                }
+                    var model = GetItemModel(itemData);
+                    result.Add(model);
+                }         
             }
 
             return result;
+        }
+
+        private IMarketItem GetItemModel(MarketItemData itemData)
+        {
+            return itemData.TierType switch
+            {
+
+                TierType.Tier1 => new TierOneItemModel(itemData, _marketDataProvider),
+                TierType.Tier2 => new TierTwoItemModel(itemData, _marketDataProvider),
+                TierType.Tier3 => new TierThreeItemModel(itemData, _marketDataProvider),
+                _ => new StubItemModel(itemData),
+            };
         }
     }
 }

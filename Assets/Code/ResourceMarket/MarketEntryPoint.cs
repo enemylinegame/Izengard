@@ -39,5 +39,10 @@ namespace ResourceMarket
         {
             _marketController.ShowView();
         }
+        private void Update()
+        {
+            _marketController.OnUpdate(Time.deltaTime);
+        }
+
     }
 }

@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace ResourceMarket
+﻿namespace ResourceMarket
 {
-    public sealed class TierOneItemModel : BaseItemModel
+    public sealed class TierThreeItemModel : BaseItemModel
     {
         private readonly IMarketDataProvider _marketDataProvider;
 
@@ -20,7 +18,7 @@ namespace ResourceMarket
             }
         }
 
-        public TierOneItemModel(
+        public TierThreeItemModel(
             IMarketItemData data,
             IMarketDataProvider marketDataProvider) : base(data)
         {

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ResourceSystem;
 using UnityEngine;
 
 namespace ResourceMarket
@@ -8,30 +7,27 @@ namespace ResourceMarket
     public sealed class MarketDataConfig : ScriptableObject
     {
         [SerializeField] private List<MarketItemData> _marketItems;
+        [SerializeField] private MarketTierData _marketTierData;
+        
+        [Space(10)]
         [SerializeField] private int _marketBuildings = 1;
         [SerializeField] private float _marketCoef = 0.05f;
-
+        
+        [Space(5)]
+        [SerializeField] private float _marketRestoreValueDelay = 30f;
+        
         public List<MarketItemData> MarketItemsData => _marketItems;
+        public MarketTierData MarketTierData => _marketTierData;
         public int MarketBuildings => _marketBuildings;
         public float MarketCoef => _marketCoef;
+        public float MarketRestoreValueDelay => _marketRestoreValueDelay;
     }
 
     [System.Serializable]
-    public class MarketItemData : IMarketItemData
+    public sealed class MarketTierData
     {
-        [field: SerializeField] public TierType TierType { get; private set; }
-
-        [field: SerializeField] public ResourceType ResourceType { get; private set; }
-
-        [field: SerializeField] public Sprite Icon { get; private set; }
-
-        [field: SerializeField] public int InitialAmount { get; private set; } = 100;
-        [field: SerializeField] public int ExchangeAmount { get; private set; } = 10;
-        [field: SerializeField] public int ExchangeRate { get; private set; } = 100;
-        [field: SerializeField] public int MinExchange { get; private set; } = 50;
-        [field: SerializeField] public float ExchangeCoef { get; private set; } = 0.45f;
-
-        [field: SerializeField] public string Name { get; private set; }
-        [field: SerializeField] public string ErrorMessage { get; private set; }
+        [field: SerializeField] public int TierOneUnlockValue { get; private set; } = 0;
+        [field: SerializeField] public int TierTwoUnlockValue { get; private set; } = 3;
+        [field: SerializeField] public int TierThreeUnlockValue { get; private set; } = 6;
     }
 }
