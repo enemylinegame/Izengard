@@ -15,5 +15,6 @@ namespace ResourceMarket
         public void IncreaseAmount(int amount);
 
         public void DecreaseAmount(int amount);
+        void RestoreValue();
     }
 }

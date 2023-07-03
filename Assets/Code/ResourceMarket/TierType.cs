@@ -1,9 +1,10 @@
 ﻿namespace ResourceMarket
 {
-    public enum ItemTierType
+    public enum TierType
     {
         None,
         Tier1,
         Tier2,
+        Tier3,
     }
 }

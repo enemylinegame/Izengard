@@ -1,12 +1,8 @@
-﻿using System;
-
-namespace ResourceMarket
+﻿namespace ResourceMarket
 {
-    public class TierTwoItemModel : BaseItemModel
+    public sealed class TierTwoItemModel : BaseItemModel
     {
         private readonly IMarketDataProvider _marketDataProvider;
-
-        public override event Action<int> OnAmountChange;
 
         public override int BuyCost
         {
@@ -32,13 +28,16 @@ namespace ResourceMarket
         public override void IncreaseAmount(int amount)
         {
             CurrentAmount += amount;
-            OnAmountChange?.Invoke(CurrentAmount);
         }
 
         public override void DecreaseAmount(int amount)
         {
             CurrentAmount -= amount;
-            OnAmountChange?.Invoke(CurrentAmount);
+        }
+
+        public override void RestoreValue()
+        {
+            CurrentAmount = Data.InitialAmount;
         }
     }
 }
