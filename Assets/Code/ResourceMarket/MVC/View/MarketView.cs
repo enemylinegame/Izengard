@@ -18,6 +18,8 @@ namespace ResourceMarket
         [Header("Buttons")]
         [SerializeField] private Button _byItemButton;
         [SerializeField] private Button _sellItemButton;
+        [SerializeField] private Button _increaseExchangeButton;
+        [SerializeField] private Button _decreaseExchangeButton;
 
         [Space(10)]
         [Header("Items Tier Settings")]
@@ -43,8 +45,8 @@ namespace ResourceMarket
             IList<IMarketItem> tierOneItems,
             IList<IMarketItem> tierTwoItems,
             IList<IMarketItem> tierThreeItems,
-            Action<ResourceType> byItem,
-            Action<ResourceType> sellItem)
+            Action<ResourceType, int> byItem,
+            Action<ResourceType, int> sellItem)
         {
             _statusText.text = "";
             _itemsViewList = new List<MarketItemView>();
@@ -55,13 +57,31 @@ namespace ResourceMarket
 
             _byItemButton.onClick.AddListener
                 (
-                    () => byItem?.Invoke(_currentSelectedType)
+                    () => byItem?.Invoke(_currentSelectedType, _exchangeAmount)
                 );
 
             _sellItemButton.onClick.AddListener
                 (
-                    () => sellItem?.Invoke(_currentSelectedType)
+                    () => sellItem?.Invoke(_currentSelectedType, _exchangeAmount)
                 );
+
+            _increaseExchangeButton.onClick.AddListener
+                (
+                    () =>
+                    {
+                        _exchangeAmount++;
+                        _exchangeAmountText.text = _exchangeAmount.ToString();
+                    }
+                );
+
+            _decreaseExchangeButton.onClick.AddListener
+             (
+                 () =>
+                 {
+                     _exchangeAmount--;
+                     _exchangeAmountText.text = _exchangeAmount.ToString();
+                 }
+             );
         }
 
         private void CreateTierOneItemsView(MarketTierData tierData, IList<IMarketItem> items)

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ResourceSystem;
-using UnityEngine;
 
 namespace ResourceMarket
 {
@@ -67,7 +65,7 @@ namespace ResourceMarket
             _marketCustomer.UpdateCustomerGold(_currentGold);
         }
 
-        private void OnBuyItem(ResourceType resourceType)
+        private void OnBuyItem(ResourceType resourceType, int exchange)
         {
             if (resourceType == ResourceType.None) 
                 return;
@@ -77,9 +75,9 @@ namespace ResourceMarket
             if (_currentGold >= item.BuyCost)
             {
                 _stock.GetResourceFromStock(ResourceType.Gold, item.BuyCost);
-                _stock.AddResourceToStock(resourceType, item.Data.ExchangeAmount);
+                _stock.AddResourceToStock(resourceType, exchange);
 
-                item.DecreaseAmount(item.Data.ExchangeAmount);
+                item.DecreaseAmount(exchange);
 
                 _view.UpdateStatus("");
             }
@@ -89,19 +87,19 @@ namespace ResourceMarket
             }
         }
 
-        private void OnSellItem(ResourceType resourceType)
+        private void OnSellItem(ResourceType resourceType, int exchange)
         {
             if (resourceType == ResourceType.None)
                 return;
 
             var item = _marketItems.Find(r => r.Data.ResourceType == resourceType);
 
-            if (_stock.CheckResourceInStock(resourceType, item.Data.ExchangeAmount) == false)
+            if (_stock.CheckResourceInStock(resourceType, exchange) == false)
             {
-                _stock.GetResourceFromStock(resourceType, item.Data.ExchangeAmount);
+                _stock.GetResourceFromStock(resourceType, exchange);
                 _stock.AddResourceToStock(ResourceType.Gold, item.ExchangeCost);
 
-                item.IncreaseAmount(item.Data.ExchangeAmount);
+                item.IncreaseAmount(exchange);
 
                 _view.UpdateStatus("");
             }

@@ -15445,6 +15445,8 @@ MonoBehaviour:
   _marketItemPrefab: {fileID: 4530489761130350541, guid: 5dfe41e7f3bc14c4898c815bb3e974b0, type: 3}
   _byItemButton: {fileID: 113652612}
   _sellItemButton: {fileID: 896284470}
+  _increaseExchangeButton: {fileID: 507584419}
+  _decreaseExchangeButton: {fileID: 1780134929}
   _tierOneItems: {fileID: 900541659}
   _tierTwoItems: {fileID: 1503380095}
   _tierThreeItems: {fileID: 1265483654}
