@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ResourceSystem;
 
 namespace ResourceMarket
@@ -13,10 +14,26 @@ namespace ResourceMarket
         private readonly IMarketDataProvider _marketDataProvider;
         private readonly IMarketItemFactory _itemFactory;
         
-        private float _timer = 0f;
-        private float _restoreDelay;
-        
         private int _currentGold;
+        private float _restoreTime;
+        private float _restoreTimer = 0f;
+        
+        public float RestoreTimer 
+        {
+            get => _restoreTimer;
+            set
+            {
+                if (_restoreTimer != value)
+                {
+                    _restoreTimer = value;
+
+                    _view.UpdateTimerTime(_restoreTimer);
+                    OnTimerUpdate?.Invoke(_restoreTimer);
+                }
+            }
+        }
+        
+        public event Action<float> OnTimerUpdate;
 
         public MarketController(
             MarketView view,
@@ -53,7 +70,8 @@ namespace ResourceMarket
             _marketDataProvider.OnMarketAmountChange += _view.UpdateMarketAmount;
             _view.UpdateMarketAmount(_marketDataProvider.MarketAmount);
 
-            _restoreDelay = marketData.MarketRestoreValueDelay;
+            _restoreTime = marketData.MarketRestoreValueDelay;
+            RestoreTimer = _restoreTime;
         }
 
         private void OnGoldChange(ResourceType resourceType, int value)
@@ -117,14 +135,13 @@ namespace ResourceMarket
 
         public void OnUpdate(float deltaTime)
         {
-            _timer += deltaTime;
+            RestoreTimer -= deltaTime;
 
-            if (_timer >= _restoreDelay)
+            if (RestoreTimer <= 0)
             {
                 RestoreItemValues();
-                _timer = 0f;
+                RestoreTimer = _restoreTime;
             }
-           
         }
 
         private void RestoreItemValues()

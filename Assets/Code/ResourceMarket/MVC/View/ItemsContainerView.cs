@@ -17,7 +17,7 @@ namespace ResourceMarket
         public void Init(int valueForUnlock)
         {
             _valueForUnlock = valueForUnlock;
-            _blockInfoText.text = $"Open from {_valueForUnlock} markets!";
+            _blockInfoText.text = $"Need more markets to unlock! ({_valueForUnlock})";
             ChangeBlockState(_isBlockEnabled);
         }
 

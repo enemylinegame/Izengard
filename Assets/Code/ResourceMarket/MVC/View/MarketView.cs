@@ -12,6 +12,7 @@ namespace ResourceMarket
         [SerializeField] private TMP_Text _exchangeAmountText;
         [SerializeField] private TMP_Text _statusText;
         [SerializeField] private TMP_Text _marketAmountText;
+        [SerializeField] private TMP_Text _timerText;
         [SerializeField] private GameObject _marketItemPrefab;
 
         [Space(10)]
@@ -175,6 +176,17 @@ namespace ResourceMarket
             _tierOneItems.CheckBlockState(marketAmount);
             _tierTwoItems.CheckBlockState(marketAmount);
             _tierThreeItems.CheckBlockState(marketAmount);
+        }
+
+        public void UpdateTimerTime(float time)
+        {
+            int hours = (int)(time / 3600);
+            int minutes = (int)((time % 3600) / 60);
+            int seconds = (int)(time % 60);
+
+            string formattedTime = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+
+            _timerText.text = $"Restock in: {formattedTime}";
         }
     }
 }

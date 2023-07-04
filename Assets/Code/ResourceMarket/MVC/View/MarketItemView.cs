@@ -11,8 +11,7 @@ namespace ResourceMarket
         [SerializeField] private Image _icon;
         [SerializeField] private TMP_Text _itemNameText;
         [SerializeField] private TMP_Text _itemAmountText;
-        [SerializeField] private TMP_Text _itemByCostText;
-        [SerializeField] private TMP_Text _itemSellCostText;
+        [SerializeField] private TMP_Text _itemExchangeAmountText;
         
         [SerializeField] private Button _onClickButton;
         [SerializeField] private GameObject _selectedBackground;
@@ -37,8 +36,7 @@ namespace ResourceMarket
         {
             _icon.sprite = marketItem.Data.Icon;
             _itemNameText.text = marketItem.Data.Name;
-            _itemByCostText.text = $"Buy: {marketItem.BuyCost}";
-            _itemSellCostText.text = $"Sell: {marketItem.ExchangeCost}";
+            _itemExchangeAmountText.text = $"{marketItem.Data.ExchangeAmount}";
             UpdateAmount(marketItem.CurrentAmount);
         }
 

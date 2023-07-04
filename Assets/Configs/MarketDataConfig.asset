@@ -63,4 +63,4 @@ MonoBehaviour:
     <TierThreeUnlockValue>k__BackingField: 6
   _marketBuildings: 5
   _marketCoef: 0.05
-  _marketRestoreValueDelay: 30
+  _marketRestoreValueDelay: 600
