@@ -8,25 +8,16 @@ namespace ResourceMarket
     public class CustomerItemView : MonoBehaviour
     {
         [SerializeField] private Image _icon;
-        [SerializeField] private TMP_Text _itemNameText;
         [SerializeField] private TMP_Text _itemAmountText;
 
         private ResourceType _resourceType;
-
         public ResourceType ResourceType => _resourceType;
 
         public void InitView(ResourceConfig config)
         {
             _icon.sprite = config.Icon;
-            //_itemNameText.text = $"{config.ItemName}: ";
             _resourceType = config.ResourceType;
         }
-
-        public void Display() 
-            => gameObject.SetActive(true);
-
-        public void Hide()
-           => gameObject.SetActive(false);
 
         public void ChangeAmount(int amount)
         {

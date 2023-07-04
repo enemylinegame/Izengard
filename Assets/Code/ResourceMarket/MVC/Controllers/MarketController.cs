@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ResourceSystem;
+using UnityEngine;
 
 namespace ResourceMarket
 {
@@ -8,29 +10,55 @@ namespace ResourceMarket
         private readonly List<IMarketItem> _marketItems = new List<IMarketItem>();
 
         private readonly MarketView _view;
-        private readonly MarketCustomerController _marketCustomer;
         private readonly GlobalStock _stock;
         private readonly IMarketDataProvider _marketDataProvider;
         private readonly IMarketItemFactory _itemFactory;
         
-        private float _timer = 0f;
-        private float _restoreDelay;
-        
         private int _currentGold;
+        private int _tradeValue;
+        private float _restoreTime;
+        private float _restoreTimer = 0f;
+
+        public float RestoreTimer 
+        {
+            get => _restoreTimer;
+            set
+            {
+                if (_restoreTimer != value)
+                {
+                    _restoreTimer = value;
+
+                    _view.UpdateTimerTime(_restoreTimer);
+                    OnTimerUpdate?.Invoke(_restoreTimer);
+                }
+            }
+        }
+   
+        public int TradeVale
+        {
+            get => _tradeValue;
+            set
+            {
+                if (_tradeValue != value)
+                {
+                    _tradeValue = Mathf.Clamp(value, 1, int.MaxValue);
+                    _view.UpdateTradeValue(_tradeValue);
+                }
+            }
+        }
+
+        public event Action<float> OnTimerUpdate;
 
         public MarketController(
             MarketView view,
             MarketDataConfig marketData,
-            MarketCustomerController marketCustomer,
             GlobalStock stock,
             IMarketDataProvider marketDataProvider)
         {
             _view = view;
-            _marketCustomer = marketCustomer;
 
             _stock = stock;
             _stock.ResourceValueChanged += OnGoldChange;
-            _stock.ResourceValueChanged += _marketCustomer.UpdateResourceAmount;
 
             _marketDataProvider = marketDataProvider;
 
@@ -43,17 +71,14 @@ namespace ResourceMarket
             var tierthreeItems = _itemFactory.CreateTierThreeItems();
             _marketItems.AddRange(tierthreeItems);
 
-            _view.InitView(
-                marketData.MarketTierData, 
-                tierOneItems, 
-                tierTwoItems, 
-                tierthreeItems, 
-                OnBuyItem, OnSellItem);
+            _view.InitViewData(marketData.MarketTierData, tierOneItems, tierTwoItems, tierthreeItems);
+            _view.InitViewAction(OnBuyItem, OnSellItem, OnIncreaseTradeValue, OnDecreaseTradeValue, ResetTradeValue);
             
             _marketDataProvider.OnMarketAmountChange += _view.UpdateMarketAmount;
             _view.UpdateMarketAmount(_marketDataProvider.MarketAmount);
 
-            _restoreDelay = marketData.MarketRestoreValueDelay;
+            _restoreTime = marketData.MarketRestoreValueDelay;
+            RestoreTimer = _restoreTime;
         }
 
         private void OnGoldChange(ResourceType resourceType, int value)
@@ -62,22 +87,22 @@ namespace ResourceMarket
                 return;
 
             _currentGold = value;
-            _marketCustomer.UpdateCustomerGold(_currentGold);
+            _view.UpdateGold(_currentGold);
         }
 
-        private void OnBuyItem(ResourceType resourceType, int exchange)
+        private void OnBuyItem(ResourceType resourceType)
         {
             if (resourceType == ResourceType.None) 
                 return;
 
             var item = _marketItems.Find(r => r.Data.ResourceType == resourceType);
 
-            if (_currentGold >= item.BuyCost)
+            if (_currentGold >= item.BuyCost * TradeVale)
             {
-                _stock.GetResourceFromStock(ResourceType.Gold, item.BuyCost);
-                _stock.AddResourceToStock(resourceType, exchange);
+                _stock.GetResourceFromStock(ResourceType.Gold, item.BuyCost * TradeVale);
+                _stock.AddResourceToStock(resourceType, item.Data.ExchangeAmount * TradeVale);
 
-                item.DecreaseAmount(exchange);
+                item.DecreaseAmount(item.Data.ExchangeAmount * TradeVale);
 
                 _view.UpdateStatus("");
             }
@@ -87,19 +112,19 @@ namespace ResourceMarket
             }
         }
 
-        private void OnSellItem(ResourceType resourceType, int exchange)
+        private void OnSellItem(ResourceType resourceType)
         {
             if (resourceType == ResourceType.None)
                 return;
 
             var item = _marketItems.Find(r => r.Data.ResourceType == resourceType);
 
-            if (_stock.CheckResourceInStock(resourceType, exchange) == false)
+            if (_stock.CheckResourceInStock(resourceType, item.Data.ExchangeAmount * TradeVale) == false)
             {
-                _stock.GetResourceFromStock(resourceType, exchange);
-                _stock.AddResourceToStock(ResourceType.Gold, item.ExchangeCost);
+                _stock.GetResourceFromStock(resourceType, item.Data.ExchangeAmount * TradeVale);
+                _stock.AddResourceToStock(ResourceType.Gold, item.ExchangeCost * TradeVale);
 
-                item.IncreaseAmount(exchange);
+                item.IncreaseAmount(item.Data.ExchangeAmount * TradeVale);
 
                 _view.UpdateStatus("");
             }
@@ -109,30 +134,38 @@ namespace ResourceMarket
             }
         }
 
+        private void OnIncreaseTradeValue() 
+            => TradeVale++;
+
+        private void OnDecreaseTradeValue() 
+            => TradeVale--;
+
+        private void ResetTradeValue() 
+            => TradeVale = 1;
+
         public void ShowView()
         {
             _view.Show();
         }
 
-
         public void OnUpdate(float deltaTime)
         {
-            _timer += deltaTime;
+            RestoreTimer -= deltaTime;
 
-            if (_timer >= _restoreDelay)
+            if (RestoreTimer <= 0)
             {
-                RestoreItemValues();
-                _timer = 0f;
+                RestoreValues();
+                RestoreTimer = _restoreTime;
             }
-           
         }
 
-        private void RestoreItemValues()
+        private void RestoreValues()
         {
             foreach(var item in _marketItems)
             {
                 item.RestoreValue();
             }
+            ResetTradeValue();
         }
     }
 }
