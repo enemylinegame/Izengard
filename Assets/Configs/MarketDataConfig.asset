@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fb633d4b5585f047852bc15972c92d1, type: 3}
+  m_Script: {fileID: 11500000, guid: ad8d5cbdd400e954c868fba5801267cc, type: 3}
   m_Name: MarketDataConfig
   m_EditorClassIdentifier: 
   _marketItems:

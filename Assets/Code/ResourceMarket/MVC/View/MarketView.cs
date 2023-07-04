@@ -28,61 +28,28 @@ namespace ResourceMarket
         [SerializeField] private ItemsContainerView _tierTwoItems;
         [SerializeField] private ItemsContainerView _tierThreeItems;
 
-        [SerializeField] private MarketCustomerView _customerView;
+        [SerializeField] private MarketTradeInfoView _marketTradeInfo;
 
         private List<MarketItemView> _itemsViewList;
-        public MarketCustomerView CustomerView => _customerView;
         private ResourceType _currentSelectedType;
+        private Action _onResetTradeValue;
 
-        private int _exchangeAmount;
-
-        private void Awake()
-        {
-            Hide();
-        }
-
-        public void InitView(
+        public void InitViewData(
             MarketTierData tierData,
             IList<IMarketItem> tierOneItems,
             IList<IMarketItem> tierTwoItems,
-            IList<IMarketItem> tierThreeItems,
-            Action<ResourceType, int> byItem,
-            Action<ResourceType, int> sellItem)
+            IList<IMarketItem> tierThreeItems)
         {
             _statusText.text = "";
+          
             _itemsViewList = new List<MarketItemView>();
-
             CreateTierOneItemsView(tierData, tierOneItems);
             CreateTierTwoItemsView(tierData, tierTwoItems);
             CreateTierThreeItemsView(tierData, tierThreeItems);
 
-            _byItemButton.onClick.AddListener
-                (
-                    () => byItem?.Invoke(_currentSelectedType, _exchangeAmount)
-                );
+            InitTradeInfoView(tierOneItems, tierTwoItems, tierThreeItems);
 
-            _sellItemButton.onClick.AddListener
-                (
-                    () => sellItem?.Invoke(_currentSelectedType, _exchangeAmount)
-                );
-
-            _increaseExchangeButton.onClick.AddListener
-                (
-                    () =>
-                    {
-                        _exchangeAmount++;
-                        _exchangeAmountText.text = _exchangeAmount.ToString();
-                    }
-                );
-
-            _decreaseExchangeButton.onClick.AddListener
-             (
-                 () =>
-                 {
-                     _exchangeAmount--;
-                     _exchangeAmountText.text = _exchangeAmount.ToString();
-                 }
-             );
+            Hide();
         }
 
         private void CreateTierOneItemsView(MarketTierData tierData, IList<IMarketItem> items)
@@ -142,10 +109,48 @@ namespace ResourceMarket
                     itemView.SetSelected(false);
                 }
             }
+            
+            _onResetTradeValue?.Invoke();
 
-            _exchangeAmount = item.Data.ExchangeAmount;
+            SetButtonsInteraction(true);
+        }
 
-            _exchangeAmountText.text = _exchangeAmount.ToString();
+        private void SetButtonsInteraction(bool state)
+        {
+            _byItemButton.interactable = state;
+            _sellItemButton.interactable = state;
+            _increaseExchangeButton.interactable = state;
+            _decreaseExchangeButton.interactable = state;
+        }
+
+        private void InitTradeInfoView(
+            IList<IMarketItem> tierOneItems,
+            IList<IMarketItem> tierTwoItems,
+            IList<IMarketItem> tierThreeItems)
+        {
+            var tradeInfoDataList = new List<IMarketItem>();
+            tradeInfoDataList.AddRange(tierOneItems);
+            tradeInfoDataList.AddRange(tierTwoItems);
+            tradeInfoDataList.AddRange(tierThreeItems);
+
+            _marketTradeInfo.InitView(tradeInfoDataList);
+        }
+
+        public void InitViewAction(
+            Action<ResourceType> byItem,
+            Action<ResourceType> sellItem,
+            Action increaseTradeValue,
+            Action decreaseTradeValue,
+            Action resetTradeValue)
+        {
+            _byItemButton.onClick.AddListener(() => byItem?.Invoke(_currentSelectedType));
+            _sellItemButton.onClick.AddListener(() => sellItem?.Invoke(_currentSelectedType));
+
+            _increaseExchangeButton.onClick.AddListener(() => increaseTradeValue?.Invoke());
+            _decreaseExchangeButton.onClick.AddListener(() => decreaseTradeValue?.Invoke());
+            
+            _onResetTradeValue = resetTradeValue;
+            SetButtonsInteraction(false);
         }
 
         public void Deinit()
@@ -159,10 +164,20 @@ namespace ResourceMarket
         }
 
         public void Show()
-            => gameObject.SetActive(true);
+        {
+            _onResetTradeValue?.Invoke();
+            gameObject.SetActive(true);
+        }
 
         public void Hide()
-            => gameObject.SetActive(false);
+        {
+            foreach (var itemView in _itemsViewList)
+            {
+                itemView.SetSelected(false);
+            }
+            SetButtonsInteraction(false);
+            gameObject.SetActive(false);
+        }
 
         public void UpdateStatus(string message)
         {
@@ -187,6 +202,14 @@ namespace ResourceMarket
             string formattedTime = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
 
             _timerText.text = $"Restock in: {formattedTime}";
+        }
+
+        public void UpdateGold(int amount)
+            => _marketTradeInfo.UpdateGold(amount);
+
+        public void UpdateTradeValue(int tradeValue)
+        {
+            _exchangeAmountText.text = tradeValue.ToString();
         }
     }
 }

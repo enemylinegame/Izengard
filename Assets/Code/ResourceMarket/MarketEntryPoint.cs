@@ -7,6 +7,8 @@ namespace ResourceMarket
     public sealed class MarketEntryPoint : MonoBehaviour
     {
         [SerializeField] private MarketView _marketView;
+        [SerializeField] private CustomerDataView _customerView;
+
         [SerializeField] private GlobalResourceList _globalResourceList;
         [SerializeField] private MarketDataConfig _marketData;
 
@@ -17,21 +19,21 @@ namespace ResourceMarket
         [SerializeField] private int _initialIron = 100;
 
         private MarketController _marketController;
+        private CustomerController _customerController;
 
         private void Start()
         {
-            var marketCustomer = new MarketCustomerController(_marketView.CustomerView, _globalResourceList.GlobalResourceConfigs);
             var globalResStock = new GlobalStock(_globalResourceList.GlobalResourceConfigs);
             var marketProvider = new TestMarketDataProvider(_marketData.MarketCoef, _marketData.MarketBuildings);
 
-            _marketController = new MarketController(_marketView, _marketData, marketCustomer, globalResStock, marketProvider);
+            _marketController = new MarketController(_marketView, _marketData, globalResStock, marketProvider);    
+            _customerController = new CustomerController(_customerView, _globalResourceList.GlobalResourceConfigs, globalResStock);
 
             globalResStock.AddResourceToStock(ResourceType.Gold, _initialGold);
             globalResStock.AddResourceToStock(ResourceType.Wood, _initialWood);
             globalResStock.AddResourceToStock(ResourceType.Iron, _initialIron);
 
             _openMarketButton.onClick.AddListener(ShowMarket);
-
         }
 
         private void ShowMarket()

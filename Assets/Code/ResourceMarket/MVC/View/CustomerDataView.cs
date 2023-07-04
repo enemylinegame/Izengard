@@ -5,9 +5,8 @@ using UnityEngine;
 
 namespace ResourceMarket
 {
-    public class MarketCustomerView : MonoBehaviour
+    public class CustomerDataView : MonoBehaviour
     {
-        [SerializeField] private TMP_Text _customerGoldText;
         [SerializeField] private GameObject _itemPrefab;
         [SerializeField] private Transform _itemContainer;
         
@@ -33,34 +32,6 @@ namespace ResourceMarket
 
             itemView.InitView(resource);
             return itemView;
-        }
-
-        public void Display(List<ResourceType> displayResources)
-        {
-            ClearView();
-
-            for (int i =0; i< displayResources.Count; i++)
-            {
-                var displiedItem = _customerItems.Find(item => item.ResourceType == displayResources[i]);
-                if(displiedItem != null)
-                {
-                    displiedItem.Display();
-                }
-            }
-        }
-
-        private void ClearView()
-        {
-            foreach(var item in _customerItems)
-            {
-                item.Hide();
-            }
-        }
-
-
-        public void UpdateGold(int currentGold)
-        {
-            _customerGoldText.text = $"Gold: {currentGold}";
         }
 
         public void UpdateResource(ResourceType resourceType, int value)

@@ -52,7 +52,6 @@ namespace ResourceMarket
         {
             _selectedBackground.SetActive(isSelected);
             _unselectedBackground.SetActive(!isSelected);
-
         }
 
         public void Deinit()
