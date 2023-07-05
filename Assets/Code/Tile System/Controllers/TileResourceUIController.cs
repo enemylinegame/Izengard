@@ -6,17 +6,16 @@ namespace Code.TileSystem
 {
     public class TileResourceUIController : IOnTile, ITileLoadInfo
     {
-        private const int MAX_RESOURCES = 5;
         private ResourcesLayoutUIView _uiController;
         private TileController _controller;
         private TileResouceUIFactory _factory;
 
         public TileResourceUIController(UIController uiController, 
-            InputController inputController, TileController controller)
+            InputController inputController, TileController controller, GameConfig gameConfig)
         {
             _uiController = uiController.BottomUI.ResourcesLayoutUIView;
             _controller = controller;
-            _factory = new TileResouceUIFactory(uiController, this, controller);
+            _factory = new TileResouceUIFactory(uiController, this, controller, gameConfig);
             inputController.Add(this);
             
         }
@@ -48,11 +47,11 @@ namespace Code.TileSystem
         private void AddResource(ResourceView resourceView)
         {
             int resourceValue = resourceView.ResourceCurrentValueInt;
-            if (resourceValue < MAX_RESOURCES &&
-                _controller.WorkerMenager.IsThereFreeWorkers(
-                    resourceView.Building))
+            if (_controller.WorkerMenager.IsThereFreeWorkers(resourceView.Building) && 
+                _controller.TileModel.CurrentWorkersUnits < _controller.TileModel.MaxWorkers)
             {
                 IWorkerPreparation workerPreparation = null;
+
                 _controller.WorkerMenager.StartProduction(
                     _controller.View.transform.position,
                     resourceView.Building, workerPreparation);
@@ -68,7 +67,7 @@ namespace Code.TileSystem
             int resourceValue = resourceView.ResourceCurrentValueInt;
 
             if (resourceValue > 0 && 
-                _controller.WorkerMenager.IsThereBuisyWorkers(
+                _controller.WorkerMenager.IsThereBusyWorkers(
                     resourceView.Building))
             {
                 _controller.WorkerMenager.StopFirstFindedWorker(

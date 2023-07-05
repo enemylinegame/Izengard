@@ -10,7 +10,7 @@ namespace CombatSystem.Interfaces
         int ThreatLevel { get; }
         bool IsDead { get; }
         
-        event Action DeathAction;
+        event Action OnDeath;
         event Action<IDamageable> OnDamaged; 
 
         void MakeDamage(int damage, IDamageable damageDealer);

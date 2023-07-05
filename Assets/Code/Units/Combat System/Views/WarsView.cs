@@ -71,8 +71,7 @@ namespace CombatSystem.Views
 
             for (int i = 0; i < _slots.Length; i++)
             {
-                DefenderSlotView newSlot = new DefenderSlotView(slots[i], _warsUIView.UnitDefenderSprite,
-                    i + FIRST_SLOT_NUMBER);
+                DefenderSlotView newSlot = new DefenderSlotView(slots[i], i + FIRST_SLOT_NUMBER);
                 newSlot.OnHireClick += HireButtonClick;
                 newSlot.OnDissmisClick += DismissButtonClick;
                 newSlot.OnInBarrackChanged += InBarrackToggleChanged;
@@ -98,11 +97,11 @@ namespace CombatSystem.Views
             if (_defendersList != null)
             {
                 int index = slotNumber - FIRST_SLOT_NUMBER;
-                if (index >= 0 && index < _defendersList.Count)
+                if (index >= 0 && index < _slots.Length)
                 {
-                    List<DefenderUnit> units = new List<DefenderUnit>(1);
-                    units.Add(_defendersList[index]);
-                    _defendersManager?.DismissDefender(units);
+                    List<DefenderUnit> unitsToDismiss = new List<DefenderUnit>(1);
+                    unitsToDismiss.Add(_slots[index].Unit);
+                    _defendersManager?.DismissDefender(unitsToDismiss);
                 }
             }
         }

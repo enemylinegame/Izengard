@@ -11,10 +11,11 @@ namespace ResourceSystem
 
         public event Action<ResourceType, int> ResourceValueChanged;
         
-        public GlobalStock(List<ResourceConfig> resourceConfigs)
+        public GlobalStock(List<ResourceConfig> resourceConfigs, TopResUiVew topResUiVew)
         {
             _resourceHolders = new List<ResourceHolder>();
             InitHolders(resourceConfigs);
+            ResourceValueChanged += topResUiVew.UpdateResursesCount;
         }
 
         private void InitHolders(List<ResourceConfig> resourceConfigs)

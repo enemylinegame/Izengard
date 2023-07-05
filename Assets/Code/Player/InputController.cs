@@ -38,14 +38,16 @@ namespace Code.Player
                         {
                             selector.Cancel();
                             _outlineController.DisableOutLine(_tile.Renderer);
+                            LockRightClick = true;
                         }
     
                     if (_isSpecialMode) _tileSelector.Cancel();
 
-                    IsOnTile = !_isSpecialMode;
+                    IsOnTile = true;
                     _tile = null;
                 }
             }
+            if (!IsOnTile) return;
             if (!Input.GetMouseButtonDown(0)) return;
 
             var bitmask = 1 << 6;
@@ -60,14 +62,12 @@ namespace Code.Player
             {
                 _tileSelector.SelectTile(tile);
             }
-            else if (IsOnTile)
+            
+            foreach (var selector in _loadInfoToTheUis)
             {
-                foreach (var selector in _loadInfoToTheUis)
-                {
-                    selector.LoadInfoToTheUI(tile);
-                    _outlineController.EnableOutLine(tile.Renderer);
-                    IsOnTile = false;
-                }
+                selector.LoadInfoToTheUI(tile);
+                _outlineController.EnableOutLine(tile.Renderer);
+                IsOnTile = false;
             }
         }
 
@@ -87,8 +87,13 @@ namespace Code.Player
         }
         public void HardOffTile()
         {
-            foreach (var selector in _loadInfoToTheUis) 
-                if (!_isSpecialMode) selector.Cancel();
+            foreach (var selector in _loadInfoToTheUis)
+                if (!_isSpecialMode)
+                {
+                    _outlineController.DisableOutLine(_tile.Renderer);
+                    LockRightClick = true;
+                    selector.Cancel();
+                }
     
             if (_isSpecialMode) _tileSelector.Cancel();
 

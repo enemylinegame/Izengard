@@ -34,6 +34,7 @@ public class Building : BaseBuildAndResources, ICollectable
         ResourceType = mineralConfig.ResourceType;
         Prefab = gameObject;
         SpawnPosition = transform.position;
+        MaxWorkers = 999999999;
     }
 
 }

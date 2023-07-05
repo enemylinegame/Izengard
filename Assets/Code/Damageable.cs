@@ -22,7 +22,7 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
     public int NumberOfAttackers => _listAttackedUnits.Count;
     
     public event Action<float, float> OnHealthChanged; 
-    public event Action DeathAction;
+    public event Action OnDeath;
     public event Action<IDamageable> OnDamaged; 
 
     public bool IsDead { get; private set; }
@@ -47,7 +47,7 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
             if (!_listAttackedUnits.Contains(damageable))
             {
                 _listAttackedUnits.Add(damageable);
-                damageable.DeathAction += MeAttackedDead;
+                damageable.OnDeath += MeAttackedDead;
                 MeAttackedChenged?.Invoke(_listAttackedUnits); 
 
                 return true;
@@ -63,7 +63,7 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
         {
             if (_listAttackedUnits[i].IsDead)
             {
-                _listAttackedUnits[i].DeathAction-= MeAttackedDead;
+                _listAttackedUnits[i].OnDeath-= MeAttackedDead;
                 _listAttackedUnits.Remove(_listAttackedUnits[i]);
             }
         }
@@ -72,14 +72,13 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
 
     public void MakeDamage(int damage)
     {
-        //Debug.Log($"Damageable->MakeDamage: gameObject = {gameObject.name}; damage = {damage}");// added Anton
         CurrentHealth -= damage;
         OnHealthChanged?.Invoke(MaxHealth,CurrentHealth);
         if (CurrentHealth <= 0)
         {
             IsDead = true;
             _listAttackedUnits.Clear();
-            DeathAction?.Invoke();
+            OnDeath?.Invoke();
             
         }
     }
@@ -92,11 +91,12 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
         {
             IsDead = true;
             _listAttackedUnits.Clear();
-            DeathAction?.Invoke();
+            OnDeath?.Invoke();
         }
         else
         {
             OnDamaged?.Invoke(damageDealer);
         }
     }
+
 }

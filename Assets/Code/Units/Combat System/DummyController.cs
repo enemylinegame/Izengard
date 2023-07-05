@@ -13,7 +13,7 @@ namespace CombatSystem
         {
             _dummy = dummy.GetComponent<Damageable>();
             _dummy.Init(100, 5);
-            _dummy.DeathAction += OnDead;
+            _dummy.OnDeath += OnDead;
         }
 
         public void Spawn()
@@ -32,7 +32,7 @@ namespace CombatSystem
 
         public void Dispose()
         {
-            _dummy.DeathAction -= OnDead;
+            _dummy.OnDeath -= OnDead;
             UnityEngine.Object.Destroy(_dummy.gameObject);
         }
     }

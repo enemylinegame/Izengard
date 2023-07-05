@@ -28,13 +28,14 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
     public bool IsDowntime { get; private set; }
 
 
-    public WaveController(GeneratorLevelController levelGenerator, UIController controller, Transform btnParents, GameConfig gameConfig)
+    public WaveController(GeneratorLevelController levelGenerator, UIController controller, Transform btnParents, 
+        GameConfig gameConfig, BulletsController bulletsController)
     {
         _levelGenerator = levelGenerator;
         _btnParents = btnParents;
         
         _enemyAIController = new EnemyAIController();
-        _bulletsController = new BulletsController();
+        _bulletsController = bulletsController;
         
         _waveGathering = new WaveGatheringController(_levelGenerator, _enemyAIController, _bulletsController, gameConfig);
         _sendingEnemys = new SendingEnemies(_enemyAIController, _levelGenerator, gameConfig.BattlePhaseConfig.EnemySpawnSettings);
@@ -64,7 +65,6 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
     public void OnFixedUpdate(float fixedDeltaTime)
     {
         _sendingEnemys?.OnFixedUpdate(fixedDeltaTime);
-        _bulletsController?.OnFixedUpdate(fixedDeltaTime);
     }
 
     private void OnCombatPhaseEnding()

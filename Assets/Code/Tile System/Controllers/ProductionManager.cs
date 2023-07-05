@@ -88,17 +88,13 @@ namespace Code.TileSystem
             if (!_buildingsTable.ContainsKey(buildingId))
                 return false;
 
-            int workersCount = --_buildingsTable[buildingId];
-
-            if (workersCount <= 0)
+            if (--_buildingsTable[buildingId] <= 0)
                 _buildingsTable.Remove(buildingId);
-            else
-                _buildingsTable[buildingId] = workersCount;
 
             return true;
         }
 
-        public bool IsThereBuisyWorkers(ICollectable building)
+        public bool IsThereBusyWorkers(ICollectable building)
         {
             if (!_buildingsTable.TryGetValue(
                 building.BuildingID, out int worksCount))

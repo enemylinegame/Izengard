@@ -35,12 +35,12 @@ namespace CombatSystem.DefenderStates
 
         public override void OnDamaged(IDamageable attacker)
         {
-            _setState(DefenderState.Fight);
+            _setState(DefenderState.Pursuit);
         }
 
         public override void AddedTargetInRange()
         {
-            _setState(DefenderState.Fight);
+            _setState(DefenderState.Pursuit);
         }
 
         public override void GoToPosition(Vector3 destination)
