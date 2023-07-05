@@ -17,9 +17,9 @@ namespace ResourceMarket
         public void Init(int valueForUnlock)
         {
             _valueForUnlock = valueForUnlock;
-            _blockInfoText.text = $"Need more markets to unlock! ({_valueForUnlock})";
             ChangeBlockState(_isBlockEnabled);
         }
+
 
         public void CheckBlockState(int value)
         {
@@ -29,13 +29,20 @@ namespace ResourceMarket
             if(value >= _valueForUnlock)
             {
                 ChangeBlockState(false);
+                return;
             }
+            UpdateBlockState(value);
         }
 
         private void ChangeBlockState(bool state)
         {
             _blockPannel.SetActive(state);
             _blockInfoText.enabled = state;
+        }
+
+        private void UpdateBlockState(int amount)
+        {
+            _blockInfoText.text = $"Need more markets to unlock! ({_valueForUnlock - amount})";
         }
     }
 }

@@ -32,7 +32,7 @@ namespace ResourceMarket
 
         public void UpdateGold(int currentGold)
         {
-            _goldText.text = $"Gold: {currentGold}";
+            _goldText.text = $"{currentGold}";
         }
     }
 }

@@ -9,7 +9,6 @@ namespace ResourceMarket
         public Sprite Icon { get; } 
         public int ExchangeAmount { get; }
         public int ExchangeRate { get; }
-        public int MinExchange { get; }
         public float ExchangeCoef { get; }
         public int InitialAmount { get; }
 
