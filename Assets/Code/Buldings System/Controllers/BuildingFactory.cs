@@ -12,27 +12,32 @@ using Random = UnityEngine.Random;
 
 namespace Code.BuildingSystem
 {
-    public class BuildingController: IDisposable
+    public class BuildingFactory: IDisposable
     {
         private UIController _uiController;
         private ITextVisualizationOnUI _notificationUI;
         private GlobalStock _stock;
         private GameConfig _gameConfig;
-        
-        private readonly HashSet<DummyController> _instantiatedDummys = new HashSet<DummyController>();
+        private GeneratorLevelController _levelController;
 
-        public BuildingController(UIController uiController, GlobalStock stock, 
+
+        private readonly HashSet<DummyController> _instantiatedDummys = 
+            new HashSet<DummyController>();
+
+        public BuildingFactory(UIController uiController, GlobalStock stock, 
             GameConfig gameConfig, GeneratorLevelController levelController)
         {
             _uiController = uiController;
             _notificationUI = uiController.CenterUI.BaseNotificationUI;
             _stock = stock;
             _gameConfig = gameConfig;
-            _stock.AddResourceToStock(ResourceType.Wood, 100);
-            _stock.AddResourceToStock(ResourceType.Iron, 100);
-            _stock.AddResourceToStock(ResourceType.Deer, 100);
-            
-            levelController.OnCombatPhaseStart += RespawnDummies;
+
+            //_stock.AddResourceToStock(ResourceType.Wood, 100);
+            //_stock.AddResourceToStock(ResourceType.Iron, 100);
+            //_stock.AddResourceToStock(ResourceType.Deer, 100);
+
+            _levelController = levelController;
+            _levelController.OnCombatPhaseStart += RespawnDummies;
         }
         
         /// <summary>
@@ -45,8 +50,8 @@ namespace Code.BuildingSystem
             {
                 return;
             }
-            buildingConfig.BuildingCost.ForEach(resourcePrice => _stock.GetResourceFromStock(
-                resourcePrice.ResourceType, resourcePrice.Cost));
+            buildingConfig.BuildingCost.ForEach(resourcePrice => 
+                _stock.GetResourceFromStock(resourcePrice.ResourceType, resourcePrice.Cost));
 
             ICollectable building = CreateBuilding(model, buildingConfig);
 
@@ -67,7 +72,9 @@ namespace Code.BuildingSystem
             controller.LevelCheck();
         }
         
-        public void DestroyBuilding(List<ICollectable> buildings, BuildingUIInfo buildingUI, TileModel model, TileController tileController)
+        public void DestroyBuilding(List<ICollectable> buildings, 
+            BuildingUIInfo buildingUI, TileModel model, 
+            TileController tileController)
         {
             var buildingToRemove = buildings.Find(kvp => kvp.BuildingID == buildingUI.BuildingID);
             
@@ -89,28 +96,48 @@ namespace Code.BuildingSystem
                 
             tileController.LevelCheck();
         }
-        private ICollectable CreateBuilding(TileModel model, BuildingConfig config)
+
+        void AddWorkerPreparation(GameObject building, 
+            ICollectable buildingModel)
+        {
+            if (!building.TryGetComponent(out IWorkerPreparation preporation))
+                return;
+
+            buildingModel.WorkerPreparation = preporation;
+        }
+
+        private ICollectable CreateBuilding(
+            TileModel model, BuildingConfig config)
         {
             var dot = CheckDot(model);
-            if (dot == null)
+            if (null == dot)
             {
-                _notificationUI.BasicTemporaryUIVisualization("You have built maximum buildings", 1);
+                _notificationUI.BasicTemporaryUIVisualization(
+                    "You have built maximum buildings", 1);
+                return null;
+            }
+            
+            var building = Object.Instantiate(config.BuildingPrefab, dot.transform);
+            if (!building.TryGetComponent(out ICollectable buildingModel))
+            {
+                Debug.LogError("Building does't has component ICollectable");
                 return null;
             }
 
-            var buildingPrefab = config.BuildingPrefab.GetComponent<Building>();
-            
-            var build = Object.Instantiate(buildingPrefab, dot.transform);
-            
-            build.BuildingTypes = config.BuildingType;
-            build.MaxWorkers = config.MaxWorkers;
-            build.BuildingTypes = config.BuildingType;
-            build.NameBuiding = config.Name;
-            
-            dot.Building = build;
+            buildingModel.BuildingTypes = config.BuildingType;
+            buildingModel.MaxWorkers = config.MaxWorkers;
+            buildingModel.BuildingTypes = config.BuildingType;
+            buildingModel.Name = config.Name;
+            buildingModel.VisibleName = config.Name;
+            buildingModel.ResourceType = config.Resource;
+            buildingModel.SpawnPosition = dot.transform.position;
+
+            AddWorkerPreparation(building, buildingModel);
+
+            dot.Building = buildingModel;
             dot.IsActive = false;
             
-            return build;
+            return buildingModel;
         }
 
         public void RemoveTypeDots(TileModel model, ICollectable building)
@@ -156,6 +183,7 @@ namespace Code.BuildingSystem
         
         public void Dispose()
         {
+            _levelController.OnCombatPhaseStart -= RespawnDummies;
             // _levelGenerator.SpawnResources -= OnNewTile;
             foreach (var dummyController in _instantiatedDummys) dummyController.Dispose();
         }

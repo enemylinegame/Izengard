@@ -22,3 +22,4 @@ MonoBehaviour:
   _houseType: 3
   _description: 
   _maxWorkers: 5
+  _resource: 6
