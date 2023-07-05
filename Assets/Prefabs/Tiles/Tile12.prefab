@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 352733197907109010}
   - component: {fileID: 8380277773303726366}
   - component: {fileID: 7410633083839480666}
+  - component: {fileID: 5710408627133781179}
   m_Layer: 6
   m_Name: Tile12
   m_TagString: Untagged
@@ -61,9 +62,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tileConfig: {fileID: 11400000, guid: 9565a228ea7f390448b26a5a1b3ef329, type: 2}
-  Renderer: {fileID: 0}
   _dotSpawns:
   - {fileID: 0}
+  Renderer: {fileID: 0}
 --- !u!65 &7410633083839480666
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -77,6 +78,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2, y: 1, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5710408627133781179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6398344475937370422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d083a8990adb4fc48668d418bdca3711, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2279876734145438094
 PrefabInstance:
   m_ObjectHideFlags: 0
