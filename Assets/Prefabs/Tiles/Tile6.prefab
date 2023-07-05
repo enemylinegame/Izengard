@@ -417,7 +417,6 @@ GameObject:
   - component: {fileID: 6941335300236840142}
   - component: {fileID: -2379153995598993259}
   - component: {fileID: -4704638590679643552}
-  - component: {fileID: 6483096285636860434}
   m_Layer: 6
   m_Name: Tile6
   m_TagString: Untagged
@@ -504,18 +503,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.7, y: 0.33, z: 2.7}
   m_Center: {x: 0, y: 0.19, z: 0}
---- !u!114 &6483096285636860434
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6941335300236840141}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d083a8990adb4fc48668d418bdca3711, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8823054676902309740
 GameObject:
   m_ObjectHideFlags: 0
