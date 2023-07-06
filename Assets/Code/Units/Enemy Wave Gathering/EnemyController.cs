@@ -18,7 +18,7 @@ namespace Wave
         private readonly IBulletsController _bulletsController;
 
         private readonly Damageable _damageable;
-
+        private readonly EnemyTileDislocation _tileDislocation;
 
         public EnemyController(EnemySettings enemySettings, GameObject enemyRootGo, GeneratorLevelController generatorLevelController,
             IEnemyAIController enemyAIController, IBulletsController bulletsController)
@@ -31,6 +31,8 @@ namespace Wave
             _generatorLevelController = generatorLevelController;
             _enemyAIController = enemyAIController;
             _bulletsController = bulletsController;
+
+            _tileDislocation = new EnemyTileDislocation(_damageable);
         }
 
         public void KillEnemy()
@@ -38,6 +40,7 @@ namespace Wave
             _enemyAIController.RemoveEnemyAI(_enemyAI);
             _enemyAI.StopAction();
             _enemyAnimation.StopAnimation();
+            _tileDislocation.Off();
             OnEnemyDead?.Invoke(this);
         }
 
@@ -51,6 +54,7 @@ namespace Wave
             _enemyAI ??= new EnemyAI(Enemy, _generatorLevelController.MainBuilding, _enemyAnimation, _bulletsController);
             _enemyAIController.AddEnemyAI(_enemyAI);
             _damageable.Init(Enemy.Stats.Health);
+            _tileDislocation.On();
             // SlowlyKilling();
         }
 
@@ -58,6 +62,7 @@ namespace Wave
         {
             _enemyAI.Dispose();
             _damageable.OnDeath -= KillEnemy;
+            _tileDislocation.Off();
             UnityEngine.Object.Destroy(Enemy.RootGameObject);
         }
 

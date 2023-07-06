@@ -29,28 +29,36 @@ namespace CombatSystem
         private void EnterToTile(GameObject tileGameObject)
         {
             if (!_isEnabled) return;
-            TileModel tile = tileGameObject.GetComponent<TileView>().TileModel;
-            _contactedTiles.Add(tile);
-            if (_currentTile == null)
+            TileView tileView = tileGameObject.GetComponent<TileView>();
+            if (tileView)
             {
-                _currentTile = tile;
-                _currentTile.EnemiesInTile.Add(_damageable);
+                TileModel tile = tileView.TileModel;
+                _contactedTiles.Add(tile);
+                if (_currentTile == null)
+                {
+                    _currentTile = tile;
+                    _currentTile.EnemiesInTile.Add(_damageable);
+                }
             }
         }
 
         private void ExitFromTile(GameObject tileGameObject)
         {
             if (!_isEnabled) return;
-            TileModel tile = tileGameObject.GetComponent<TileView>().TileModel;
-            _contactedTiles.Remove(tile);
-            if (_currentTile == tile)
+            TileView tileView = tileGameObject.GetComponent<TileView>();
+            if (tileView)
             {
-                _currentTile.EnemiesInTile.Remove(_damageable);
-                _currentTile = null;
-                if (_contactedTiles.Count > 0)
+                TileModel tile = tileGameObject.GetComponent<TileView>().TileModel;
+                _contactedTiles.Remove(tile);
+                if (_currentTile == tile)
                 {
-                    _currentTile = _contactedTiles[0];
-                    _currentTile.EnemiesInTile.Add(_damageable);
+                    _currentTile.EnemiesInTile.Remove(_damageable);
+                    _currentTile = null;
+                    if (_contactedTiles.Count > 0)
+                    {
+                        _currentTile = _contactedTiles[0];
+                        _currentTile.EnemiesInTile.Add(_damageable);
+                    }
                 }
             }
         }
