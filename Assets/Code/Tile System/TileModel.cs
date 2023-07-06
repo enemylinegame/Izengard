@@ -14,6 +14,7 @@ namespace Code.TileSystem
         public List<ICollectable> FloodedBuildings { get; set; }
         public List<BuildingConfig> CurrBuildingConfigs { get; set; }
         public List<DefenderUnit> DefenderUnits { get; set; }
+        public List<Damageable> EnemiesInTile { get; private set; }
         public TileConfig SaveTileConfig { get; set; }
         public int MaxWorkers => TileConfig.MaxUnits;
         public int MaxWarriors => MAX_WARRIORS;
@@ -26,6 +27,7 @@ namespace Code.TileSystem
             CurrBuildingConfigs = new List<BuildingConfig>(TileConfig.BuildingTirs);
             FloodedBuildings = new List<ICollectable>();
             DefenderUnits = new List<DefenderUnit>();
+            EnemiesInTile = new List<Damageable>();
             SaveTileConfig = TileConfig;
         }
     }
