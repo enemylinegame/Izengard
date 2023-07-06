@@ -153,6 +153,7 @@ namespace Code.TileSystem
              view.Icon.sprite = building.Icon;
              view.Type.text = building.BuildingTypes.ToString();
              view.BuildingType = building.BuildingTypes;
+             view.BuildingID = building.BuildingID;
 
              view.UnitsBusy.text = $"{units}/{building.MaxWorkers}";
              view.CurrentUnits = units;

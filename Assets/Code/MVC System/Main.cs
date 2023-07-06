@@ -41,11 +41,14 @@ public class Main : MonoBehaviour
     private void Start()
     {
         _controllers = new Controller();
+
         new GameInit(_controllers, _gameConfig, _workersTeamConfig, 
             _rightUI,  _btnParents,_centerUI ,_bottonUI,
             _topUI, _endGameScreen, _towerShotConfig,
             _buyItemScreenView, _hireSystemView, _equipScreenView, 
-            _screenCamera, _tileList, _globalResourceList, _outLineSettings);
+            _screenCamera, _tileList, _globalResourceList, _outLineSettings,
+            _marketDataConfig, _marketUI);
+
         _controllers.OnStart();
     }
 

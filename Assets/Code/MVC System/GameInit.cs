@@ -8,6 +8,7 @@ using Code.Units.HireDefendersSystem;
 using CombatSystem;
 using Controllers.BaseUnit;
 using EquipmentSystem;
+using ResourceMarket;
 using ResourceSystem;
 using UnityEngine;
 
@@ -18,7 +19,8 @@ public class GameInit
         EndGameScreen endGameScreen,
         TowerShotConfig towerShotConfig, BuyItemScreenView buyItemScreenView, HireSystemView hireSystemView,
         EquipScreenView equipScreenView, Camera camera, TileList tileList,
-        GlobalResourceList globalResourceList, OutLineSettings outLineSettings)
+        GlobalResourceList globalResourceList, OutLineSettings outLineSettings,
+        MarketDataConfig marketData, MarketView marketUI)
     {
         //TODO Do not change the structure of the script
         var tiles = GetTileList.GetTiles(gameConfig);
@@ -33,6 +35,9 @@ public class GameInit
         // var buildController = new BuildGenerator(gameConfig);
         var buildingController = new BuildingFactory(
             uiController, globalResStock, gameConfig, levelGenerator);
+
+        /* Market */
+        var marketController = new MarketController(marketUI, marketData, globalResStock, buildingController, rightUI);
 
         var unitController = new UnitController();
         var timeRemaining = new TimeRemainingController();
@@ -75,6 +80,9 @@ public class GameInit
         controller.Add(tileController);
         controller.Add(defenderController);
         controller.Add(bulletsController);
+        controller.Add(marketController);
+
+        globalResStock.AddResourceToStock(ResourceType.Wood, 100);
 
         // var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
         // controller.Add(testDummyTargetController);

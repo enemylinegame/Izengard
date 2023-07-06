@@ -47,6 +47,8 @@ namespace Code.UI
             inputController.Add(this);
             
             CenterUI.TIleSelection.Back.onClick.AddListener(() => IsWorkUI(UIType.TileSel, false));
+
+            RightUI.OpenMarketButton.onClick.AddListener(() => IsWorkUI(UIType.Market, false));
         }
         /// <summary>
         /// Включение/отключение любой части UI
@@ -78,6 +80,11 @@ namespace Code.UI
                 case UIType.TileSel:
                     _inputController.LockRightClick = isOn;
                     _centerUI.TIleSelection.gameObject.SetActive(isOn);
+                    break;
+                case UIType.Market:
+                    _inputController.LockRightClick = isOn;
+                    _centerUI.BuildingBuy.SetActive(isOn);
+                    IsOnTileUI(isOn);
                     break;
                 case UIType.Esc:
                     break;
@@ -140,6 +147,7 @@ namespace Code.UI
         Tile,
         Unit,
         TileSel,
+        Market,
         Esc,
     }
 }

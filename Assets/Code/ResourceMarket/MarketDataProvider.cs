@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ResourceMarket
 {
-    public class TestMarketDataProvider : IMarketDataProvider
+    public class MarketDataProvider : IMarketDataProvider
     {
         private float _marketCoef;
         private int _marketAmount;
@@ -25,10 +25,9 @@ namespace ResourceMarket
             }
         }
 
-        public TestMarketDataProvider(float marketCoef, int marketAmount)
+        public MarketDataProvider(float marketCoef)
         {
             _marketCoef = marketCoef;
-            MarketAmount = marketAmount;
         }
 
         public void AddMarket() => MarketAmount++;
