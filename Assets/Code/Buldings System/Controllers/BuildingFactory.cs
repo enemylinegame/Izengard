@@ -90,13 +90,13 @@ namespace Code.BuildingSystem
             tileController.WorkerMenager.StopAllProductions(
                 buildingToRemove);
 
+            OnBuildingsChange?.Invoke(buildingToRemove.BuildingTypes, false);
+
             RemoveTypeDots(model, buildingToRemove);
                 
             buildings.Remove(buildingToRemove);
             model.FloodedBuildings.Remove(buildingToRemove);
             
-            OnBuildingsChange?.Invoke(buildingToRemove.BuildingTypes, false);
-
             GameObject.Destroy(buildingToRemove.Prefab);
             GameObject.Destroy(buildingUI.gameObject);
                 

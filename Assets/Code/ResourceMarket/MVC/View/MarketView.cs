@@ -21,6 +21,7 @@ namespace ResourceMarket
         [SerializeField] private Button _sellItemButton;
         [SerializeField] private Button _increaseExchangeButton;
         [SerializeField] private Button _decreaseExchangeButton;
+        [SerializeField] private Button _closeMarketButton;
 
         [Space(10)]
         [Header("Items Tier Settings")]
@@ -141,7 +142,8 @@ namespace ResourceMarket
             Action<ResourceType> sellItem,
             Action increaseTradeValue,
             Action decreaseTradeValue,
-            Action resetTradeValue)
+            Action resetTradeValue,
+            Action closeMarket)
         {
             _byItemButton.onClick.AddListener(() => byItem?.Invoke(_currentSelectedType));
             _sellItemButton.onClick.AddListener(() => sellItem?.Invoke(_currentSelectedType));
@@ -150,6 +152,9 @@ namespace ResourceMarket
             _decreaseExchangeButton.onClick.AddListener(() => decreaseTradeValue?.Invoke());
             
             _onResetTradeValue = resetTradeValue;
+
+            _closeMarketButton.onClick.AddListener(() => closeMarket?.Invoke());
+
             SetButtonsInteraction(false);
         }
 
@@ -161,6 +166,8 @@ namespace ResourceMarket
             _decreaseExchangeButton.onClick.RemoveAllListeners();
 
             _onResetTradeValue = default;
+
+            _closeMarketButton.onClick.RemoveAllListeners();
 
             foreach (var itemView in _itemsViewList)
             {

@@ -84,7 +84,7 @@ namespace ResourceMarket
             _marketItems.AddRange(tierthreeItems);
 
             _view.InitViewData(marketData.MarketTierData, tierOneItems, tierTwoItems, tierthreeItems);
-            _view.InitViewAction(OnBuyItem, OnSellItem, OnIncreaseTradeValue, OnDecreaseTradeValue, ResetTradeValue);
+            _view.InitViewAction(OnBuyItem, OnSellItem, OnIncreaseTradeValue, OnDecreaseTradeValue, ResetTradeValue, OnCloseMarket);
 
             _restoreTime = marketData.MarketRestoreValueDelay;
             RestoreTimer = _restoreTime;
@@ -167,9 +167,16 @@ namespace ResourceMarket
         private void ResetTradeValue() 
             => TradeVale = 1;
 
+        private void OnCloseMarket()
+        {
+            _view.Hide();
+            _rightUI.OpenMarketButton.gameObject.SetActive(true);
+        }
+
         public void ShowView()
         {
             _view.Show();
+            _rightUI.OpenMarketButton.gameObject.SetActive(false);
         }
 
         public void OnUpdate(float deltaTime)
