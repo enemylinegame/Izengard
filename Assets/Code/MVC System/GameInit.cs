@@ -37,7 +37,7 @@ public class GameInit
             uiController, globalResStock, gameConfig, levelGenerator);
 
         /* Market */
-        var marketController = new MarketController(marketUI, marketData, globalResStock, buildingController, rightUI);
+        var marketController = new MarketController(marketUI, marketData, globalResStock, buildingController, uiController);
 
         var unitController = new UnitController();
         var timeRemaining = new TimeRemainingController();

@@ -14,9 +14,11 @@ namespace ResourceMarket
         private readonly MarketView _view;
         private readonly GlobalStock _stock;
         private readonly BuildingFactory _buildingsFactory;
+        private readonly UIController _uiController;
+
         private readonly IMarketDataProvider _marketDataProvider;
         private readonly IMarketItemFactory _itemFactory;
-        private readonly RightUI _rightUI;
+
 
         private int _currentGold;
         private int _tradeValue;
@@ -57,8 +59,8 @@ namespace ResourceMarket
             MarketView view,
             MarketDataConfig marketData,
             GlobalStock stock,
-            BuildingFactory buildingFactory, 
-            RightUI rightUI)
+            BuildingFactory buildingFactory,
+            UIController uiController)
         {
             _view = view;
 
@@ -67,9 +69,9 @@ namespace ResourceMarket
 
             _buildingsFactory = buildingFactory;
             _buildingsFactory.OnBuildingsChange += OnAddMarkets;
-            
-            _rightUI = rightUI;
-            _rightUI.OpenMarketButton.onClick.AddListener(ShowView);
+
+            _uiController = uiController;
+            _uiController.RightUI.OpenMarketButton.onClick.AddListener(ShowView);
 
             _marketDataProvider = new MarketDataProvider(marketData.MarketCoef);
             _marketDataProvider.OnMarketAmountChange += _view.UpdateMarketAmount;
@@ -170,13 +172,15 @@ namespace ResourceMarket
         private void OnCloseMarket()
         {
             _view.Hide();
-            _rightUI.OpenMarketButton.gameObject.SetActive(true);
+            _uiController.IsWorkUI(UIType.All, false);
+            _uiController.RightUI.OpenMarketButton.gameObject.SetActive(true);
         }
 
         public void ShowView()
         {
             _view.Show();
-            _rightUI.OpenMarketButton.gameObject.SetActive(false);
+            _uiController.IsWorkUI(UIType.Market, true);
+            _uiController.RightUI.OpenMarketButton.gameObject.SetActive(false);
         }
 
         public void OnUpdate(float deltaTime)
@@ -205,7 +209,7 @@ namespace ResourceMarket
             _buildingsFactory.OnBuildingsChange -= OnAddMarkets;
             _marketDataProvider.OnMarketAmountChange -= _view.UpdateMarketAmount;
 
-            _rightUI.OpenMarketButton.onClick.RemoveListener(ShowView);
+            _uiController.RightUI.OpenMarketButton.onClick.RemoveListener(ShowView);
             
             _view.Deinit();
         }
