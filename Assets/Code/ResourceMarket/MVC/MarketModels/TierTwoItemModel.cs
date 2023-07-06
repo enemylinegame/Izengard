@@ -19,7 +19,7 @@
         }
 
         public TierTwoItemModel(
-            IMarketItemData data,
+            IMarketItemData data, 
             IMarketDataProvider marketDataProvider) : base(data)
         {
             _marketDataProvider = marketDataProvider;

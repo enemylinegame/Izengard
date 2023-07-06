@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using Code.BuildingSystem;
+using Code.UI;
 using ResourceSystem;
 using UnityEngine;
 
 namespace ResourceMarket
 {
-    public sealed class MarketController : IOnUpdate
+    public sealed class MarketController : IOnController, IOnUpdate, IDisposable
     {
         private readonly List<IMarketItem> _marketItems = new List<IMarketItem>();
 
         private readonly MarketView _view;
         private readonly GlobalStock _stock;
+        private readonly BuildingFactory _buildingsFactory;
         private readonly IMarketDataProvider _marketDataProvider;
         private readonly IMarketItemFactory _itemFactory;
-        
+        private readonly RightUI _rightUI;
+
         private int _currentGold;
         private int _tradeValue;
         private float _restoreTime;
@@ -53,16 +57,24 @@ namespace ResourceMarket
             MarketView view,
             MarketDataConfig marketData,
             GlobalStock stock,
-            IMarketDataProvider marketDataProvider)
+            BuildingFactory buildingFactory, 
+            RightUI rightUI)
         {
             _view = view;
 
             _stock = stock;
             _stock.ResourceValueChanged += OnGoldChange;
 
-            _marketDataProvider = marketDataProvider;
+            _buildingsFactory = buildingFactory;
+            _buildingsFactory.OnBuildingsChange += OnAddMarkets;
+            
+            _rightUI = rightUI;
+            _rightUI.OpenMarketButton.onClick.AddListener(ShowView);
 
-            _itemFactory = new MarketItemFactory(marketData, marketDataProvider);
+            _marketDataProvider = new MarketDataProvider(marketData.MarketCoef);
+            _marketDataProvider.OnMarketAmountChange += _view.UpdateMarketAmount;
+
+            _itemFactory = new MarketItemFactory(marketData, _marketDataProvider);
 
             var tierOneItems = _itemFactory.CreateTierOneItems();
             _marketItems.AddRange(tierOneItems);
@@ -73,9 +85,6 @@ namespace ResourceMarket
 
             _view.InitViewData(marketData.MarketTierData, tierOneItems, tierTwoItems, tierthreeItems);
             _view.InitViewAction(OnBuyItem, OnSellItem, OnIncreaseTradeValue, OnDecreaseTradeValue, ResetTradeValue);
-            
-            _marketDataProvider.OnMarketAmountChange += _view.UpdateMarketAmount;
-            _view.UpdateMarketAmount(_marketDataProvider.MarketAmount);
 
             _restoreTime = marketData.MarketRestoreValueDelay;
             RestoreTimer = _restoreTime;
@@ -88,6 +97,21 @@ namespace ResourceMarket
 
             _currentGold = value;
             _view.UpdateGold(_currentGold);
+        }
+
+        private void OnAddMarkets(BuildingTypes type, bool isMarketBuild)
+        {
+            if (type != BuildingTypes.ResourceMarket)
+                return;
+
+            if (isMarketBuild)
+            {
+                _marketDataProvider.AddMarket();
+            }
+            else
+            {
+                _marketDataProvider.RemoveMarket();
+            }
         }
 
         private void OnBuyItem(ResourceType resourceType)
@@ -166,6 +190,17 @@ namespace ResourceMarket
                 item.RestoreValue();
             }
             ResetTradeValue();
+        }
+
+        public void Dispose()
+        {
+            _stock.ResourceValueChanged -= OnGoldChange;
+            _buildingsFactory.OnBuildingsChange -= OnAddMarkets;
+            _marketDataProvider.OnMarketAmountChange -= _view.UpdateMarketAmount;
+
+            _rightUI.OpenMarketButton.onClick.RemoveListener(ShowView);
+            
+            _view.Deinit();
         }
     }
 }

@@ -24,6 +24,8 @@ namespace Code.BuildingSystem
         private readonly HashSet<DummyController> _instantiatedDummys = 
             new HashSet<DummyController>();
 
+        public event Action<BuildingTypes, bool> OnBuildingsChange;
+
         public BuildingFactory(UIController uiController, GlobalStock stock, 
             GameConfig gameConfig, GeneratorLevelController levelController)
         {
@@ -69,6 +71,8 @@ namespace Code.BuildingSystem
             _uiController.ButtonsBuy.Add(buildingConfig);
             model.FloodedBuildings.Add(building);
             
+            OnBuildingsChange?.Invoke(building.BuildingTypes, true);
+
             controller.LevelCheck();
         }
         
@@ -90,7 +94,9 @@ namespace Code.BuildingSystem
                 
             buildings.Remove(buildingToRemove);
             model.FloodedBuildings.Remove(buildingToRemove);
-                
+            
+            OnBuildingsChange?.Invoke(buildingToRemove.BuildingTypes, false);
+
             GameObject.Destroy(buildingToRemove.Prefab);
             GameObject.Destroy(buildingUI.gameObject);
                 

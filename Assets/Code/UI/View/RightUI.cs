@@ -13,6 +13,7 @@ namespace Code.UI
         [SerializeField] private Button _buttonSelectTileSecond;
         [SerializeField] private Button _buttonSelectTileThird;
         [SerializeField] private HireUnitUIView _hireUnits;
+        [SerializeField] private Button _openMarketButton;
         [SerializeField] private TMP_Text _timer;
         
         public TMP_Text Timer => _timer;
@@ -22,7 +23,10 @@ namespace Code.UI
         public Button ButtonSelectTileSecond => _buttonSelectTileSecond;
     
         public Button ButtonSelectTileThird => _buttonSelectTileThird;
+        
         public HireUnitUIView HireUnits => _hireUnits;
+
+        public Button OpenMarketButton => _openMarketButton;
 
         #region Comments
 

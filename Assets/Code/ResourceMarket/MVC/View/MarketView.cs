@@ -157,6 +157,11 @@ namespace ResourceMarket
         {
             _byItemButton.onClick.RemoveAllListeners();
             _sellItemButton.onClick.RemoveAllListeners();
+            _increaseExchangeButton.onClick.RemoveAllListeners();
+            _decreaseExchangeButton.onClick.RemoveAllListeners();
+
+            _onResetTradeValue = default;
+
             foreach (var itemView in _itemsViewList)
             {
                 itemView.Deinit();
@@ -186,7 +191,7 @@ namespace ResourceMarket
 
         public void UpdateMarketAmount(int marketAmount)
         {
-            _marketAmountText.text = $"Markets: {marketAmount}";
+            _marketAmountText.text = marketAmount.ToString();
 
             _tierOneItems.CheckBlockState(marketAmount);
             _tierTwoItems.CheckBlockState(marketAmount);
