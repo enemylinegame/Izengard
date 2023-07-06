@@ -5,6 +5,7 @@ using UnityEngine;
 public interface IWorkerView
 {
     void InitPlace(Vector3 place);
+    void ContinueWalkFromCurrentPlace();
     void GoToPlace(Vector3 place);
     bool IsOnThePlace();
     void ProduceWork();

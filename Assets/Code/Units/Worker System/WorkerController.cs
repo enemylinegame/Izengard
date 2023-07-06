@@ -19,11 +19,17 @@ namespace Controllers.Worker
 
         private void InitTask(Vector3 fromPlace, Vector3 target)
         {
-            View.Activate();
             Model.StatrtingPlace = fromPlace;
             Model.TargetPlace = target;
 
-            View.InitPlace(fromPlace);
+            if (WorkerStates.NONE == Model.State)
+            {
+                View.Activate();
+                View.InitPlace(fromPlace);
+            }
+            else
+                View.ContinueWalkFromCurrentPlace();
+
             View.GoToPlace(target);
             Model.State = WorkerStates.NONE;
         }
@@ -37,7 +43,8 @@ namespace Controllers.Worker
 
         public int RepeatGoToWorkAndReturn()
         {
-            return GoToWorkAndReturn(Model.StatrtingPlace, Model.TargetPlace);
+            return GoToWorkAndReturn(
+                Model.StatrtingPlace, Model.TargetPlace);
         }
 
         public int GoToPlace(Vector3 fromPlace, Vector3 toPlace)
