@@ -18,7 +18,7 @@ namespace Code.TileSystem
         private TileUIView _uiView;
         private TileView _tileView;
         private ITextVisualizationOnUI _textVisualization;
-        private BuildingController _buildingController;
+        private BuildingFactory _buildingController;
         private InputController _inputController;
         private UIController _uiController;
         private ProductionManager _productionManager;
@@ -31,7 +31,7 @@ namespace Code.TileSystem
         #endregion
         public TileController(TileList tileList, 
             UIController uiController, 
-            BuildingController buildingController, 
+            BuildingFactory buildingController, 
             InputController inputController,
             ProductionManager productionManager)
         {
@@ -50,7 +50,10 @@ namespace Code.TileSystem
         private void OnWorksCountChanged(int workersCount)
         {
             if (null != TileModel)
+            {
                 TileModel.CurrentWorkersUnits = workersCount;
+                _uiView.UnitMax.text = $"{TileModel.CurrentWorkersUnits}/{TileModel.MaxWorkers} Units";
+            }
         }
         #region LoadAndUnloadTile
         public void LoadInfoToTheUI(TileView tile)
@@ -120,15 +123,14 @@ namespace Code.TileSystem
 
         #endregion
         #region BuildingInfoAndHiring
-        public BuildingUIInfo CreateBuildingInfo(BuildingConfig config, TileModel model, 
-            ICollectable building)
+        public BuildingUIInfo CreateBuildingInfo(BuildingConfig config, ICollectable building)
          {
              var view = Object.Instantiate(_uiController.BottomUI.BuildingMenu.BuildingInfo.GetComponent<BuildingUIInfo>()
                  , _uiController.BottomUI.BuildingMenu.ByBuildButtonsHolder);
              view.Icon.sprite = config.Icon;
              view.Type.text = config.BuildingType.ToString();
              view.BuildingType = config.BuildingType;
-             view.UnitsBusy.text = $"{view.CurrentUnits}/{TileModel.MaxWorkers}";
+             view.UnitsBusy.text = $"{view.CurrentUnits}/{building.MaxWorkers}";
             
              _uiController.DestroyBuildingInfo.Add(view.gameObject, view);
             
@@ -152,7 +154,7 @@ namespace Code.TileSystem
              view.Type.text = building.BuildingTypes.ToString();
              view.BuildingType = building.BuildingTypes;
 
-             view.UnitsBusy.text = $"{units}/{TileModel.MaxWorkers}";
+             view.UnitsBusy.text = $"{units}/{building.MaxWorkers}";
              view.CurrentUnits = units;
 
              var destroyButton = view.DestroyBuildingInfo;
@@ -165,22 +167,22 @@ namespace Code.TileSystem
             
              LevelCheck();
          }
-         private void Hiring(bool isOn, BuildingUIInfo buildingUI, ICollectable building)
+
+        private void Hiring(bool isOn, BuildingUIInfo buildingUI, ICollectable building)
          {
             if (isOn)
             {
+                if(buildingUI.CurrentUnits >= building.MaxWorkers) return;
                 if (!_productionManager.IsThereFreeWorkers(building))
                     return;
 
-                IWorkerPreparation preparation = null;
-
                 _productionManager.StartProduction(
                     _tileView.gameObject.transform.position,
-                     building, preparation);
+                     building, building.WorkerPreparation);
             }
             else
             {
-                if (!_productionManager.IsThereBuisyWorkers(building))
+                if (!_productionManager.IsThereBusyWorkers(building))
                     return;
 
                 _productionManager.StopFirstFindedWorker(building);
@@ -188,7 +190,7 @@ namespace Code.TileSystem
 
             buildingUI.CurrentUnits += isOn ? 1 : -1;
              if(buildingUI.CurrentUnits <=0) buildingUI.CurrentUnits = 0;
-             buildingUI.UnitsBusy.text = $"{buildingUI.CurrentUnits}/{TileModel.MaxWorkers}";
+             buildingUI.UnitsBusy.text = $"{buildingUI.CurrentUnits}/{building.MaxWorkers}";
          }
          private void LoadFloodedBuildings()
          {
@@ -207,10 +209,11 @@ namespace Code.TileSystem
             if(view.TileModel.HouseType != HouseType.None) return;
             
             _uiController.IsWorkUI(UIType.TileSel, true);
-            
+
             _uiController.CenterUI.TIleSelection.TileEco.onClick.AddListener(() => TileType(HouseType.Eco, view));
             _uiController.CenterUI.TIleSelection.TileWar.onClick.AddListener(() => TileType(HouseType.war, view));
             _uiController.CenterUI.TIleSelection.Back.onClick.AddListener(() => RemoveListenersTileSelection(true));
+            Debug.Log($"Блокировка UI: {_inputController.LockRightClick}");
         }
         private void TileType(HouseType type, TileView tile)
         {

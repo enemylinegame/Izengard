@@ -7,6 +7,7 @@ namespace ResourceMarket
     public sealed class MarketEntryPoint : MonoBehaviour
     {
         [SerializeField] private MarketView _marketView;
+        [SerializeField] private TopResUiVew _topResUiVew;
         [SerializeField] private CustomerDataView _customerView;
 
         [SerializeField] private GlobalResourceList _globalResourceList;
@@ -23,7 +24,7 @@ namespace ResourceMarket
 
         private void Start()
         {
-            var globalResStock = new GlobalStock(_globalResourceList.GlobalResourceConfigs);
+            var globalResStock = new GlobalStock(_globalResourceList.GlobalResourceConfigs, _topResUiVew);
             var marketProvider = new TestMarketDataProvider(_marketData.MarketCoef, _marketData.MarketBuildings);
 
             _marketController = new MarketController(_marketView, _marketData, globalResStock, marketProvider);    

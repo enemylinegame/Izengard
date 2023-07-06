@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ResourceSystem;
-using TMPro;
 using UnityEngine;
 
 namespace ResourceMarket

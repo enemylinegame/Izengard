@@ -90,6 +90,7 @@ namespace Wave
             enemy.Enemy.RootGameObject.transform.position = spawnPosition;
             enemy.Enemy.RootGameObject.SetActive(true);
             var navMesh = enemy.Enemy.RootGameObject.GetComponent<NavMeshAgent>();
+            navMesh.enabled = true;
             if (navMesh.isOnNavMesh) navMesh.ResetPath();
             navMesh.Warp(spawnPosition);
         }

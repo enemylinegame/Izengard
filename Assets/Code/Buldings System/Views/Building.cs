@@ -16,8 +16,10 @@ public class Building : BaseBuildAndResources, ICollectable
     public float CollectTime { get; set; }
     public int MaxWorkers { get; set; }
     public string VisibleName { get; set; }
-    public string NameBuiding { get; set; }
-    
+    public string Name { get; set; }
+
+    public IWorkerPreparation WorkerPreparation { get; set; }
+
     public void InitBuilding()
     {
         BuildingID = Random.Range(0, 1000000);
@@ -34,6 +36,7 @@ public class Building : BaseBuildAndResources, ICollectable
         ResourceType = mineralConfig.ResourceType;
         Prefab = gameObject;
         SpawnPosition = transform.position;
+        MaxWorkers = 999999999;
     }
 
 }

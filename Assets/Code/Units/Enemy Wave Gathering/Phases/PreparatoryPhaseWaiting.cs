@@ -26,7 +26,7 @@ namespace Wave
         public override void StartPhase()
         {
             base.StartPhase();
-            _notificationUI.BasicTemporaryUIVisualization("end of the military phase!!", 3);
+            _notificationUI.BasicTemporaryUIVisualization("the end of the peaceful phase!!", 3);
             _timeLeft = _preparatoryPhaseDuration;
         }
 

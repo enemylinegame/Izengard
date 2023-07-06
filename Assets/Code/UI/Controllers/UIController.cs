@@ -76,7 +76,7 @@ namespace Code.UI
                 case UIType.Unit:
                     break;
                 case UIType.TileSel:
-                    _inputController.LockRightClick = !isOn;
+                    _inputController.LockRightClick = isOn;
                     _centerUI.TIleSelection.gameObject.SetActive(isOn);
                     break;
                 case UIType.Esc:

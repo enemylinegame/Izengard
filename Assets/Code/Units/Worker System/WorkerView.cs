@@ -31,7 +31,8 @@ public class WorkerView : MonoBehaviour, IWorkerView
 
     public bool IsOnThePlace()
     {
-        return _navigationAgent.remainingDistance < _distanceToBeginWork;
+        return (_navigationAgent.destination - transform.position).magnitude < 
+            _distanceToBeginWork;
     }
 
     public void ProduceWork()

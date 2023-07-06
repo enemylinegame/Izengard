@@ -13,14 +13,16 @@ namespace Code.TileSystem
         private TileResourceUIController _tileResourceController;
         private TileController _tileController;
         private List<ICollectable> _buildings;
+        private GameConfig _gameConfig;
 
         public TileResouceUIFactory(UIController uiController, TileResourceUIController tileResourceController
-            , TileController tileController)
+            , TileController tileController, GameConfig gameConfig)
         {
             _layoutTransform = uiController.BottomUI.ResourcesLayoutUIView.LayoutRectTransform;
             _resourcesLayoutUIView = uiController.BottomUI.ResourcesLayoutUIView;
             _tileResourceController = tileResourceController;
             _tileController = tileController;
+            _gameConfig = gameConfig;
         }
         
         public void LoadInfoToTheUI(TileView tile)
@@ -58,7 +60,7 @@ namespace Code.TileSystem
 
         private void AddNewLayoutElement(ICollectable mineralConfig)
         {
-            GameObject resourceUIElement = Resources.Load<GameObject>("UI/ResourceUI/Res");//TODO PLS DEL
+            GameObject resourceUIElement = Object.Instantiate(_gameConfig.Res);
 
             CreateResourceUIOnLayout(resourceUIElement, mineralConfig);
         }

@@ -14,6 +14,7 @@ namespace Views.BuildBuildingsUI
         [SerializeField] private Button _destroyBuildingInfo;
         [SerializeField] private Button _plusUnit;
         [SerializeField] private Button _minusUnit;
+        public int MaxWorkers { get; set; }
         private int _currentCurrentUnits;
         public BuildingTypes BuildingType { get; set; }
         public ResourceType ResourceType { get; set; }

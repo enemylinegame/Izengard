@@ -180,6 +180,6 @@ public class WorkersResourceTeam : IOnUpdate
 
     private Dictionary<int, WorkerResourceWork> _smokingWorkers;
     private Dictionary<int, WorkerResourceWork> _activeWorkers;
-    List<int> _readyToWork;
-    List<int> _readyToSmoke;
+    private List<int> _readyToWork;
+    private List<int> _readyToSmoke;
 }

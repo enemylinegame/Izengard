@@ -15,10 +15,10 @@ namespace CombatSystem
         public event Action<DefenderState> OnStateChanged; 
         public event Action<float, float> OnHealthChanged; 
 
-        public GameObject DefenderGameObject { get { return _defender; } }
+        public GameObject DefenderGameObject { get { return _defenderRootGO; } }
 
         private Damageable _myDamageable;
-        private GameObject _defender;
+        private GameObject _defenderRootGO;
         private DefenderUnitStats _unitStats;
         private NavMeshAgent _agent;
         private TileModel _tileModel;
@@ -40,8 +40,6 @@ namespace CombatSystem
         private Vector3 _defendPosition;
         private DefenderState _state;
 
-        private float _reloadTimeCounter = 0;
-        private bool _isReload = false;
 
         /// <summary>
         /// Going to barrack or inside barrack
@@ -73,32 +71,47 @@ namespace CombatSystem
             }
         }
         
+        public Sprite Icon { get; private set; }
+        
 
-        public DefenderUnit(GameObject defender, Vector3 defendPosition)
+        public DefenderUnit(GameObject defender, Vector3 defendPosition, DefenderSettings settings, 
+            IBulletsController bulletsController)
         {
-            _unitStats = new DefenderUnitStats(1f, 0.3f, 2.0f ,25, 100);
-            _defender = defender;
+            _unitStats = settings.UnitStats;
+            _defenderRootGO = defender;
             _defendPosition = defendPosition;
+            Icon = settings.Icon;
             _myDamageable = defender.GetComponent<Damageable>();
             _myDamageable.OnHealthChanged += HealthChanged;
-            _myDamageable.DeathAction += DefenderDead;
+            _myDamageable.OnDeath += DefenderDead;
             _myDamageable.OnDamaged += OnDamaged;
             _myDamageable.Init(_unitStats.MaxHealth, 1);
             _agent = defender.GetComponent<NavMeshAgent>();
+            _agent.speed = _unitStats.MovementSpeed;
             _animation = new DefenderAnimation(defender, this);
             _targetsHolder = new DefenderTargetsHolder();
-            _targetFinder = new DefenderTargetFinder(_defender, _unitStats.VisionRange, _targetsHolder, _unitStats);
+            _targetFinder = new DefenderTargetFinder(_defenderRootGO, _unitStats.VisionRange, _targetsHolder, _unitStats);
             _targetFinder.OnTargetsDetected += AddedTargetInRange;
-            _targetSelector = new DefenderTargetSelector(_defender, _targetsHolder);
-            _fightState = new DefenderFight(this, SetState, _unitStats, _targetsHolder, _targetSelector, 
-                _myDamageable, _targetFinder);
+            _targetSelector = new DefenderTargetSelector(_defenderRootGO, _targetsHolder);
+            
+            if (settings.Type == DefenderType.Range)
+            {
+                _fightState = new DefenderFightRange(this, SetState, _unitStats, _targetsHolder, _targetSelector, 
+                    _myDamageable, _targetFinder, bulletsController);
+            }
+            else
+            {
+                _fightState = new DefenderFight(this, SetState, _unitStats, _targetsHolder, _targetSelector, 
+                    _myDamageable, _targetFinder);
+            }
+
             _goingState = new DefenderGoing(this, SetState, _unitStats, _agent);
             _gotoBarrackState = new DefenderGotoBarrack(this, SetState, _agent);
             _idleState = new DefenderIdle(this, SetState, _agent);
             _inBarrackState = new DefenderInBarrack(this, SetState);
             _pursuitState = new DefenderPursuit(this, SetState, _agent, _targetSelector, _targetsHolder,
                 _targetFinder);
-            _visualSelect = new DefenderVisualSelect(defender);
+            _visualSelect = new DefenderVisualSelect(defender, settings.SelectVisualEffectPrefab);
             _visualSelect.Off();
 
             SetState(DefenderState.Going);
@@ -113,8 +126,9 @@ namespace CombatSystem
         public void Dispose()
         {
             _animation.Disable();
-            _myDamageable.DeathAction -= DefenderDead;
+            _myDamageable.OnDeath -= DefenderDead;
             ClearTargets();
+            Debug.Log("DefenderUnit->Dispose:");
         }
 
         public void OnUpdate(float deltaTime)
@@ -154,14 +168,18 @@ namespace CombatSystem
 
         private void OnDamaged(IDamageable attacker)
         {
-            if (!_targetsHolder.AttackingTargets.Contains(attacker))
+            if (attacker != null)
             {
-                _targetsHolder.AttackingTargets.Add(attacker);
-            
+                if (!_targetsHolder.AttackingTargets.Contains(attacker))
+                {
+                    _targetsHolder.AttackingTargets.Add(attacker);
+
+                }
+
+                attacker.OnDeath += EnemyDead;
+                //Debug.Log($"DefenderUnit::OnDamaged: {_state} ");
+                _currentStateExecuter.OnDamaged(attacker);
             }
-            attacker.DeathAction += EnemyDead;
-            //Debug.Log($"DefenderUnit::OnDamaged: {_state} ");
-            _currentStateExecuter.OnDamaged(attacker);
         }
 
         private void AddedTargetInRange()
@@ -207,7 +225,7 @@ namespace CombatSystem
             {
                 if (_targetsHolder.AttackingTargets[i].IsDead)
                 {
-                    _targetsHolder.AttackingTargets[i].DeathAction -= EnemyDead;
+                    _targetsHolder.AttackingTargets[i].OnDeath -= EnemyDead;
                     _targetsHolder.AttackingTargets.RemoveAt(i);
                 }
             }
@@ -226,8 +244,23 @@ namespace CombatSystem
         
         private void ClearAttackingTargets()
         {
-            _targetsHolder.AttackingTargets.ForEach(target => target.DeathAction -= EnemyDead);
+            _targetsHolder.AttackingTargets.ForEach(target => target.OnDeath -= EnemyDead);
             _targetsHolder.AttackingTargets.Clear();
+        }
+
+        public void DestroyItself()
+        {
+            GameObject.Destroy(_defenderRootGO);
+        }
+
+        public void Dismiss()
+        {
+            if (!_myDamageable.IsDead)
+            {
+                _myDamageable.MakeDamage(_unitStats.MaxHealth, null);
+            }
+
+            GameObject.Destroy(_defenderRootGO);
         }
 
         private void DebugDrawLineToTarget(IDamageable target)

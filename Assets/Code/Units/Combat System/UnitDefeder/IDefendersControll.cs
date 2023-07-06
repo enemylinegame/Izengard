@@ -7,7 +7,7 @@ namespace CombatSystem
 {
     public interface IDefendersControll
     {
-        DefenderUnit CreateDefender(TileView tile);
+        DefenderUnit CreateDefender(TileView tile, DefenderSettings settings);
         void SendDefendersToBarrack(List<DefenderUnit> defenderUnits, TileView tile);
         void SendDefenderToBarrack(DefenderUnit unit, TileView tile);
         void KickDefendersOutOfBarrack(List<DefenderUnit> defenderUnits, TileView tile);
