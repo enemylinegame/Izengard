@@ -60,9 +60,10 @@ namespace Code.TileSystem
 
         private void AddNewLayoutElement(ICollectable mineralConfig)
         {
-            GameObject resourceUIElement = Object.Instantiate(_gameConfig.Res);
+            
 
-            CreateResourceUIOnLayout(resourceUIElement, mineralConfig);
+            CreateResourceUIOnLayout(_gameConfig.Res, mineralConfig);
+            
         }
         private void RemoveLayoutElement(MineralConfig mineralConfig)
         {
