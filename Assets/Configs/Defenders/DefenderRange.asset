@@ -18,7 +18,7 @@ MonoBehaviour:
     AttackRange: 2
     VisionRange: 2
     MovementSpeed: 2
-    AttackDamage: 50
+    AttackDamage: 10
     MaxHealth: 70
     ThreatLevel: 4
   <Prefab>k__BackingField: {fileID: 2102001904127989955, guid: 7c1d0c9c2a3a886498fe72006ffb5936, type: 3}
