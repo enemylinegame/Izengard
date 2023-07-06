@@ -111,7 +111,7 @@ namespace CombatSystem
             _inBarrackState = new DefenderInBarrack(this, SetState);
             _pursuitState = new DefenderPursuit(this, SetState, _agent, _targetSelector, _targetsHolder,
                 _targetFinder);
-            _visualSelect = new DefenderVisualSelect(defender);
+            _visualSelect = new DefenderVisualSelect(defender, settings.SelectVisualEffectPrefab);
             _visualSelect.Off();
 
             SetState(DefenderState.Going);

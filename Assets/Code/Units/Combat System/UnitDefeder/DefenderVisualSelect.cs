@@ -7,9 +7,13 @@ namespace CombatSystem
     {
         private VisualSelectionEffect _selectionEffect;
 
-        public DefenderVisualSelect(GameObject root)
+        public DefenderVisualSelect(GameObject root, GameObject visualEffectPrefab)
         {
-            _selectionEffect = root.GetComponentInChildren<VisualSelectionEffect>();
+            if (visualEffectPrefab)
+            {
+                GameObject effect = GameObject.Instantiate(visualEffectPrefab, root.transform);
+                _selectionEffect = effect.GetComponent<VisualSelectionEffect>();
+            }
         }
 
         public void On()
