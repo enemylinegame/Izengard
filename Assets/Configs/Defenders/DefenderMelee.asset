@@ -23,3 +23,4 @@ MonoBehaviour:
     ThreatLevel: 8
   <Prefab>k__BackingField: {fileID: 2102001904127989955, guid: 8da3dc99a1495c744ac872fb76c815a4, type: 3}
   <Icon>k__BackingField: {fileID: 21300000, guid: 1444c21aec3c5994f9586bd7791b515d, type: 3}
+  <SelectVisualEffectPrefab>k__BackingField: {fileID: 6075373536427580745, guid: 4bed8164f1ddbc64688abcac91743384, type: 3}

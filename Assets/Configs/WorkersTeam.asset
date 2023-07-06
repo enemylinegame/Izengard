@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: WorkersTeam
   m_EditorClassIdentifier: 
   _moveSpeed: 1
-  _timeToProcessWorkSec: 10
-  _workersAmount: 4
   _workerPrefab: {fileID: 188376, guid: c88c4162c795e8b4d822a0631f17ebf9, type: 3}
-  _workersIntervalSec: 3
+  _smokeBreakTime: 5
+  _timeToProcessWorkSec: 10
+  _portionSize: 1
+  _craftWorkerPerformance: 0

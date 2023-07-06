@@ -47,7 +47,6 @@ namespace Code.Player
                     _tile = null;
                 }
             }
-            if (!IsOnTile) return;
             if (!Input.GetMouseButtonDown(0)) return;
 
             var bitmask = 1 << 6;
@@ -56,12 +55,14 @@ namespace Code.Player
             var tile = hit.collider.GetComponentInParent<TileView>();
             
             if (!tile) return;
-            _tile = tile;
 
             if (_isSpecialMode)
             {
                 _tileSelector.SelectTile(tile);
             }
+            
+            if (!IsOnTile) return;
+            _tile = tile;
             
             foreach (var selector in _loadInfoToTheUis)
             {

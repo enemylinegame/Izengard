@@ -15,7 +15,7 @@ public class ResourceGenerator : IDisposable
     private GameConfig _gameConfig;
     private Mineral _mineral;
     private GeneratorLevelController _generatorLevelController;
-    private BuildingController _buildingController;
+    private BuildingFactory _buildingController;
     private TileController _tileController;
     private int _numOfVariant = 0;
     private bool _flag;
@@ -24,7 +24,7 @@ public class ResourceGenerator : IDisposable
     private List<MineralConfig> _resourcesTierTwo;
     private List<MineralConfig> _resourcesTierThree;
     public ResourceGenerator(/*GameObject[,] installedBuildings,*/
-        GameConfig gameConfig, GeneratorLevelController generatorLevelController, BuildingController buildingController)
+        GameConfig gameConfig, GeneratorLevelController generatorLevelController, BuildingFactory buildingController)
     {
         _buildingController = buildingController;
         // _installedBuildings = installedBuildings;
@@ -38,7 +38,7 @@ public class ResourceGenerator : IDisposable
     }
     
     public ResourceGenerator(/*GameObject[,] installedBuildings,*/
-        GameConfig gameConfig, GeneratorLevelController generatorLevelController, BuildingController buildingController, int i)
+        GameConfig gameConfig, GeneratorLevelController generatorLevelController, BuildingFactory buildingController, int i)
     {
         // _installedBuildings = installedBuildings;
         _gameConfig = gameConfig;

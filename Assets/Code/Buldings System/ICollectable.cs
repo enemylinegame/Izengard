@@ -15,6 +15,9 @@ namespace Code.BuildingSystem
         int MaxWorkers { get; set; }
         int BuildingID { get; set; }
         string VisibleName { get; set; }
+        string Name { get; set; }
+
+        IWorkerPreparation WorkerPreparation { get; set; }
 
         void InitBuilding();
         void InitMineral(MineralConfig mineralConfig);

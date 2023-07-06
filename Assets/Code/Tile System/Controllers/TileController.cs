@@ -18,7 +18,7 @@ namespace Code.TileSystem
         private TileUIView _uiView;
         private TileView _tileView;
         private ITextVisualizationOnUI _textVisualization;
-        private BuildingController _buildingController;
+        private BuildingFactory _buildingController;
         private InputController _inputController;
         private UIController _uiController;
         private ProductionManager _productionManager;
@@ -31,7 +31,7 @@ namespace Code.TileSystem
         #endregion
         public TileController(TileList tileList, 
             UIController uiController, 
-            BuildingController buildingController, 
+            BuildingFactory buildingController, 
             InputController inputController,
             ProductionManager productionManager)
         {
@@ -168,15 +168,6 @@ namespace Code.TileSystem
              LevelCheck();
          }
 
-        IWorkerPreparation CreateWorkAnimation(GameObject resourceView)
-        {
-            if (!resourceView.gameObject.TryGetComponent(
-                out IWorkerPreparation workerPreparation))
-                return null;
-
-            return workerPreparation;
-        }
-
         private void Hiring(bool isOn, BuildingUIInfo buildingUI, ICollectable building)
          {
             if (isOn)
@@ -185,12 +176,9 @@ namespace Code.TileSystem
                 if (!_productionManager.IsThereFreeWorkers(building))
                     return;
 
-                IWorkerPreparation preparation = 
-                    CreateWorkAnimation(buildingUI.gameObject);
-
                 _productionManager.StartProduction(
                     _tileView.gameObject.transform.position,
-                     building, preparation);
+                     building, building.WorkerPreparation);
             }
             else
             {

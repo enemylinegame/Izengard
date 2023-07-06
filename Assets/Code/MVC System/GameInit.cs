@@ -31,7 +31,7 @@ public class GameInit
         var levelGenerator = new GeneratorLevelController(
             tiles, gameConfig, btnConroller, btnParents, uiController);
         // var buildController = new BuildGenerator(gameConfig);
-        var buildingController = new BuildingController(
+        var buildingController = new BuildingFactory(
             uiController, globalResStock, gameConfig, levelGenerator);
 
         var unitController = new UnitController();

@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Code.BuildingSystem;
 using UnityEngine;
-using UnityEngine.Serialization;
+
 
 namespace Code.TileSystem
 {
     public class Dot : MonoBehaviour
     {
         public bool IsActive = true;
-        public Building Building;
+        public ICollectable Building;
     }
 }
