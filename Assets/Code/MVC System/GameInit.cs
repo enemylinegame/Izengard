@@ -8,6 +8,7 @@ using Code.Units.HireDefendersSystem;
 using CombatSystem;
 using Controllers.BaseUnit;
 using EquipmentSystem;
+using ResourceMarket;
 using ResourceSystem;
 using UnityEngine;
 
@@ -18,7 +19,8 @@ public class GameInit
         EndGameScreen endGameScreen,
         TowerShotConfig towerShotConfig, BuyItemScreenView buyItemScreenView, HireSystemView hireSystemView,
         EquipScreenView equipScreenView, Camera camera, TileList tileList,
-        GlobalResourceList globalResourceList, OutLineSettings outLineSettings)
+        GlobalResourceList globalResourceList, OutLineSettings outLineSettings,
+        MarketDataConfig marketData, MarketView marketView)
     {
         //TODO Do not change the structure of the script
         var tiles = GetTileList.GetTiles(gameConfig);
@@ -26,13 +28,16 @@ public class GameInit
         var globalResStock = new GlobalStock(globalResourceList.GlobalResourceConfigs, topResUiVew);
         var btnConroller = new BtnUIController(rightUI, gameConfig);
         var inputController = new InputController(outlineController);
-        var uiController = new UIController(rightUI, bottomUI, centerUI, inputController);
+        var uiController = new UIController(rightUI, bottomUI, centerUI, inputController, marketView);
 
         var levelGenerator = new GeneratorLevelController(
             tiles, gameConfig, btnConroller, btnParents, uiController);
         // var buildController = new BuildGenerator(gameConfig);
         var buildingController = new BuildingFactory(
             uiController, globalResStock, gameConfig, levelGenerator);
+
+        /* Market */
+        var marketController = new MarketController(uiController, globalResStock, buildingController, marketData);
 
         var unitController = new UnitController();
         var timeRemaining = new TimeRemainingController();
@@ -75,6 +80,9 @@ public class GameInit
         controller.Add(tileController);
         controller.Add(defenderController);
         controller.Add(bulletsController);
+        controller.Add(marketController);
+
+        globalResStock.AddResourceToStock(ResourceType.Wood, 100);
 
         // var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
         // controller.Add(testDummyTargetController);

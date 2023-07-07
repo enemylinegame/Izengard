@@ -1,15 +1,11 @@
 using UnityEngine;
 using ResourceSystem;
-using BuildingSystem;
-using Code;
-using Code.BuildingSystem;
 using Code.QuickOutline.Scripts;
 using Code.TileSystem;
 using Code.TowerShot;
 using Code.UI;
 using EquipmentSystem;
-using UnityEngine.Serialization;
-using Views.BaseUnit.UI;
+using ResourceMarket;
 
 public class Main : MonoBehaviour
 {
@@ -20,20 +16,22 @@ public class Main : MonoBehaviour
     [SerializeField] private GlobalResourceList _globalResourceList;
     [SerializeField] private WorkersTeamConfig _workersTeamConfig;
     [SerializeField] private OutLineSettings _outLineSettings;
-  
     [SerializeField] private TowerShotConfig _towerShotConfig;
+    [SerializeField] private MarketDataConfig _marketDataConfig;
+
     [Header("UI")]
     [SerializeField] private RightUI _rightUI;
-
     [SerializeField] private CenterUI _centerUI;
     [SerializeField] private BottomUI _bottonUI;
     [SerializeField] private TopResUiVew _topUI;
     [SerializeField] private EndGameScreen _endGameScreen;
     [SerializeField] private BuildingsUI buildingsUI;
+    [SerializeField] private MarketView _marketUI;
     [Header("Equip")]
     [SerializeField] private BuyItemScreenView _buyItemScreenView;
     [SerializeField] private HireSystemView _hireSystemView;
     [SerializeField] private EquipScreenView _equipScreenView;
+
     [Header("Other")]
     [SerializeField] private Transform _btnParents;
     [SerializeField] private Camera _screenCamera;
@@ -43,11 +41,14 @@ public class Main : MonoBehaviour
     private void Start()
     {
         _controllers = new Controller();
+
         new GameInit(_controllers, _gameConfig, _workersTeamConfig, 
             _rightUI,  _btnParents,_centerUI ,_bottonUI,
             _topUI, _endGameScreen, _towerShotConfig,
             _buyItemScreenView, _hireSystemView, _equipScreenView, 
-            _screenCamera, _tileList, _globalResourceList, _outLineSettings);
+            _screenCamera, _tileList, _globalResourceList, _outLineSettings,
+            _marketDataConfig, _marketUI);
+
         _controllers.OnStart();
     }
 
