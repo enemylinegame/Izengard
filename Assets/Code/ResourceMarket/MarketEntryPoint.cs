@@ -25,7 +25,7 @@ namespace ResourceMarket
         private void Start()
         {
             var globalResStock = new GlobalStock(_globalResourceList.GlobalResourceConfigs, _topResUiVew);
-            _marketController = new MarketController(_marketView, _marketData, globalResStock, null, null);    
+            //_marketController = new MarketController(_marketView, _marketData, globalResStock, null, null);    
             _customerController = new CustomerController(_customerView, _globalResourceList.GlobalResourceConfigs, globalResStock);
 
             globalResStock.AddResourceToStock(ResourceType.Gold, _initialGold);

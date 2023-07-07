@@ -20,7 +20,7 @@ public class GameInit
         TowerShotConfig towerShotConfig, BuyItemScreenView buyItemScreenView, HireSystemView hireSystemView,
         EquipScreenView equipScreenView, Camera camera, TileList tileList,
         GlobalResourceList globalResourceList, OutLineSettings outLineSettings,
-        MarketDataConfig marketData, MarketView marketUI)
+        MarketDataConfig marketData, MarketView marketView)
     {
         //TODO Do not change the structure of the script
         var tiles = GetTileList.GetTiles(gameConfig);
@@ -28,7 +28,7 @@ public class GameInit
         var globalResStock = new GlobalStock(globalResourceList.GlobalResourceConfigs, topResUiVew);
         var btnConroller = new BtnUIController(rightUI, gameConfig);
         var inputController = new InputController(outlineController);
-        var uiController = new UIController(rightUI, bottomUI, centerUI, inputController);
+        var uiController = new UIController(rightUI, bottomUI, centerUI, inputController, marketView);
 
         var levelGenerator = new GeneratorLevelController(
             tiles, gameConfig, btnConroller, btnParents, uiController);
@@ -37,7 +37,7 @@ public class GameInit
             uiController, globalResStock, gameConfig, levelGenerator);
 
         /* Market */
-        var marketController = new MarketController(marketUI, marketData, globalResStock, buildingController, uiController);
+        var marketController = new MarketController(uiController, globalResStock, buildingController, marketData);
 
         var unitController = new UnitController();
         var timeRemaining = new TimeRemainingController();

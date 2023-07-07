@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using Views.BuildBuildingsUI;
 using CombatSystem.Views;
 using Code.Player;
-
+using ResourceMarket;
 
 namespace Code.UI
 {
@@ -17,19 +17,23 @@ namespace Code.UI
         private CenterUI _centerUI;
         private InputController _inputController;
         private WarsView _warsView;
+        private static MarketView _marketView;
 
         public RightUI RightUI => _rightUI;
         public BottomUI BottomUI => _bottomUI;
         public CenterUI CenterUI => _centerUI;
         public WarsView WarsView => _warsView;
+        public MarketView MarketView => _marketView;
 
         public List<BuildingConfig> ButtonsBuy = new List<BuildingConfig>();
         public Dictionary<BuildingConfig, Button> ButtonsInMenu = new Dictionary<BuildingConfig, Button>();
         public Dictionary<GameObject, BuildingUIInfo> DestroyBuildingInfo = new Dictionary<GameObject, BuildingUIInfo>();
+
+
         /// <summary>
         /// Главный контроллер UI
         /// </summary>
-        public UIController(RightUI rightUI, BottomUI bottomUI, CenterUI centerUI, InputController inputController)
+        public UIController(RightUI rightUI, BottomUI bottomUI, CenterUI centerUI, InputController inputController, MarketView marketView)
         {
             _rightUI = rightUI;
             _bottomUI = bottomUI;
@@ -37,7 +41,9 @@ namespace Code.UI
             _inputController = inputController;
 
             _warsView = new WarsView(bottomUI.WarsUIView, inputController);
-            
+
+            _marketView = marketView;
+
             IsWorkUI(UIType.All, false);
             
             _bottomUI.BuildingMenu.PrefabButtonClear.onClick.AddListener(() => IsWorkUI(UIType.Buy, true));
@@ -59,30 +65,48 @@ namespace Code.UI
             switch (type)
             {
                 case UIType.All:
-                    _centerUI.BuildingBuy.SetActive(isOn);
-                    ClearButtonsUIBuy(isOn);
-                    IsOnTileUI(isOn);
-                    _inputController.LockRightClick = !isOn;
-                    break;
+                    {
+                        _centerUI.BuildingBuy.SetActive(isOn);
+                        ClearButtonsUIBuy(isOn);
+                        IsOnTileUI(isOn);
+                        _inputController.LockRightClick = !isOn;
+                        _rightUI.OpenMarketButton.gameObject.SetActive(isOn);
+                        break;
+                    }
                 case UIType.Tile:
-                    IsOnTileUI(isOn);
-                    _inputController.LockRightClick = !isOn;
-                    break;
+                    {
+                        IsOnTileUI(isOn);
+                        _inputController.LockRightClick = !isOn;
+
+                        _rightUI.OpenMarketButton.gameObject.SetActive(isOn);
+                        break;
+                    }
                 case UIType.Buy:
-                    _inputController.LockRightClick = isOn;
-                    _centerUI.BuildingBuy.SetActive(isOn);
-                    break;
+                    {
+                        _inputController.LockRightClick = isOn;
+                        _centerUI.BuildingBuy.SetActive(isOn);
+                        _rightUI.OpenMarketButton.gameObject.SetActive(!isOn);
+                        break;
+                    }
                 case UIType.Сonfirmation:
                     break;
                 case UIType.Unit:
                     break;
                 case UIType.TileSel:
-                    _inputController.LockRightClick = isOn;
-                    _centerUI.TIleSelection.gameObject.SetActive(isOn);
-                    break;
+                    {
+                        _inputController.LockRightClick = isOn;
+                        _centerUI.TIleSelection.gameObject.SetActive(isOn);
+
+                        _rightUI.OpenMarketButton.gameObject.SetActive(!isOn);
+                        break;
+                    }
                 case UIType.Market:
-                    IsOnTileUI(!isOn);
-                    break;
+                    {
+                        _marketView.SetActive(isOn);
+                        IsOnTileUI(!isOn);
+                        _rightUI.OpenMarketButton.gameObject.SetActive(!isOn);
+                        break;
+                    }
                 case UIType.Esc:
                     break;
             }
