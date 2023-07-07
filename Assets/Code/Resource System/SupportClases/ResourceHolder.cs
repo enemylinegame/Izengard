@@ -21,7 +21,7 @@
         
         public bool CheckAmount(int value)
         {
-           return _currentAmount <= value;
+           return _currentAmount >= value;
         } 
 
         public void AddResource(int value)

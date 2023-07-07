@@ -11,12 +11,14 @@ namespace ResourceMarket
     {
         private readonly List<IMarketItem> _marketItems = new List<IMarketItem>();
 
+        private readonly UIController _uiController;
         private readonly MarketView _view;
         private readonly GlobalStock _stock;
         private readonly BuildingFactory _buildingsFactory;
+
         private readonly IMarketDataProvider _marketDataProvider;
         private readonly IMarketItemFactory _itemFactory;
-        private readonly RightUI _rightUI;
+
 
         private int _currentGold;
         private int _tradeValue;
@@ -54,22 +56,21 @@ namespace ResourceMarket
         public event Action<float> OnTimerUpdate;
 
         public MarketController(
-            MarketView view,
-            MarketDataConfig marketData,
+            UIController uiController,
             GlobalStock stock,
-            BuildingFactory buildingFactory, 
-            RightUI rightUI)
+            BuildingFactory buildingFactory,
+            MarketDataConfig marketData)
         {
-            _view = view;
+            _uiController = uiController;
+            _uiController.RightUI.OpenMarketButton.onClick.AddListener(ShowView);
+
+            _view = uiController.MarketView;
 
             _stock = stock;
             _stock.ResourceValueChanged += OnGoldChange;
 
             _buildingsFactory = buildingFactory;
             _buildingsFactory.OnBuildingsChange += OnAddMarkets;
-            
-            _rightUI = rightUI;
-            _rightUI.OpenMarketButton.onClick.AddListener(ShowView);
 
             _marketDataProvider = new MarketDataProvider(marketData.MarketCoef);
             _marketDataProvider.OnMarketAmountChange += _view.UpdateMarketAmount;
@@ -143,7 +144,7 @@ namespace ResourceMarket
 
             var item = _marketItems.Find(r => r.Data.ResourceType == resourceType);
 
-            if (_stock.CheckResourceInStock(resourceType, item.Data.ExchangeAmount * TradeVale) == false)
+            if (_stock.CheckResourceInStock(resourceType, item.Data.ExchangeAmount * TradeVale))
             {
                 _stock.GetResourceFromStock(resourceType, item.Data.ExchangeAmount * TradeVale);
                 _stock.AddResourceToStock(ResourceType.Gold, item.ExchangeCost * TradeVale);
@@ -169,14 +170,12 @@ namespace ResourceMarket
 
         private void OnCloseMarket()
         {
-            _view.Hide();
-            _rightUI.OpenMarketButton.gameObject.SetActive(true);
+            _uiController.IsWorkUI(UIType.Market, false);
         }
 
         public void ShowView()
         {
-            _view.Show();
-            _rightUI.OpenMarketButton.gameObject.SetActive(false);
+            _uiController.IsWorkUI(UIType.Market, true);
         }
 
         public void OnUpdate(float deltaTime)
@@ -205,7 +204,7 @@ namespace ResourceMarket
             _buildingsFactory.OnBuildingsChange -= OnAddMarkets;
             _marketDataProvider.OnMarketAmountChange -= _view.UpdateMarketAmount;
 
-            _rightUI.OpenMarketButton.onClick.RemoveListener(ShowView);
+            _uiController.RightUI.OpenMarketButton.onClick.RemoveListener(ShowView);
             
             _view.Deinit();
         }

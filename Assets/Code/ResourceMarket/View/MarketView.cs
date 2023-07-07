@@ -50,7 +50,7 @@ namespace ResourceMarket
 
             InitTradeInfoView(tierOneItems, tierTwoItems, tierThreeItems);
 
-            Hide();
+            SetActive(false);
         }
 
         private void CreateTierOneItemsView(MarketTierData tierData, IList<IMarketItem> items)
@@ -175,20 +175,22 @@ namespace ResourceMarket
             }
         }
 
-        public void Show()
+        public void SetActive(bool state)
         {
-            _onResetTradeValue?.Invoke();
-            gameObject.SetActive(true);
-        }
-
-        public void Hide()
-        {
-            foreach (var itemView in _itemsViewList)
+            if (state)
             {
-                itemView.SetSelected(false);
+                _onResetTradeValue?.Invoke();
             }
-            SetButtonsInteraction(false);
-            gameObject.SetActive(false);
+            else
+            {
+                foreach (var itemView in _itemsViewList)
+                {
+                    itemView.SetSelected(false);
+                }
+                SetButtonsInteraction(false);
+            }
+
+            gameObject.SetActive(state);
         }
 
         public void UpdateStatus(string message)

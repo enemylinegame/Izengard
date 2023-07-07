@@ -165,9 +165,9 @@ namespace Code.BuildingSystem
         {
             foreach (ResourcePriceModel resourcePriceModel in buildingConfig.BuildingCost)
             {
-                if (_stock.CheckResourceInStock(resourcePriceModel.ResourceType, resourcePriceModel.Cost))
+                if (!_stock.CheckResourceInStock(resourcePriceModel.ResourceType, resourcePriceModel.Cost))
                 {
-                    _notificationUI.BasicTemporaryUIVisualization("you do not have enough resources to buy", 1000);
+                    _notificationUI.BasicTemporaryUIVisualization("you do not have enough resources to buy", 1);
                     return false;
                 }
             }
