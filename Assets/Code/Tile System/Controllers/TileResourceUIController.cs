@@ -50,11 +50,9 @@ namespace Code.TileSystem
             if (_controller.WorkerMenager.IsThereFreeWorkers(resourceView.Building) && 
                 _controller.TileModel.CurrentWorkersUnits < _controller.TileModel.MaxWorkers)
             {
-                IWorkerPreparation workerPreparation = null;
-
-                _controller.WorkerMenager.StartProduction(
+                _controller.WorkerMenager.StartMiningProduction(
                     _controller.View.transform.position,
-                    resourceView.Building, workerPreparation);
+                    resourceView.Building);
 
                 resourceValue++;
             }

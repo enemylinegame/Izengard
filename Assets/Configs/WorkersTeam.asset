@@ -17,4 +17,4 @@ MonoBehaviour:
   _smokeBreakTime: 5
   _timeToProcessWorkSec: 10
   _portionSize: 1
-  _craftWorkerPerformance: 0
+  _craftWorkerPerformance: 1
