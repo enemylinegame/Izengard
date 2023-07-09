@@ -63,10 +63,7 @@ namespace CombatSystem.DefenderStates
         public override void StartState()
         {
             _agent.ResetPath();
-            if (_targetsHolder.CurrentTarget == null && _targetsHolder.AttackingTargets.Count > 0)
-            {
-                _targetsHolder.CurrentTarget = _targetsHolder.AttackingTargets[0];
-            }
+            _targetSelector.SelectTarget();
         }
 
         // public override void OnDamaged(IDamageable attacker)
