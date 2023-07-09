@@ -5,7 +5,11 @@ namespace CombatSystem
 {
     public sealed class DefenderTargetsHolder
     {
-        public IDamageable CurrentTarget;
+        public IDamageable CurrentTarget
+        {
+            get; 
+            set;
+        }
         public List<IDamageable> TargetsInRange;
         public List<IDamageable> AttackingTargets;
         

@@ -22,17 +22,6 @@ namespace CombatSystem.DefenderStates
             _stopDistanceSqr = stopDistance * stopDistance + float.Epsilon;
         }
 
-
-        // public override void OnUpdate()
-        // {
-        //     Vector3 position = _transform.position;
-        //     position.y = _defenderUnit.DefendPosition.y;
-        //     if (( position - _defenderUnit.DefendPosition).sqrMagnitude > _stopDistanceSqr)
-        //     {
-        //         _setState(DefenderState.Going);
-        //     }
-        // }
-
         public override void OnDamaged(IDamageable attacker)
         {
             _setState(DefenderState.Pursuit);
