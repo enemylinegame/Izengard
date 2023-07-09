@@ -28,7 +28,6 @@ public class WorkerView : MonoBehaviour, IWorkerView
 
     public void GoToPlace(Vector3 place)
     {
-
         _animator.ResetTrigger(IDLE);
         _animator.SetTrigger(WALK);
         _navigationAgent.SetDestination(place);
@@ -36,10 +35,13 @@ public class WorkerView : MonoBehaviour, IWorkerView
 
     public bool IsOnThePlace()
     {
-        bool isOnThePlace = (_navigationAgent.destination - transform.position).magnitude < 
-            _distanceToBeginWork;
+        if (_navigationAgent.remainingDistance <= _distanceToBeginWork)
+        {
+            _navigationAgent.ResetPath();
+            return true;
+        }
 
-        return isOnThePlace;
+        return false;
     }
 
     public void ProduceWork()

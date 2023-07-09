@@ -19,6 +19,9 @@ namespace Controllers.Worker
 
         private void InitTask(Vector3 fromPlace, Vector3 target)
         {
+            fromPlace.y = 0.0f;
+            target.y = 0.0f;
+
             Model.StatrtingPlace = fromPlace;
             Model.TargetPlace = target;
 

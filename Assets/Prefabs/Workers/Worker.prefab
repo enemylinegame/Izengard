@@ -4387,6 +4387,7 @@ GameObject:
   - component: {fileID: -1529049577106757515}
   - component: {fileID: 2639540907965254609}
   - component: {fileID: 5444716667091924750}
+  - component: {fileID: -8970668400050150343}
   m_Layer: 0
   m_Name: Worker
   m_TagString: Untagged
@@ -4465,7 +4466,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 0.1
+  m_Speed: 0.2
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -4486,11 +4487,11 @@ CapsuleCollider:
   m_GameObject: {fileID: 188376}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.5
-  m_Height: 1
+  m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &5444716667091924750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4505,7 +4506,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 9577340}
   _navigationAgent: {fileID: -1529049577106757515}
-  _distanceToBeginWork: 0.01
+  _distanceToBeginWork: 0.1
+--- !u!208 &-8970668400050150343
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 188376}
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 1, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &188742
 GameObject:
   m_ObjectHideFlags: 0

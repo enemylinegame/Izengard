@@ -172,13 +172,19 @@ namespace Code.TileSystem
          {
             if (isOn)
             {
-                if(buildingUI.CurrentUnits >= building.MaxWorkers) return;
+                if(buildingUI.CurrentUnits >= building.MaxWorkers ||
+                    TileModel.CurrentWorkersUnits >= TileModel.MaxWorkers) 
+                    return;
+
+
                 if (!_productionManager.IsThereFreeWorkers(building))
                     return;
 
-                _productionManager.StartProduction(
+                _productionManager.StartFactoryProduction(
                     _tileView.gameObject.transform.position,
                      building, building.WorkerPreparation);
+
+                buildingUI.CurrentUnits += 1;
             }
             else
             {
@@ -186,10 +192,9 @@ namespace Code.TileSystem
                     return;
 
                 _productionManager.StopFirstFindedWorker(building);
+                buildingUI.CurrentUnits -= 1;
             }
 
-            buildingUI.CurrentUnits += isOn ? 1 : -1;
-             if(buildingUI.CurrentUnits <=0) buildingUI.CurrentUnits = 0;
              buildingUI.UnitsBusy.text = $"{buildingUI.CurrentUnits}/{building.MaxWorkers}";
          }
          private void LoadFloodedBuildings()

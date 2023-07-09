@@ -59,13 +59,36 @@ namespace Code.TileSystem
             return false;
         }
 
-        public bool StartProduction(Vector3 spawnPosition,
+        public bool StartFactoryProduction(Vector3 spawnPosition,
             ICollectable building,
             IWorkerPreparation preparation)
         {
-
-            int workId = BeginWork(spawnPosition, building.SpawnPosition,
+            int workId = SendWorkerToManufactory(spawnPosition, 
+                building.SpawnPosition,
                 building.ResourceType, preparation);
+
+            if (workId < 0)
+                return false;
+
+            _worksTable.Add(new WorkDescriptor
+            {
+                BuildingType = building.BuildingTypes,
+                ResourceType = building.ResourceType,
+                WorkId = workId
+            });
+
+            IncreaseWorksForBuilding(building.BuildingID);
+
+            OnWorksCountChanged.Invoke(++_worksAccount);
+            return true;
+        }
+
+        public bool StartMiningProduction(Vector3 spawnPosition,
+           ICollectable building)
+        {
+            int workId = SendWorkerToMine(
+                spawnPosition, building.SpawnPosition,
+                building.ResourceType, null);
 
             if (workId < 0)
                 return false;
@@ -192,57 +215,6 @@ namespace Code.TileSystem
 
             return _teamController.SendWorkerToWork(
                 workerInitPlace, workPlace, preparation, work);
-        }
-
-        private int BeginWork(Vector3 workerInitPlace, Vector3 workPlace,
-            ResourceType resource, IWorkerPreparation preparation)
-        {
-            switch (resource)
-            {
-                case ResourceType.Wood:
-                    {
-                        return SendWorkerToMine(workerInitPlace, workPlace,
-                            resource, preparation);
-                    }
-                case ResourceType.Iron:
-                    {
-                        return SendWorkerToMine(workerInitPlace, workPlace,
-                            resource, preparation);
-                    }
-                case ResourceType.Deer:
-                    {
-                        return SendWorkerToMine(workerInitPlace, workPlace,
-                            resource, preparation);
-                    }
-                case ResourceType.MagicStones:
-                    {
-                        return SendWorkerToMine(workerInitPlace, workPlace,
-                            resource, preparation);
-                    }
-                case ResourceType.Gold:
-                    {
-                        return SendWorkerToMine(workerInitPlace, workPlace,
-                            resource, preparation);
-                    }
-                case ResourceType.Horse:
-                    {
-                        return SendWorkerToManufactory(workerInitPlace, workPlace,
-                            resource, preparation);
-                    }
-                case ResourceType.Textile:
-                    {
-                        return SendWorkerToManufactory(workerInitPlace, workPlace,
-                            resource, preparation);
-                    }
-                case ResourceType.Steel:
-                    {
-                        return SendWorkerToManufactory(workerInitPlace, workPlace,
-                            resource, preparation);
-                    }
-            }
-
-            Debug.LogError("Unknown resource type");
-            return -1;
         }
     }
 }
