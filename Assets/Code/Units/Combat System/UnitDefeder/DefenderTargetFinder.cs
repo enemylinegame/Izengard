@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Code.TileSystem;
 using CombatSystem.Interfaces;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ namespace CombatSystem
         private readonly DefenderUnitStats _stats;
         private DefenderTargetsHolder _targetsHolder;
         private Transform _transform;
+        private Func<TileModel> _getTileDelegate;
 
         private LayerMask _targetMask = LayerMask.GetMask("Enemy");
         private float _range;
@@ -23,12 +25,13 @@ namespace CombatSystem
 
 
         public DefenderTargetFinder(GameObject defenderRoot, float range, DefenderTargetsHolder holder, 
-            DefenderUnitStats stats)
+            DefenderUnitStats stats, Func<TileModel> getTileDelegate)
         {
             _transform = defenderRoot.transform;
             _range = range;
             _targetsHolder = holder;
             _stats = stats;
+            _getTileDelegate = getTileDelegate;
         }
         
 
@@ -39,11 +42,12 @@ namespace CombatSystem
             if (_frequencyReductionCounter >= FREQUNCY_REDUCTION_FRAMES)
             {
                 _frequencyReductionCounter = 0;
-                DoSearch();
+                //DoSearchByCast();
+                DoSearchFromTileData();
             }
         }
         
-        private void DoSearch()
+        private void DoSearchByCast()
         {
             var targets = Physics.SphereCastAll(_transform.position, _range, Vector3.forward,
                 0.0f, _targetMask);
@@ -64,6 +68,28 @@ namespace CombatSystem
                     OnTargetsDetected?.Invoke();
                 }
             }
+        }
+
+        private void DoSearchFromTileData()
+        {
+            TileModel tile = _getTileDelegate();
+            var list = tile.EnemiesInTile;
+            float rangeSqr = _stats.VisionRange * _stats.VisionRange;
+            bool isDetected = false;
+            foreach (var target in list)
+            {
+                if ((target.Position - _transform.position).sqrMagnitude <= rangeSqr)
+                {
+                    _targetsHolder.TargetsInRange.Add(target);
+                    isDetected = true;
+                }
+            }
+            
+            if (isDetected)
+            {
+                OnTargetsDetected?.Invoke();
+            }
+
         }
 
         public bool IsTargetInRange(IDamageable target)

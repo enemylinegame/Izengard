@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Code.TileSystem;
+using CombatSystem.Interfaces;
 
 
 namespace CombatSystem
@@ -8,7 +9,7 @@ namespace CombatSystem
     public class EnemyTileDislocation
     {
         private readonly OnTriggerDetector _triggerDetector;
-        private Damageable _damageable;
+        private IDamageable _damageable;
 
         private List<TileModel> _contactedTiles = new List<TileModel>();
         private TileModel _currentTile;
