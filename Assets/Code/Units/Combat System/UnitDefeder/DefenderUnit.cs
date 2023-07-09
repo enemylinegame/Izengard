@@ -90,7 +90,8 @@ namespace CombatSystem
             _agent.speed = _unitStats.MovementSpeed;
             _animation = new DefenderAnimation(defender, this);
             _targetsHolder = new DefenderTargetsHolder();
-            _targetFinder = new DefenderTargetFinder(_defenderRootGO, _unitStats.VisionRange, _targetsHolder, _unitStats);
+            _targetFinder = new DefenderTargetFinder(_defenderRootGO, _unitStats.VisionRange, _targetsHolder, 
+                _unitStats, () => _tileModel);
             _targetFinder.OnTargetsDetected += AddedTargetInRange;
             _targetSelector = new DefenderTargetSelector(_defenderRootGO, _targetsHolder);
             
