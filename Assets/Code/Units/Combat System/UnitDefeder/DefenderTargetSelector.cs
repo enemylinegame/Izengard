@@ -35,7 +35,20 @@ namespace CombatSystem
 
             selectedTarget = SelectNearestTarget(targets);
 
-            _targetHolder.CurrentTarget = selectedTarget;
+            if (selectedTarget != null)
+            {
+                _targetHolder.CurrentTarget = selectedTarget;
+            }
+            else
+            {
+                IDamageable target = _targetHolder.CurrentTarget;
+                if (target != null && target.IsDead)
+                {
+                    _targetHolder.CurrentTarget = null;
+                }
+                selectedTarget = _targetHolder.CurrentTarget;
+            }
+
             return selectedTarget;
         }
 

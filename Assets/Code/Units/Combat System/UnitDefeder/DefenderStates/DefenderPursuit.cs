@@ -33,7 +33,18 @@ namespace CombatSystem.DefenderStates
                 target = _targetSelector.SelectTarget();
             }
 
-            if (target != null && !target.IsDead )
+            if (target == null)
+            {
+                _agent.ResetPath();
+                _setState(DefenderState.Going);
+            }
+            else if (target.IsDead)
+            {
+                _targetsHolder.CurrentTarget = null;
+                _agent.ResetPath();
+                _setState(DefenderState.Going);
+            }
+            else
             {
                 if (_targetFinder.IsTargetInRange(target))
                 {
@@ -46,20 +57,16 @@ namespace CombatSystem.DefenderStates
                     _agent.SetDestination(target.Position);
                 }
             }
-            else
-            {
-                if (target != null)
-                {
-                    _targetsHolder.CurrentTarget = null;
-                }
-                _agent.ResetPath();
-                _setState(DefenderState.Going);
-            }
+
         }
 
         public override void StartState()
         {
             _agent.ResetPath();
+            if (_targetsHolder.CurrentTarget == null && _targetsHolder.AttackingTargets.Count > 0)
+            {
+                _targetsHolder.CurrentTarget = _targetsHolder.AttackingTargets[0];
+            }
         }
 
         // public override void OnDamaged(IDamageable attacker)
