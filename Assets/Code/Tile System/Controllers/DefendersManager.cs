@@ -189,7 +189,7 @@ namespace Code.TileSystem
             {
                 HireConcreteDefender(_defendersSet.Defenders[index]);
             }
-            CloseHireDefenderPanel();
+            //CloseHireDefenderPanel();
         }
 
         private void CloseHireDefenderPanel()

@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fireRate: 0.5
   _rayOffset: 4.8
-  _damage: 200
+  _damage: 5
   _bulletSpeed: 7.7
   _countBullet: 14
