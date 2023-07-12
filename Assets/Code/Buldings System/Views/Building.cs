@@ -15,6 +15,7 @@ public class Building : BaseBuildAndResources, ICollectable
     
     public float CollectTime { get; set; }
     public int MaxWorkers { get; set; }
+    public int WorkersCount { get; set; }
     public string VisibleName { get; set; }
     public string Name { get; set; }
 

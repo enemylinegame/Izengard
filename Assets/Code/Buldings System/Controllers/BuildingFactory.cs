@@ -83,8 +83,8 @@ namespace Code.BuildingSystem
             var buildingToRemove = buildings.Find(kvp => kvp.BuildingID == buildingUI.BuildingID);
             
             buildingUI.DestroyBuildingInfo.onClick.RemoveAllListeners();
-            buildingUI.PlusUnit.onClick.RemoveAllListeners();
-            buildingUI.MinusUnit.onClick.RemoveAllListeners();
+            buildingUI.PlusUnitButton.onClick.RemoveAllListeners();
+            buildingUI.MinusUnitButton.onClick.RemoveAllListeners();
                 
             _uiController.DestroyBuildingInfo.Remove(buildingUI.gameObject);
             tileController.WorkerMenager.StopAllProductions(

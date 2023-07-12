@@ -14,6 +14,9 @@ namespace Code.TileSystem
         [SerializeField] private Button _destroy;
         [SerializeField] private TMP_Text _unitMax;
 
+        private int _workersAccount;
+        private int _maxWorkersAccount;
+
         public Image Icon => _icon;
         public TMP_Text LvlText => _LVLText;
         public TMP_Text NameTile
@@ -22,8 +25,30 @@ namespace Code.TileSystem
             set => _nameTile = value;
         }
 
-        public TMP_Text UnitMax => _unitMax;
         public Button Upgrade => _upgrade;
         public Button Destroy => _destroy;
+
+        public int WorkersCount
+        {
+            set 
+            {
+                _workersAccount = value;
+                SetWorkersAccountText();
+            }
+        }
+
+        public int MaxWorkersCount
+        {
+            set 
+            {
+                _maxWorkersAccount = value;
+                SetWorkersAccountText();
+            }
+        }
+
+        private void SetWorkersAccountText()
+        {
+            _unitMax.text = $"{_workersAccount}/{_maxWorkersAccount} Units";
+        }
     }
 }

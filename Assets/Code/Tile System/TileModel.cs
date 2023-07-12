@@ -19,7 +19,7 @@ namespace Code.TileSystem
         public TileConfig SaveTileConfig { get; set; }
         public int MaxWorkers => TileConfig.MaxUnits;
         public int MaxWarriors => MAX_WARRIORS;
-        public int CurrentWorkersUnits { get; set; }
+        public int WorkersCount { get; set; }
         
         
         public void Init()
