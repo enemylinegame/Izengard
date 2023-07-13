@@ -29,7 +29,7 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
 
 
     public WaveController(GeneratorLevelController levelGenerator, UIController controller, Transform btnParents, 
-        GameConfig gameConfig, BulletsController bulletsController)
+        GameConfig gameConfig, BulletsController bulletsController, EnemyDestroyObserver destroyObserver)
     {
         _levelGenerator = levelGenerator;
         _btnParents = btnParents;
@@ -38,7 +38,8 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
         _bulletsController = bulletsController;
         
         _waveGathering = new WaveGatheringController(_levelGenerator, _enemyAIController, _bulletsController, gameConfig);
-        _sendingEnemys = new SendingEnemies(_enemyAIController, _levelGenerator, gameConfig.BattlePhaseConfig.EnemySpawnSettings);
+        _sendingEnemys = new SendingEnemies(_enemyAIController, _levelGenerator, 
+            gameConfig.BattlePhaseConfig.EnemySpawnSettings, destroyObserver);
         _combatPhaseWaiting = new CombatPhaseWaiting(_sendingEnemys);
         _combatPhaseWaiting.PhaseEnded += OnCombatPhaseEnding;
 

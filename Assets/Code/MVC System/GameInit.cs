@@ -11,6 +11,7 @@ using EquipmentSystem;
 using ResourceMarket;
 using ResourceSystem;
 using UnityEngine;
+using Wave;
 
 public class GameInit
 {
@@ -39,6 +40,7 @@ public class GameInit
         /* Market */
         var marketController = new MarketController(uiController, globalResStock, buildingController, marketData);
 
+        var enemyDestroyObserver = new EnemyDestroyObserver(globalResStock);
         var unitController = new UnitController();
         var timeRemaining = new TimeRemainingController();
         var towershotcontroller = new TowerShotController(towerShotConfig, levelGenerator, gameConfig.Bullet);
@@ -46,7 +48,8 @@ public class GameInit
         var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, 
             hireSystemView, levelGenerator);
         var bulletsController = new BulletsController();
-        var waveController = new WaveController(levelGenerator, uiController, btnParents, gameConfig, bulletsController);
+        var waveController = new WaveController(levelGenerator, uiController, btnParents, gameConfig, 
+            bulletsController, enemyDestroyObserver);
         var endGameController = new EndGameController(endGameScreen, levelGenerator);
         
         var workersTeamComtroller = new WorkersTeamController(

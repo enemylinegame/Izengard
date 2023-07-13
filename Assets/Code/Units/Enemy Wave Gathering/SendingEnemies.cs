@@ -23,15 +23,18 @@ namespace Wave
 
         private readonly IEnemyAIController _enemyAIController;
         private readonly GeneratorLevelController _levelGenerator;
+        private readonly EnemyDestroyObserver _enemyDestroyObserver;
 
 
-        public SendingEnemies(IEnemyAIController enemyAIController, GeneratorLevelController levelGenerator, EnemySpawnSettings enemySpawnSettings)
+        public SendingEnemies(IEnemyAIController enemyAIController, GeneratorLevelController levelGenerator, 
+            EnemySpawnSettings enemySpawnSettings, EnemyDestroyObserver enemyDestroyObserver)
         {
             _enemySpawnSettings = enemySpawnSettings;//Resources.Load<EnemySpawnSettings>(nameof(EnemySpawnSettings));
             LifeEnemys = new HashSet<IEnemyController>();
 
             _enemyAIController = enemyAIController;
             _levelGenerator = levelGenerator;
+            _enemyDestroyObserver = enemyDestroyObserver;
         }
 
         public void OnUpdate(float deltaTime)
@@ -83,6 +86,7 @@ namespace Wave
         {
             LifeEnemys.Remove(enemy);
             enemy.OnEnemyDead -= OnEnemyDead;
+            _enemyDestroyObserver.EnemyDestroyed(enemy.Enemy);
         }
 
         private void SetEnemyNavMesh(IEnemyController enemy, Vector3 spawnPosition)
