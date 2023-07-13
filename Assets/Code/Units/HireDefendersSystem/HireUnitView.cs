@@ -16,18 +16,22 @@ namespace Code.Units.HireDefendersSystem
         private List<Button> _hireButtons = new List<Button>();
         private List<Image> _hireButtonsImages = new List<Image>();
 
+        private bool _isVisible;
 
         public HireUnitView(HireUnitUIView hireUnitUIView)
         {
             _hireUnitUIView = hireUnitUIView;
             _emptySlotBackground = _hireUnitUIView.HireButton.transform.GetComponent<Image>().sprite;
             _hireUnitUIView.HireButton.gameObject.SetActive(false);
+            _isVisible = false;
             _hireUnitUIView.Root.SetActive(false);
         }
 
         public void Show(List<Sprite> sprites)
         {
+            if (_isVisible) return;
             _hireUnitUIView.Root.SetActive(true);
+            _isVisible = true;
             _hireUnitUIView.CloseButton.onClick.AddListener(CloseButtonClick);
             for (int index = 0; index < sprites.Count; index++)
             {
@@ -46,6 +50,7 @@ namespace Code.Units.HireDefendersSystem
                 _hireButtons[index].gameObject.SetActive(false);
             }
             _hireUnitUIView.Root.SetActive(false);
+            _isVisible = false;
             _hireUnitUIView.CloseButton.onClick.RemoveAllListeners();
         }
 
