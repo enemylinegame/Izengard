@@ -61,8 +61,9 @@ public class GameInit
         var defenderController = new DefendersController(bulletsController);
         var tileResourceUIController = new TileResourceUIController(uiController, inputController, tileController, gameConfig);
         var hireUnitView = new HireUnitView(rightUI.HireUnits);
+        var paymentDefendersSystem = new PaymentDefendersSystem(globalResStock);
         var defendersAssignController = new DefendersManager(tileController, defenderController, uiController, 
-            hireUnitView, gameConfig.DefendersSets);
+            hireUnitView, gameConfig.DefendersSets, paymentDefendersSystem);
         inputController.Add(defendersAssignController);
         
         if (!gameConfig.ChangeVariant) new ResourceGenerator(/*buildController.Buildings, */gameConfig, levelGenerator, buildingController);

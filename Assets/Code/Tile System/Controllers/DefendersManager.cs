@@ -17,6 +17,7 @@ namespace Code.TileSystem
         private readonly IDefendersControll _defendersController;
         private readonly WarsView _warsView;
         private readonly HireUnitView _hireUnitView;
+        private readonly PaymentDefendersSystem _paymentSystem;
 
         private DefendersSet _defendersSet;
         
@@ -29,7 +30,8 @@ namespace Code.TileSystem
         
 
         public DefendersManager(TileController tileController, IDefendersControll defendersController, 
-            UIController uiController, HireUnitView hireUnitView, DefendersSet defendersSet)
+            UIController uiController, HireUnitView hireUnitView, DefendersSet defendersSet, 
+            PaymentDefendersSystem paymentSystem)
         {
             _tileController = tileController;
             _defendersController = defendersController;
@@ -39,6 +41,7 @@ namespace Code.TileSystem
             _hireUnitView = hireUnitView;
             _hireUnitView.OnHireButtonClick += HireDefenderButtonClick;
             _hireUnitView.OnCloseButtonClick += CloseHireDefenderPanel;
+            _paymentSystem = paymentSystem;
         }
 
 
@@ -124,10 +127,13 @@ namespace Code.TileSystem
             int unitsQuantity = defendersOnTile.Count;
             if (unitsQuantity < SelectedTileModel.MaxWarriors)
             {
-                var unit = _defendersController.CreateDefender(SelectedTileView, settings);
-                defendersOnTile.Add(unit);
-                unit.Tile = SelectedTileModel; 
-                unit.DefenderUnitDead += DefenderDead;
+                if (_paymentSystem.PayForDefender(settings.HireCost))
+                {
+                    var unit = _defendersController.CreateDefender(SelectedTileView, settings);
+                    defendersOnTile.Add(unit);
+                    unit.Tile = SelectedTileModel;
+                    unit.DefenderUnitDead += DefenderDead;
+                }
             }
             _warsView.UpdateDefenders();
         }
