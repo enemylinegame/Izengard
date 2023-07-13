@@ -13,6 +13,6 @@ namespace CombatSystem
         [field: SerializeField] public GameObject Prefab { get; private set; }
         [field: SerializeField] public Sprite Icon { get; private set; }
         [field: SerializeField] public GameObject SelectVisualEffectPrefab { get; private set; }
-        [field: SerializeField] public List<ResourcePriceModel> BuildingCost;
+        [field: SerializeField] public List<ResourcePriceModel> HireCost;
     }
 }
