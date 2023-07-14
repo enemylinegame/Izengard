@@ -33,20 +33,20 @@ namespace Views.BuildBuildingsUI
             set
             {
                 _maxWorkers = value;
-                SetBuisyUnitsText();
+                SetBusyUnitsText();
             }
         }
 
-        public int WorkersAccount
+        public int WorkersСount
         {
             set 
             {
                 _workersAccount = value;
-                SetBuisyUnitsText();
+                SetBusyUnitsText();
             }
         }
 
-        private void SetBuisyUnitsText()
+        private void SetBusyUnitsText()
         {
             _unitsBusy.text = $"{_workersAccount}/{_maxWorkers}";
         }
