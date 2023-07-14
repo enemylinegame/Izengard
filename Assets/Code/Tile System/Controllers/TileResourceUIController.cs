@@ -1,80 +1,75 @@
 ﻿using Code.UI;
 using Code.Player;
-using UnityEngine;
+
 
 namespace Code.TileSystem
 {
     public class TileResourceUIController : IOnTile, ITileLoadInfo
     {
-        private ResourcesLayoutUIView _uiController;
-        private TileController _controller;
-        private TileResouceUIFactory _factory;
+        private ResourcesLayoutUIView _resourceUiView;
+        private TileController _tileController;
+        private TileResouceUIFactory _resourceFactory;
 
         public TileResourceUIController(UIController uiController, 
             InputController inputController, TileController controller, GameConfig gameConfig)
         {
-            _uiController = uiController.BottomUI.ResourcesLayoutUIView;
-            _controller = controller;
-            _factory = new TileResouceUIFactory(uiController, this, controller, gameConfig);
+            _resourceUiView = uiController.BottomUI.ResourcesLayoutUIView;
+            _tileController = controller;
+            _resourceFactory = new TileResouceUIFactory(uiController, this, controller, gameConfig);
             inputController.Add(this);
             
         }
-        
         public void LoadInfoToTheUI(TileView tile)
         {
-            _uiController.Resources.ForEach(res => AddNewLayoutElement(res));
-            _factory.LoadInfoToTheUI(tile);
+            _resourceUiView.Resources.ForEach(res => AddNewLayoutElement(res));
+            _resourceFactory.LoadInfoToTheUI(tile);
         }
 
         public void Cancel()
         {
-            if(_uiController.Resources == null) return;
+            if(_resourceUiView.Resources == null) 
+                return;
             
-            foreach (ResourceView res in _uiController.Resources)
+            foreach (ResourceView res in _resourceUiView.Resources)
             {
                 res.ResourceAddButton.onClick.RemoveAllListeners();
                 res.ResourceRemoveButton.onClick.RemoveAllListeners();
             }
-            _factory.Cancel();
+            _resourceFactory.Cancel();
         }
 
         public void AddNewLayoutElement(ResourceView res)
         {
-            res.ResourceAddButton.onClick.AddListener(() => AddResource(res));
-            res.ResourceRemoveButton.onClick.AddListener(() => RemoveResource(res));
+            res.ResourceAddButton.onClick.AddListener(() => AddResourceWorker(res));
+            res.ResourceRemoveButton.onClick.AddListener(() => RemoveResourceWorker(res));
         }
 
-        private void AddResource(ResourceView resourceView)
+        private void AddResourceWorker(ResourceView resourceView)
         {
-            int resourceValue = resourceView.ResourceCurrentValueInt;
-            if (_controller.WorkerMenager.IsThereFreeWorkers(resourceView.Building) && 
-                _controller.TileModel.CurrentWorkersUnits < _controller.TileModel.MaxWorkers)
-            {
-                _controller.WorkerMenager.StartMiningProduction(
-                    _controller.View.transform.position,
-                    resourceView.Building);
+            var building = resourceView.Building;
+            if (!_tileController.IsThereFreeWorkers(building))
+                return;
 
-                resourceValue++;
-            }
-            resourceView.Building.MineralConfig.CurrentMineValue = resourceValue;
-            resourceView.ResourceCurrentValueString = $"{resourceValue}";
+            _tileController.WorkerMenager.StartMiningProduction(
+                _tileController.View.transform.position,
+                building);
+
+            _tileController.IncrementWorkersAccount(building);
+
+            resourceView.WorkersCount = building.WorkersCount;
         }
-        
-        private void RemoveResource(ResourceView resourceView)
+
+        private void RemoveResourceWorker(ResourceView resourceView)
         {
-            int resourceValue = resourceView.ResourceCurrentValueInt;
+            var building = resourceView.Building;
+            if (!_tileController.IsThereBusyWorkers(building))
+                return;
 
-            if (resourceValue > 0 && 
-                _controller.WorkerMenager.IsThereBusyWorkers(
-                    resourceView.Building))
-            {
-                _controller.WorkerMenager.StopFirstFindedWorker(
-                    resourceView.Building);
-                resourceValue--;
-            }
+            _tileController.WorkerMenager.StopFirstFindedWorker(
+                building);
+            _tileController.DecrementWorkersAccount(building);
 
-            resourceView.Building.MineralConfig.CurrentMineValue = resourceValue;
-            resourceView.ResourceCurrentValueString = resourceValue.ToString();
+            resourceView.WorkersCount = building.WorkersCount;
         }
     }
 }

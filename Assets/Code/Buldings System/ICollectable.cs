@@ -13,6 +13,7 @@ namespace Code.BuildingSystem
         float CollectTime { get; set; }
         Sprite Icon { get; set; }
         int MaxWorkers { get; set; }
+        int WorkersCount { get; set; }
         int BuildingID { get; set; }
         string VisibleName { get; set; }
         string Name { get; set; }

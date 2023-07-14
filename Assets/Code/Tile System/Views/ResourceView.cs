@@ -19,15 +19,6 @@ namespace Code.TileSystem
         public ResourceType ResourceType { get; set; }
         public ICollectable Building { get; set; }
 
-        public string ResourceCurrentValueString
-        {
-            get { return _resourceCurrentValue.text; }
-            set { _resourceCurrentValue.text = value; }
-        }
-        public int ResourceCurrentValueInt
-        {
-            get { return Convert.ToInt32(_resourceCurrentValue.text); }
-        }
         public string ResourceTextString
         {
             get { return _resourceText.text; }
@@ -40,6 +31,11 @@ namespace Code.TileSystem
         public Button ResourceRemoveButton
         {
             get { return _resourceRemoveButton; }
+        }
+
+        public int WorkersCount
+        {
+            set { _resourceCurrentValue.text = $"{value}"; }
         }
 
 
