@@ -21,4 +21,4 @@ MonoBehaviour:
     RunSpeed: 1
     Cost: 5
     Gold: 5
-  <Prefab>k__BackingField: {fileID: 1548683655444547302, guid: 1bbc60aa227b8914baf4fb553e7649c5, type: 3}
+  <Prefab>k__BackingField: {fileID: 163804, guid: 91367098b0cfd6d468017e15613b1170, type: 3}
