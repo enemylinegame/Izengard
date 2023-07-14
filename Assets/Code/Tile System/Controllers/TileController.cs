@@ -19,7 +19,7 @@ namespace Code.TileSystem
         private TileView _tileView;
 
 
-        private ITextVisualizationOnUI _textVisualization;
+        private ITextVisualizationOnUI _playerNotificationSystem;
         private BuildingFactory _buildingFactory;
         private InputController _inputController;
         private UIController _uiController;
@@ -39,7 +39,7 @@ namespace Code.TileSystem
         {
             _productionManager = productionManager;
 
-            _textVisualization = uiController.CenterUI.BaseNotificationUI;
+            _playerNotificationSystem = uiController.CenterUI.BaseNotificationUI;
             _list = tileList;
             _uiView = uiController.BottomUI.TileUIView;
             _uiController = uiController;
@@ -320,7 +320,7 @@ namespace Code.TileSystem
             int currentLevel = TileModel.SaveTileConfig.TileLvl.GetHashCode();
             if (currentLevel == _list.LVLList.Count)
             {
-                _textVisualization.BasicTemporaryUIVisualization("Max LVL", 2);
+                _playerNotificationSystem.BasicTemporaryUIVisualization("Max LVL", 2);
                 return;
             }
             
