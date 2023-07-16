@@ -52,7 +52,7 @@ namespace Code.TileSystem
             GameObject resourceUIObject = GameObject.Instantiate(resourceUIElement, _layoutTransform);
             resourceUIObjectView = resourceUIObject.GetComponent<ResourceView>();
             resourceUIObjectView.InitViewData(mineralConfig.ResourceType.ToString(),
-                _tileController.WorkerMenager.GetAssignedWorkers(mineralConfig), mineralConfig);
+                mineralConfig.WorkersCount, mineralConfig);
 
             _resourcesLayoutUIView.Resources.Add(resourceUIObjectView);
             _tileResourceController.AddNewLayoutElement(resourceUIObjectView);
@@ -60,10 +60,7 @@ namespace Code.TileSystem
 
         private void AddNewLayoutElement(ICollectable mineralConfig)
         {
-            
-
             CreateResourceUIOnLayout(_gameConfig.Res, mineralConfig);
-            
         }
         private void RemoveLayoutElement(MineralConfig mineralConfig)
         {
