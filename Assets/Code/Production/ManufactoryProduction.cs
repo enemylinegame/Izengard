@@ -1,12 +1,14 @@
 using ResourceSystem;
+using System;
 
 public class ManufactoryProduction : IWorkerWork
 {
-    public ManufactoryProduction(GlobalStock stock, ResourceType resourceType, 
+    public ManufactoryProduction(GlobalStock stock, 
+        Prescription prescription, 
         float productionEfficiency)
     {
         _globalStock = stock;
-        _resourceType = resourceType;
+        _prescription = prescription;
         _productionEfficiency = productionEfficiency;
     }
 
@@ -18,14 +20,30 @@ public class ManufactoryProduction : IWorkerWork
         if (portion > 0)
         {
             _produced -= portion;
-            _globalStock.AddResourceToStock(_resourceType, (int)portion);
+
+            if (IsPrescriptCanBeDone(_prescription))
+            {
+                UtilizeResources();
+                _globalStock.AddResourceToStock(_prescription.TargetResource,
+                    (int)portion);
+            }
         }
     }
 
+    public bool IsPrescriptCanBeDone(Prescription prescription)
+    {
+        throw new NotImplementedException();
+        return true;
+    }
+
+    public void UtilizeResources()
+    {
+        throw new NotImplementedException();
+    }
 
     private float _produced;
 
     private float _productionEfficiency;
     private GlobalStock _globalStock;
-    private ResourceType _resourceType;
+    private Prescription _prescription;
 }

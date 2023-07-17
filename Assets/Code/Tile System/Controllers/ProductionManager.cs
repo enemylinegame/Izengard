@@ -16,6 +16,7 @@ namespace Code.TileSystem
 
         private int _mineWorkerPortionSize;
         private float _craftWorkerEfficiency;
+        private PrescriptionsStorage _prescriptionsStorage;
 
         private sealed class WorkDescriptor
         {
@@ -25,9 +26,11 @@ namespace Code.TileSystem
         }
 
         public ProductionManager(GlobalStock globalStock,
-            WorkersTeamController teamController, WorkersTeamConfig workerConfig)
+            WorkersTeamController teamController, WorkersTeamConfig workerConfig,
+            PrescriptionsStorage prescriptionsStorage)
         {
             _teamController = teamController;
+            _prescriptionsStorage = prescriptionsStorage;
             _globalStock = globalStock;
 
             _worksTable = new List<WorkDescriptor>();
@@ -128,11 +131,15 @@ namespace Code.TileSystem
                 workerInitPlace, workPlace, preparation, workerTask);
         }
 
-        private int SendWorkerToManufactory(Vector3 workerInitPlace, Vector3 workPlace,
+        private int SendWorkerToManufactory(
+            Vector3 workerInitPlace, Vector3 workPlace,
             ResourceType resourceType, IWorkerPreparation preparation)
         {
+            var prescription = _prescriptionsStorage.GetPrescription(
+                resourceType);
+
             IWorkerWork work = new ManufactoryProduction(
-                _globalStock, resourceType, _craftWorkerEfficiency);
+                _globalStock, prescription, _craftWorkerEfficiency);
 
             return _teamController.SendWorkerToWork(
                 workerInitPlace, workPlace, preparation, work);
