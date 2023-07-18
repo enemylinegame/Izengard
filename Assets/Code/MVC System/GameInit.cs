@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Code.BuildingSystem;
 using Code.Player;
 using Code.QuickOutline.Scripts;
@@ -24,7 +25,9 @@ public class GameInit
         MarketDataConfig marketData, MarketView marketView)
     {
         //TODO Do not change the structure of the script
-        var tiles = GetTileList.GetTiles(gameConfig);
+        //var tiles = GetTileList.GetTiles(gameConfig);
+        var tiles = GetTiles(gameConfig);
+
         var outlineController = new OutlineController(outLineSettings);
         var globalResStock = new GlobalStock(globalResourceList.GlobalResourceConfigs, topResUiVew);
         var btnConroller = new BtnUIController(rightUI, gameConfig);
@@ -45,27 +48,27 @@ public class GameInit
         var timeRemaining = new TimeRemainingController();
         var towershotcontroller = new TowerShotController(towerShotConfig, levelGenerator, gameConfig.Bullet);
         var eqScreenController = new EquipScreenController(equipScreenView, camera);
-        var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, 
+        var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController,
             hireSystemView, levelGenerator);
         var bulletsController = new BulletsController();
-        var waveController = new WaveController(levelGenerator, uiController, btnParents, gameConfig, 
+        var waveController = new WaveController(levelGenerator, uiController, btnParents, gameConfig,
             bulletsController, enemyDestroyObserver);
         var endGameController = new EndGameController(endGameScreen, levelGenerator);
-        
+
         var workersTeamComtroller = new WorkersTeamController(
             workersTeamConfig);
         var productionManager = new ProductionManager(
             globalResStock, workersTeamComtroller, workersTeamConfig);
-        var tileController = new TileController(tileList, uiController, 
+        var tileController = new TileController(tileList, uiController,
             buildingController, inputController, productionManager);
         var defenderController = new DefendersController(bulletsController);
         var tileResourceUIController = new TileResourceUIController(uiController, inputController, tileController, gameConfig);
         var hireUnitView = new HireUnitView(rightUI.HireUnits);
         var paymentDefendersSystem = new PaymentDefendersSystem(globalResStock);
-        var defendersAssignController = new DefendersManager(tileController, defenderController, uiController, 
+        var defendersAssignController = new DefendersManager(tileController, defenderController, uiController,
             hireUnitView, gameConfig.DefendersSets, paymentDefendersSystem);
         inputController.Add(defendersAssignController);
-        
+
         if (!gameConfig.ChangeVariant) new ResourceGenerator(/*buildController.Buildings, */gameConfig, levelGenerator, buildingController);
         else new ResourceGenerator(/*.Buildings, */gameConfig, levelGenerator, buildingController, 2);
 
@@ -90,5 +93,18 @@ public class GameInit
 
         // var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
         // controller.Add(testDummyTargetController);
+    }
+
+    private List<VoxelTile> GetTiles(GameConfig gameConfig)
+    {
+        var resultList = new List<VoxelTile>();
+        var pos = Vector3.zero;
+        foreach (var tile in gameConfig.TilePrefabs)
+        {
+            pos += Vector3.back * 5f;
+            resultList.Add(GameObject.Instantiate(tile, pos, Quaternion.identity));
+        }
+
+        return resultList;
     }
 }

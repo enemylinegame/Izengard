@@ -82,7 +82,8 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
             TowerShot = mainBuilding.GetComponentInChildren<TowerShotBehavior>();
             firstTile.TileView.TileModel.HouseType = HouseType.All;
         }
-        MainBuilding.Init(1000);
+      //  MainBuilding.Init(1000);
+        MainBuilding.Init(100);
     }
     public void OnLateUpdate(float deltaTime)
     {

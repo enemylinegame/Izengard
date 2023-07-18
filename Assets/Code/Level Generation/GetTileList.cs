@@ -16,4 +16,10 @@ public static class GetTileList
 
         return _tiles;
     }
+
+    public static void ClearTiles()
+    {
+        pos = Vector3.zero;
+        _tiles.Clear();
+    }
 }
