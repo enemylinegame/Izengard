@@ -19,7 +19,6 @@ MonoBehaviour:
     <InitialAmount>k__BackingField: 100
     <ExchangeAmount>k__BackingField: 10
     <ExchangeRate>k__BackingField: 100
-    <MinExchange>k__BackingField: 50
     <ExchangeCoef>k__BackingField: 0.45
     <Name>k__BackingField: Wood
     <ErrorMessage>k__BackingField: "\u041D\u0443\u0436\u043D\u043E \u0431\u043E\u043B\u044C\u0448\u0435
@@ -30,7 +29,6 @@ MonoBehaviour:
     <InitialAmount>k__BackingField: 200
     <ExchangeAmount>k__BackingField: 10
     <ExchangeRate>k__BackingField: 200
-    <MinExchange>k__BackingField: 50
     <ExchangeCoef>k__BackingField: 0.45
     <Name>k__BackingField: Iron
     <ErrorMessage>k__BackingField: "\u041D\u0443\u0436\u043D\u043E \u0431\u043E\u043B\u044C\u0448\u0435
@@ -41,7 +39,6 @@ MonoBehaviour:
     <InitialAmount>k__BackingField: 200
     <ExchangeAmount>k__BackingField: 5
     <ExchangeRate>k__BackingField: 200
-    <MinExchange>k__BackingField: 50
     <ExchangeCoef>k__BackingField: 0.35
     <Name>k__BackingField: Deer
     <ErrorMessage>k__BackingField: "\u041D\u0443\u0436\u043D\u043E \u0431\u043E\u043B\u044C\u0448\u0435
@@ -52,7 +49,6 @@ MonoBehaviour:
     <InitialAmount>k__BackingField: 200
     <ExchangeAmount>k__BackingField: 1
     <ExchangeRate>k__BackingField: 200
-    <MinExchange>k__BackingField: 50
     <ExchangeCoef>k__BackingField: 0.35
     <Name>k__BackingField: Magic Stone
     <ErrorMessage>k__BackingField: "\u041D\u0435 \u0445\u0432\u0430\u0442\u0430\u0435\u0442

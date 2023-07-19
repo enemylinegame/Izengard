@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace ResourceMarket
 {
-    public sealed class MarketController : IOnController, IOnUpdate, IDisposable
+    public sealed class MarketController : IOnController, IOnUpdate, IOnStart, IDisposable
     {
         private readonly List<IMarketItem> _marketItems = new List<IMarketItem>();
 
@@ -19,12 +19,12 @@ namespace ResourceMarket
         private readonly IMarketDataProvider _marketDataProvider;
         private readonly IMarketItemFactory _itemFactory;
 
+        private readonly TimeRemaining _resetTimer;
 
         private int _currentGold;
         private int _tradeValue;
-        private float _restoreTime;
-        private float _restoreTimer = 0f;
 
+        private float _restoreTimer;
         public float RestoreTimer 
         {
             get => _restoreTimer;
@@ -87,8 +87,7 @@ namespace ResourceMarket
             _view.InitViewData(marketData.MarketTierData, tierOneItems, tierTwoItems, tierthreeItems);
             _view.InitViewAction(OnBuyItem, OnSellItem, OnIncreaseTradeValue, OnDecreaseTradeValue, ResetTradeValue, OnCloseMarket);
 
-            _restoreTime = marketData.MarketRestoreValueDelay;
-            RestoreTimer = _restoreTime;
+            _resetTimer = new TimeRemaining(RestoreValues, marketData.MarketRestoreValueDelay, true);
         }
 
         private void OnGoldChange(ResourceType resourceType, int value)
@@ -173,31 +172,29 @@ namespace ResourceMarket
             _uiController.IsWorkUI(UIType.Market, false);
         }
 
-        public void ShowView()
-        {
-            _uiController.IsWorkUI(UIType.Market, true);
-        }
-
-        public void OnUpdate(float deltaTime)
-        {
-            RestoreTimer -= deltaTime;
-
-            if (RestoreTimer <= 0)
-            {
-                RestoreValues();
-                RestoreTimer = _restoreTime;
-            }
-        }
-
         private void RestoreValues()
         {
-            foreach(var item in _marketItems)
+            foreach (var item in _marketItems)
             {
                 item.RestoreValue();
             }
             ResetTradeValue();
         }
 
+        public void ShowView()
+        {
+            _uiController.IsWorkUI(UIType.Market, true);
+        }
+        public void OnStart()
+        {
+            TimeRemainingExtensions.AddTimeRemaining(_resetTimer);
+        }
+  
+        public void OnUpdate(float deltaTime)
+        {
+            RestoreTimer = _resetTimer.CurrentTime;
+        }
+  
         public void Dispose()
         {
             _stock.ResourceValueChanged -= OnGoldChange;
@@ -205,8 +202,10 @@ namespace ResourceMarket
             _marketDataProvider.OnMarketAmountChange -= _view.UpdateMarketAmount;
 
             _uiController.RightUI.OpenMarketButton.onClick.RemoveListener(ShowView);
-            
+
+            TimeRemainingExtensions.RemoveTimeRemaining(_resetTimer);
+
             _view.Deinit();
-        }
+        }  
     }
 }
