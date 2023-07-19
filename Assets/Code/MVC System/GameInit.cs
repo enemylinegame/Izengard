@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Code.BuildingSystem;
 using Code.Player;
 using Code.QuickOutline.Scripts;
@@ -25,8 +24,7 @@ public class GameInit
         MarketDataConfig marketData, MarketView marketView)
     {
         //TODO Do not change the structure of the script
-        //var tiles = GetTileList.GetTiles(gameConfig);
-        var tiles = GetTiles(gameConfig);
+        var tiles = GetTileList.GetTiles(gameConfig);
 
         var outlineController = new OutlineController(outLineSettings);
         var globalResStock = new GlobalStock(globalResourceList.GlobalResourceConfigs, topResUiVew);
@@ -93,18 +91,5 @@ public class GameInit
 
         // var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
         // controller.Add(testDummyTargetController);
-    }
-
-    private List<VoxelTile> GetTiles(GameConfig gameConfig)
-    {
-        var resultList = new List<VoxelTile>();
-        var pos = Vector3.zero;
-        foreach (var tile in gameConfig.TilePrefabs)
-        {
-            pos += Vector3.back * 5f;
-            resultList.Add(GameObject.Instantiate(tile, pos, Quaternion.identity));
-        }
-
-        return resultList;
     }
 }
