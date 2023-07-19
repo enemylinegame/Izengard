@@ -3,6 +3,10 @@ using ResourceSystem;
 
 public class MiningProduction : IWorkerTask
 {
+    private int _portionSize;
+    private GlobalStock _globalStock;
+    private ResourceType _resourceType;
+
     public MiningProduction(GlobalStock stock, ResourceType resourceType,
         int portionSize)
     {
@@ -16,7 +20,8 @@ public class MiningProduction : IWorkerTask
         _globalStock.AddResourceToStock(_resourceType, _portionSize);
     }
 
-    private int _portionSize;
-    private GlobalStock _globalStock;
-    private ResourceType _resourceType;
+    public void Dispose()
+    {
+        _globalStock = null;
+    }
 }

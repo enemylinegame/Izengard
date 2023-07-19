@@ -1,9 +1,10 @@
 using ResourceSystem;
+using System;
 
-
+[Serializable]
 public struct PrescriptionComponent
 {
     public ResourceType ResourceType;
-    public int ResourceCount;
+    public int ResourceAmount;
 }
 

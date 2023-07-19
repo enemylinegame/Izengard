@@ -17,6 +17,7 @@ namespace Code.TileSystem
         private int _mineWorkerPortionSize;
         private float _craftWorkerEfficiency;
         private PrescriptionsStorage _prescriptionsStorage;
+        private IPlayerNotifier _notifier;
 
         private sealed class WorkDescriptor
         {
@@ -27,15 +28,17 @@ namespace Code.TileSystem
 
         public ProductionManager(GlobalStock globalStock,
             WorkersTeamController teamController, WorkersTeamConfig workerConfig,
-            PrescriptionsStorage prescriptionsStorage)
+            PrescriptionsStorage prescriptionsStorage,
+            IPlayerNotifier notifier)
         {
             _teamController = teamController;
             _prescriptionsStorage = prescriptionsStorage;
             _globalStock = globalStock;
+            _notifier = notifier;
 
             _worksTable = new List<WorkDescriptor>();
 
-            _mineWorkerPortionSize = workerConfig.MineWorkerPortionSize;//resource config
+            _mineWorkerPortionSize = workerConfig.MineWorkerPortionSize;
             _craftWorkerEfficiency = workerConfig.CraftWorkerPerformance;
         }
 
@@ -79,7 +82,6 @@ namespace Code.TileSystem
 
             return true;
         }
-
 
         public void StopFirstFindedWorker(ICollectable building)
         {
@@ -139,7 +141,7 @@ namespace Code.TileSystem
                 resourceType);
 
             IWorkerWork work = new ManufactoryProduction(
-                _globalStock, prescription, _craftWorkerEfficiency);
+                _globalStock, prescription, _craftWorkerEfficiency, _notifier);
 
             return _teamController.SendWorkerToWork(
                 workerInitPlace, workPlace, preparation, work);

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beaac01dcc715274cad5dab613e707c5, type: 3}
+  m_Name: Prescriptions
+  m_EditorClassIdentifier: 
+  _prescriptions:
+  - TargetResource: 6
+    ResultAmount: 2
+    Components:
+    - ResourceType: 5
+      ResourceAmount: 4
+    - ResourceType: 3
+      ResourceAmount: 1
+  - TargetResource: 3
+    ResultAmount: 4
+    Components:
+    - ResourceType: 6
+      ResourceAmount: 4
+    - ResourceType: 2
+      ResourceAmount: 1
