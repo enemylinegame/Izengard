@@ -87,7 +87,7 @@ public class GameInit
         controller.Add(marketController);
 
         globalResStock.AddResourceToStock(ResourceType.Wood, 100);
-
+        globalResStock.AddResourceToStock(ResourceType.Gold, 100);
         // var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
         // controller.Add(testDummyTargetController);
     }
