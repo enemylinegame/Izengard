@@ -27,3 +27,5 @@ MonoBehaviour:
   HireCost:
   - _resourceType: 8
     _cost: 15
+  <HireCost>k__BackingField: []
+  <HireDuration>k__BackingField: 0.5
