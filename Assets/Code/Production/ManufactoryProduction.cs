@@ -12,7 +12,7 @@ public sealed class ManufactoryProduction : IWorkerWork
     private IPlayerNotifier _notifier;
 
     private IList<ResourceType> _deficitResources;
-    private int _dificitHashCode;
+    private IList<ResourceType> _lastDeficitResources;
 
     public ManufactoryProduction(GlobalStock stock,
         Prescription prescription,
@@ -25,17 +25,16 @@ public sealed class ManufactoryProduction : IWorkerWork
         _notifier = notifier;
 
         _deficitResources = new List<ResourceType>();
-        _dificitHashCode = _deficitResources.GetHashCode();
+        _lastDeficitResources = new List<ResourceType>();
     }
 
     public void Produce(float deltaTime)
     {
         _produced += deltaTime * _productionEfficiency;
 
-        float portion = UnityEngine.Mathf.Floor(_produced);
-        if (portion > 0)
+        if (_produced > _prescription.ResultAmount)
         {
-            _produced -= portion;
+            _produced -= _prescription.ResultAmount;
 
             FindDeficitResources(_prescription, _deficitResources);
 
@@ -43,27 +42,58 @@ public sealed class ManufactoryProduction : IWorkerWork
             {
                 UtilizeResources(_prescription);
                 _globalStock.AddResourceToStock(_prescription.TargetResource,
-                    _prescription.ResultAmount * (int)portion);
+                    _prescription.ResultAmount);
             }
             else
             {
+                _produced = 0;
                 NotifyPlayer(_deficitResources);
             }
-            _dificitHashCode = _deficitResources.GetHashCode();
+            ExchangeLists(ref _deficitResources, ref _lastDeficitResources);
             _deficitResources.Clear();
         }
     }
 
     public string CreateNotifyMessage(IList<ResourceType> deficitList)
     {
-        return "Not enough resource";
+        if (0 == deficitList.Count)
+            return string.Empty;
+
+        StringBuilder message = new StringBuilder();
+        message.Append("Not enough resource: ");
+        int lastDeficintIndex = deficitList.Count - 1;
+        for (int i = 0; i < lastDeficintIndex; ++i)
+        {
+            message.AppendFormat("{0}, ", deficitList[i]);
+        }
+        message.AppendFormat("{0}.", deficitList[lastDeficintIndex]);
+        return message.ToString();
+    }
+
+    private void ExchangeLists(ref IList<ResourceType> list1, 
+        ref IList<ResourceType> list2)
+    {
+        IList<ResourceType> buffer = list1;
+        list1 = list2;
+        list2 = buffer;
+    }
+    private bool Equals(IList<ResourceType> list1,
+        IList<ResourceType> list2)
+    {
+        if (list1.Count != list2.Count)
+            return false;
+
+        for (int i = 0; i < list1.Count; ++i)
+            if (list1[i] != list2[i])
+                return false;
+
+        return true;
     }
 
     private void NotifyPlayer(IList<ResourceType> deficitList)
     {
-        if (deficitList.GetHashCode() != _dificitHashCode)
+        if (!Equals(deficitList, _lastDeficitResources))
             _notifier.Notify(CreateNotifyMessage(deficitList));
-        
     }
 
     private void  FindDeficitResources(Prescription prescription, 
@@ -77,8 +107,8 @@ public sealed class ManufactoryProduction : IWorkerWork
                 prescriptionComponent.ResourceType,
                 prescriptionComponent.ResourceAmount))
             {
-                if (!_deficitResources.Contains(prescriptionComponent.ResourceType))
-                    _deficitResources.Add(prescriptionComponent.ResourceType);
+                if (!deficitResources.Contains(prescriptionComponent.ResourceType))
+                    deficitResources.Add(prescriptionComponent.ResourceType);
             }
         }
     }
