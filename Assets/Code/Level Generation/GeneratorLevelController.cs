@@ -36,7 +36,7 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
         _btnUIController = btnUIController;
         _rightUI = uiController.RightUI;
         
-        _buttonsSetter = new ButtonsSetter(SpawnTile, btnParents, tiles[0].SizeTile, _spawnedTiles, gameConfig.ButtonSpawn);
+        _buttonsSetter = new ButtonsSetter(SpawnTile, btnParents, tiles[0].SizeTile, _spawnedTiles, gameConfig.ButtonSetterView);
     }
 
     public void OnStart()
@@ -73,8 +73,11 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
     }
     private void PlaceMainTower()
     {
+        var config = _gameConfig.MainTowerConfig as BuildingConfig;
+
         var firstTile = _spawnedTiles[_tileSetter.FirstTileGridPosition];
-        var mainBuilding = Object.Instantiate(_gameConfig.MainTower, firstTile.transform.position, Quaternion.identity);
+        var mainBuilding = Object.Instantiate(config.BuildingPrefab, firstTile.transform.position, Quaternion.identity);
+        
         PointSpawnUnits = mainBuilding.transform;
         MainBuilding = mainBuilding.GetComponent<Damageable>();
         if (mainBuilding != null)
@@ -82,7 +85,8 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
             TowerShot = mainBuilding.GetComponentInChildren<TowerShotBehavior>();
             firstTile.TileView.TileModel.HouseType = HouseType.All;
         }
-        MainBuilding.Init(1000);
+       
+        MainBuilding.Init((int)config.MaxHealth);
     }
     public void OnLateUpdate(float deltaTime)
     {

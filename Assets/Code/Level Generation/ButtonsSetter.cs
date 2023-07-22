@@ -1,6 +1,7 @@
 using LevelGenerator.Interfaces;
 using System;
 using System.Collections.Generic;
+using Code.Level_Generation;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,14 +11,14 @@ namespace LevelGenerator
     public class ButtonsSetter : IButtonsSetter
     {
         private readonly float _offsetInstanceTiles;
-        private readonly Button _buttonSpawn;
+        private readonly ButtonSetterView _buttonSpawn;
         private readonly Transform _btnParents;
         private readonly Action<TileSpawnInfo> _onSpawnTileButtonClick;
         private readonly IReadOnlyDictionary<Vector2Int, VoxelTile> _spawnedTiles;
         private readonly HashSet<IOnLateUpdate> _buttons = new HashSet<IOnLateUpdate>();
         
         public ButtonsSetter(Action<TileSpawnInfo> onSpawnTileButtonClick, Transform buttonParent, float offsetInstanceTiles,
-            IReadOnlyDictionary<Vector2Int, VoxelTile> spawnedTiles, Button buttonSpawn)
+            IReadOnlyDictionary<Vector2Int, VoxelTile> spawnedTiles, ButtonSetterView buttonSpawn)
         {
             _onSpawnTileButtonClick = onSpawnTileButtonClick;
             _btnParents = buttonParent;
@@ -49,8 +50,8 @@ namespace LevelGenerator
 
         private void InstansButton(Vector2Int baseTileGridPosition, Vector2Int newTileGridPosition, Vector3 posForButton)
         {
-            Vector2 pos = Camera.main.WorldToScreenPoint(posForButton);
-            Button btnMain = UnityEngine.Object.Instantiate(_buttonSpawn, pos, Quaternion.identity, _btnParents);
+            Vector3 pos = Camera.main.WorldToScreenPoint(posForButton);
+            ButtonSetterView btnMain = UnityEngine.Object.Instantiate(_buttonSpawn, pos, Quaternion.identity, _btnParents);
             var tileSpawnInfo = new TileSpawnInfo
             {
                 GridBasePosition = baseTileGridPosition,

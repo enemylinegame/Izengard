@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Code.Level_Generation;
 using UnityEngine;
 using Button = UnityEngine.UI.Button;
 
@@ -8,14 +9,14 @@ namespace LevelGenerator
     public class ParentButtonController : IDisposable, IOnLateUpdate
     {
         private readonly List<IDisposable> _spawnButtonControllers = new List<IDisposable>(2);
-        private readonly Button _button;
+        private readonly ButtonSetterView _button;
         private TileSpawnInfo _tileSpawnInfo;
         private readonly Action<TileSpawnInfo> _onSpawnTileButtonClick;
         private readonly Vector3 _positionInWorld;
         private readonly Action<ParentButtonController> _removeButton;
 
 
-        public ParentButtonController(Button button, TileSpawnInfo tileSpawnInfo, 
+        public ParentButtonController(ButtonSetterView button, TileSpawnInfo tileSpawnInfo, 
             Action<TileSpawnInfo> onSpawnTileButtonClick, Vector3 positionInWorld, Action<ParentButtonController> removeButton)
         {
             _button = button;
@@ -24,7 +25,7 @@ namespace LevelGenerator
             _positionInWorld = positionInWorld;
             _removeButton = removeButton;
 
-            _button.onClick.AddListener(OnButtonClick);
+            _button.onSpawnTileButtonClick += OnButtonClick;
         }
 
         //private void InstansButton()
@@ -63,7 +64,7 @@ namespace LevelGenerator
 
         public void OnLateUpdate(float deltaTime)
         {
-            _button.transform.position = Camera.main.WorldToScreenPoint(_positionInWorld);
+            _button.transform.position = _positionInWorld;
         }
 
         private void OnButtonClick()
