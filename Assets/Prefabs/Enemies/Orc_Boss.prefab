@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: -3345420066190139898}
   - component: {fileID: 1373568036533525981}
   - component: {fileID: -6131636720816506885}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Orc_Boss
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -135,7 +135,7 @@ GameObject:
   m_Component:
   - component: {fileID: 463026}
   - component: {fileID: 13785698}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Orc_Catapult
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -230,7 +230,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 406676}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone_wheel_C001D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -261,7 +261,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 441520}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone_stone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -293,7 +293,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 453798}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone_front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -324,7 +324,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 471246}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone_wheel_B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -357,7 +357,7 @@ GameObject:
   - component: {fileID: 466474}
   - component: {fileID: 3340234}
   - component: {fileID: 2390184}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Orc_Catapult_stone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -438,7 +438,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 448654}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone_body_A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -469,7 +469,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 404118}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone_body_B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -500,7 +500,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 428876}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone_Arm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -532,7 +532,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 477770}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone_wheel_A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -563,7 +563,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 409710}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone_Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -599,7 +599,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 448518}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone_Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -634,7 +634,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 423792}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bone_wheel_C
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -667,7 +667,7 @@ GameObject:
   - component: {fileID: 4263303270598725848}
   - component: {fileID: 3422192262329648834}
   - component: {fileID: 5521728094099791278}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: TileContactDetecterTank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
