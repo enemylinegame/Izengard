@@ -11,8 +11,14 @@ public sealed class ManufactoryProduction : IWorkerWork
     private Prescription _prescription;
     private IPlayerNotifier _notifier;
 
-    private IList<ResourceType> _deficitResources;
-    private IList<ResourceType> _lastDeficitResources;
+    private struct DeficitDescription
+    {
+        public ResourceType ResourceType;
+        public int ResourceAccount;
+    };
+
+    private IList<DeficitDescription> _deficitResources;
+    private IList<DeficitDescription> _lastDeficitResources;
 
     public ManufactoryProduction(GlobalStock stock,
         Prescription prescription,
@@ -24,8 +30,8 @@ public sealed class ManufactoryProduction : IWorkerWork
         _productionEfficiency = productionEfficiency;
         _notifier = notifier;
 
-        _deficitResources = new List<ResourceType>();
-        _lastDeficitResources = new List<ResourceType>();
+        _deficitResources = new List<DeficitDescription>();
+        _lastDeficitResources = new List<DeficitDescription>();
     }
 
     public void Produce(float deltaTime)
@@ -54,61 +60,83 @@ public sealed class ManufactoryProduction : IWorkerWork
         }
     }
 
-    public string CreateNotifyMessage(IList<ResourceType> deficitList)
+    private void AppendDeficitFormat(StringBuilder message, 
+        DeficitDescription deficitDescription)
+    
+    {
+        message.AppendFormat("{0} missing {1}",
+                deficitDescription.ResourceType, 
+                deficitDescription.ResourceAccount);
+    }
+
+    private string CreateNotificationMessage(
+        IList<DeficitDescription> deficitList)
     {
         if (0 == deficitList.Count)
             return string.Empty;
 
         StringBuilder message = new StringBuilder();
-        message.Append("Not enough resource: ");
+        message.Append("Not enough resources: ");
         int lastDeficintIndex = deficitList.Count - 1;
         for (int i = 0; i < lastDeficintIndex; ++i)
         {
-            message.AppendFormat("{0}, ", deficitList[i]);
+            AppendDeficitFormat(message, deficitList[i]);
+            message.Append(", ");
         }
-        message.AppendFormat("{0}.", deficitList[lastDeficintIndex]);
+        AppendDeficitFormat(message, deficitList[lastDeficintIndex]);
+        message.Append(".");
+
         return message.ToString();
     }
 
-    private void ExchangeLists(ref IList<ResourceType> list1, 
-        ref IList<ResourceType> list2)
+    private void ExchangeLists<T>(ref IList<T> list1, 
+        ref IList<T> list2)
     {
-        IList<ResourceType> buffer = list1;
+        IList<T> buffer = list1;
         list1 = list2;
         list2 = buffer;
     }
-    private bool Equals(IList<ResourceType> list1,
-        IList<ResourceType> list2)
+    private bool Equals(IList<DeficitDescription> list1,
+        IList<DeficitDescription> list2)
     {
         if (list1.Count != list2.Count)
             return false;
 
         for (int i = 0; i < list1.Count; ++i)
-            if (list1[i] != list2[i])
+            if (list1[i].ResourceType != list2[i].ResourceType ||
+                list1[i].ResourceAccount != list2[i].ResourceAccount)
                 return false;
 
         return true;
     }
 
-    private void NotifyPlayer(IList<ResourceType> deficitList)
+    private void NotifyPlayer(IList<DeficitDescription> deficitList)
     {
         if (!Equals(deficitList, _lastDeficitResources))
-            _notifier.Notify(CreateNotifyMessage(deficitList));
+            _notifier.Notify(CreateNotificationMessage(deficitList));
     }
 
     private void  FindDeficitResources(Prescription prescription, 
-        IList<ResourceType> deficitResources)
+        IList<DeficitDescription> deficit)
     {
-        deficitResources.Clear();
+        deficit.Clear();
         for (int i = 0; i < prescription.Components.Length; ++i)
         {
             var prescriptionComponent = prescription.Components[i];
-            if (!_globalStock.CheckResourceInStock(
-                prescriptionComponent.ResourceType,
-                prescriptionComponent.ResourceAmount))
+
+            int availableResourceAccount = 
+                _globalStock.GetAvailableResourceAccount(
+                    prescriptionComponent.ResourceType);
+
+            if (availableResourceAccount < 
+                prescriptionComponent.ResourceAmount)
             {
-                if (!deficitResources.Contains(prescriptionComponent.ResourceType))
-                    deficitResources.Add(prescriptionComponent.ResourceType);
+                deficit.Add(new DeficitDescription{ 
+                    ResourceType = prescriptionComponent.ResourceType,
+                    
+                    ResourceAccount = prescriptionComponent.ResourceAmount - 
+                        availableResourceAccount
+                });
             }
         }
     }

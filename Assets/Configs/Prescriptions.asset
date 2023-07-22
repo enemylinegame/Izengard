@@ -20,6 +20,8 @@ MonoBehaviour:
       ResourceAmount: 4
     - ResourceType: 3
       ResourceAmount: 1
+    - ResourceType: 5
+      ResourceAmount: 1
   - TargetResource: 3
     ResultAmount: 4
     Components:
