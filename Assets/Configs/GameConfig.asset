@@ -38,6 +38,7 @@ MonoBehaviour:
   _thirdTile: {fileID: 5422724862020434414, guid: 3ab4f4b1ac8d769459501f42fe40ef79, type: 3}
   _prefabWarehouse: {fileID: 7792856555819872173, guid: b6337cf5402de7640a955740aa72a575, type: 3}
   _buttonSpawn: {fileID: 1890798190433461583, guid: afe3a8195de216545bd67505a19d8e36, type: 3}
+  _buttonSetterView: {fileID: 2079979781873304754, guid: 5f4f2f018a163fd44ba9f72ebb68e2b4, type: 3}
   _bullet: {fileID: 1295366321784566, guid: 13aec0437ee03504aba6ded25ea4d73b, type: 3}
   _battlePhaseConfig: {fileID: 11400000, guid: e521de4186ce38d4296627abbc4789f9, type: 2}
   _mineralConfigs: {fileID: 11400000, guid: aee47a174ae38e4429f5f8dd82872994, type: 2}
