@@ -26,4 +26,4 @@ MonoBehaviour:
   <SelectVisualEffectPrefab>k__BackingField: {fileID: 6075373536427580745, guid: 4bed8164f1ddbc64688abcac91743384, type: 3}
   HireCost:
   - _resourceType: 8
-    _cost: 4
+    _cost: 15

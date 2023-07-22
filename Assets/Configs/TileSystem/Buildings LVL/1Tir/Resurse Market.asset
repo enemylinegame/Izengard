@@ -23,4 +23,5 @@ MonoBehaviour:
   _buildingType: 212
   _houseType: 3
   _description: 
-  _maxWorkers: 2
+  _maxWorkers: 0
+  _resource: 0

@@ -16,7 +16,7 @@ MonoBehaviour:
   _maxHealth: 1000
   _name: 
   _buildingCost:
-  - _resourceType: 2
+  - _resourceType: 6
     _cost: 22
   - _resourceType: 1
     _cost: 22
@@ -25,3 +25,5 @@ MonoBehaviour:
   _buildingType: 203
   _houseType: 3
   _description: 
+  _maxWorkers: 5
+  _resource: 2

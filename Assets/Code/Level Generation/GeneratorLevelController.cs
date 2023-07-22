@@ -36,7 +36,7 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
         _btnUIController = btnUIController;
         _rightUI = uiController.RightUI;
         
-        _buttonsSetter = new ButtonsSetter(SpawnTile, btnParents, tiles[0].SizeTile, _spawnedTiles, gameConfig.ButtonSpawn);
+        _buttonsSetter = new ButtonsSetter(SpawnTile, btnParents, tiles[0].SizeTile, _spawnedTiles, gameConfig.ButtonSetterView);
     }
 
     public void OnStart()
