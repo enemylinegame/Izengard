@@ -51,6 +51,9 @@ public class GameConfig : ScriptableObject
         "Если выключено, то вариант Николая и сумма весов должна равняться 1, если включено, то вариант Иоанна, " +
         " 1 - сумма всех весов = вероятности спавна пустоты";
 
+    [SerializeField]
+    private PrescriptionsStorage _prescriptionsStorage;
+
     public DefendersSet DefendersSets => _defendersSet;
     public GameObject Enemy => _enemy;
     public GameObject PrefabWarehouse => _prefabWarehouse;
@@ -97,4 +100,5 @@ public class GameConfig : ScriptableObject
     public GameObject Res => _Res;
     public GameObject ResTopUI => _resTopUI;
 
+    public PrescriptionsStorage PrescriptionsStorage => _prescriptionsStorage;
 }

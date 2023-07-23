@@ -54,11 +54,22 @@ namespace ResourceSystem
             resourceHolder.AddResource(value);
             ResourceCountChanged(resourceType, resourceHolder.CurrentAmount);
         }
+
         public void GetResourceFromStock(ResourceType resourceType, int value)
         {
             ResourceHolder resourceHolder = _resourceHolders.Find(x => x.ResourceType == resourceType);
             resourceHolder.RemoveResource(value);
             ResourceCountChanged(resourceType, resourceHolder.CurrentAmount);
+        }
+
+        public int GetAvailableResourceAccount(ResourceType resourceType)
+        {
+            ResourceHolder resourceHolder = _resourceHolders.Find(
+                x => x.ResourceType == resourceType);
+            if (null == resourceHolder)
+                return 0;
+
+           return resourceHolder.CurrentAmount;
         }
 
         public bool CheckResourceInStock(ResourceType resourceType, int value)

@@ -5,29 +5,24 @@ using UnityEngine;
 public class WorkersTeamConfig : ScriptableObject
 {
     [SerializeField]
-    private float _moveSpeed;
-    public float MoveSpeed => _moveSpeed;
-
-
-    [SerializeField]
     private GameObject _workerPrefab;
-    public GameObject WorkerPrefab => _workerPrefab;
-
-    [Header("Mine worker")]
-    [SerializeField]
+    [Header("Mine worker smoke break time")]
+    [SerializeField, Range(0, 100)]
     private float _smokeBreakTime;
-    public float SmokeBreakTime => _smokeBreakTime;
-
-    [SerializeField]
+    
+    [Header("Mine worker mining time"), SerializeField, Range(0, 100)]
     private float _timeToProcessWorkSec;
-    public float TimeToProcessWork => _timeToProcessWorkSec;
-
-    [SerializeField]
+    
+    [Header("Mine worker portion size"), SerializeField, Range(0, 100)]
     private int _portionSize;
-    public int MineWorkerPortionSize => _portionSize;
+    
+    [Header("Craft worker performance"), SerializeField, Range(0, 100)]
+    private float _craftWorkerPerformance;
 
-    [Header("Craft worker")]
-    [SerializeField]
-    private float _craftWorkerPerformance;//обсудить с Николаем
+
+    public float TimeToProcessWork => _timeToProcessWorkSec;
+    public int MineWorkerPortionSize => _portionSize;
+    public float SmokeBreakTime => _smokeBreakTime;
+    public GameObject WorkerPrefab => _workerPrefab;
     public float CraftWorkerPerformance => _craftWorkerPerformance;
 }

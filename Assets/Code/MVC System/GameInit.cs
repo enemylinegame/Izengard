@@ -55,9 +55,12 @@ public class GameInit
 
         var workersTeamComtroller = new WorkersTeamController(
             workersTeamConfig);
-        var productionManager = new ProductionManager(
-            globalResStock, workersTeamComtroller, workersTeamConfig);
-        var tileController = new TileController(tileList, uiController,
+        var productionManager = new ProductionManager(globalResStock, 
+            workersTeamComtroller, workersTeamConfig, 
+            gameConfig.PrescriptionsStorage, 
+            uiController.CenterUI.BaseNotificationUI);
+
+        var tileController = new TileController(tileList, uiController, 
             buildingController, inputController, productionManager);
         var defenderController = new DefendersController(bulletsController);
         var tileResourceUIController = new TileResourceUIController(uiController, inputController, tileController, gameConfig);
