@@ -130,6 +130,7 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
             WorkerCraftWork work = worker.Value;
             work.Worker.OnMissionCompleted -= OnReadyToWork;
             work.Preparation = null;
+            work.Work.Dispose();
             work.Work = null;
 
             workers.Add(work.Worker);

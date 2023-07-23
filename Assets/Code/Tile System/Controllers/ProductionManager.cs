@@ -11,14 +11,13 @@ namespace Code.TileSystem
         private WorkersTeamController _teamController;
 
         private List<WorkDescriptor> _worksTable;
-        private Dictionary<int, int> _buildingsTable;
 
         private GlobalStock _globalStock;
 
-        private int _worksAccount;
-
         private int _mineWorkerPortionSize;
         private float _craftWorkerEfficiency;
+        private PrescriptionsStorage _prescriptionsStorage;
+        private IPlayerNotifier _notifier;
 
         private sealed class WorkDescriptor
         {
@@ -27,36 +26,20 @@ namespace Code.TileSystem
             public int WorkId;
         }
 
-        public Action<int> OnWorksCountChanged = delegate { };
-
         public ProductionManager(GlobalStock globalStock,
-            WorkersTeamController teamController, WorkersTeamConfig workerConfig)
+            WorkersTeamController teamController, WorkersTeamConfig workerConfig,
+            PrescriptionsStorage prescriptionsStorage,
+            IPlayerNotifier notifier)
         {
             _teamController = teamController;
+            _prescriptionsStorage = prescriptionsStorage;
             _globalStock = globalStock;
+            _notifier = notifier;
 
             _worksTable = new List<WorkDescriptor>();
-            _buildingsTable = new Dictionary<int, int>();
 
-            _worksAccount = 0;
-
-            _mineWorkerPortionSize = workerConfig.MineWorkerPortionSize;//resource config
+            _mineWorkerPortionSize = workerConfig.MineWorkerPortionSize;
             _craftWorkerEfficiency = workerConfig.CraftWorkerPerformance;
-        }
-
-        public bool IsThereFreeWorkers(ICollectable building)
-        {
-            if (0 == building.MaxWorkers)
-                return false;
-
-            if (!_buildingsTable.TryGetValue(building.BuildingID,
-                out int workersAccount))
-                return true;
-
-            if (building.MaxWorkers > workersAccount)
-                return true;
-
-            return false;
         }
 
         public bool StartFactoryProduction(Vector3 spawnPosition,
@@ -77,9 +60,6 @@ namespace Code.TileSystem
                 WorkId = workId
             });
 
-            IncreaseWorksForBuilding(building.BuildingID);
-
-            OnWorksCountChanged.Invoke(++_worksAccount);
             return true;
         }
 
@@ -100,47 +80,11 @@ namespace Code.TileSystem
                 WorkId = workId
             });
 
-            IncreaseWorksForBuilding(building.BuildingID);
-
-            OnWorksCountChanged.Invoke(++_worksAccount);
             return true;
-        }
-
-        private bool DecreaseWorksForBuilding(int buildingId)
-        {
-            if (!_buildingsTable.ContainsKey(buildingId))
-                return false;
-
-            if (--_buildingsTable[buildingId] <= 0)
-                _buildingsTable.Remove(buildingId);
-
-            return true;
-        }
-
-        public bool IsThereBusyWorkers(ICollectable building)
-        {
-            if (!_buildingsTable.TryGetValue(
-                building.BuildingID, out int worksCount))
-                return false;
-
-            return worksCount > 0 ? true : false;
-        }
-
-        private void IncreaseWorksForBuilding(int buildingId)
-        {
-            if (!_buildingsTable.ContainsKey(buildingId))
-            {
-                _buildingsTable.Add(buildingId, 0);
-            }
-
-            ++_buildingsTable[buildingId];
         }
 
         public void StopFirstFindedWorker(ICollectable building)
         {
-            if (!DecreaseWorksForBuilding(building.BuildingID))
-                return;
-
             WorkDescriptor work = _worksTable.Find(x =>
                 x.ResourceType == building.ResourceType ||
                 x.BuildingType == building.BuildingTypes);
@@ -150,7 +94,6 @@ namespace Code.TileSystem
 
             _teamController.CancelWork(work.WorkId);
             _worksTable.Remove(work);
-            OnWorksCountChanged.Invoke(--_worksAccount);
         }
 
         public void StopAllProductions(ICollectable building)
@@ -159,14 +102,7 @@ namespace Code.TileSystem
                 return;
 
             int buildingId = building.BuildingID;
-            if (!_buildingsTable.TryGetValue(buildingId, out int worksCount))
-                return;
-
-            _worksAccount -= _buildingsTable[buildingId];
-            OnWorksCountChanged.Invoke(_worksAccount);
-
-            _buildingsTable.Remove(buildingId);
-
+  
             var worksToStop = _worksTable.FindAll(
                 x => x.BuildingType == building.BuildingTypes ||
                 x.ResourceType == building.ResourceType);
@@ -177,14 +113,6 @@ namespace Code.TileSystem
                 _worksTable.Remove(work);
             }
         }
-        public int GetAssignedWorkers(ICollectable building)
-        {
-            if (!_buildingsTable.TryGetValue(
-                building.BuildingID, out int workersCount))
-                return 0;
-
-            return workersCount;
-        }
 
         public void Dispose()
         {
@@ -193,8 +121,6 @@ namespace Code.TileSystem
 
             _worksTable.Clear();
             _worksTable = null;
-            _buildingsTable.Clear();
-            _buildingsTable = null;
         }
 
         private int SendWorkerToMine(Vector3 workerInitPlace, Vector3 workPlace,
@@ -207,11 +133,15 @@ namespace Code.TileSystem
                 workerInitPlace, workPlace, preparation, workerTask);
         }
 
-        private int SendWorkerToManufactory(Vector3 workerInitPlace, Vector3 workPlace,
+        private int SendWorkerToManufactory(
+            Vector3 workerInitPlace, Vector3 workPlace,
             ResourceType resourceType, IWorkerPreparation preparation)
         {
+            var prescription = _prescriptionsStorage.GetPrescription(
+                resourceType);
+
             IWorkerWork work = new ManufactoryProduction(
-                _globalStock, resourceType, _craftWorkerEfficiency);
+                _globalStock, prescription, _craftWorkerEfficiency, _notifier);
 
             return _teamController.SendWorkerToWork(
                 workerInitPlace, workPlace, preparation, work);
