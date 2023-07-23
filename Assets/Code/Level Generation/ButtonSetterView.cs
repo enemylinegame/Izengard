@@ -27,7 +27,7 @@ namespace Code.Level_Generation
             renderer.material = originalMaterial;
         }
 
-        void OnMouseDown()
+        public void OnClick()
         {
             onSpawnTileButtonClick?.Invoke();
         }
