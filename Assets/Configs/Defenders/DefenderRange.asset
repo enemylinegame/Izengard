@@ -24,8 +24,7 @@ MonoBehaviour:
   <Prefab>k__BackingField: {fileID: 2102001904127989955, guid: 7c1d0c9c2a3a886498fe72006ffb5936, type: 3}
   <Icon>k__BackingField: {fileID: 21300000, guid: 45949188d9111d047887f132813a2efc, type: 3}
   <SelectVisualEffectPrefab>k__BackingField: {fileID: 6075373536427580745, guid: 4bed8164f1ddbc64688abcac91743384, type: 3}
-  HireCost:
+  <HireCost>k__BackingField:
   - _resourceType: 8
     _cost: 15
-  <HireCost>k__BackingField: []
   <HireDuration>k__BackingField: 0.5

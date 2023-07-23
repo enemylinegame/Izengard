@@ -121,7 +121,7 @@ namespace Code.TileSystem
         
         #endregion
 
-        private void HireConcreteDefender(DefenderSettings settings)
+        private void StartHireDefenderProcess(DefenderSettings settings)
         {
             List<DefenderUnit> defendersOnTile = SelectedTileModel.DefenderUnits;
             int unitsQuantity = defendersOnTile.Count;
@@ -193,7 +193,7 @@ namespace Code.TileSystem
         {
             if (_isHireDefenderPenelOpened)
             {
-                HireConcreteDefender(_defendersSet.Defenders[index]);
+                StartHireDefenderProcess(_defendersSet.Defenders[index]);
             }
             //CloseHireDefenderPanel();
         }
