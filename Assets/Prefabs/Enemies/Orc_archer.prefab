@@ -2302,6 +2302,8 @@ GameObject:
   - component: {fileID: -86669711413221654}
   - component: {fileID: 8878901959832000666}
   - component: {fileID: -4784985907993731630}
+  - component: {fileID: 5336049602862772201}
+  - component: {fileID: 4156637402317630192}
   m_Layer: 8
   m_Name: Orc_archer
   m_TagString: Enemy
@@ -2384,6 +2386,7 @@ MonoBehaviour:
   _icon: {fileID: 0}
   _maxCountAttackers: 5
   _threatLevel: 4
+  animator: {fileID: 0}
 --- !u!114 &-86669711413221654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2436,6 +2439,30 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &5336049602862772201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4887173f86e1a249b7f4c274ed08e50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4156637402317630192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3953d30172232c248ac96f8edf42801a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &157296
 GameObject:
   m_ObjectHideFlags: 0

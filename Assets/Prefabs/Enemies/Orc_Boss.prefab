@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -3345420066190139898}
   - component: {fileID: 1373568036533525981}
   - component: {fileID: -6131636720816506885}
+  - component: {fileID: 3047234564895702478}
   m_Layer: 8
   m_Name: Orc_Boss
   m_TagString: Enemy
@@ -125,6 +126,19 @@ MonoBehaviour:
   _icon: {fileID: 0}
   _maxCountAttackers: 5
   _threatLevel: 8
+  animator: {fileID: 0}
+--- !u!114 &3047234564895702478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3953d30172232c248ac96f8edf42801a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &103566
 GameObject:
   m_ObjectHideFlags: 0

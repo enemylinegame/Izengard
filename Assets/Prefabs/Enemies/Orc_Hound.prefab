@@ -1896,6 +1896,7 @@ GameObject:
   - component: {fileID: -4484706185885328441}
   - component: {fileID: 477096553137004399}
   - component: {fileID: -5120797808834383624}
+  - component: {fileID: -7575609620815379629}
   m_Layer: 8
   m_Name: Orc_Hound
   m_TagString: Enemy
@@ -1976,6 +1977,7 @@ MonoBehaviour:
   _icon: {fileID: 0}
   _maxCountAttackers: 5
   _threatLevel: 8
+  animator: {fileID: 0}
 --- !u!65 &-4484706185885328441
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2027,6 +2029,18 @@ MonoBehaviour:
   m_Area: 0
   m_IgnoreFromBuild: 1
   m_AffectedAgents: ffffffff
+--- !u!114 &-7575609620815379629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 137360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3953d30172232c248ac96f8edf42801a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &138642
 GameObject:
   m_ObjectHideFlags: 0

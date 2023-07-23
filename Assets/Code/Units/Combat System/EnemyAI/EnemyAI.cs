@@ -22,12 +22,15 @@ namespace CombatSystem
 
         private Transform _enemyTransform;
 
+        Animator animator;
+
         public bool IsActionComplete { get; private set; }
 
 
         public EnemyAI(Enemy unit, Damageable primaryTarget, IEnemyAnimationController animationController,
             IBulletsController bulletsController)
         {
+            
             _actionList = new List<IAction<Damageable>>();
             _type = unit.Type;
             var navmesh = unit.RootGameObject.GetComponent<NavMeshAgent>();
@@ -37,15 +40,21 @@ namespace CombatSystem
             _onUpdate = _findTarget as IOnUpdate;
             _planRoute = new PlanRouteAction(navmesh);
             _actionList.Add(_planRoute);
+            animator = unit.MyDamagable.GetComponent<Animator>();
+
             if (unit.Type == EnemyType.Archer)
             {
+                
                 _attack = new RangedAttackAction(bulletsController, unit);
+               
+
             }
             else
             {
                 _attack = new AttackAction(animationController, unit);
             }
             _actionList.Add(_attack);
+            
             _checkAttackDistance = new CheckAttackDistance(unit, navmesh, unit.Stats.AttackRange);
             _actionList.Add(_checkAttackDistance);
 
@@ -63,6 +72,7 @@ namespace CombatSystem
         {
             IsActionComplete = false;
             _nextAction.StartAction(_currentTarget);
+            
         }
 
         public void StopAction()
@@ -115,6 +125,7 @@ namespace CombatSystem
             }
             else _nextAction = _checkAttackDistance;
             IsActionComplete = true;
+            animator.SetTrigger("AttackTrigger");
         }
 
         private void OnCheckAttackDistanceComplete(Damageable target)
@@ -173,6 +184,7 @@ namespace CombatSystem
         {
             _currentTarget = _primaryTarget;
             _actionList.ForEach(action => action.ClearTarget());
+            animator.SetTrigger("SwitchTrigger");
         }
 
         private void DrawLineToTarget()

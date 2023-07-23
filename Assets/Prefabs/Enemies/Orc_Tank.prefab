@@ -2576,6 +2576,7 @@ GameObject:
   - component: {fileID: 5013786577506457904}
   - component: {fileID: 5886764754115042961}
   - component: {fileID: -5567821665638126747}
+  - component: {fileID: -3230522149662080739}
   m_Layer: 8
   m_Name: Orc_Tank
   m_TagString: Enemy
@@ -2658,6 +2659,7 @@ MonoBehaviour:
   _icon: {fileID: 0}
   _maxCountAttackers: 5
   _threatLevel: 8
+  animator: {fileID: 0}
 --- !u!195 &5013786577506457904
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2710,6 +2712,18 @@ CapsuleCollider:
   m_Height: 1.8277392
   m_Direction: 1
   m_Center: {x: 0, y: 0.75402987, z: 0}
+--- !u!114 &-3230522149662080739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 163804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3953d30172232c248ac96f8edf42801a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &163906
 GameObject:
   m_ObjectHideFlags: 0
