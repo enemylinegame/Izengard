@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f08a583672b6eda4c8477fb15887c745, type: 3}
+  m_Name: TextileT1
+  m_EditorClassIdentifier: 
+  Prefab: {fileID: 6611631232710345216, guid: d684e4a283cc43b41ae2e5bc2d784e81, type: 3}
+  NameOfMine: 
+  ExtractionTime: 10
+  Icon: {fileID: 0}
+  CurrentMineValue: 0
+  Tier: 1
+  ResourceType: 6

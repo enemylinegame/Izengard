@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0fc94b35dc427643b4a6d984400368c, type: 3}
+  m_Name: Elf_Shoulderpads_Light
+  m_EditorClassIdentifier: 
+  _name: Elf_Shoulderpads_Light
+  _icon: {fileID: 21300000, guid: b5de57551ddf84e48b7747a338ad7975, type: 3}
+  _material: {fileID: 2100000, guid: 8c10d0579a1faa547b0825e1e3a93c76, type: 2}
+  _itemObject: {fileID: 7451921484561713077, guid: 98d0b12bb2d67b84fbbb8f9a159abecc, type: 3}
+  _itemParameters:
+    _defendsModificator:
+      _value: 2
+      _description: 
+    _speedModificator:
+      _value: 0
+      _description: 
+    _rangeAttackModificator:
+      _value: 0
+      _description: 
+    _damageModificator:
+      _value: 0
+      _description: 
+  _costInGold:
+    _coastInResurse:
+    - _maxResurseCount: 300
+      _currentResurseCount: 0
+      _resurseInHolder: {fileID: 0}
+    _pricePaid: 0
+    _itIsResetable: 0
+    _produceTime: 0
+  _costInResurse:
+    _coastInResurse: []
+    _pricePaid: 0
+    _itIsResetable: 0
+    _produceTime: 0
+  _skinnedMeshRenderer: {fileID: 7451921484566987723, guid: 98d0b12bb2d67b84fbbb8f9a159abecc, type: 3}
+  _armorBindingsType: 20
+  _armorSlotType:
+    _value: 5
+    _description: 
