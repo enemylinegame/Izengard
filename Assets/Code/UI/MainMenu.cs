@@ -5,17 +5,26 @@ namespace Code.UI
 {
     public class MainMenu : MonoBehaviour
     {
-        public void Playgame()
-        
-            //
+        private int _gameSceneIndex;
 
+        private void Awake()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            _gameSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
         }
+
+        public void Playgame()
+        {
+            SceneManager.LoadScene(_gameSceneIndex);
+        }
+
         public void QuitGame()
         {
+#if UNITY_EDITOR
             Debug.Log("EXIT!");
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
             Application.Quit();
+#endif
         }
     }
 }

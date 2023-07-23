@@ -3,17 +3,19 @@ using UnityEngine;
 
 public static class GetTileList
 {
-    static Vector3 pos = Vector3.zero;
     static List<VoxelTile> _tiles = new List<VoxelTile>();
 
     public static List<VoxelTile> GetTiles(GameConfig gameConfig)
     {
+        var resultTiles = new List<VoxelTile>();
+        var pos = Vector3.zero;
+
         foreach (var tile in gameConfig.TilePrefabs)
         {
             pos +=Vector3.back*5f;
-            _tiles.Add(GameObject.Instantiate(tile, pos, Quaternion.identity));
+            resultTiles.Add(GameObject.Instantiate(tile, pos, Quaternion.identity));
         }
 
-        return _tiles;
+        return resultTiles;
     }
 }

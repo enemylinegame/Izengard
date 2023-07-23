@@ -30,13 +30,17 @@ namespace CombatSystem
         {
             _actionList = new List<IAction<Damageable>>();
             _type = unit.Type;
+
             var navmesh = unit.RootGameObject.GetComponent<NavMeshAgent>();
+            navmesh.speed = unit.Stats.RunSpeed;
+            
             _currentTarget =_primaryTarget = primaryTarget;
             _findTarget = new FindTargetAction(unit,primaryTarget);
             _actionList.Add(_findTarget);
             _onUpdate = _findTarget as IOnUpdate;
             _planRoute = new PlanRouteAction(navmesh);
             _actionList.Add(_planRoute);
+            
             if (unit.Type == EnemyType.Archer)
             {
                 _attack = new RangedAttackAction(bulletsController, unit);
@@ -45,6 +49,7 @@ namespace CombatSystem
             {
                 _attack = new AttackAction(animationController, unit);
             }
+            
             _actionList.Add(_attack);
             _checkAttackDistance = new CheckAttackDistance(unit, navmesh, unit.Stats.AttackRange);
             _actionList.Add(_checkAttackDistance);
@@ -55,7 +60,7 @@ namespace CombatSystem
             _checkAttackDistance.OnComplete += OnCheckAttackDistanceComplete;
 
             _enemyTransform = unit.RootGameObject.transform;
-            
+
             StopAction();
         }
 

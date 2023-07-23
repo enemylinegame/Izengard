@@ -25,6 +25,7 @@ public class GameInit
     {
         //TODO Do not change the structure of the script
         var tiles = GetTileList.GetTiles(gameConfig);
+
         var outlineController = new OutlineController(outLineSettings);
         var globalResStock = new GlobalStock(globalResourceList.GlobalResourceConfigs, topResUiVew);
         var btnConroller = new BtnUIController(rightUI, gameConfig);
@@ -45,13 +46,13 @@ public class GameInit
         var timeRemaining = new TimeRemainingController();
         var towershotcontroller = new TowerShotController(towerShotConfig, levelGenerator, gameConfig.Bullet);
         var eqScreenController = new EquipScreenController(equipScreenView, camera);
-        var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, 
+        var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController,
             hireSystemView, levelGenerator);
         var bulletsController = new BulletsController();
-        var waveController = new WaveController(levelGenerator, uiController, btnParents, gameConfig, 
+        var waveController = new WaveController(levelGenerator, uiController, btnParents, gameConfig,
             bulletsController, enemyDestroyObserver);
         var endGameController = new EndGameController(endGameScreen, levelGenerator);
-        
+
         var workersTeamComtroller = new WorkersTeamController(
             workersTeamConfig);
         var productionManager = new ProductionManager(globalResStock, 
@@ -65,10 +66,10 @@ public class GameInit
         var tileResourceUIController = new TileResourceUIController(uiController, inputController, tileController, gameConfig);
         var hireUnitView = new HireUnitView(rightUI.HireUnits);
         var paymentDefendersSystem = new PaymentDefendersSystem(globalResStock);
-        var defendersAssignController = new DefendersManager(tileController, defenderController, uiController, 
+        var defendersAssignController = new DefendersManager(tileController, defenderController, uiController,
             hireUnitView, gameConfig.DefendersSets, paymentDefendersSystem);
         inputController.Add(defendersAssignController);
-        
+
         if (!gameConfig.ChangeVariant) new ResourceGenerator(/*buildController.Buildings, */gameConfig, levelGenerator, buildingController);
         else new ResourceGenerator(/*.Buildings, */gameConfig, levelGenerator, buildingController, 2);
 

@@ -12,7 +12,7 @@ public class GameConfig : ScriptableObject
     [SerializeField] private int _mapSizeX;
     [SerializeField] private int _mapSizeY;
     [SerializeField] private VoxelTile[] _tilePrefabs;
-    [SerializeField] private GameObject _mainTower;
+    [SerializeField] private ScriptableObject _mainTowerConfig;
     [SerializeField] private GameObject _baseUnit;
     [SerializeField] private GameObject _enemy;
     [SerializeField] private GameObject _Res;
@@ -93,7 +93,7 @@ public class GameConfig : ScriptableObject
 
     public VoxelTile[] TilePrefabs => _tilePrefabs;
 
-    public GameObject MainTower => _mainTower;
+    public ScriptableObject MainTowerConfig => _mainTowerConfig;
 
     public GameObject BaseUnit => _baseUnit;
     public GameObject Bullet => _bullet;
