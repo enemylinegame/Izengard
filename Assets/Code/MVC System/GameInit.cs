@@ -20,14 +20,14 @@ public class GameInit
         EndGameScreen endGameScreen,
         TowerShotConfig towerShotConfig, BuyItemScreenView buyItemScreenView, HireSystemView hireSystemView,
         EquipScreenView equipScreenView, Camera camera, TileList tileList,
-        GlobalResourceList globalResourceList, OutLineSettings outLineSettings,
+        GlobalResourceData globalResourceList, OutLineSettings outLineSettings,
         MarketDataConfig marketData, MarketView marketView)
     {
         //TODO Do not change the structure of the script
         var tiles = GetTileList.GetTiles(gameConfig);
 
         var outlineController = new OutlineController(outLineSettings);
-        var globalResStock = new GlobalStock(globalResourceList.GlobalResourceConfigs, topResUiVew);
+        var globalResStock = new GlobalStock(globalResourceList, topResUiVew);
         var btnConroller = new BtnUIController(rightUI, gameConfig);
         var inputController = new InputController(outlineController);
         var uiController = new UIController(rightUI, bottomUI, centerUI, inputController, marketView);
@@ -90,8 +90,6 @@ public class GameInit
         controller.Add(bulletsController);
         controller.Add(marketController);
 
-        globalResStock.AddResourceToStock(ResourceType.Wood, 100);
-        globalResStock.AddResourceToStock(ResourceType.Gold, 100);
         // var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
         // controller.Add(testDummyTargetController);
     }

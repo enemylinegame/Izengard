@@ -11,16 +11,20 @@ namespace ResourceSystem
 
         public event Action<ResourceType, int> ResourceValueChanged;
         
-        public GlobalStock(List<ResourceConfig> resourceConfigs, TopResUiVew topResUiVew)
+        public GlobalStock(GlobalResourceData resourcesConfig, TopResUiVew topResUiVew)
         {
             _resourceHolders = new List<ResourceHolder>();
-            InitHolders(resourceConfigs);
+            
             ResourceValueChanged += topResUiVew.UpdateResursesCount;
+
+            InitHolders(resourcesConfig.ResourcesData);
+            SetupInitalValues(resourcesConfig.InitialResourceData);
         }
 
-        private void InitHolders(List<ResourceConfig> resourceConfigs)
+
+        private void InitHolders(ResourceList resourcesData)
         {
-            foreach (ResourceConfig resourceConfig in resourceConfigs)
+            foreach (ResourceConfig resourceConfig in resourcesData.Resources)
             {
                 if (_resourceHolders.Exists(x => x.ResourceType == resourceConfig.ResourceType))
                 {
@@ -29,6 +33,15 @@ namespace ResourceSystem
                 }
                 ResourceHolder resourceHolder  = new ResourceHolder(resourceConfig.ResourceType,resourceConfig.MaxHoldedAmount);
                 _resourceHolders.Add(resourceHolder);
+            }
+        }
+
+
+        private void SetupInitalValues(InitialResourcesList initialResourceData)
+        {
+            foreach (var resData in initialResourceData.InitialResources) 
+            {
+                AddResourceToStock(resData.ResourceType, resData.Amount);
             }
         }
 
