@@ -35,7 +35,6 @@ namespace ResourceMarket
                     _restoreTimer = value;
 
                     _view.UpdateTimerTime(_restoreTimer);
-                    OnTimerUpdate?.Invoke(_restoreTimer);
                 }
             }
         }
@@ -52,8 +51,6 @@ namespace ResourceMarket
                 }
             }
         }
-
-        public event Action<float> OnTimerUpdate;
 
         public MarketController(
             UIController uiController,
@@ -86,6 +83,8 @@ namespace ResourceMarket
 
             _view.InitViewData(marketData.MarketTierData, tierOneItems, tierTwoItems, tierthreeItems);
             _view.InitViewAction(OnBuyItem, OnSellItem, OnIncreaseTradeValue, OnDecreaseTradeValue, ResetTradeValue, OnCloseMarket);
+            _view.UpdateGold(_stock.GetAvailableResourceAccount(ResourceType.Gold));
+            _view.UpdateMarketAmount(_marketDataProvider.MarketAmount);
 
             _resetTimer = new TimeRemaining(RestoreValues, marketData.MarketRestoreValueDelay, true);
         }
@@ -185,6 +184,7 @@ namespace ResourceMarket
         {
             _uiController.IsWorkUI(UIType.Market, true);
         }
+
         public void OnStart()
         {
             TimeRemainingExtensions.AddTimeRemaining(_resetTimer);
