@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4935294550185668097}
   - component: {fileID: 2967788845184321047}
   - component: {fileID: 2079979781873304754}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ButtonSetTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9209070142626042880}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}

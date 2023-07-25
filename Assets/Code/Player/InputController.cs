@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Code.Level_Generation;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Code.TileSystem;
@@ -53,7 +54,9 @@ namespace Code.Player
             if (!Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 100, bitmask)) return;
             if (EventSystem.current.IsPointerOverGameObject()) return;
             var tile = hit.collider.GetComponentInParent<TileView>();
+            var buttonSetterView = hit.collider.GetComponent<ButtonSetterView>();
             
+            if(buttonSetterView != null && IsOnTile) buttonSetterView.OnClick();
             if (!tile) return;
 
             if (_isSpecialMode)

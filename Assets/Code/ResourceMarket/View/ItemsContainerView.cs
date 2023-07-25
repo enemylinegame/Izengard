@@ -29,7 +29,6 @@ namespace ResourceMarket
             if(value >= _valueForUnlock)
             {
                 ChangeBlockState(false);
-                return;
             }
             UpdateBlockState(value);
         }

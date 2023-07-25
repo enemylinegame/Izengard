@@ -26,7 +26,7 @@ MonoBehaviour:
   - {fileID: 6579931382245792856, guid: 5bfff929440313d4db5b0b7dc1eee4a7, type: 3}
   - {fileID: 2207685555743648068, guid: 27cd86a72d95ed842aebfe8be9103e23, type: 3}
   - {fileID: -6135819058454172838, guid: 8c5f872f0957c03419aaa20dcfa83e9f, type: 3}
-  _mainTower: {fileID: 4437343820552527173, guid: f83ebf818c4168f42a870a67eb8e73b7, type: 3}
+  _mainTowerConfig: {fileID: 11400000, guid: 460132edf173fd6408ce3b2ddd92e1f2, type: 2}
   _baseUnit: {fileID: 4278957194176336866, guid: 327741d9696b557489e748f8da1d9f0e, type: 3}
   _enemy: {fileID: 4278957194176336866, guid: 197f399d8a7e9a84b8e0484ec8604a32, type: 3}
   _Res: {fileID: 3316622248634499761, guid: 0684f1b41578b3e48bc45237074efaf4, type: 3}
@@ -59,4 +59,5 @@ MonoBehaviour:
     \u0418\u043E\u0430\u043D\u043D\u0430,  1 - \u0441\u0443\u043C\u043C\u0430 \u0432\u0441\u0435\u0445
     \u0432\u0435\u0441\u043E\u0432 = \u0432\u0435\u0440\u043E\u044F\u0442\u043D\u043E\u0441\u0442\u0438
     \u0441\u043F\u0430\u0432\u043D\u0430 \u043F\u0443\u0441\u0442\u043E\u0442\u044B"
+  _prescriptionsStorage: {fileID: 11400000, guid: 7c39cd56705294040bc557f1f63c6470, type: 2}
   TestBuilding: {fileID: 8048208380929675822, guid: 3d12417f0311adc4a8dc6decc7d50a6a, type: 3}

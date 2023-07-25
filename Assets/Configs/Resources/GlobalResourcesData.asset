@@ -9,11 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 668d1d08603c17d4f9f996915acdfda9, type: 3}
-  m_Name: WorkersTeam
+  m_Script: {fileID: 11500000, guid: 8c64c82a5f274d2ca2da4b061600cc6b, type: 3}
+  m_Name: GlobalResourcesData
   m_EditorClassIdentifier: 
-  _moveSpeed: 1
-  _timeToProcessWorkSec: 10
-  _workersAmount: 4
-  _workerPrefab: {fileID: 188376, guid: c88c4162c795e8b4d822a0631f17ebf9, type: 3}
-  _workersIntervalSec: 3
+  InitialResourceData: {fileID: 11400000, guid: 3320a9f1b671a2c4dbf1f6ccda0ec23d, type: 2}
+  ResourcesData: {fileID: 11400000, guid: c079af62c89b7e2438c61a22c5aad90f, type: 2}

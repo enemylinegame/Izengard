@@ -77,6 +77,7 @@ public class WorkersResourceTeam : IOnUpdate
             work.Preparation.AfterWork();
 
         var worker = work.Worker;
+        work.Task.Dispose();
         work.Task = null;
 
         worker.OnMissionCompleted -= OnMissionIsCompleted;

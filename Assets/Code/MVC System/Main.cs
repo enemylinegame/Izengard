@@ -13,7 +13,7 @@ public class Main : MonoBehaviour
     [SerializeField] private GameConfig _gameConfig;
     [SerializeField] private BuildingList _buildingList;
     [SerializeField] private TileList _tileList;
-    [SerializeField] private GlobalResourceList _globalResourceList;
+    [SerializeField] private GlobalResourceData _globalResourceList;
     [SerializeField] private WorkersTeamConfig _workersTeamConfig;
     [SerializeField] private OutLineSettings _outLineSettings;
     [SerializeField] private TowerShotConfig _towerShotConfig;

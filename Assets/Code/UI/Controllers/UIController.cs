@@ -105,6 +105,7 @@ namespace Code.UI
                         _marketView.SetActive(isOn);
                         IsOnTileUI(!isOn);
                         _rightUI.OpenMarketButton.gameObject.SetActive(!isOn);
+                        _inputController.LockRightClick = isOn;
                         break;
                     }
                 case UIType.Esc:
