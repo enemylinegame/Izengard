@@ -78,14 +78,14 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
 
     public void MakeDamage(int damage)
     {
-        animator.SetTrigger("TakeDamage");
+        animator.SetTrigger("TakeDamage"); //анимация получения урона (работает, но неконсистентно)
         CurrentHealth -= damage;
         OnHealthChanged?.Invoke(MaxHealth,CurrentHealth);
         
 
         if (CurrentHealth <= 0)
         {
-            animator.SetBool("EnemyDead", true);
+            animator.SetBool("EnemyDead", true); //анимация смерти (пока что не работает, так как враг деспаунится быстрее анимации)
             IsDead = true;
             _listAttackedUnits.Clear();
             OnDeath?.Invoke();
