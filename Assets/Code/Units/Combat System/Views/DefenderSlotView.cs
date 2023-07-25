@@ -23,7 +23,7 @@ namespace CombatSystem.Views
         private GameObject _selectedBoard;
         private GameObject _hpBarRoot;
         private RectTransform _hpBar;
-        private DefenderUnit _unit;
+        private DefenderPreview _unit;
 
         private int _number;
 
@@ -80,7 +80,7 @@ namespace CombatSystem.Views
             }
         }
 
-        public DefenderUnit Unit { get => _unit; }
+        public DefenderPreview Unit { get => _unit; }
 
 
         public DefenderSlotView(DefenderSlotUI slot, int number)
@@ -138,7 +138,7 @@ namespace CombatSystem.Views
             }
         }
 
-        public void SetUnit(DefenderUnit unit)
+        public void SetUnit(DefenderPreview unit)
         {
             if (unit != null)
             {
@@ -148,7 +148,7 @@ namespace CombatSystem.Views
                 IsInBarrack = unit.IsInBarrack;
                 _hireButton.gameObject.SetActive(false);
                 _dismissButton.gameObject.SetActive(true);
-                _unit.OnHealthChanged += HealthChanged;
+                _unit.AddHeathListener(HealthChanged);
                 _hpBarRoot.SetActive(true);
                 UpdateHealth();
             }
@@ -163,7 +163,7 @@ namespace CombatSystem.Views
             IsSelected = false;
             _unitIcon.sprite = _emptySprite;
             _hpBarRoot.SetActive(false);
-            _unit.OnHealthChanged -= HealthChanged;
+            _unit.RemoveHeathListener(HealthChanged);
             _unit = null;
             _inBarrack.gameObject.SetActive(false);
             _dismissButton.gameObject.SetActive(false);
