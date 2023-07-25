@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Code.BuildingSystem;
 using CombatSystem;
 using CombatSystem.Interfaces;
+using UnityEngine;
 
 namespace Code.TileSystem
 {
@@ -20,7 +21,7 @@ namespace Code.TileSystem
         public int MaxWorkers => TileConfig.MaxUnits;
         public int MaxWarriors => MAX_WARRIORS;
         public int WorkersCount { get; set; }
-        
+        public Vector3 TilePosition { get; set; } // TODO: after merging, redo this ...
         
         public void Init()
         {

@@ -87,7 +87,7 @@ namespace Code.TileSystem
                                     .FindAll(unit => unit != null);
             if (defenders.Count > 0)
             {
-                _defendersController.SendDefendersToBarrack(defenders, SelectedTileView);
+                _defendersController.SendDefendersToBarrack(defenders, SelectedTileModel);
             }
             _warsView.UpdateDefenders();
         }
@@ -98,7 +98,7 @@ namespace Code.TileSystem
                 .FindAll(unit => unit != null);
             if (defenders.Count > 0)
             {
-                _defendersController.KickDefendersOutOfBarrack(defenders, SelectedTileView);
+                _defendersController.KickDefendersOutOfBarrack(defenders, SelectedTileModel);
             }
             _warsView.UpdateDefenders();
         }
@@ -138,7 +138,7 @@ namespace Code.TileSystem
                 if (_paymentSystem.PayForDefender(settings.HireCost))
                 {
                     DefenderPreview unit = new DefenderPreview(settings);
-                    DefenderUnit defender = _defendersController.CreateDefender(SelectedTileView, settings);
+                    DefenderUnit defender = _defendersController.CreateDefender(SelectedTileModel, settings);
                     unit.Unit = defender;
                     defendersOnTile.Add(unit);
                     defender.Tile = SelectedTileModel;
@@ -186,12 +186,12 @@ namespace Code.TileSystem
                 DefenderUnit defenderUnit = defenderPreview.Unit;
                 if (defenderUnit.IsInBarrack)
                 {
-                    _defendersController.KickDefenderOutOfBarrack(defenderUnit, SelectedTileView);
+                    _defendersController.KickDefenderOutOfBarrack(defenderUnit, SelectedTileModel);
                 }
                 defenderUnit.Tile.DefenderUnits.Remove(defenderPreview);
                 destinationTile.DefenderUnits.Add(defenderPreview);
                 defenderUnit.Tile = destinationTile;
-                _defendersController.SendDefenderToTile(defenderUnit, tile);
+                _defendersController.SendDefenderToTile(defenderUnit, tile.TileModel);
                 hasSent = true;
             }
             else
