@@ -1,9 +1,11 @@
 
 
+using System;
 using UnityEngine;
 
 public interface IWorkerView
 {
+    Action OnCollideWithOtherWorker { get; set; }
     void InitPlace(Vector3 place);
     void ContinueWalkFromCurrentPlace();
     void GoToPlace(Vector3 place);

@@ -1,9 +1,9 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(Animator), 
-    typeof(NavMeshAgent), 
-    typeof(CapsuleCollider))]
+    typeof(NavMeshAgent))]
 public class WorkerView : MonoBehaviour, IWorkerView
 {
     [SerializeField]
@@ -14,6 +14,9 @@ public class WorkerView : MonoBehaviour, IWorkerView
 
     [SerializeField]
     private float _distanceToBeginWork;
+
+
+    public Action OnCollideWithOtherWorker { get; set; }
 
     public void InitPlace(Vector3 place)
     {
@@ -101,6 +104,16 @@ public class WorkerView : MonoBehaviour, IWorkerView
     public void Deactivate()
     {
         gameObject.SetActive(false);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!collision.gameObject.TryGetComponent(
+            out IWorkerView opponent))
+            return;
+
+        Debug.Log("workers colliding");
+        OnCollideWithOtherWorker?.Invoke();
     }
 
     private const string IDLE = "Idle";

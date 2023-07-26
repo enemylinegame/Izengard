@@ -15,6 +15,7 @@ namespace Controllers.Worker
         {
             Model = workerModel;
             View = workerView;
+            View.OnCollideWithOtherWorker += OnCollideWithOtherWorker;
         }
 
         private void InitTask(Vector3 fromPlace, Vector3 target)
@@ -81,6 +82,13 @@ namespace Controllers.Worker
             if (WorkerStates.NONE == Model.State)
                 return;
 
+            if (_sleepTime > 0)
+            {
+                _sleepTime -= deltaTime;
+                if (_sleepTime < 0)
+                    Resume();
+            }
+
             if (WorkerStates.PRODUCE_WORK == Model.State)
             {
                 Model.WorkTimeLeft -= deltaTime;
@@ -133,9 +141,20 @@ namespace Controllers.Worker
             }
         }
 
+        private float _sleepTime = 0;
+        private void OnCollideWithOtherWorker()
+        {
+            if (WorkerStates.GO_TO_WORK == Model.State)
+            {
+                View.Pause();
+                _sleepTime = GameContants.WORKER_AWAITING_TIME_SEC;
+            }
+        }
+
         public void Dispose()
         {
             Model = null;
+            View.OnCollideWithOtherWorker -= OnCollideWithOtherWorker;
             View = null;
         }
     }
