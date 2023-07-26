@@ -108,7 +108,7 @@ namespace CombatSystem
                 _onUpdate = _findTarget as IOnUpdate;
             }
             else _nextAction = _checkAttackDistance;
-            IsActionComplete = true;
+            IsActionComplete = true;            
 
         }
 
@@ -126,7 +126,7 @@ namespace CombatSystem
             else _nextAction = _checkAttackDistance;
             IsActionComplete = true;
             animator.SetTrigger("AttackTrigger"); //анимация атаки
-
+            
         }
 
         private void OnCheckAttackDistanceComplete(Damageable target)
