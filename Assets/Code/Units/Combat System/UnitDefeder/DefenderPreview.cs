@@ -4,12 +4,14 @@ using UnityEngine;
 
 namespace CombatSystem
 {
-    public class DefenderPreview
+    public class DefenderPreview : IGetProgress
     {
 
+        public event Action OnDefenderSet;  
+        
         private DefenderSettings _settings;
         private DefenderUnit _unit;
-        //private HireProgress _hireProgress;
+        private HireProgress _hireProgress;
         
         public Sprite Icon { get; private set; }
 
@@ -32,6 +34,7 @@ namespace CombatSystem
                 if (_unit == null)
                 {
                     _unit = value;
+                    OnDefenderSet?.Invoke();
                 }
             }
         }
@@ -60,7 +63,34 @@ namespace CombatSystem
             }
         }
 
-        //public void SetHireProgress(HireProgress hireProgress) => _hireProgress = hireProgress;
+        public void SetHireProgress(HireProgress hireProgress) => _hireProgress = hireProgress;
 
+
+        #region IGetProgress
+
+        public float GetCurrentProgress()
+        {
+            float progress = 0.0f;
+            if (_hireProgress != null)
+            {
+                if (_hireProgress.TimePassed <= _hireProgress.Duration)
+                {
+                    progress = _hireProgress.TimePassed;
+                }
+                else
+                {
+                    progress = _hireProgress.Duration;
+                }
+            }
+            return progress;
+        }
+        
+        public float GetMaxProgress()
+        {
+            return _hireProgress?.Duration ?? 0.0f;
+        }
+
+        #endregion 
+        
     }
 }

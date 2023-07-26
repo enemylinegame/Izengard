@@ -30,6 +30,7 @@ namespace Code.Units.HireDefendersSystem
                 TimePassed = 0.0f
             };
             _queues[tile].Enqueue(newProgress);
+            defenderPreview.SetHireProgress(newProgress);
         }
         
         
@@ -54,6 +55,7 @@ namespace Code.Units.HireDefendersSystem
 
         private void ProgressCompleted(HireProgress progress, TileModel tile)
         {
+            progress.Defender.SetHireProgress(null);
             _finishProgressListener?.Invoke(progress.Defender, tile, progress.Settings);
         }
 
@@ -61,8 +63,11 @@ namespace Code.Units.HireDefendersSystem
         {
             _finishProgressListener += listener;
         }
-        
-        
+
+        public void Clear()
+        {
+            
+        }
         
     }
 }

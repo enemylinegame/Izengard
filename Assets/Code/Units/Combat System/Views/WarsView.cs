@@ -430,6 +430,8 @@ namespace CombatSystem.Views
             _defendersManager = manager;
         }
 
+        #region ITileSelector
+
         public void Cancel()
         {
             SendDefendersModeOff();
@@ -454,6 +456,8 @@ namespace CombatSystem.Views
                 _defendersManager.SendToOtherTile(units, tile);
             }
         }
+        
+        #endregion
         
         private void SendDefendersModeOn()
         {
