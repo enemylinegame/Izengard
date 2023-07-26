@@ -18,6 +18,7 @@ namespace Code.TileSystem
         private readonly WarsView _warsView;
         private readonly HireUnitView _hireUnitView;
         private readonly PaymentDefendersSystem _paymentSystem;
+        private readonly HireDefenderProgressManager _hireProgressManager;
 
         private DefendersSet _defendersSet;
         
@@ -31,7 +32,7 @@ namespace Code.TileSystem
 
         public DefendersManager(TileController tileController, IDefendersControll defendersController, 
             UIController uiController, HireUnitView hireUnitView, DefendersSet defendersSet, 
-            PaymentDefendersSystem paymentSystem)
+            PaymentDefendersSystem paymentSystem, HireDefenderProgressManager hireProgressManager)
         {
             _tileController = tileController;
             _defendersController = defendersController;
@@ -42,6 +43,8 @@ namespace Code.TileSystem
             _hireUnitView.OnHireButtonClick += HireDefenderButtonClick;
             _hireUnitView.OnCloseButtonClick += CloseHireDefenderPanel;
             _paymentSystem = paymentSystem;
+            _hireProgressManager = hireProgressManager;
+            _hireProgressManager.AddFinishProgressListener(FinishHireDefenderProcess);
         }
 
 
@@ -137,15 +140,22 @@ namespace Code.TileSystem
             {
                 if (_paymentSystem.PayForDefender(settings.HireCost))
                 {
-                    DefenderPreview unit = new DefenderPreview(settings);
-                    DefenderUnit defender = _defendersController.CreateDefender(SelectedTileModel, settings);
-                    unit.Unit = defender;
-                    defendersOnTile.Add(unit);
-                    defender.Tile = SelectedTileModel;
-                    defender.DefenderUnitDead += DefenderDead;
+                    DefenderPreview unitPreview = new DefenderPreview(settings);
+                    defendersOnTile.Add(unitPreview);
+                    _hireProgressManager.StartDefenderHireProcess(unitPreview, SelectedTileModel, settings, 
+                        settings.HireDuration);
                 }
             }
             _warsView.UpdateDefenders();
+        }
+
+        private void FinishHireDefenderProcess(DefenderPreview defenderPreview, TileModel tile, 
+            DefenderSettings settings)
+        {
+            DefenderUnit defender = _defendersController.CreateDefender(tile, settings);
+            defenderPreview.Unit = defender;
+            defender.Tile = tile;
+            defender.DefenderUnitDead += DefenderDead;
         }
 
         #region ITileLoadInfo

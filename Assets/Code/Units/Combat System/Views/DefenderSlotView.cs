@@ -148,9 +148,12 @@ namespace CombatSystem.Views
                 IsInBarrack = unit.IsInBarrack;
                 _hireButton.gameObject.SetActive(false);
                 _dismissButton.gameObject.SetActive(true);
-                _unit.AddHeathListener(HealthChanged);
-                _hpBarRoot.SetActive(true);
-                UpdateHealth();
+                if (_unit.Unit != null)
+                {
+                    _unit.AddHeathListener(HealthChanged);
+                    _hpBarRoot.SetActive(true);
+                    UpdateHealth();
+                }
             }
             else
             {

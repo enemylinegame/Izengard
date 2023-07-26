@@ -1,4 +1,5 @@
 ﻿using System;
+using Code.Units.HireDefendersSystem;
 using UnityEngine;
 
 namespace CombatSystem
@@ -8,6 +9,7 @@ namespace CombatSystem
 
         private DefenderSettings _settings;
         private DefenderUnit _unit;
+        //private HireProgress _hireProgress;
         
         public Sprite Icon { get; private set; }
 
@@ -57,6 +59,8 @@ namespace CombatSystem
                 _unit.OnHealthChanged -= listener;
             }
         }
+
+        //public void SetHireProgress(HireProgress hireProgress) => _hireProgress = hireProgress;
 
     }
 }
