@@ -78,7 +78,7 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
 
     public void MakeDamage(int damage)
     {
-        animator.SetTrigger("TakeDamage"); //анимация получения урона (работает, но неконсистентно)
+        animator.SetTrigger("TakeDamage"); //анимация получения урона 
         CurrentHealth -= damage;
         OnHealthChanged?.Invoke(MaxHealth,CurrentHealth);
         

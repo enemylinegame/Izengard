@@ -2853,10 +2853,10 @@ GameObject:
   m_Component:
   - component: {fileID: 417932}
   - component: {fileID: 9513784}
-  - component: {fileID: -68696939160729883}
   - component: {fileID: -7259779588729330226}
   - component: {fileID: 2192190955237394796}
   - component: {fileID: -2790387625662590886}
+  - component: {fileID: -68696939160729883}
   - component: {fileID: -8959338978983441128}
   m_Layer: 9
   m_Name: DefenderMelee
@@ -2914,7 +2914,7 @@ Animator:
   m_GameObject: {fileID: 162708}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 635180035812f964db1d9529cbb170f2, type: 3}
-  m_Controller: {fileID: 9100000, guid: 77e6228f2d5a532428cc99051dac20e5, type: 2}
+  m_Controller: {fileID: 9100000, guid: 4c401b5b68e873948aa8de503685bd5c, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -2924,21 +2924,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &-68696939160729883
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 162708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d33f3acb88c0a63498346a81a394ce5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _icon: {fileID: 0}
-  _maxCountAttackers: 1
-  _threatLevel: 0
 --- !u!54 &-7259779588729330226
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2965,7 +2950,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5000001
-  m_Speed: 3.5
+  m_Speed: 1
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -2993,6 +2978,22 @@ MonoBehaviour:
   m_Area: 0
   m_IgnoreFromBuild: 1
   m_AffectedAgents: ffffffff
+--- !u!114 &-68696939160729883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 162708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d33f3acb88c0a63498346a81a394ce5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _icon: {fileID: 0}
+  _maxCountAttackers: 1
+  _threatLevel: 0
+  animator: {fileID: 0}
 --- !u!136 &-8959338978983441128
 CapsuleCollider:
   m_ObjectHideFlags: 0

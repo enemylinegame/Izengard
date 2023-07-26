@@ -164,6 +164,7 @@ namespace CombatSystem
             if (!IsActionComplete)
             {
                 _onUpdate?.OnUpdate(deltaTime);
+                animator.SetBool("IsMoving", true);  //анимация бега
             }
         }
 
@@ -185,7 +186,7 @@ namespace CombatSystem
         {
             _currentTarget = _primaryTarget;
             _actionList.ForEach(action => action.ClearTarget());
-            animator.SetTrigger("SwitchTrigger"); //анимация смены цели
+            
         }
 
         private void DrawLineToTarget()
