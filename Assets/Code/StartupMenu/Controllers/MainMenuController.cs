@@ -29,7 +29,6 @@ namespace StartupMenu
             return objectView.GetComponent<MainMenuView>();
         }
 
-
         private void StartGame()
         {
             _menuMonitor.CurrentState = MenuState.Game;
