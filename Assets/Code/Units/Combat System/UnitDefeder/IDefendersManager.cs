@@ -8,10 +8,10 @@ namespace CombatSystem
     public interface IDefendersManager
     {
         void HireDefender();
-        void DismissDefender(List<DefenderUnit> units);
-        void SendToBarrack(List<DefenderUnit> units);
-        void KickoutFromBarrack(List<DefenderUnit> units);
-        void SendToOtherTile(List<DefenderUnit> units, TileView tile);
+        void DismissDefender(List<DefenderPreview> units);
+        void SendToBarrack(List<DefenderPreview> units);
+        void KickoutFromBarrack(List<DefenderPreview> units);
+        void SendToOtherTile(List<DefenderPreview> units, TileView tile);
         void BarrackButtonClick();
     }
 }

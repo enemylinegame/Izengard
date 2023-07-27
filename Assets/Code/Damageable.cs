@@ -30,6 +30,11 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
     private List<Damageable> _listAttackedUnits = new List<Damageable>();
     
     public event Action<List<Damageable>> MeAttackedChenged;
+    
+    public Animator animator;
+
+
+  
 
     public void Init(int maxHealth, int maxAttackers = 1)
     {
@@ -37,6 +42,7 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
         MaxHealth = maxHealth;
         IsDead = false;
         _maxCountAttackers = maxAttackers;
+        animator = GetComponent<Animator>();
     }
 
     public bool Attacked(Damageable damageable)
@@ -72,10 +78,14 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
 
     public void MakeDamage(int damage)
     {
+        animator.SetTrigger("TakeDamage"); //анимация получения урона (работает, но неконсистентно)
         CurrentHealth -= damage;
         OnHealthChanged?.Invoke(MaxHealth,CurrentHealth);
+        
+
         if (CurrentHealth <= 0)
         {
+            animator.SetBool("EnemyDead", true); //анимация смерти (пока что не работает, так как враг деспаунится быстрее анимации)
             IsDead = true;
             _listAttackedUnits.Clear();
             OnDeath?.Invoke();

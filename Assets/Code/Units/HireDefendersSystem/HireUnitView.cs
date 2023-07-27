@@ -7,6 +7,7 @@ namespace Code.Units.HireDefendersSystem
 {
     public class HireUnitView
     {
+        // временная UI панель выбора защитника для найма
         
         public event Action OnCloseButtonClick;
         public event Action<int> OnHireButtonClick;

@@ -22,35 +22,39 @@ namespace CombatSystem
 
         private Transform _enemyTransform;
 
+        Animator animator;
+
         public bool IsActionComplete { get; private set; }
 
 
         public EnemyAI(Enemy unit, Damageable primaryTarget, IEnemyAnimationController animationController,
             IBulletsController bulletsController)
         {
+            
             _actionList = new List<IAction<Damageable>>();
             _type = unit.Type;
-
             var navmesh = unit.RootGameObject.GetComponent<NavMeshAgent>();
-            navmesh.speed = unit.Stats.RunSpeed;
-            
             _currentTarget =_primaryTarget = primaryTarget;
             _findTarget = new FindTargetAction(unit,primaryTarget);
             _actionList.Add(_findTarget);
             _onUpdate = _findTarget as IOnUpdate;
             _planRoute = new PlanRouteAction(navmesh);
             _actionList.Add(_planRoute);
-            
+            animator = unit.MyDamagable.GetComponent<Animator>(); //аниматор
+
             if (unit.Type == EnemyType.Archer)
             {
+                
                 _attack = new RangedAttackAction(bulletsController, unit);
+               
+
             }
             else
             {
                 _attack = new AttackAction(animationController, unit);
             }
-            
             _actionList.Add(_attack);
+            
             _checkAttackDistance = new CheckAttackDistance(unit, navmesh, unit.Stats.AttackRange);
             _actionList.Add(_checkAttackDistance);
 
@@ -60,7 +64,7 @@ namespace CombatSystem
             _checkAttackDistance.OnComplete += OnCheckAttackDistanceComplete;
 
             _enemyTransform = unit.RootGameObject.transform;
-
+            
             StopAction();
         }
 
@@ -68,6 +72,7 @@ namespace CombatSystem
         {
             IsActionComplete = false;
             _nextAction.StartAction(_currentTarget);
+            
         }
 
         public void StopAction()
@@ -103,7 +108,7 @@ namespace CombatSystem
                 _onUpdate = _findTarget as IOnUpdate;
             }
             else _nextAction = _checkAttackDistance;
-            IsActionComplete = true;
+            IsActionComplete = true;            
 
         }
 
@@ -120,6 +125,8 @@ namespace CombatSystem
             }
             else _nextAction = _checkAttackDistance;
             IsActionComplete = true;
+            animator.SetTrigger("AttackTrigger"); //анимация атаки
+            
         }
 
         private void OnCheckAttackDistanceComplete(Damageable target)
@@ -178,6 +185,7 @@ namespace CombatSystem
         {
             _currentTarget = _primaryTarget;
             _actionList.ForEach(action => action.ClearTarget());
+            animator.SetTrigger("SwitchTrigger"); //анимация смены цели
         }
 
         private void DrawLineToTarget()

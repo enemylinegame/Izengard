@@ -23,14 +23,15 @@ namespace CombatSystem.Views
         private GameObject _selectedBoard;
         private GameObject _hpBarRoot;
         private RectTransform _hpBar;
-        private DefenderUnit _unit;
+        private DefenderPreview _unit;
+        private HiringProgressVisualizer _hiringProgressVisualizer;
 
         private int _number;
 
         private bool _isInBarrack;
         private bool _isEnabled;
         private bool _isSelected;
-
+        private bool _isHireIndication;
 
         public bool IsInBarrack
         {
@@ -80,7 +81,7 @@ namespace CombatSystem.Views
             }
         }
 
-        public DefenderUnit Unit { get => _unit; }
+        public DefenderPreview Unit { get => _unit; }
 
 
         public DefenderSlotView(DefenderSlotUI slot, int number)
@@ -103,6 +104,7 @@ namespace CombatSystem.Views
             _selectedBoard.SetActive(_isSelected);
             _hpBarRoot = slot.HpBarRoot;
             _hpBar = slot.HpBar;
+            _hiringProgressVisualizer = new HiringProgressVisualizer(slot.UnitIconMask);
             
             _hpBarRoot.SetActive(false);
             _number = number;
@@ -138,24 +140,54 @@ namespace CombatSystem.Views
             }
         }
 
-        public void SetUnit(DefenderUnit unit)
+        public void SetUnit(DefenderPreview unit)
         {
             if (unit != null)
             {
                 _unitIcon.sprite = unit.Icon;
                 _unit = unit;
-                _inBarrack.gameObject.SetActive(true);
-                IsInBarrack = unit.IsInBarrack;
-                _hireButton.gameObject.SetActive(false);
-                _dismissButton.gameObject.SetActive(true);
-                _unit.OnHealthChanged += HealthChanged;
-                _hpBarRoot.SetActive(true);
-                UpdateHealth();
+
+                if (_unit.Unit != null)
+                {
+                    SetUnitReadyMode();
+                }
+                else
+                {
+                    SetHiringUnitMode();
+                }
             }
             else
             {
+                StopProgressIndication();
                 RemoveUnit();
             }
+        }
+
+        private void SetUnitReadyMode()
+        {
+            StopProgressIndication();
+            _inBarrack.gameObject.SetActive(true);
+            IsInBarrack = _unit.IsInBarrack;
+            _hireButton.gameObject.SetActive(false);
+            _dismissButton.gameObject.SetActive(true);
+            _unit.AddHeathListener(HealthChanged);
+            _hpBarRoot.SetActive(true);
+            UpdateHealth();
+        }
+
+        private void SetHiringUnitMode()
+        {
+            _inBarrack.gameObject.SetActive(false);
+            _hireButton.gameObject.SetActive(false);
+            _dismissButton.gameObject.SetActive(false);
+            _unit.OnDefenderSet += OnUnitReady;
+            StartProgressIndication();
+        }
+
+        private void OnUnitReady()
+        {
+            _unit.OnDefenderSet -= OnUnitReady;
+            SetUnitReadyMode();
         }
 
         public void RemoveUnit()
@@ -163,11 +195,16 @@ namespace CombatSystem.Views
             IsSelected = false;
             _unitIcon.sprite = _emptySprite;
             _hpBarRoot.SetActive(false);
-            _unit.OnHealthChanged -= HealthChanged;
+            _unit.RemoveHeathListener(HealthChanged);
+            if (_isHireIndication)
+            {
+                _unit.OnDefenderSet -= OnUnitReady;
+            }
             _unit = null;
             _inBarrack.gameObject.SetActive(false);
             _dismissButton.gameObject.SetActive(false);
             _hireButton.gameObject.SetActive(true);
+            StopProgressIndication();
         }
 
         private void HealthChanged(float maxHealth, float currentHealth)
@@ -187,5 +224,22 @@ namespace CombatSystem.Views
             HealthChanged(health.MaxHealth, health.CurrentHealth);
         }
 
+        private void StartProgressIndication()
+        {
+            if (!_isHireIndication)
+            {
+                _hiringProgressVisualizer.On(_unit);
+                _isHireIndication = true;
+            }
+        }
+
+        private void StopProgressIndication()
+        {
+            if (_isHireIndication)
+            {
+                _hiringProgressVisualizer.Off();
+                _isHireIndication = false;
+            }
+        }
     }
 }

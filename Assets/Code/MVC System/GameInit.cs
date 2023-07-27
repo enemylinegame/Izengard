@@ -66,8 +66,9 @@ public class GameInit
         var tileResourceUIController = new TileResourceUIController(uiController, inputController, tileController, gameConfig);
         var hireUnitView = new HireUnitView(rightUI.HireUnits);
         var paymentDefendersSystem = new PaymentDefendersSystem(globalResStock);
-        var defendersAssignController = new DefendersManager(tileController, defenderController, uiController,
-            hireUnitView, gameConfig.DefendersSets, paymentDefendersSystem);
+        var hireDefendersManager = new HireDefenderProgressManager();
+        var defendersAssignController = new DefendersManager(tileController, defenderController, uiController, 
+            hireUnitView, gameConfig.DefendersSets, paymentDefendersSystem, hireDefendersManager);
         inputController.Add(defendersAssignController);
 
         if (!gameConfig.ChangeVariant) new ResourceGenerator(/*buildController.Buildings, */gameConfig, levelGenerator, buildingController);
@@ -89,6 +90,7 @@ public class GameInit
         controller.Add(defenderController);
         controller.Add(bulletsController);
         controller.Add(marketController);
+        controller.Add(hireDefendersManager);
 
         // var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
         // controller.Add(testDummyTargetController);

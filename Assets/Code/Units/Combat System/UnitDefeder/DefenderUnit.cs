@@ -71,8 +71,6 @@ namespace CombatSystem
             }
         }
         
-        public Sprite Icon { get; private set; }
-        
 
         public DefenderUnit(GameObject defender, Vector3 defendPosition, DefenderSettings settings, 
             IBulletsController bulletsController)
@@ -80,7 +78,6 @@ namespace CombatSystem
             _unitStats = settings.UnitStats;
             _defenderRootGO = defender;
             _defendPosition = defendPosition;
-            Icon = settings.Icon;
             _myDamageable = defender.GetComponent<Damageable>();
             _myDamageable.OnHealthChanged += HealthChanged;
             _myDamageable.OnDeath += DefenderDead;
