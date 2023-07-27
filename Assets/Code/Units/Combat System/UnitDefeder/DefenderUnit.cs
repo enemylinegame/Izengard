@@ -35,11 +35,13 @@ namespace CombatSystem
         private DefenderIdle _idleState;
         private DefenderInBarrack _inBarrackState;
         private DefenderPursuit _pursuitState;
+        private DefenderDying _dying;
         private DefenderStateBase _currentStateExecuter;
 
         private Vector3 _defendPosition;
         private DefenderState _state;
 
+        private float _bodyDestroyDelay;
 
         /// <summary>
         /// Going to barrack or inside barrack
@@ -109,15 +111,16 @@ namespace CombatSystem
             _inBarrackState = new DefenderInBarrack(this, SetState);
             _pursuitState = new DefenderPursuit(this, SetState, _agent, _targetSelector, _targetsHolder,
                 _targetFinder);
+            _dying = new DefenderDying(this, SetState, _defenderRootGO);
             _visualSelect = new DefenderVisualSelect(defender, settings.SelectVisualEffectPrefab);
             _visualSelect.Off();
+            _bodyDestroyDelay = settings.DestroyDelayAfterDeath;
 
             SetState(DefenderState.Going);
         }
 
         private void DefenderDead()
         {
-            _animation.Disable();
             DefenderUnitDead?.Invoke(this);
         }
 
@@ -178,6 +181,7 @@ namespace CombatSystem
                 //Debug.Log($"DefenderUnit::OnDamaged: {_state} ");
                 _currentStateExecuter.OnDamaged(attacker);
             }
+            _animation.TakeDamage();
         }
 
         private void AddedTargetInRange()
@@ -207,6 +211,9 @@ namespace CombatSystem
                     break;
                 case DefenderState.InBarrack:
                     _currentStateExecuter = _inBarrackState;
+                    break;
+                case DefenderState.Dying:
+                    _currentStateExecuter = _dying;
                     break;
             }
 
@@ -248,6 +255,13 @@ namespace CombatSystem
 
         public void DestroyItself()
         {
+            SetState(DefenderState.Dying);
+            (new TimeRemaining(DestroyBody, _bodyDestroyDelay)).AddTimeRemaining();
+        }
+
+        private void DestroyBody()
+        {
+            _animation.Disable();
             GameObject.Destroy(_defenderRootGO);
         }
 
@@ -257,7 +271,7 @@ namespace CombatSystem
             {
                 _myDamageable.MakeDamage(_unitStats.MaxHealth, null);
             }
-
+            _animation.Disable();
             GameObject.Destroy(_defenderRootGO);
         }
 
