@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace StartupMenu
 {
-    public class BaseController : IDisposable
+    public abstract class BaseController : IDisposable
     {
 
         private List<IDisposable> _disposableObjects;

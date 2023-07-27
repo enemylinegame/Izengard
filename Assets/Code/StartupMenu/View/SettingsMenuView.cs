@@ -13,14 +13,23 @@ namespace StartupMenu
         [SerializeField] private AudioMixer _audioMixer;
         
         [Space(10)]
+        [Header("Graphics Settings")]
+        [Space(2)]
         [SerializeField] private TMP_Dropdown _resolutionDropdown;
         [SerializeField] private TMP_Dropdown _graphicsDropdown;
         [SerializeField] private TMP_Dropdown _shadowDropdown;
-
-        [Space(10)]
+        [Space(5)]
         [SerializeField] private Toggle _fullScreenToggle;
         [SerializeField] private Toggle _vsyncToggle;
         [SerializeField] private Toggle _blurToggle;
+
+        [Space(10)]
+        [Header("Sound Settings")]
+        [Space(2)]
+        [SerializeField] private Slider _masterVolumeSlider;
+        [SerializeField] private Slider _musicVolumeSlider;
+        [SerializeField] private Slider _voiceVolumeSlider;
+        [SerializeField] private Slider _effectsVolumeSlider;
 
         private Resolution[] resolutions;
 
@@ -36,6 +45,11 @@ namespace StartupMenu
             _fullScreenToggle.onValueChanged.AddListener(model.ChangeFullScreenMode);
             _vsyncToggle.onValueChanged.AddListener(model.ChangeVSyncMode);
             _blurToggle.onValueChanged.AddListener(model.ChangeBlurMode);
+
+            _masterVolumeSlider.onValueChanged.AddListener(model.ChangeMasterVolume);
+            _musicVolumeSlider.onValueChanged.AddListener(model.ChangeMusicVolume);
+            _voiceVolumeSlider.onValueChanged.AddListener(model.ChangeVoiceVolume);
+            _effectsVolumeSlider.onValueChanged.AddListener(model.ChangeEffectsVolume);
 
             resolutions = Screen.resolutions;
 
@@ -92,6 +106,11 @@ namespace StartupMenu
             _fullScreenToggle.onValueChanged.RemoveAllListeners();
             _vsyncToggle.onValueChanged.RemoveAllListeners();
             _blurToggle.onValueChanged.RemoveAllListeners();
+
+            _masterVolumeSlider.onValueChanged.RemoveAllListeners();
+            _musicVolumeSlider.onValueChanged.RemoveAllListeners();
+            _voiceVolumeSlider.onValueChanged.RemoveAllListeners();
+            _effectsVolumeSlider.onValueChanged.RemoveAllListeners();
         }
     }
 }

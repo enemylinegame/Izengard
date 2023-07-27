@@ -2892,6 +2892,10 @@ MonoBehaviour:
   _fullScreenToggle: {fileID: 581920706790432170}
   _vsyncToggle: {fileID: 737854776437418063}
   _blurToggle: {fileID: 581920707818823339}
+  _masterVolumeSlider: {fileID: 581920707694926216}
+  _musicVolumeSlider: {fileID: 7193788359443125824}
+  _voiceVolumeSlider: {fileID: 7193788360034289798}
+  _effectsVolumeSlider: {fileID: 7193788359953269342}
 --- !u!1 &581920707680556666
 GameObject:
   m_ObjectHideFlags: 0
@@ -2980,7 +2984,7 @@ GameObject:
   - component: {fileID: 581920707694926219}
   - component: {fileID: 581920707694926216}
   m_Layer: 5
-  m_Name: SliderVoiceSound
+  m_Name: Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4647,7 +4651,7 @@ GameObject:
   - component: {fileID: 7193788359443125825}
   - component: {fileID: 7193788359443125824}
   m_Layer: 5
-  m_Name: SliderVoiceSound
+  m_Name: Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5544,7 +5548,7 @@ GameObject:
   - component: {fileID: 7193788359953269343}
   - component: {fileID: 7193788359953269342}
   m_Layer: 5
-  m_Name: SliderVoiceSound
+  m_Name: Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5807,7 +5811,7 @@ GameObject:
   - component: {fileID: 7193788360034289799}
   - component: {fileID: 7193788360034289798}
   m_Layer: 5
-  m_Name: SliderVoiceSound
+  m_Name: Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
