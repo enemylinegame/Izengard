@@ -9,6 +9,8 @@ namespace Code.TileSystem
     {
         private const int MAX_WARRIORS = 8;
         
+        public float CurrentHealth { get; set; }
+        public float MaxHealth { get; set; }
         public HouseType HouseType { get; set; }
         public TileConfig TileConfig { get; set; }
         public List<Dot> DotSpawns { get; set; }

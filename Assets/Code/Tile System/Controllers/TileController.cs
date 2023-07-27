@@ -10,7 +10,7 @@ using Object = UnityEngine.Object;
 
 namespace Code.TileSystem
 {
-    public class TileController : IDisposable, IOnController, IOnTile, ITileLoadInfo
+    public class TileController : IDisposable, IOnController, IOnTile, ITileLoadInfo, IOnUpdate
     {
         #region Fields
 
@@ -347,5 +347,10 @@ namespace Code.TileSystem
         }
         #endregion
 
+        public void OnUpdate(float deltaTime)
+        {
+            if(_tileView != null)
+                Debug.Log($"Currenthealth: {_tileView.TileModel.CurrentHealth}");
+        }
     }
 }

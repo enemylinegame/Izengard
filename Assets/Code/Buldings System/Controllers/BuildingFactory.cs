@@ -12,7 +12,7 @@ using Random = UnityEngine.Random;
 
 namespace Code.BuildingSystem
 {
-    public class BuildingFactory: IDisposable
+    public class BuildingFactory: IDisposable, IOnController, IOnUpdate
     {
         private UIController _uiController;
         private ITextVisualizationOnUI _notificationUI;
@@ -25,6 +25,10 @@ namespace Code.BuildingSystem
             new HashSet<DummyController>();
 
         public event Action<BuildingTypes, bool> OnBuildingsChange;
+        
+        //TODO Это временно!!
+        private DummyController _dummyController;
+        private TileView _tileView;
 
         public BuildingFactory(UIController uiController, GlobalStock stock, 
             GameConfig gameConfig, GeneratorLevelController levelController)
@@ -184,6 +188,9 @@ namespace Code.BuildingSystem
             var instaniatedDummy = Object.Instantiate(_gameConfig.TestBuilding, view.transform.position, Quaternion.identity);
             var dummyController = new DummyController(instaniatedDummy);
             _instantiatedDummys.Add(dummyController);
+            _tileView = view;
+            view.TileModel.MaxHealth = dummyController.Dummy.MaxHealth;
+            _dummyController = dummyController;
             foreach (var dummy in _instantiatedDummys) dummy.Spawn();
         }
         
@@ -192,6 +199,13 @@ namespace Code.BuildingSystem
             _levelController.OnCombatPhaseStart -= RespawnDummies;
             // _levelGenerator.SpawnResources -= OnNewTile;
             foreach (var dummyController in _instantiatedDummys) dummyController.Dispose();
+        }
+
+        public void OnUpdate(float deltaTime)
+        {
+            if(_dummyController != null && _tileView != null)
+                if(_dummyController.Dummy.CurrentHealth >= 0)
+                    _tileView.TileModel.CurrentHealth = _dummyController.Dummy.CurrentHealth;
         }
     }
 }
