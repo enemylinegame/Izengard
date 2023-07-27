@@ -2093,6 +2093,7 @@ GameObject:
   - component: {fileID: -8267112835474923397}
   - component: {fileID: 3270848265423002376}
   - component: {fileID: 9205287377694162915}
+  - component: {fileID: 6343854224559908517}
   m_Layer: 9
   m_Name: DefenderArcher
   m_TagString: Player
@@ -2184,7 +2185,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 147264}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5000001
+  m_Radius: 0.4
   m_Speed: 1
   m_Acceleration: 8
   avoidancePriority: 50
@@ -2193,8 +2194,8 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 1
+  m_Height: 1.54
+  m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &3270848265423002376
@@ -2229,6 +2230,20 @@ MonoBehaviour:
   _maxCountAttackers: 1
   _threatLevel: 0
   animator: {fileID: 0}
+--- !u!136 &6343854224559908517
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 147264}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.4
+  m_Height: 1.5568914
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.74258316, z: 0}
 --- !u!1 &147358
 GameObject:
   m_ObjectHideFlags: 0
