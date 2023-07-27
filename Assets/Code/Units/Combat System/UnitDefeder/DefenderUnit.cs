@@ -105,6 +105,8 @@ namespace CombatSystem
                     _myDamageable, _targetFinder);
             }
 
+            _fightState.OnStartAttack += _animation.StartAttack;
+            
             _goingState = new DefenderGoing(this, SetState, _unitStats, _agent);
             _gotoBarrackState = new DefenderGotoBarrack(this, SetState, _agent);
             _idleState = new DefenderIdle(this, SetState, _agent);
@@ -121,6 +123,7 @@ namespace CombatSystem
 
         private void DefenderDead()
         {
+            _agent.ResetPath();
             DefenderUnitDead?.Invoke(this);
         }
 

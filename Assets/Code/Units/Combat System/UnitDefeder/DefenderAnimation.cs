@@ -53,5 +53,13 @@ namespace CombatSystem
             }
         }
 
+        public void StartAttack()
+        {
+            if (_isEnabled)
+            {
+                _animator.SetTrigger(_attackTriggerProperty);
+            }
+        }
+
     }
 }

@@ -28,4 +28,4 @@ MonoBehaviour:
   - _resourceType: 8
     _cost: 10
   <HireDuration>k__BackingField: 0.5
-  <DestroyDelayAfterDeath>k__BackingField: 7
+  <DestroyDelayAfterDeath>k__BackingField: 10
