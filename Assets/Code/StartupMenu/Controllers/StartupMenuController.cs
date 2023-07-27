@@ -1,29 +1,23 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace StartupMenu
 {
-    public class StartupMenuController
+    public class StartupMenuController : BaseController
     {
         private readonly int _gameSceneIndex = 1;
+
         private readonly Transform _placeForUi;
-
-        private readonly GameObject _mainMenuPrefab;
-        private readonly GameObject _settingsPrefab;
-
-        private readonly StateMonitor _startupSceneState;
+        private readonly StateModel _startupSceneState;
 
         private MainMenuController _mainMenuController;
         private SettingsMenuController _settingsMenuContoller;
 
-        public StartupMenuController(Transform placeForUi, GameObject mainMenuPrefab, GameObject settingsPrefab)
+        public StartupMenuController(Transform placeForUi)
         {
             _placeForUi = placeForUi;
-            _mainMenuPrefab = mainMenuPrefab;
-            _settingsPrefab = settingsPrefab;
 
-            _startupSceneState = new StateMonitor();
+            _startupSceneState = new StateModel();
 
             _startupSceneState.OnStateChange += OnChangeGameState;
 
@@ -38,12 +32,12 @@ namespace StartupMenu
             {
                 case MenuState.Start:
                     {
-                        _mainMenuController = new MainMenuController(_mainMenuPrefab, _placeForUi, _startupSceneState);
+                        _mainMenuController = new MainMenuController(_placeForUi, _startupSceneState);
                         break;
                     }
                 case MenuState.Settings:
                     {
-                        _settingsMenuContoller = new SettingsMenuController(_settingsPrefab, _placeForUi);
+                        _settingsMenuContoller = new SettingsMenuController(_placeForUi, _startupSceneState);
                         break;
                     }
                 case MenuState.Game:
@@ -79,6 +73,12 @@ namespace StartupMenu
 #else
             Application.Quit();
 #endif
+        }
+
+        protected override void OnDispose()
+        {
+            DisposeControllers();
+            _startupSceneState.OnStateChange -= OnChangeGameState;
         }
 
     }

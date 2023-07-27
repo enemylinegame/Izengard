@@ -2,11 +2,15 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace StartupMenu 
 {
     public class SettingsMenuView : MonoBehaviour
     {
+        [SerializeField] private Button _backToMenuButton; 
+
         public AudioMixer audioMixer;
 
         public TMP_Dropdown resolutionDropdown;
@@ -38,17 +42,30 @@ namespace StartupMenu
             resolutionDropdown.value = currentResolutionIndex;
             resolutionDropdown.RefreshShownValue();
         }
+
+        public void Init(UnityAction backToMenu)
+        {
+            _backToMenuButton.onClick.AddListener(backToMenu);
+        }
+
         public void SetVolume(float volume)
         {
             audioMixer.SetFloat("volume", volume);
         }
+
         public void SetQuality(int qualityIndex)
         {
             QualitySettings.SetQualityLevel(qualityIndex);
         }
+
         public void SetFullscreen(bool isFullscreen)
         {
             Screen.fullScreen = isFullscreen;
+        }
+
+        protected void OnDestroy()
+        {
+            _backToMenuButton.onClick.RemoveAllListeners();
         }
     }
 }

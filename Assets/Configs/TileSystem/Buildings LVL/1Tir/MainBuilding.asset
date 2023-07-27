@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MainBuilding
   m_EditorClassIdentifier: 
   _icon: {fileID: 0}
-  _maxHealth: 100
+  _maxHealth: 3000
   _name: 
   _buildingCost:
   - _resourceType: 1

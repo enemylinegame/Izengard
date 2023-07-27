@@ -11,7 +11,7 @@ namespace StartupMenu
         Exit
     }
 
-    public class StateMonitor
+    public class StateModel
     {
         public event Action<MenuState> OnStateChange;
 
