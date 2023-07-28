@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
@@ -10,7 +9,6 @@ namespace StartupMenu
     public class SettingsMenuView : MonoBehaviour
     {
         [SerializeField] private Button _backToMenuButton; 
-        [SerializeField] private AudioMixer _audioMixer;
         
         [Space(10)]
         [Header("Graphics Settings")]
@@ -31,7 +29,6 @@ namespace StartupMenu
         [SerializeField] private Slider _voiceVolumeSlider;
         [SerializeField] private Slider _effectsVolumeSlider;
 
-        private Resolution[] resolutions;
 
         public void Init(
             UnityAction backToMenu, SettingsMenuModel model)
@@ -50,13 +47,9 @@ namespace StartupMenu
             _musicVolumeSlider.onValueChanged.AddListener(model.ChangeMusicVolume);
             _voiceVolumeSlider.onValueChanged.AddListener(model.ChangeVoiceVolume);
             _effectsVolumeSlider.onValueChanged.AddListener(model.ChangeEffectsVolume);
-
-            resolutions = Screen.resolutions;
-
-            SetUpResolution(resolutions);
         }
 
-        private void SetUpResolution(IList<Resolution> resolutions)
+        public void SetUpResolution(IList<Resolution> resolutions)
         {
             _resolutionDropdown.ClearOptions();
 
@@ -77,22 +70,6 @@ namespace StartupMenu
             _resolutionDropdown.AddOptions(options);
             _resolutionDropdown.value = currentResolutionIndex;
             _resolutionDropdown.RefreshShownValue();
-        }
-
-
-        public void SetVolume(float volume)
-        {
-            _audioMixer.SetFloat("volume", volume);
-        }
-
-        public void SetQuality(int qualityIndex)
-        {
-            QualitySettings.SetQualityLevel(qualityIndex);
-        }
-
-        public void SetFullscreen(bool isFullscreen)
-        {
-            Screen.fullScreen = isFullscreen;
         }
 
         protected void OnDestroy()

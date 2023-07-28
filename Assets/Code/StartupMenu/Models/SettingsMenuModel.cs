@@ -2,8 +2,18 @@
 
 namespace StartupMenu
 {
+    public enum SettingsType
+    {
+        None, 
+        Graphics,
+        Sound
+    }
+
     public class SettingsMenuModel
     {
+        public event Action<SettingsType> OnSettingsChanged;
+
+
         private int _currentResolutionId;
         private int _currentGraphicsId;
         private int _currentShadowId;
@@ -25,6 +35,7 @@ namespace StartupMenu
             private set
             {
                 _currentResolutionId = value;
+                OnSettingsChanged?.Invoke(SettingsType.Graphics);
             }
         }
 
@@ -34,6 +45,7 @@ namespace StartupMenu
             private set
             {
                 _currentGraphicsId = value;
+                OnSettingsChanged?.Invoke(SettingsType.Graphics);
             }
         }
 
@@ -43,6 +55,7 @@ namespace StartupMenu
             private set
             {
                 _currentShadowId = value;
+                OnSettingsChanged?.Invoke(SettingsType.Graphics);
             }
         }
 
@@ -52,6 +65,7 @@ namespace StartupMenu
             private set
             {
                 _isFullScreenOn = value;
+                OnSettingsChanged?.Invoke(SettingsType.Graphics);
             }
         }
 
@@ -61,6 +75,7 @@ namespace StartupMenu
             private set
             {
                 _isFVSyncOn = value;
+                OnSettingsChanged?.Invoke(SettingsType.Graphics);
             }
         }
 
@@ -70,6 +85,7 @@ namespace StartupMenu
             private set
             {
                 _isBlurnOn = value;
+                OnSettingsChanged?.Invoke(SettingsType.Graphics);
             }
         }
 
@@ -79,6 +95,7 @@ namespace StartupMenu
             private set
             {
                 _masterVolumeValue = value;
+                OnSettingsChanged?.Invoke(SettingsType.Sound);
             }
         }
 
@@ -88,6 +105,7 @@ namespace StartupMenu
             private set
             {
                 _musicVolumeValue = value;
+                OnSettingsChanged?.Invoke(SettingsType.Sound);
             }
         }
 
@@ -97,6 +115,7 @@ namespace StartupMenu
             private set
             {
                 _voiceVolumeValue = value;
+                OnSettingsChanged?.Invoke(SettingsType.Sound);
             }
         }
 
@@ -106,6 +125,7 @@ namespace StartupMenu
             private set
             {
                 _effectsVolumeValue = value;
+                OnSettingsChanged?.Invoke(SettingsType.Sound);
             }
         }
 

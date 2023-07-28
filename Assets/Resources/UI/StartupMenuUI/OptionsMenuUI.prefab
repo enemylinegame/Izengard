@@ -2885,7 +2885,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _backToMenuButton: {fileID: 581920707118627069}
-  _audioMixer: {fileID: 24100000, guid: 3a6d9f822122c76438315552c7bd42e9, type: 2}
   _resolutionDropdown: {fileID: 581920706629347303}
   _graphicsDropdown: {fileID: 581920706309172760}
   _shadowDropdown: {fileID: 7193788360303506684}
@@ -3057,9 +3056,9 @@ MonoBehaviour:
   m_FillRect: {fileID: 581920707241842044}
   m_HandleRect: {fileID: 581920705865409032}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
-  m_WholeNumbers: 0
+  m_MinValue: -80
+  m_MaxValue: 0
+  m_WholeNumbers: 1
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4724,9 +4723,9 @@ MonoBehaviour:
   m_FillRect: {fileID: 7193788359471378225}
   m_HandleRect: {fileID: 7193788361172326546}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
-  m_WholeNumbers: 0
+  m_MinValue: -80
+  m_MaxValue: 0
+  m_WholeNumbers: 1
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5621,9 +5620,9 @@ MonoBehaviour:
   m_FillRect: {fileID: 7193788361140412539}
   m_HandleRect: {fileID: 7193788360353937751}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
-  m_WholeNumbers: 0
+  m_MinValue: -80
+  m_MaxValue: 0
+  m_WholeNumbers: 1
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5884,9 +5883,9 @@ MonoBehaviour:
   m_FillRect: {fileID: 7193788360225539931}
   m_HandleRect: {fileID: 7193788360588380404}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
-  m_WholeNumbers: 0
+  m_MinValue: -80
+  m_MaxValue: 0
+  m_WholeNumbers: 1
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -6545,6 +6544,8 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: High
       m_Image: {fileID: 0}
+    - m_Text: Very High
+      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -7146,7 +7147,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 100, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7193788360582492090

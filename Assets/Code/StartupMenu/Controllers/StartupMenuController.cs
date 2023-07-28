@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 namespace StartupMenu
@@ -8,14 +9,17 @@ namespace StartupMenu
         private readonly int _gameSceneIndex = 1;
 
         private readonly Transform _placeForUi;
+        private readonly AudioMixer _audioMixer;
+
         private readonly StateModel _startupSceneState;
 
         private MainMenuController _mainMenuController;
         private SettingsMenuController _settingsMenuContoller;
 
-        public StartupMenuController(Transform placeForUi)
+        public StartupMenuController(Transform placeForUi, AudioMixer audioMixer)
         {
             _placeForUi = placeForUi;
+            _audioMixer = audioMixer;
 
             _startupSceneState = new StateModel();
 
@@ -37,7 +41,7 @@ namespace StartupMenu
                     }
                 case MenuState.Settings:
                     {
-                        _settingsMenuContoller = new SettingsMenuController(_placeForUi, _startupSceneState);
+                        _settingsMenuContoller = new SettingsMenuController(_placeForUi, _audioMixer, _startupSceneState);
                         break;
                     }
                 case MenuState.Game:
