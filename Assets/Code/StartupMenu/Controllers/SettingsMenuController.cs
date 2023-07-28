@@ -35,7 +35,7 @@ namespace StartupMenu
                 _resolutionList.Add(resolution);
             }
 
-            _view.SetUpResolution(_resolutionList);
+            _view.InitSettingsValues(_resolutionList);
         }
 
 

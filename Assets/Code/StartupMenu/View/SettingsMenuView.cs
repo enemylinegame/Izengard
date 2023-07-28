@@ -59,7 +59,7 @@ namespace StartupMenu
         private void PlayClickSound() 
             => _clickAudioSource.Play();
 
-        public void SetUpResolution(IList<Resolution> resolutions)
+        public void InitSettingsValues(IList<Resolution> resolutions)
         {
             _resolutionDropdown.ClearOptions();
 
@@ -80,6 +80,17 @@ namespace StartupMenu
             _resolutionDropdown.AddOptions(options);
             _resolutionDropdown.value = currentResolutionIndex;
             _resolutionDropdown.RefreshShownValue();
+
+            _graphicsDropdown.value = 0;
+            _shadowDropdown.value = 0;
+
+            _fullScreenToggle.isOn = true;
+            _fullScreenToggle.onValueChanged?.Invoke(_fullScreenToggle.isOn);
+            _vsyncToggle.isOn = true;
+            _vsyncToggle.onValueChanged?.Invoke(_vsyncToggle.isOn);
+            _blurToggle.isOn = true;
+            _blurToggle.onValueChanged?.Invoke(_blurToggle.isOn);
+
         }
 
         protected void OnDestroy()
