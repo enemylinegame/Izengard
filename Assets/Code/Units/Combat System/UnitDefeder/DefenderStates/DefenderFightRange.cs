@@ -18,7 +18,7 @@ namespace CombatSystem.DefenderStates
 
         protected override void AttackTarget(IDamageable target)
         {
-            target.MakeDamage(_stats.AttackDamage, _myDamagable);
+            base.AttackTarget(target);
             LaunchBullet(target);
         }
         

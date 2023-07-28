@@ -24,50 +24,48 @@ namespace CombatSystem
             _defendersRoot = new GameObject(DEFENDERS_GO_ROOT_NAME).transform;
         }
 
-        public DefenderUnit CreateDefender(TileView tile, DefenderSettings settings)
+        public DefenderUnit CreateDefender(TileModel tile, DefenderSettings settings)
         {
             GameObject go = GameObject.Instantiate(settings.Prefab,_unitsSpawnPosition, Quaternion.identity, 
                 _defendersRoot);
-            Vector3 position = GeneratePositionNearTileCentre(tile);
+            Vector3 position = GeneratePositionNearTileCentre(tile.TilePosition);
             DefenderUnit defender = new DefenderUnit(go, position, settings, _bulletsController);
             defender.DefenderUnitDead += DefenderDead;
             _defenderUnits.Add(defender);
             return defender;
         }
 
-        private Vector3 GeneratePositionNearTileCentre(TileView tile)
+        private Vector3 GeneratePositionNearTileCentre(Vector3 tilePosition)
         {
             Vector3 position = UnityEngine.Random.insideUnitSphere * POSITION_RADIUS;
             position.y = 0f;
-            return position + tile.transform.position;
+            return position + tilePosition;
         }
 
-        public void SendDefendersToBarrack(List<DefenderUnit> defenderUnits, TileView tile)
+        public void SendDefendersToBarrack(List<DefenderUnit> defenderUnits, TileModel tile)
         {
             if (defenderUnits.Count > 0)
             {
-                Vector3 buildingPosition = tile.transform.position;
                 for (int i = 0; i < defenderUnits.Count; i++)
                 {
                     DefenderUnit unit = defenderUnits[i];
                     if (unit.IsInBarrack == false)
                     {
-                        unit.GoToBarrack(buildingPosition);
+                        unit.GoToBarrack(tile.TilePosition);
                     }
                 }
             }
         }
 
-        public void SendDefenderToBarrack(DefenderUnit unit, TileView tile)
+        public void SendDefenderToBarrack(DefenderUnit unit, TileModel tile)
         {
             if (unit.IsInBarrack == false)
             {
-                Vector3 buildingPosition = tile.transform.position;
-                unit.GoToBarrack(buildingPosition);
+                unit.GoToBarrack(tile.TilePosition);
             }
         }
 
-        public void KickDefendersOutOfBarrack(List<DefenderUnit> defenderUnits, TileView tile)
+        public void KickDefendersOutOfBarrack(List<DefenderUnit> defenderUnits, TileModel tile)
         {
             for (int i = 0; i < defenderUnits.Count; i++)
             {
@@ -76,15 +74,15 @@ namespace CombatSystem
             }
         }
 
-        public void KickDefenderOutOfBarrack(DefenderUnit unit, TileView tile)
+        public void KickDefenderOutOfBarrack(DefenderUnit unit, TileModel tile)
         {
             unit.ExitFromBarrack();
             SendDefenderToTile(unit, tile);
         }
 
-        public void SendDefenderToTile(DefenderUnit unit, TileView tile)
+        public void SendDefenderToTile(DefenderUnit unit, TileModel tile)
         {
-            Vector3 position = GeneratePositionNearTileCentre(tile);
+            Vector3 position = GeneratePositionNearTileCentre(tile.TilePosition);
             unit.GoToPosition(position);
         }
 

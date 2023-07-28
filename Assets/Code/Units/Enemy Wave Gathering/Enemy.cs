@@ -9,8 +9,7 @@ namespace Wave
         public readonly EnemyStats Stats;
         public readonly GameObject RootGameObject;
         public readonly Damageable MyDamagable;
-
-
+        
         public Enemy(EnemySettings enemySettings, GameObject rootGO, Damageable damageable)
         {
             Type = enemySettings.Type;
@@ -26,6 +25,6 @@ namespace Wave
             };
             RootGameObject = rootGO;
             MyDamagable = damageable;
-        }
+            }
     }
 }

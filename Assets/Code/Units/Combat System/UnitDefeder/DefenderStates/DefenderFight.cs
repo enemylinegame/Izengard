@@ -8,6 +8,8 @@ namespace CombatSystem.DefenderStates
     public class DefenderFight : DefenderStateBase
     {
 
+        public event Action OnStartAttack; 
+
         protected DefenderUnitStats _stats;
         private DefenderTargetsHolder _targetsHolder;
         private DefenderTargetSelector _targetSelector;
@@ -76,6 +78,7 @@ namespace CombatSystem.DefenderStates
 
         protected virtual void AttackTarget(IDamageable target)
         {
+            OnStartAttack?.Invoke();
             target.MakeDamage(_stats.AttackDamage, _myDamagable);
         }
 

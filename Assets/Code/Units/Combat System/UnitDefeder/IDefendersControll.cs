@@ -7,13 +7,13 @@ namespace CombatSystem
 {
     public interface IDefendersControll
     {
-        DefenderUnit CreateDefender(TileView tile, DefenderSettings settings);
-        void SendDefendersToBarrack(List<DefenderUnit> defenderUnits, TileView tile);
-        void SendDefenderToBarrack(DefenderUnit unit, TileView tile);
-        void KickDefendersOutOfBarrack(List<DefenderUnit> defenderUnits, TileView tile);
-        void KickDefenderOutOfBarrack(DefenderUnit unit, TileView tile);
+        DefenderUnit CreateDefender(TileModel tile, DefenderSettings settings);
+        void SendDefendersToBarrack(List<DefenderUnit> defenderUnits, TileModel tile);
+        void SendDefenderToBarrack(DefenderUnit unit, TileModel tile);
+        void KickDefendersOutOfBarrack(List<DefenderUnit> defenderUnits, TileModel tile);
+        void KickDefenderOutOfBarrack(DefenderUnit unit, TileModel tile);
         void DismissDefender(DefenderUnit unit);
-        void SendDefenderToTile(DefenderUnit unit, TileView tile);
+        void SendDefenderToTile(DefenderUnit unit, TileModel tile);
 
     }
 }

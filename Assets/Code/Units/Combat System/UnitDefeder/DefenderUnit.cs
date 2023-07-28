@@ -35,11 +35,13 @@ namespace CombatSystem
         private DefenderIdle _idleState;
         private DefenderInBarrack _inBarrackState;
         private DefenderPursuit _pursuitState;
+        private DefenderDying _dying;
         private DefenderStateBase _currentStateExecuter;
 
         private Vector3 _defendPosition;
         private DefenderState _state;
 
+        private float _bodyDestroyDelay;
 
         /// <summary>
         /// Going to barrack or inside barrack
@@ -71,8 +73,6 @@ namespace CombatSystem
             }
         }
         
-        public Sprite Icon { get; private set; }
-        
 
         public DefenderUnit(GameObject defender, Vector3 defendPosition, DefenderSettings settings, 
             IBulletsController bulletsController)
@@ -80,7 +80,6 @@ namespace CombatSystem
             _unitStats = settings.UnitStats;
             _defenderRootGO = defender;
             _defendPosition = defendPosition;
-            Icon = settings.Icon;
             _myDamageable = defender.GetComponent<Damageable>();
             _myDamageable.OnHealthChanged += HealthChanged;
             _myDamageable.OnDeath += DefenderDead;
@@ -106,21 +105,25 @@ namespace CombatSystem
                     _myDamageable, _targetFinder);
             }
 
+            _fightState.OnStartAttack += _animation.StartAttack;
+            
             _goingState = new DefenderGoing(this, SetState, _unitStats, _agent);
             _gotoBarrackState = new DefenderGotoBarrack(this, SetState, _agent);
             _idleState = new DefenderIdle(this, SetState, _agent);
             _inBarrackState = new DefenderInBarrack(this, SetState);
             _pursuitState = new DefenderPursuit(this, SetState, _agent, _targetSelector, _targetsHolder,
                 _targetFinder);
+            _dying = new DefenderDying(this, SetState, _defenderRootGO);
             _visualSelect = new DefenderVisualSelect(defender, settings.SelectVisualEffectPrefab);
             _visualSelect.Off();
+            _bodyDestroyDelay = settings.DestroyDelayAfterDeath;
 
             SetState(DefenderState.Going);
         }
 
         private void DefenderDead()
         {
-            _animation.Disable();
+            _agent.ResetPath();
             DefenderUnitDead?.Invoke(this);
         }
 
@@ -181,6 +184,7 @@ namespace CombatSystem
                 //Debug.Log($"DefenderUnit::OnDamaged: {_state} ");
                 _currentStateExecuter.OnDamaged(attacker);
             }
+            _animation.TakeDamage();
         }
 
         private void AddedTargetInRange()
@@ -210,6 +214,9 @@ namespace CombatSystem
                     break;
                 case DefenderState.InBarrack:
                     _currentStateExecuter = _inBarrackState;
+                    break;
+                case DefenderState.Dying:
+                    _currentStateExecuter = _dying;
                     break;
             }
 
@@ -251,6 +258,13 @@ namespace CombatSystem
 
         public void DestroyItself()
         {
+            SetState(DefenderState.Dying);
+            (new TimeRemaining(DestroyBody, _bodyDestroyDelay)).AddTimeRemaining();
+        }
+
+        private void DestroyBody()
+        {
+            _animation.Disable();
             GameObject.Destroy(_defenderRootGO);
         }
 
@@ -260,7 +274,7 @@ namespace CombatSystem
             {
                 _myDamageable.MakeDamage(_unitStats.MaxHealth, null);
             }
-
+            _animation.Disable();
             GameObject.Destroy(_defenderRootGO);
         }
 

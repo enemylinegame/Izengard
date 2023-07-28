@@ -14,6 +14,7 @@ namespace Code.TileSystem
             TileModel = new TileModel();
             TileModel.TileConfig = _tileConfig;
             TileModel.DotSpawns = _dotSpawns;
+            TileModel.TilePosition = transform.position;
             TileModel.Init();
         }
 

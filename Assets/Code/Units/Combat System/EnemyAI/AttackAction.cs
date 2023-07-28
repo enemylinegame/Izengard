@@ -1,17 +1,23 @@
 using System;
+using UnityEngine;
 using Wave;
+
 
 
 namespace CombatSystem
 {
-    public class AttackAction : IAction<Damageable>
+    public class AttackAction : MonoBehaviour, IAction<Damageable>
     {
+
         public event Action<Damageable> OnComplete;
 
         private readonly IEnemyAnimationController _animation;
         private readonly Enemy _unit;
         private Damageable _currentTarget;
+      
+        
 
+        
 
         public AttackAction(IEnemyAnimationController animation, Enemy unit)
         {
@@ -22,11 +28,15 @@ namespace CombatSystem
         public void StartAction(Damageable target)
         {
             _currentTarget = target;
-
+            
             _animation.ActionMoment += OnActionMoment;
             _animation.AnimationComplete += OnAnimationComplete;
+            
 
             _animation.PlayAnimation(AnimationType.Attack);
+            
+            
+
         }
         
         public void ClearTarget()

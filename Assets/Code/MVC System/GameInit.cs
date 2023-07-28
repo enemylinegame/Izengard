@@ -20,13 +20,14 @@ public class GameInit
         EndGameScreen endGameScreen,
         TowerShotConfig towerShotConfig, BuyItemScreenView buyItemScreenView, HireSystemView hireSystemView,
         EquipScreenView equipScreenView, Camera camera, TileList tileList,
-        GlobalResourceList globalResourceList, OutLineSettings outLineSettings,
+        GlobalResourceData globalResourceList, OutLineSettings outLineSettings,
         MarketDataConfig marketData, MarketView marketView)
     {
         //TODO Do not change the structure of the script
         var tiles = GetTileList.GetTiles(gameConfig);
+
         var outlineController = new OutlineController(outLineSettings);
-        var globalResStock = new GlobalStock(globalResourceList.GlobalResourceConfigs, topResUiVew);
+        var globalResStock = new GlobalStock(globalResourceList, topResUiVew);
         var btnConroller = new BtnUIController(rightUI, gameConfig);
         var inputController = new InputController(outlineController);
         var uiController = new UIController(rightUI, bottomUI, centerUI, inputController, marketView);
@@ -43,12 +44,13 @@ public class GameInit
         var timeRemaining = new TimeRemainingController();
         var towershotcontroller = new TowerShotController(towerShotConfig, levelGenerator, gameConfig.Bullet);
         var eqScreenController = new EquipScreenController(equipScreenView, camera);
-        var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, hireSystemView, levelGenerator);
+        var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController,
+            hireSystemView, levelGenerator);
         var bulletsController = new BulletsController();
-        var waveController = new WaveController(levelGenerator, uiController, btnParents, gameConfig, 
+        var waveController = new WaveController(levelGenerator, uiController, btnParents, gameConfig,
             bulletsController, enemyDestroyObserver);
         var endGameController = new EndGameController(endGameScreen, levelGenerator);
-        
+
         var workersTeamComtroller = new WorkersTeamController(
             workersTeamConfig);
         var productionManager = new ProductionManager(globalResStock, workersTeamComtroller, workersTeamConfig, gameConfig.PrescriptionsStorage, uiController.CenterUI.BaseNotificationUI);
@@ -59,8 +61,11 @@ public class GameInit
         var tileResourceUIController = new TileResourceUIController(uiController, inputController, tileController, gameConfig);
         var hireUnitView = new HireUnitView(rightUI.HireUnits);
         var paymentDefendersSystem = new PaymentDefendersSystem(globalResStock);
-        var defendersAssignController = new DefendersManager(tileController, defenderController, uiController, hireUnitView, gameConfig.DefendersSets, paymentDefendersSystem);
-        
+        var hireDefendersManager = new HireDefenderProgressManager();
+        var defendersAssignController = new DefendersManager(tileController, defenderController, uiController, 
+            hireUnitView, gameConfig.DefendersSets, paymentDefendersSystem, hireDefendersManager);
+        inputController.Add(defendersAssignController);
+
         if (!gameConfig.ChangeVariant) new ResourceGenerator(/*buildController.Buildings, */gameConfig, levelGenerator, buildingController);
         else new ResourceGenerator(/*.Buildings, */gameConfig, levelGenerator, buildingController, 2);
 
@@ -81,9 +86,8 @@ public class GameInit
         controller.Add(defenderController);
         controller.Add(bulletsController);
         controller.Add(marketController);
+        controller.Add(hireDefendersManager);
 
-        globalResStock.AddResourceToStock(ResourceType.Wood, 100);
-        globalResStock.AddResourceToStock(ResourceType.Gold, 100);
         // var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
         // controller.Add(testDummyTargetController);
     }

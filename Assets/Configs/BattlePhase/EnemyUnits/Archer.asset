@@ -16,7 +16,7 @@ MonoBehaviour:
   <Stats>k__BackingField:
     Health: 75
     Attack: 10
-    AttackSpeed: 1.5
+    AttackSpeed: 1
     AttackRange: 1.5
     RunSpeed: 1
     Cost: 5

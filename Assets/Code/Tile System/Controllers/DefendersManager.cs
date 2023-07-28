@@ -18,6 +18,7 @@ namespace Code.TileSystem
         private readonly WarsView _warsView;
         private readonly HireUnitView _hireUnitView;
         private readonly PaymentDefendersSystem _paymentSystem;
+        private readonly HireDefenderProgressManager _hireProgressManager;
 
         private DefendersSet _defendersSet;
         
@@ -31,7 +32,7 @@ namespace Code.TileSystem
 
         public DefendersManager(TileController tileController, IDefendersControll defendersController, 
             UIController uiController, HireUnitView hireUnitView, DefendersSet defendersSet, 
-            PaymentDefendersSystem paymentSystem)
+            PaymentDefendersSystem paymentSystem, HireDefenderProgressManager hireProgressManager)
         {
             _tileController = tileController;
             _defendersController = defendersController;
@@ -42,6 +43,8 @@ namespace Code.TileSystem
             _hireUnitView.OnHireButtonClick += HireDefenderButtonClick;
             _hireUnitView.OnCloseButtonClick += CloseHireDefenderPanel;
             _paymentSystem = paymentSystem;
+            _hireProgressManager = hireProgressManager;
+            _hireProgressManager.AddFinishProgressListener(FinishHireDefenderProcess);
         }
 
 
@@ -58,52 +61,60 @@ namespace Code.TileSystem
             _isHireDefenderPenelOpened = true;
         }
 
-        public void DismissDefender(List<DefenderUnit> units)
+        public void DismissDefender(List<DefenderPreview> units)
         {
             if (units.Count > 0)
             {
-                List<DefenderUnit> defendersOnTile = SelectedTileModel.DefenderUnits;
+                List<DefenderPreview> defendersOnTile = SelectedTileModel.DefenderUnits;
 
                 for (int i = 0; i < units.Count; i++)
                 {
-                    DefenderUnit defender = units[i];
+                    DefenderPreview defender = units[i];     //TODO: if defender in creating process ...
                     if (defendersOnTile.Remove(defender))
                     {
-                        defender.DefenderUnitDead -= DefenderDead;
-                        _defendersController.DismissDefender(defender);
+                        DefenderUnit unit = defender.Unit;
+                        if (unit != null)
+                        {
+                            unit.DefenderUnitDead -= DefenderDead;
+                            _defendersController.DismissDefender(unit);
+                        }
                     }
                 }
             }
             _warsView.UpdateDefenders();
         }
 
-        public void SendToBarrack(List<DefenderUnit> units)
+        public void SendToBarrack(List<DefenderPreview> units)
         {
-            if (units.Count > 0)
+            List<DefenderUnit> defenders = units.ConvertAll(preview => preview.Unit)
+                                    .FindAll(unit => unit != null);
+            if (defenders.Count > 0)
             {
-                _defendersController.SendDefendersToBarrack(units, SelectedTileView);
+                _defendersController.SendDefendersToBarrack(defenders, SelectedTileModel);
             }
             _warsView.UpdateDefenders();
         }
 
-        public void KickoutFromBarrack(List<DefenderUnit> units)
+        public void KickoutFromBarrack(List<DefenderPreview> units)
         {
-            if (units.Count > 0)
+            List<DefenderUnit> defenders = units.ConvertAll(preview => preview.Unit)
+                .FindAll(unit => unit != null);
+            if (defenders.Count > 0)
             {
-                _defendersController.KickDefendersOutOfBarrack(units, SelectedTileView);
+                _defendersController.KickDefendersOutOfBarrack(defenders, SelectedTileModel);
             }
             _warsView.UpdateDefenders();
         }
 
-        public void SendToOtherTile(List<DefenderUnit> units, TileView tile)
+        public void SendToOtherTile(List<DefenderPreview> defenders, TileView tile)
         {
             TileModel current = SelectedTileModel;
             TileModel other = tile.TileModel;
             if (current != other)
             {
-                for (int i = 0; i < units.Count; i++)
+                for (int i = 0; i < defenders.Count; i++)
                 {
-                    DefenderUnit unit = units[i];
+                    DefenderPreview unit = defenders[i];
                     if (!SendDefenderToTile(unit, tile))
                     {
                         break;
@@ -121,21 +132,30 @@ namespace Code.TileSystem
         
         #endregion
 
-        private void HireConcreteDefender(DefenderSettings settings)
+        private void StartHireDefenderProcess(DefenderSettings settings)
         {
-            List<DefenderUnit> defendersOnTile = SelectedTileModel.DefenderUnits;
+            List<DefenderPreview> defendersOnTile = SelectedTileModel.DefenderUnits;
             int unitsQuantity = defendersOnTile.Count;
             if (unitsQuantity < SelectedTileModel.MaxWarriors)
             {
                 if (_paymentSystem.PayForDefender(settings.HireCost))
                 {
-                    var unit = _defendersController.CreateDefender(SelectedTileView, settings);
-                    defendersOnTile.Add(unit);
-                    unit.Tile = SelectedTileModel;
-                    unit.DefenderUnitDead += DefenderDead;
+                    DefenderPreview unitPreview = new DefenderPreview(settings);
+                    defendersOnTile.Add(unitPreview);
+                    _hireProgressManager.StartDefenderHireProcess(unitPreview, SelectedTileModel, settings, 
+                        settings.HireDuration);
                 }
             }
             _warsView.UpdateDefenders();
+        }
+
+        private void FinishHireDefenderProcess(DefenderPreview defenderPreview, TileModel tile, 
+            DefenderSettings settings)
+        {
+            DefenderUnit defender = _defendersController.CreateDefender(tile, settings);
+            defenderPreview.Unit = defender;
+            defender.Tile = tile;
+            defender.DefenderUnitDead += DefenderDead;
         }
 
         #region ITileLoadInfo
@@ -155,7 +175,9 @@ namespace Code.TileSystem
 
         private void DefenderDead(DefenderUnit defender)
         {
-            defender.Tile.DefenderUnits.Remove(defender);
+            List<DefenderPreview> defendersOnTile = defender.Tile.DefenderUnits;
+            int index = defendersOnTile.FindIndex(preview => preview.Unit == defender);
+            defendersOnTile.RemoveAt(index);
             TileModel defendersTile = defender.Tile;
             defender.Tile = null;
             if (SelectedTileModel == defendersTile)
@@ -164,21 +186,22 @@ namespace Code.TileSystem
             }
         }
 
-        private bool SendDefenderToTile(DefenderUnit defender, TileView tile)
+        private bool SendDefenderToTile(DefenderPreview defenderPreview, TileView tile)
         {
             bool hasSent = false;
 
             TileModel destinationTile = tile.TileModel;
             if (destinationTile.DefenderUnits.Count < destinationTile.MaxWarriors)
             {
-                if (defender.IsInBarrack)
+                DefenderUnit defenderUnit = defenderPreview.Unit;
+                if (defenderUnit.IsInBarrack)
                 {
-                    _defendersController.KickDefenderOutOfBarrack(defender, SelectedTileView);
+                    _defendersController.KickDefenderOutOfBarrack(defenderUnit, SelectedTileModel);
                 }
-                defender.Tile.DefenderUnits.Remove(defender);
-                destinationTile.DefenderUnits.Add(defender);
-                defender.Tile = destinationTile;
-                _defendersController.SendDefenderToTile(defender, tile);
+                defenderUnit.Tile.DefenderUnits.Remove(defenderPreview);
+                destinationTile.DefenderUnits.Add(defenderPreview);
+                defenderUnit.Tile = destinationTile;
+                _defendersController.SendDefenderToTile(defenderUnit, tile.TileModel);
                 hasSent = true;
             }
             else
@@ -193,7 +216,7 @@ namespace Code.TileSystem
         {
             if (_isHireDefenderPenelOpened)
             {
-                HireConcreteDefender(_defendersSet.Defenders[index]);
+                StartHireDefenderProcess(_defendersSet.Defenders[index]);
             }
             //CloseHireDefenderPanel();
         }

@@ -24,10 +24,10 @@ namespace CombatSystem.Views
         private GameObject _enterBarrackButton;
         private GameObject _exitBarrackButton;
 
-        private IReadOnlyList<DefenderUnit> _defendersList;
+        private IReadOnlyList<DefenderPreview> _defendersList;
         private List<DefenderSlotView> _selectedSlots;
-        private List<DefenderUnit> _unitsInsideBarrack;
-        private List<DefenderUnit> _unitsOutsideBarrack;
+        private List<DefenderPreview> _unitsInsideBarrack;
+        private List<DefenderPreview> _unitsOutsideBarrack;
         private IDefendersManager _defendersManager;
         private InputController _inputController;
 
@@ -51,8 +51,8 @@ namespace CombatSystem.Views
             _exitBarrackButton.SetActive(false);
             _barrackButtonsStatus = BarrackButtonsStatus.Enter;
 
-            _unitsInsideBarrack = new List<DefenderUnit>();
-            _unitsOutsideBarrack = new List<DefenderUnit>();
+            _unitsInsideBarrack = new List<DefenderPreview>();
+            _unitsOutsideBarrack = new List<DefenderPreview>();
 
             CreateSlots();
         }
@@ -99,7 +99,7 @@ namespace CombatSystem.Views
                 int index = slotNumber - FIRST_SLOT_NUMBER;
                 if (index >= 0 && index < _slots.Length)
                 {
-                    List<DefenderUnit> unitsToDismiss = new List<DefenderUnit>(1);
+                    List<DefenderPreview> unitsToDismiss = new List<DefenderPreview>(1);
                     unitsToDismiss.Add(_slots[index].Unit);
                     _defendersManager?.DismissDefender(unitsToDismiss);
                 }
@@ -113,7 +113,7 @@ namespace CombatSystem.Views
                 int index = slotNumber - FIRST_SLOT_NUMBER;
                 if (index >= 0 && index < _defendersList.Count)
                 {
-                    List<DefenderUnit> units = new List<DefenderUnit>(1);
+                    List<DefenderPreview> units = new List<DefenderPreview>(1);
                     units.Add(_defendersList[index]);
                     if (isOn)
                     {
@@ -146,7 +146,7 @@ namespace CombatSystem.Views
         {
             SendDefendersModeOff();
             
-            List<DefenderUnit> units = new List<DefenderUnit>();
+            List<DefenderPreview> units = new List<DefenderPreview>();
             bool isUnitsSelected = false;
             for (int i = 0; i < _slots.Length; i++)
             {
@@ -211,7 +211,7 @@ namespace CombatSystem.Views
                 DefenderSlotView slot = slots[i];
                 if (slot.IsEnabled && slot.IsUsed)
                 {
-                    DefenderUnit unit = slot.Unit;
+                    DefenderPreview unit = slot.Unit;
                     if (unit.IsInBarrack)
                     {
                         _unitsInsideBarrack.Add(unit);
@@ -252,7 +252,7 @@ namespace CombatSystem.Views
             SendDefendersModeOn();
         }
 
-        public void SetDefenders(IReadOnlyList<DefenderUnit> defendersList)
+        public void SetDefenders(IReadOnlyList<DefenderPreview> defendersList)
         {
             if (_defendersList != null)
             {
@@ -310,7 +310,7 @@ namespace CombatSystem.Views
 
                 for (int i = 0; i < _defendersList.Count; i++)
                 {
-                    DefenderUnit searchedUnit = _defendersList[i];
+                    DefenderPreview searchedUnit = _defendersList[i];
                     DefenderSlotView firstEmpty = null;
                     bool isFound = false;
 
@@ -430,6 +430,8 @@ namespace CombatSystem.Views
             _defendersManager = manager;
         }
 
+        #region ITileSelector
+
         public void Cancel()
         {
             SendDefendersModeOff();
@@ -441,7 +443,7 @@ namespace CombatSystem.Views
             
             if (_selectedSlots.Count > 0)
             {
-                List<DefenderUnit> units = new List<DefenderUnit>();
+                List<DefenderPreview> units = new();
                 for (int i = 0; i < _selectedSlots.Count; i++)
                 {
                     DefenderSlotView slot = _selectedSlots[i];
@@ -454,6 +456,8 @@ namespace CombatSystem.Views
                 _defendersManager.SendToOtherTile(units, tile);
             }
         }
+        
+        #endregion
         
         private void SendDefendersModeOn()
         {

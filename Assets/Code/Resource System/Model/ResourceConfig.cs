@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ResourceSystem
 {
-    [CreateAssetMenu(fileName = "ResourceConfig", menuName = "Resщurсe System/ResourceConfig", order = 1)]
+    [CreateAssetMenu(fileName = "ResourceConfig", menuName = "Resource System/ResourceConfig", order = 1)]
     [System.Serializable]
     public class ResourceConfig : ScriptableObject
     {
