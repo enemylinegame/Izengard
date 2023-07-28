@@ -10,16 +10,18 @@ namespace StartupMenu
 
         private readonly Transform _placeForUi;
         private readonly AudioMixer _audioMixer;
+        private readonly AudioSource _clickSource;
 
         private readonly StateModel _startupSceneState;
 
         private MainMenuController _mainMenuController;
         private SettingsMenuController _settingsMenuContoller;
 
-        public StartupMenuController(Transform placeForUi, AudioMixer audioMixer)
+        public StartupMenuController(Transform placeForUi, AudioMixer audioMixer, AudioSource clickAudioSource)
         {
             _placeForUi = placeForUi;
             _audioMixer = audioMixer;
+            _clickSource = clickAudioSource;
 
             _startupSceneState = new StateModel();
 
@@ -36,12 +38,12 @@ namespace StartupMenu
             {
                 case MenuState.Start:
                     {
-                        _mainMenuController = new MainMenuController(_placeForUi, _startupSceneState);
+                        _mainMenuController = new MainMenuController(_placeForUi, _startupSceneState, _clickSource);
                         break;
                     }
                 case MenuState.Settings:
                     {
-                        _settingsMenuContoller = new SettingsMenuController(_placeForUi, _audioMixer, _startupSceneState);
+                        _settingsMenuContoller = new SettingsMenuController(_placeForUi, _audioMixer, _startupSceneState, _clickSource);
                         break;
                     }
                 case MenuState.Game:

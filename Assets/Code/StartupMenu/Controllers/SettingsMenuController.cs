@@ -18,7 +18,7 @@ namespace StartupMenu
 
         private SettingsMenuView _view;
 
-        public SettingsMenuController(Transform placeForUI, AudioMixer audioMixer, StateModel menuMonitor)
+        public SettingsMenuController(Transform placeForUI, AudioMixer audioMixer, StateModel menuMonitor, AudioSource clickSource)
         {
             _audioMixer = audioMixer;
             _menuMonitor = menuMonitor;
@@ -28,7 +28,7 @@ namespace StartupMenu
             _model.OnSettingsChanged += ChangeSoundSettings;
 
             _view = LoadView(placeForUI);
-            _view.Init(BackToMenu, _model);
+            _view.Init(BackToMenu, _model, clickSource);
 
             foreach(var resolution in Screen.resolutions)
             {

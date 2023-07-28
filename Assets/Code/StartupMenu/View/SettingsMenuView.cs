@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -8,8 +9,8 @@ namespace StartupMenu
 {
     public class SettingsMenuView : MonoBehaviour
     {
-        [SerializeField] private Button _backToMenuButton; 
-        
+        [SerializeField] private Button _backToMenuButton;
+
         [Space(10)]
         [Header("Graphics Settings")]
         [Space(2)]
@@ -29,12 +30,18 @@ namespace StartupMenu
         [SerializeField] private Slider _voiceVolumeSlider;
         [SerializeField] private Slider _effectsVolumeSlider;
 
+        private AudioSource _clickAudioSource;
 
         public void Init(
-            UnityAction backToMenu, SettingsMenuModel model)
+            UnityAction backToMenu, 
+            SettingsMenuModel model, 
+            AudioSource clickAudioSource)
         {
+            _clickAudioSource = clickAudioSource;
+
             _backToMenuButton.onClick.AddListener(backToMenu);
-            
+            _backToMenuButton.onClick.AddListener(PlayClickSound);
+
             _resolutionDropdown.onValueChanged.AddListener(model.ChangeResolution);
             _graphicsDropdown.onValueChanged.AddListener(model.ChangeGraphics);
             _shadowDropdown.onValueChanged.AddListener(model.ChangeShadow);
@@ -48,6 +55,9 @@ namespace StartupMenu
             _voiceVolumeSlider.onValueChanged.AddListener(model.ChangeVoiceVolume);
             _effectsVolumeSlider.onValueChanged.AddListener(model.ChangeEffectsVolume);
         }
+
+        private void PlayClickSound() 
+            => _clickAudioSource.Play();
 
         public void SetUpResolution(IList<Resolution> resolutions)
         {
