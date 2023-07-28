@@ -125,8 +125,11 @@ namespace CombatSystem
             }
             else _nextAction = _checkAttackDistance;
             IsActionComplete = true;
+
+            int randomNumber = UnityEngine.Random.Range(1, 3); //рандомизатор
             animator.SetTrigger("AttackTrigger"); //анимация атаки
-            
+            animator.SetInteger("AttackType", randomNumber);
+
         }
 
         private void OnCheckAttackDistanceComplete(Damageable target)
