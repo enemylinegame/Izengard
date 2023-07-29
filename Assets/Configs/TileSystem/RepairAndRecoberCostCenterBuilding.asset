@@ -12,3 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72827fa6c3904fd48e962d6aecf05e5b, type: 3}
   m_Name: RepairAndRecoberCostCenterBuilding
   m_EditorClassIdentifier: 
+  _repairCost:
+  - _resourceType: 1
+    _cost: 1
+  _recoveryCost:
+  - _resourceType: 1
+    _cost: 2

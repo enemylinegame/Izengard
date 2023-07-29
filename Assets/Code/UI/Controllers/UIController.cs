@@ -157,7 +157,7 @@ namespace Code.UI
         {
             IsWorkUI(UIType.All, false);
             Deinit();
-            _bottomUI.TileUIView.Upgrade.onClick.RemoveAllListeners();
+            _bottomUI.TileUIView.ButtonsHolder.ForEach(x => x.Button.onClick.RemoveAllListeners());
         }
     }
 

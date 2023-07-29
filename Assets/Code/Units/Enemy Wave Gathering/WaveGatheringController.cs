@@ -1,6 +1,7 @@
 using CombatSystem;
 using Interfaces;
 using System.Collections.Generic;
+using Code.BuildingSystem;
 using UnityEngine;
 using Wave.Interfaces;
 
@@ -20,24 +21,24 @@ namespace Wave
         private readonly IEnemySorter _enemySorter;
 
 
-        public WaveGatheringController(GeneratorLevelController generatorLevelController, IEnemyAIController enemyAIController, 
+        public WaveGatheringController(BuildingFactory buildingFactory, IEnemyAIController enemyAIController, 
             IBulletsController bulletsController, GameConfig gameConfig)
         {
             _calculator = new WaveCalculator(gameConfig.BattlePhaseConfig.WaveSettings);
             //var enemySet = Resources.Load<EnemySet>(nameof(EnemySet));
-            EquipEnemyPool(gameConfig.BattlePhaseConfig.EnemySet, generatorLevelController, enemyAIController, bulletsController);
+            EquipEnemyPool(gameConfig.BattlePhaseConfig.EnemySet, buildingFactory, enemyAIController, bulletsController);
 
             _enemySorter = new EnemySorterTanksPriority();
         }
 
-        private void EquipEnemyPool(EnemySet enemySet, GeneratorLevelController generatorLevelController, IEnemyAIController enemyAIController,
+        private void EquipEnemyPool(EnemySet enemySet, BuildingFactory buildingFactory, IEnemyAIController enemyAIController,
             IBulletsController bulletsController)
         {
             var overallPoolHolder = new GameObject("EnemyPools").transform;
             foreach (var enemy in enemySet.Enemies)
             {
                 var capacity = enemy.Type == EnemyType.Boss ? BOSS_STARTING_CAPACITY : STARTING_CAPACITY;
-                _pools[enemy.Type] = new EnemyControllerPool(capacity, enemy, overallPoolHolder, generatorLevelController, 
+                _pools[enemy.Type] = new EnemyControllerPool(capacity, enemy, overallPoolHolder, buildingFactory, 
                     enemyAIController, bulletsController);
                 if (enemy.Type != EnemyType.Boss) _enemyTypesToBuy.Add(enemy);
             }

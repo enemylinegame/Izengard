@@ -25,17 +25,17 @@ namespace Code.TileSystem
         private UIController _uiController;
         private ProductionManager _productionManager;
         private List<BuildingConfig> _buildingConfigs;
+        private ButtonsControllerOnTile _buttonsController;
+        private LevelOfLifeButtonsCustomizer _level;
         private int _currentLVL;
         public ProductionManager WorkerMenager => _productionManager;
         public TileModel TileModel => _tileView.TileModel;
         public TileView View => _tileView;
 
         #endregion
-        public TileController(TileList tileList,
-            UIController uiController,
-            BuildingFactory buildingController,
-            InputController inputController,
-            ProductionManager productionManager)
+        public TileController(TileList tileList, UIController uiController,
+            BuildingFactory buildingController, InputController inputController,
+            ProductionManager productionManager, LevelOfLifeButtonsCustomizer level)
         {
             _productionManager = productionManager;
 
@@ -45,7 +45,8 @@ namespace Code.TileSystem
             _uiController = uiController;
             _buildingFactory = buildingController;
             _inputController = inputController;
-
+            _buttonsController = new ButtonsControllerOnTile(uiController);
+            _level = level;
             inputController.Add(this);
         }
 
@@ -57,13 +58,18 @@ namespace Code.TileSystem
             if (tile.TileModel.HouseType == HouseType.None) return;
 
             LoadBuildings(tile.TileModel);
-            _uiView.Upgrade.onClick.AddListener(LVLUp);
+            _buttonsController.ButtonAddListener(tile.TileModel, _level);
+            _buttonsController.HolderButton(ButtonTypes.Upgrade).onClick.AddListener(LVLUp);
             LoadAllTextsFieldsAndImaged(tile.TileModel.TileConfig);
             LoadFloodedBuildings();
             LevelCheck();
 
         }
-        public void Cancel() { }
+
+        public void Cancel()
+        {
+            _buttonsController.RemoveListeners(ButtonTypes.All, TileModel);
+        }
         #endregion
         #region BuildingBuy
 
@@ -270,7 +276,6 @@ namespace Code.TileSystem
             _uiController.CenterUI.TIleSelection.TileEco.onClick.AddListener(() => TileType(HouseType.Eco, view));
             _uiController.CenterUI.TIleSelection.TileWar.onClick.AddListener(() => TileType(HouseType.war, view));
             _uiController.CenterUI.TIleSelection.Back.onClick.AddListener(() => RemoveListenersTileSelection(true));
-            Debug.Log($"Блокировка UI: {_inputController.LockRightClick}");
         }
         private void TileType(HouseType type, TileView tile)
         {
@@ -305,7 +310,6 @@ namespace Code.TileSystem
                 kvp.Value.onClick.RemoveAllListeners();
             _uiController.BottomUI.BuildingMenu.CloseMenuButton.onClick.RemoveAllListeners();
             _uiController.Deinit();
-            _uiView.Upgrade.onClick.RemoveAllListeners();
         }
         public void LevelCheck()
         {
@@ -349,8 +353,11 @@ namespace Code.TileSystem
 
         public void OnUpdate(float deltaTime)
         {
-            if(_tileView != null)
-                Debug.Log($"Currenthealth: {_tileView.TileModel.CurrentHealth}");
+            if (_tileView != null)
+            {
+                _buttonsController.ButtonsChecker(TileModel);
+            }
+            
         }
     }
 }

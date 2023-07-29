@@ -51,8 +51,7 @@ namespace CombatSystem
 
         public void OnUpdate(float deltaTime)
         {
-            if(_dummyController != null && _tileView != null)
-                _tileView.TileModel.CurrentHealth = _dummyController.Dummy.CurrentHealth;
+            
         }
     }
 }

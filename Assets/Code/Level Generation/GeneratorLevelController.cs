@@ -3,6 +3,7 @@ using LevelGenerator.Interfaces;
 using System;
 using System.Collections.Generic;
 using Code.BuildingSystem;
+using Code.TileSystem;
 using Code.TowerShot;
 using Code.UI;
 using UnityEngine;
@@ -12,6 +13,7 @@ using Object = UnityEngine.Object;
 public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
 {
     public event Action<VoxelTile> SpawnResources;
+    public event Action<Dictionary<Vector2Int, VoxelTile>, ITileSetter, Transform> SpawnTower;
     public Action OnCombatPhaseStart;
     public Damageable MainBuilding { get; private set; }
 
@@ -19,6 +21,7 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
     private readonly GameConfig _gameConfig;
     private readonly RightUI _rightUI;
     private readonly BtnUIController _btnUIController;
+    private readonly BuildingFactory _buildingFactory;
     private readonly Dictionary<Vector2Int, VoxelTile> _spawnedTiles = new Dictionary<Vector2Int, VoxelTile>();
     public IReadOnlyDictionary<Vector2Int, VoxelTile> SpawnedTiles => _spawnedTiles;
     private ITileSetter _tileSetter;
@@ -26,6 +29,7 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
     private int _numZone;
     public TowerShotBehavior TowerShot;
     public Transform PointSpawnUnits;
+    private TileView _tileView;
 
 
     public GeneratorLevelController(List<VoxelTile> tiles, GameConfig gameConfig, BtnUIController btnUIController, 
@@ -62,7 +66,7 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
         _rightUI.ButtonSelectTileThird.gameObject.SetActive(false);
         // _rightUI.ButtonHireUnits.gameObject.SetActive(true);
 
-        PlaceMainTower();
+        SpawnTower?.Invoke(_spawnedTiles, _tileSetter, PointSpawnUnits);
         SetTileNumZone(_tileSetter.FirstTileGridPosition);
         SpawnResources?.Invoke(_spawnedTiles[_tileSetter.FirstTileGridPosition]);
     }
@@ -71,26 +75,14 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
         _numZone++;
         _spawnedTiles[tileGridPosition].NumZone = _numZone;
     }
-    private void PlaceMainTower()
-    {
-        var config = _gameConfig.MainTowerConfig as BuildingConfig;
-
-        var firstTile = _spawnedTiles[_tileSetter.FirstTileGridPosition];
-        var mainBuilding = Object.Instantiate(config.BuildingPrefab, firstTile.transform.position, Quaternion.identity);
-        
-        PointSpawnUnits = mainBuilding.transform;
-        MainBuilding = mainBuilding.GetComponent<Damageable>();
-        if (mainBuilding != null)
-        {
-            TowerShot = mainBuilding.GetComponentInChildren<TowerShotBehavior>();
-            firstTile.TileView.TileModel.HouseType = HouseType.All;
-        }
-       
-        MainBuilding.Init((int)config.MaxHealth);
-    }
     public void OnLateUpdate(float deltaTime)
     {
         _buttonsSetter.OnLateUpdate(deltaTime);
+        // if (MainBuilding != null)
+        // {
+        //     _tileView.TileModel.MaxHealth = (int)MainBuilding.MaxHealth;
+        //     _tileView.TileModel.CurrentHealth = (int)MainBuilding.CurrentHealth;
+        // }
         //if(TowerShot.GetComponent<Damageable>().Health <= 0) 
     }
 }

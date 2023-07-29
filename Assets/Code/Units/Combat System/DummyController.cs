@@ -24,6 +24,7 @@ namespace CombatSystem
             {
                 _dummy.gameObject.SetActive(true);
                 _dummy.Init((int)_dummy.MaxHealth);
+                _dummyRenderer.material.color = Color.white;
             }
         }
 

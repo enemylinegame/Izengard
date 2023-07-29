@@ -1,6 +1,7 @@
 using CombatSystem;
 using Interfaces;
 using System.Collections.Generic;
+using Code.BuildingSystem;
 using UnityEngine;
 
 
@@ -11,16 +12,16 @@ namespace Wave
         private readonly List<IEnemyController> _pool = new List<IEnemyController>();
         private readonly Transform _poolHolder;
         public readonly EnemySettings Enemy;
-        private readonly GeneratorLevelController _generatorLevelController;
+        private readonly BuildingFactory _buildingFactory;
         private readonly IEnemyAIController _enemyAIController;
         private readonly IBulletsController _bulletsController;
 
 
         public EnemyControllerPool(int startPoolCapacity, EnemySettings enemy, Transform poolHolder, 
-            GeneratorLevelController generatorLevelController, IEnemyAIController enemyAIController, IBulletsController bulletsController)
+            BuildingFactory buildingFactory, IEnemyAIController enemyAIController, IBulletsController bulletsController)
         {
             Enemy = enemy;
-            _generatorLevelController = generatorLevelController;
+            _buildingFactory = buildingFactory;
             _enemyAIController = enemyAIController;
             _bulletsController = bulletsController;
 
@@ -60,7 +61,7 @@ namespace Wave
         private IEnemyController InstantiateEnemy(EnemySettings enemy, bool isActive)
         {
             var instantiatedEnemy = Object.Instantiate(enemy.Prefab, _poolHolder);
-            var newEnemy = new EnemyController(enemy, instantiatedEnemy, _generatorLevelController, _enemyAIController, _bulletsController);
+            var newEnemy = new EnemyController(enemy, instantiatedEnemy, _buildingFactory, _enemyAIController, _bulletsController);
             newEnemy.OnEnemyDead += ReturnObjectInPool;
             instantiatedEnemy.SetActive(isActive);
             return newEnemy;

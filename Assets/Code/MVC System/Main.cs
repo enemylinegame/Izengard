@@ -18,6 +18,7 @@ public class Main : MonoBehaviour
     [SerializeField] private OutLineSettings _outLineSettings;
     [SerializeField] private TowerShotConfig _towerShotConfig;
     [SerializeField] private MarketDataConfig _marketDataConfig;
+    [SerializeField] private RepairAndRecoberCostCenterBuilding _recoberCostCenter;
 
     [Header("UI")]
     [SerializeField] private RightUI _rightUI;
@@ -47,7 +48,7 @@ public class Main : MonoBehaviour
             _topUI, _endGameScreen, _towerShotConfig,
             _buyItemScreenView, _hireSystemView, _equipScreenView, 
             _screenCamera, _tileList, _globalResourceList, _outLineSettings,
-            _marketDataConfig, _marketUI);
+            _marketDataConfig, _marketUI, _recoberCostCenter);
 
         _controllers.OnStart();
     }
