@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -10,7 +11,7 @@ namespace Code.TileSystem
         [SerializeField] private Image _icon;
         [SerializeField] private TMP_Text _LVLText;
         [SerializeField] private TMP_Text _nameTile;
-        [SerializeField] private Button _upgrade;
+        [SerializeField] private List<ButtonView> _buttonsHolder;
         [SerializeField] private Button _destroy;
         [SerializeField] private TMP_Text _unitMax;
 
@@ -25,7 +26,7 @@ namespace Code.TileSystem
             set => _nameTile = value;
         }
 
-        public Button Upgrade => _upgrade;
+        public List<ButtonView> ButtonsHolder => _buttonsHolder;
         public Button Destroy => _destroy;
 
         public int WorkersCount
