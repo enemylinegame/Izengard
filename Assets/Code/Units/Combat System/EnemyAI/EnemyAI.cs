@@ -20,6 +20,7 @@ namespace CombatSystem
         private readonly float _attackDistance;
         private readonly EnemyType _type;
 
+
         private Transform _enemyTransform;
 
         Animator animator;

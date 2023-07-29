@@ -2,6 +2,7 @@
 using CombatSystem.Interfaces;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.GraphicsBuffer;
 
 namespace CombatSystem.DefenderStates
 {
@@ -60,6 +61,9 @@ namespace CombatSystem.DefenderStates
             {
                 _agent.ResetPath();
                 _setState(DefenderState.Pursuit);
+                Vector3 directon = (attacker.Position - _transform.position).normalized;
+                Quaternion lookRotation = Quaternion.LookRotation(new Vector3(directon.x, 0, directon.z));
+                _transform.rotation = Quaternion.Slerp(_transform.rotation, lookRotation, Time.deltaTime * 55f);
             }
         }
 

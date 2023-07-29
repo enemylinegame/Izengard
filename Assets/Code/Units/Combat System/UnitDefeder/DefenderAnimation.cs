@@ -23,6 +23,7 @@ namespace CombatSystem
             _isEnabled = true;
         }
 
+
         private void StateChanged(DefenderState newState)
         {
             if (_state != newState && _isEnabled)
@@ -30,9 +31,8 @@ namespace CombatSystem
                 _state = newState;
                 bool isMoving = _state == DefenderState.Going || _state == DefenderState.Pursuit ||
                                 _state == DefenderState.GotoBarrack;
-
                 _animator.SetBool(_isMovingProperty, isMoving);
-
+                
                 if (_state == DefenderState.Dying)
                 {
                     int randomNumber = Random.Range(1, 3);

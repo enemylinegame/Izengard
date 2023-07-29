@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using Wave;
 
@@ -14,10 +15,10 @@ namespace CombatSystem
         private readonly IEnemyAnimationController _animation;
         private readonly Enemy _unit;
         private Damageable _currentTarget;
-      
-        
+        private float cooldownTime = 3.0f;
+        private bool isCooldown;
 
-        
+
 
         public AttackAction(IEnemyAnimationController animation, Enemy unit)
         {
@@ -28,14 +29,17 @@ namespace CombatSystem
         public void StartAction(Damageable target)
         {
             _currentTarget = target;
+            Cooldown();
             
-            _animation.ActionMoment += OnActionMoment;
-            _animation.AnimationComplete += OnAnimationComplete;
-            
-
-            _animation.PlayAnimation(AnimationType.Attack);
-            
-            
+            if (!isCooldown)
+            {
+                _animation.ActionMoment += OnActionMoment;
+                _animation.AnimationComplete += OnAnimationComplete;
+                
+                _animation.PlayAnimation(AnimationType.Attack);
+            }
+           
+  
 
         }
         
@@ -51,12 +55,22 @@ namespace CombatSystem
                 _currentTarget.MakeDamage(_unit.Stats.Attack, _unit.MyDamagable);
             }
             _animation.ActionMoment -= OnActionMoment;
+            
         }
 
         private void OnAnimationComplete()
         {
             _animation.AnimationComplete -= OnAnimationComplete;
             OnComplete?.Invoke(_currentTarget);
+        }
+        private IEnumerator Cooldown()
+        {
+            
+            isCooldown = true;
+            
+            yield return new WaitForSeconds(cooldownTime);
+            
+            isCooldown = false;
         }
     }
 }
