@@ -20,12 +20,9 @@ namespace CombatSystem
 
         public void Spawn() 
         {
-            if (!_dummy.gameObject.activeInHierarchy)
-            {
-                _dummy.gameObject.SetActive(true);
-                _dummy.Init((int)_dummy.MaxHealth);
-                _dummyRenderer.material.color = Color.white;
-            }
+            _dummy.gameObject.SetActive(true);
+            _dummy.Init((int)_dummy.MaxHealth);
+            _dummyRenderer.material.color = Color.white;
         }
 
         private void OnDead()

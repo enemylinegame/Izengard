@@ -9,17 +9,15 @@ namespace Code.TileSystem
     {
         private ITextVisualizationOnUI _notificationUI;
         private GlobalStock _stock;
-        private RepairAndRecoberCostCenterBuilding _cost;
         private TileUIView _uiView;
         private readonly GeneratorLevelController _levelController;
         private readonly BuildingFactory _buildingFactory;
 
-        public LevelOfLifeButtonsCustomizer(ITextVisualizationOnUI notificationUI, GlobalStock stock, RepairAndRecoberCostCenterBuilding cost, TileUIView uiView,
+        public LevelOfLifeButtonsCustomizer(ITextVisualizationOnUI notificationUI, GlobalStock stock, TileUIView uiView,
             GeneratorLevelController levelController, BuildingFactory buildingFactory)
         {
             _notificationUI = notificationUI;
             _stock = stock;
-            _cost = cost;
             _uiView = uiView;
             _levelController = levelController;
             _buildingFactory = buildingFactory;
@@ -27,10 +25,10 @@ namespace Code.TileSystem
 
         public void RepairBuilding(TileModel model)
         {
-            if(!IsResourcesEnoughRepair(_cost)) return;
+            if(!IsResourcesEnoughRepair(model.TileConfig)) return;
             if (model.CenterBuilding.CurrentHealth < model.CenterBuilding.MaxHealth)
             {
-                _cost.RepairCost.ForEach(resourcePrice => 
+                model.TileConfig.RepairCost.ForEach(resourcePrice => 
                     _stock.GetResourceFromStock(resourcePrice.ResourceType, resourcePrice.Cost));
                 model.CenterBuilding.CurrentHealth = model.CenterBuilding.MaxHealth;
             }
@@ -39,10 +37,10 @@ namespace Code.TileSystem
 
         public void RecoveryBuilding(TileModel model)
         {
-            if(!IsResourcesEnoughRecovery(_cost)) return;
+            if(!IsResourcesEnoughRecovery(model.TileConfig)) return;
             if (model.CenterBuilding.CurrentHealth < model.CenterBuilding.MaxHealth)
             {
-                _cost.RecoveryCost.ForEach(resourcePrice =>
+                model.TileConfig.RecoveryCost.ForEach(resourcePrice =>
                 {
                     _stock.GetResourceFromStock(resourcePrice.ResourceType, resourcePrice.Cost);
                 });
@@ -53,7 +51,7 @@ namespace Code.TileSystem
         
         
         
-        private bool IsResourcesEnoughRepair(RepairAndRecoberCostCenterBuilding cost)
+        private bool IsResourcesEnoughRepair(TileConfig cost)
         {
             foreach (ResourcePriceModel resourcePriceModel in cost.RepairCost)
             {
@@ -65,7 +63,7 @@ namespace Code.TileSystem
             }
             return true;
         }
-        private bool IsResourcesEnoughRecovery(RepairAndRecoberCostCenterBuilding cost)
+        private bool IsResourcesEnoughRecovery(TileConfig cost)
         {
             foreach (ResourcePriceModel resourcePriceModel in cost.RecoveryCost)
             {
