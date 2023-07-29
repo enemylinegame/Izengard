@@ -58,6 +58,7 @@ namespace Code.TileSystem
         /// <param name="model"></param>
         public void ButtonsChecker(TileModel model)
         {
+            if(model.CenterBuilding == null) return;
             if (model.CenterBuilding.CurrentHealth < model.CenterBuilding.MaxHealth &&
                 model.CenterBuilding.CurrentHealth > 0)
             {

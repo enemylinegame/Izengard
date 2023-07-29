@@ -50,7 +50,7 @@ public class GameInit
             bulletsController, enemyDestroyObserver, buildingController);
         var endGameController = new EndGameController(endGameScreen, levelGenerator);
         var renovationOfTheCentralBuilding = new LevelOfLifeButtonsCustomizer(uiController.CenterUI.BaseNotificationUI, 
-            globalResStock, repairAndRecoberCostCenterBuilding, uiController.BottomUI.TileUIView, levelGenerator, buildingController);
+            globalResStock, uiController.BottomUI.TileUIView, levelGenerator, buildingController);
 
         var workersTeamComtroller = new WorkersTeamController(
             workersTeamConfig);
