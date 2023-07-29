@@ -9,16 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7720e4c761e74c3598f1b688282be202, type: 3}
-  m_Name: 5 LVL
+  m_Script: {fileID: 11500000, guid: 72827fa6c3904fd48e962d6aecf05e5b, type: 3}
+  m_Name: RepairAndRecoberCostCenterBuilding
   m_EditorClassIdentifier: 
-  _icon: {fileID: 0}
-  _tileLvl: 5
-  maxUnits: 25
-  _buildingTirs: []
   _repairCost:
   - _resourceType: 1
-    _cost: 60
+    _cost: 1
   _recoveryCost:
   - _resourceType: 1
-    _cost: 100
+    _cost: 2

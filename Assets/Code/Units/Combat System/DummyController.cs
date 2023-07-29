@@ -7,27 +7,28 @@ namespace CombatSystem
     public class DummyController : IDisposable
     {
         private readonly Damageable _dummy;
+        private readonly Renderer _dummyRenderer;
 
-
+        public Damageable Dummy => _dummy;
         public DummyController(GameObject dummy)
         {
             _dummy = dummy.GetComponent<Damageable>();
-            _dummy.Init(100, 5);
+            _dummyRenderer = dummy.GetComponent<Renderer>();
+            _dummy.Init(1000, 5);
             _dummy.OnDeath += OnDead;
         }
 
-        public void Spawn()
+        public void Spawn() 
         {
-            if (!_dummy.gameObject.activeInHierarchy)
-            {
-                _dummy.gameObject.SetActive(true);
-                _dummy.Init((int)_dummy.MaxHealth);
-            }
+            _dummy.gameObject.SetActive(true);
+            _dummy.Init((int)_dummy.MaxHealth);
+            _dummyRenderer.material.color = Color.white;
         }
 
         private void OnDead()
         {
-            _dummy.gameObject.SetActive(false);
+            //_dummy.gameObject.SetActive(false);
+            _dummyRenderer.material.color = Color.grey;
         }
 
         public void Dispose()

@@ -1,6 +1,7 @@
 using CombatSystem;
 using System;
 using System.Threading.Tasks;
+using Code.BuildingSystem;
 using UnityEngine;
 
 
@@ -13,14 +14,14 @@ namespace Wave
 
         private readonly IEnemyAnimationController _enemyAnimation;
         private IEnemyAI _enemyAI;
-        private readonly GeneratorLevelController _generatorLevelController;
+        private readonly BuildingFactory _buildingFactory;
         private readonly IEnemyAIController _enemyAIController;
         private readonly IBulletsController _bulletsController;
 
         private readonly Damageable _damageable;
         private readonly EnemyTileDislocation _tileDislocation;
 
-        public EnemyController(EnemySettings enemySettings, GameObject enemyRootGo, GeneratorLevelController generatorLevelController,
+        public EnemyController(EnemySettings enemySettings, GameObject enemyRootGo, BuildingFactory buildingFactory,
             IEnemyAIController enemyAIController, IBulletsController bulletsController)
         {
             _damageable = enemyRootGo.GetComponent<Damageable>();
@@ -28,7 +29,7 @@ namespace Wave
             
             Enemy = new Enemy(enemySettings, enemyRootGo, _damageable);
             _enemyAnimation = new EnemyAnimationController(Enemy);
-            _generatorLevelController = generatorLevelController;
+            _buildingFactory = buildingFactory;
             _enemyAIController = enemyAIController;
             _bulletsController = bulletsController;
 
@@ -51,7 +52,7 @@ namespace Wave
 
         public void SpawnEnemy()
         {
-            _enemyAI ??= new EnemyAI(Enemy, _generatorLevelController.MainBuilding, _enemyAnimation, _bulletsController);
+            _enemyAI ??= new EnemyAI(Enemy, _buildingFactory.MainBuilding, _enemyAnimation, _bulletsController);
             _enemyAIController.AddEnemyAI(_enemyAI);
             _damageable.Init(Enemy.Stats.Health);
             _tileDislocation.On();
