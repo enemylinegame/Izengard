@@ -41,6 +41,10 @@ namespace CombatSystem
 
         public IHealthHolder HealthHolder  => _unit?.HealthHolder ?? null;
 
+        public bool IsInHiringProcess => _unit == null;
+
+        public DefenderSettings Settings => _settings; 
+        
         public DefenderPreview(DefenderSettings settings)
         {
             _settings = settings;

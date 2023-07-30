@@ -69,14 +69,16 @@ namespace Code.TileSystem
 
                 for (int i = 0; i < units.Count; i++)
                 {
-                    DefenderPreview defender = units[i];     //TODO: if defender in creating process ...
+                    DefenderPreview defender = units[i];
                     if (defendersOnTile.Remove(defender))
                     {
-                        DefenderUnit unit = defender.Unit;
-                        if (unit != null)
+                        if (defender.IsInHiringProcess)
                         {
-                            unit.DefenderUnitDead -= DefenderDead;
-                            _defendersController.DismissDefender(unit);
+                            CancelHiring(defender);
+                        }
+                        else
+                        {
+                            DismissDefenderInstance(defender);
                         }
                     }
                 }
@@ -226,7 +228,19 @@ namespace Code.TileSystem
             _hireUnitView.Hide();
             _isHireDefenderPenelOpened = false;
         }
+
+        private void CancelHiring(DefenderPreview defender)
+        {
+            _paymentSystem.ReturnCostForCancelHireDefender(defender.Settings.HireCost);
+            _hireProgressManager.StopDefenderHiringProcess(defender);
+        }
  
+        private void DismissDefenderInstance(DefenderPreview defender)
+        {
+            DefenderUnit unit = defender.Unit;
+            unit.DefenderUnitDead -= DefenderDead;
+            _defendersController.DismissDefender(unit);
+        }
         
     }
 }
