@@ -14,16 +14,28 @@ namespace StartupMenu
 
         private readonly StateModel _startupSceneState;
 
+        private readonly ISettingsData _baseSettingsData;
+
+        private readonly GameSettingsManager _gameSettings;
+
         private MainMenuController _mainMenuController;
         private SettingsMenuController _settingsMenuContoller;
 
-        public StartupMenuController(Transform placeForUi, AudioMixer audioMixer, AudioSource clickAudioSource)
+        public StartupMenuController(
+            Transform placeForUi,
+            ISettingsData baseSettingsData,
+            AudioMixer audioMixer, 
+            AudioSource clickAudioSource)
         {
             _placeForUi = placeForUi;
+            _baseSettingsData = baseSettingsData;
             _audioMixer = audioMixer;
             _clickSource = clickAudioSource;
 
             _startupSceneState = new StateModel();
+
+            _gameSettings 
+                = new GameSettingsManager(_audioMixer, _baseSettingsData);
 
             _startupSceneState.OnStateChange += OnChangeGameState;
 
@@ -38,12 +50,18 @@ namespace StartupMenu
             {
                 case MenuState.Start:
                     {
-                        _mainMenuController = new MainMenuController(_placeForUi, _startupSceneState, _clickSource);
+                        _mainMenuController 
+                            = new MainMenuController(_placeForUi, _startupSceneState, _clickSource);
                         break;
                     }
                 case MenuState.Settings:
                     {
-                        _settingsMenuContoller = new SettingsMenuController(_placeForUi, _audioMixer, _startupSceneState, _clickSource);
+                        _settingsMenuContoller 
+                            = new SettingsMenuController(
+                                _placeForUi, 
+                                _gameSettings,
+                                _startupSceneState,
+                                _clickSource);
                         break;
                     }
                 case MenuState.Game:
@@ -66,12 +84,12 @@ namespace StartupMenu
         }
 
 
-        public void Playgame()
+        private void Playgame()
         {
             SceneManager.LoadScene(_gameSceneIndex);
         }
 
-        public void QuitGame()
+        private void QuitGame()
         {
 #if UNITY_EDITOR
             Debug.Log("EXIT!");
@@ -84,7 +102,10 @@ namespace StartupMenu
         protected override void OnDispose()
         {
             DisposeControllers();
+            
             _startupSceneState.OnStateChange -= OnChangeGameState;
+         
+            _gameSettings?.Dispose();
         }
 
     }

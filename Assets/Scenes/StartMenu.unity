@@ -168,6 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _placeForUI: {fileID: 954811032}
+  _baseSettings: {fileID: 11400000, guid: 03c5d0299ead69a459967fafe235ff83, type: 2}
   _audioMixer: {fileID: 24100000, guid: 26afa02cd57577e49bd16d40431429a6, type: 2}
   _clickAudioSource: {fileID: 923587925}
 --- !u!1 &647989090
@@ -648,7 +649,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1665128140}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

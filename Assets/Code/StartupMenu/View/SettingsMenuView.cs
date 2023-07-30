@@ -9,6 +9,8 @@ namespace StartupMenu
 {
     public class SettingsMenuView : MonoBehaviour
     {
+        [SerializeField] private Button _applySettingsButton;
+        [SerializeField] private Button _restoreSettingsButton;
         [SerializeField] private Button _backToMenuButton;
 
         [Space(10)]
@@ -33,11 +35,20 @@ namespace StartupMenu
         private AudioSource _clickAudioSource;
 
         public void Init(
-            UnityAction backToMenu, 
-            SettingsMenuModel model, 
+            UnityAction applySettings,
+            UnityAction restoreSettings,
+            UnityAction backToMenu,
+            IList<Resolution> resolutions,
+            SettingsModel model, 
             AudioSource clickAudioSource)
         {
             _clickAudioSource = clickAudioSource;
+
+            _applySettingsButton.onClick.AddListener(applySettings);
+            _applySettingsButton.onClick.AddListener(PlayClickSound);
+          
+            _restoreSettingsButton.onClick.AddListener(restoreSettings);
+            _restoreSettingsButton.onClick.AddListener(PlayClickSound);
 
             _backToMenuButton.onClick.AddListener(backToMenu);
             _backToMenuButton.onClick.AddListener(PlayClickSound);
@@ -54,47 +65,66 @@ namespace StartupMenu
             _musicVolumeSlider.onValueChanged.AddListener(model.ChangeMusicVolume);
             _voiceVolumeSlider.onValueChanged.AddListener(model.ChangeVoiceVolume);
             _effectsVolumeSlider.onValueChanged.AddListener(model.ChangeEffectsVolume);
+
+            CreateResolutions(resolutions);
         }
 
         private void PlayClickSound() 
             => _clickAudioSource.Play();
 
-        public void InitSettingsValues(IList<Resolution> resolutions)
+
+        private void CreateResolutions(IList<Resolution> resolutions)
         {
             _resolutionDropdown.ClearOptions();
 
             var options = new List<string>();
 
-            int currentResolutionIndex = 0;
-
             for (int i = 0; i < resolutions.Count; i++)
             {
-                string option = resolutions[i].width + " x " + resolutions[i].height;
+                string option = $"{resolutions[i].width} x {resolutions[i].height} @ {resolutions[i].refreshRate}Hz";
                 options.Add(option);
-
-                if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
-                {
-                    currentResolutionIndex = i;
-                }
             }
             _resolutionDropdown.AddOptions(options);
-            _resolutionDropdown.value = currentResolutionIndex;
+        }
+
+        public void UpdateViewOptions(SettingsModel model)
+        {
+            _resolutionDropdown.value = model.CurrentResolutionId;
             _resolutionDropdown.RefreshShownValue();
 
-            _graphicsDropdown.value = 0;
-            _shadowDropdown.value = 0;
+            _graphicsDropdown.value = model.CurrentGraphicsId;
+            _graphicsDropdown.RefreshShownValue();
 
-            _fullScreenToggle.isOn = true;
+            _shadowDropdown.value = model.CurrentShadowId;
+            _shadowDropdown.RefreshShownValue();
+
+            _fullScreenToggle.isOn = model.IsFullScreenOn;
             _fullScreenToggle.onValueChanged?.Invoke(_fullScreenToggle.isOn);
-            _vsyncToggle.isOn = true;
+
+            _vsyncToggle.isOn = model.IsFVSyncOn;
             _vsyncToggle.onValueChanged?.Invoke(_vsyncToggle.isOn);
-            _blurToggle.isOn = true;
+            
+            _blurToggle.isOn = model.IsBlurnOn;
             _blurToggle.onValueChanged?.Invoke(_blurToggle.isOn);
 
+
+            _masterVolumeSlider.value = model.MasterVolumeValue;
+            _masterVolumeSlider.onValueChanged?.Invoke(_masterVolumeSlider.value);
+
+            _musicVolumeSlider.value = model.MusicVolumeValue;
+            _musicVolumeSlider.onValueChanged?.Invoke(_musicVolumeSlider.value);
+
+            _voiceVolumeSlider.value = model.VoiceVolumeValue;
+            _voiceVolumeSlider.onValueChanged?.Invoke(_voiceVolumeSlider.value);
+            
+            _effectsVolumeSlider.value = model.EffectsVolumeValue;
+            _effectsVolumeSlider.onValueChanged?.Invoke(_effectsVolumeSlider.value);
         }
 
         protected void OnDestroy()
         {
+            _applySettingsButton.onClick.RemoveAllListeners();
+            _restoreSettingsButton.onClick.RemoveAllListeners();
             _backToMenuButton.onClick.RemoveAllListeners();
             
             _resolutionDropdown.onValueChanged.RemoveAllListeners();

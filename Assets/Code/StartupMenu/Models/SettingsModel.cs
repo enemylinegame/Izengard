@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace StartupMenu
 {
@@ -9,7 +10,7 @@ namespace StartupMenu
         Sound
     }
 
-    public class SettingsMenuModel
+    public class SettingsModel
     {
         public event Action<SettingsType> OnSettingsChanged;
 
@@ -18,9 +19,9 @@ namespace StartupMenu
         private int _currentGraphicsId;
         private int _currentShadowId;
 
-        private bool _isFullScreenOn;
-        private bool _isFVSyncOn;
-        private bool _isBlurnOn;
+        private bool _isFullScreenOn = true;
+        private bool _isFVSyncOn = true;
+        private bool _isBlurnOn = true;
 
         private float _masterVolumeValue;
         private float _musicVolumeValue;
@@ -130,6 +131,49 @@ namespace StartupMenu
         }
 
         #endregion
+
+        public SettingsModel()
+        {
+          
+        }
+
+        public void SetBaseData(ISettingsData data)
+        {
+            _currentResolutionId 
+                = GetBaseResolutionIndex(data.ResolutionWidth, data.ResolutionHeight);
+
+            _currentGraphicsId = data.GraphicsId;
+            _currentShadowId = data.ShadowId;
+
+            _isFullScreenOn = data.IsFullScreenOn;
+            _isFVSyncOn = data.IsVSyncOn;
+            _isBlurnOn = data.IsBlurnOn;
+
+            _masterVolumeValue = data.MasterVolumeValue;
+            _musicVolumeValue = data.MusicVolumeValue;
+            _voiceVolumeValue = data.VoiceVolumeValue;
+            _effectsVolumeValue = data.EffectsVolumeValue;
+        }
+
+        private int GetBaseResolutionIndex(int widht, int height)
+        {
+            var resultIndex = 0;
+
+            var resolutions = Screen.resolutions;
+            var currentRefreshRate = Screen.currentResolution.refreshRate;
+
+            for (int i = 0; i < resolutions.Length; i++)
+            {
+                if (resolutions[i].width == widht
+                    && resolutions[i].height == height
+                    && resolutions[i].refreshRate == currentRefreshRate)
+                {
+                    resultIndex = i;
+                }
+            }
+
+            return resultIndex;
+        }
 
         public void ChangeResolution(int newResolution) =>
             CurrentResolutionId = newResolution;
