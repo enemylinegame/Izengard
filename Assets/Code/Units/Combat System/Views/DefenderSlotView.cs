@@ -177,9 +177,9 @@ namespace CombatSystem.Views
 
         private void SetHiringUnitMode()
         {
-            _inBarrack.gameObject.SetActive(false);
+            _inBarrack.gameObject.SetActive(true);
             _hireButton.gameObject.SetActive(false);
-            _dismissButton.gameObject.SetActive(false);
+            _dismissButton.gameObject.SetActive(true);
             _unit.OnDefenderSet += OnUnitReady;
             StartProgressIndication();
         }
