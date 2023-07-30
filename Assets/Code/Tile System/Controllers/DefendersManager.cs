@@ -88,8 +88,19 @@ namespace Code.TileSystem
 
         public void SendToBarrack(List<DefenderPreview> units)
         {
-            List<DefenderUnit> defenders = units.ConvertAll(preview => preview.Unit)
-                                    .FindAll(unit => unit != null);
+            List<DefenderUnit> defenders = new();
+            units.ForEach(preview =>
+            {
+                if (preview.IsInHiringProcess)
+                {
+                    preview.IsInBarrack = true;
+                }
+                else
+                {
+                    defenders.Add(preview.Unit);
+                }
+            });
+            
             if (defenders.Count > 0)
             {
                 _defendersController.SendDefendersToBarrack(defenders, SelectedTileModel);
@@ -99,8 +110,19 @@ namespace Code.TileSystem
 
         public void KickoutFromBarrack(List<DefenderPreview> units)
         {
-            List<DefenderUnit> defenders = units.ConvertAll(preview => preview.Unit)
-                .FindAll(unit => unit != null);
+            List<DefenderUnit> defenders = new();
+            units.ForEach(preview =>
+            {
+                if (preview.IsInHiringProcess)
+                {
+                    preview.IsInBarrack = false;
+                }
+                else
+                {
+                    defenders.Add(preview.Unit);
+                }
+            });
+
             if (defenders.Count > 0)
             {
                 _defendersController.KickDefendersOutOfBarrack(defenders, SelectedTileModel);
@@ -155,9 +177,14 @@ namespace Code.TileSystem
             DefenderSettings settings)
         {
             DefenderUnit defender = _defendersController.CreateDefender(tile, settings);
-            defenderPreview.Unit = defender;
+            bool isInBarrack = defenderPreview.IsInBarrack;
             defender.Tile = tile;
             defender.DefenderUnitDead += DefenderDead;
+            if (isInBarrack)
+            {
+                _defendersController.SendDefenderToBarrack(defender, tile);
+            }
+            defenderPreview.Unit = defender;
         }
 
         #region ITileLoadInfo
