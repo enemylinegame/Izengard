@@ -51,7 +51,7 @@ namespace StartupMenu
 
         private float ConvertRange(float value)
         {
-            float convertedValue = ((value - 0) / (100 - 0)) * (_maxMixerValue - (-_minMixerVBalue)) + (-_minMixerVBalue);
+            float convertedValue = ((value - 0) / (100 - 0)) * (_maxMixerValue - _minMixerVBalue) + _minMixerVBalue;
             return convertedValue;
         }
     }

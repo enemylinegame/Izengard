@@ -18,8 +18,8 @@ MonoBehaviour:
   _isFullScreenOn: 0
   _isFVSyncOn: 1
   _masterVolumeValue: 100
-  _musicVolumeValue: 100
+  _musicVolumeValue: 80
   _voiceVolumeValue: 100
-  _effectsVolumeValue: 100
+  _effectsVolumeValue: 80
   _maxMixerValue: 0
   _minMixerVBalue: -80

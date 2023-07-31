@@ -43,6 +43,8 @@ namespace StartupMenu
       
             ChangeGraphicsSettings(SettingsType.Graphics);
             ChangeSoundSettings(SettingsType.Sound);
+
+            ApplyCurrentSettings();
         }
 
         private SettingsModel CreateSettignsModel(SettingsDataManager dataManager)
