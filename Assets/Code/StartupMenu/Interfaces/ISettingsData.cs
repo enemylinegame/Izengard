@@ -4,12 +4,10 @@
     {
         public int ResolutionWidth { get; }
         public int ResolutionHeight { get; }
-        public int GraphicsId { get; }
         public int ShadowId { get; }
 
         public bool IsFullScreenOn { get; }
         public bool IsVSyncOn { get; }
-        public bool IsBlurnOn { get; }
 
         public float MasterVolumeValue { get; }
         public float MusicVolumeValue { get; }

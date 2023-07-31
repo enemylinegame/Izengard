@@ -27,7 +27,6 @@ namespace StartupMenu
 
             _view.Init(
                 ApplySettings, 
-                RestoreSettings, 
                 BackToMenu,
                 _gameSettings.ResolutionList,
                 _gameSettings.Model, 
@@ -48,14 +47,6 @@ namespace StartupMenu
         private void ApplySettings()
         {
             _gameSettings.ApplyCurrentSettings();
-
-            _isSettingsChanged = true;
-        }
-
-        private void RestoreSettings()
-        {
-            _gameSettings.RestoreBaseSettings();
-            _view.UpdateViewOptions(_gameSettings.Model);
 
             _isSettingsChanged = true;
         }

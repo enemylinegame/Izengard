@@ -9,11 +9,9 @@ namespace StartupMenu.DataManager
 
         private const string SCREEN_RESOLUTION_WIDTH = "ScreenWidth";
         private const string SCREEN_RESOLUTION_HEIGHT = "ScreenHeight";
-        private const string GRAPHICS_QUALITY = "GraphicsQuality";
         private const string SHADOW_QUALITY = "ShadowQuality";
         private const string FULLSCREEN_MODE = "FullscreenMode";
         private const string VSYNC_MODE = "VSyncMode";
-        private const string BLUR_MODE = "BlurMode";
         
         private const string MASTER_VOLUME_LEVEL = "MasterVolumeLevel";
         private const string MUSIC_VOLUME_LEVEL = "MusicVolumeLevel";
@@ -29,12 +27,10 @@ namespace StartupMenu.DataManager
             parametesStateList.Add(PlayerPrefs.HasKey(SCREEN_RESOLUTION_WIDTH));
             parametesStateList.Add(PlayerPrefs.HasKey(SCREEN_RESOLUTION_HEIGHT));
 
-            parametesStateList.Add(PlayerPrefs.HasKey(GRAPHICS_QUALITY));
             parametesStateList.Add(PlayerPrefs.HasKey(SHADOW_QUALITY));
 
             parametesStateList.Add(PlayerPrefs.HasKey(FULLSCREEN_MODE));
             parametesStateList.Add(PlayerPrefs.HasKey(VSYNC_MODE));
-            parametesStateList.Add(PlayerPrefs.HasKey(BLUR_MODE));
 
             parametesStateList.Add(PlayerPrefs.HasKey(MASTER_VOLUME_LEVEL));
             parametesStateList.Add(PlayerPrefs.HasKey(MUSIC_VOLUME_LEVEL));
@@ -53,12 +49,10 @@ namespace StartupMenu.DataManager
             PlayerPrefs.SetInt(SCREEN_RESOLUTION_WIDTH, screenWidth);
             PlayerPrefs.SetInt(SCREEN_RESOLUTION_HEIGHT, screenHeight);
 
-            PlayerPrefs.SetInt(GRAPHICS_QUALITY, data.CurrentGraphicsId);
             PlayerPrefs.SetInt(SHADOW_QUALITY, data.CurrentShadowId);
 
             PlayerPrefs.SetInt(FULLSCREEN_MODE, data.IsFullScreenOn ? 1 : 0);
             PlayerPrefs.SetInt(VSYNC_MODE, data.IsFVSyncOn ? 1 : 0);
-            PlayerPrefs.SetInt(BLUR_MODE, data.IsBlurnOn ? 1 : 0);
 
             PlayerPrefs.SetFloat(MASTER_VOLUME_LEVEL, data.MasterVolumeValue);
             PlayerPrefs.SetFloat(MUSIC_VOLUME_LEVEL, data.MusicVolumeValue);
@@ -73,12 +67,10 @@ namespace StartupMenu.DataManager
             var screenWidth = PlayerPrefs.GetInt(SCREEN_RESOLUTION_WIDTH);
             var screenHeight = PlayerPrefs.GetInt(SCREEN_RESOLUTION_HEIGHT);
 
-            var graphicsId = PlayerPrefs.GetInt(GRAPHICS_QUALITY);
             var shadowId = PlayerPrefs.GetInt(SHADOW_QUALITY);
 
             var isFullScreen = PlayerPrefs.GetInt(FULLSCREEN_MODE) == 1;
             var isVSync = PlayerPrefs.GetInt(VSYNC_MODE) == 1;
-            var isBlur = PlayerPrefs.GetInt(BLUR_MODE) == 1;
 
             var masterVolume = PlayerPrefs.GetFloat(MASTER_VOLUME_LEVEL);
             var musicVolume = PlayerPrefs.GetFloat(MUSIC_VOLUME_LEVEL);
@@ -87,12 +79,11 @@ namespace StartupMenu.DataManager
 
             loadData.SetResolutionWidth(screenWidth);
             loadData.SetResolutionHeight(screenHeight);
-
-            loadData.SetGraphicId(graphicsId);
             loadData.SetShadowId(shadowId); 
+
             loadData.SetFullScreenMode(isFullScreen);
             loadData.SetVSyncMode(isVSync);
-            loadData.SetBlurMode(isBlur);
+
             loadData.SetMasterVolume(masterVolume);
             loadData.SetMusicVolume(musicVolume);
             loadData.SetVoiceVolume(voiceVolume);

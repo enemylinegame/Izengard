@@ -14,14 +14,11 @@ namespace StartupMenu
     {
         public event Action<SettingsType> OnSettingsChanged;
 
-
         private int _currentResolutionId;
-        private int _currentGraphicsId;
         private int _currentShadowId;
 
         private bool _isFullScreenOn = true;
         private bool _isFVSyncOn = true;
-        private bool _isBlurnOn = true;
 
         private float _masterVolumeValue;
         private float _musicVolumeValue;
@@ -36,16 +33,6 @@ namespace StartupMenu
             private set
             {
                 _currentResolutionId = value;
-                OnSettingsChanged?.Invoke(SettingsType.Graphics);
-            }
-        }
-
-        public int CurrentGraphicsId
-        {
-            get => _currentGraphicsId;
-            private set
-            {
-                _currentGraphicsId = value;
                 OnSettingsChanged?.Invoke(SettingsType.Graphics);
             }
         }
@@ -76,16 +63,6 @@ namespace StartupMenu
             private set
             {
                 _isFVSyncOn = value;
-                OnSettingsChanged?.Invoke(SettingsType.Graphics);
-            }
-        }
-
-        public bool IsBlurnOn
-        {
-            get => _isBlurnOn;
-            private set
-            {
-                _isBlurnOn = value;
                 OnSettingsChanged?.Invoke(SettingsType.Graphics);
             }
         }
@@ -141,13 +118,10 @@ namespace StartupMenu
         {
             _currentResolutionId 
                 = GetBaseResolutionIndex(data.ResolutionWidth, data.ResolutionHeight);
-
-            _currentGraphicsId = data.GraphicsId;
             _currentShadowId = data.ShadowId;
 
             _isFullScreenOn = data.IsFullScreenOn;
             _isFVSyncOn = data.IsVSyncOn;
-            _isBlurnOn = data.IsBlurnOn;
 
             _masterVolumeValue = data.MasterVolumeValue;
             _musicVolumeValue = data.MusicVolumeValue;
@@ -178,9 +152,6 @@ namespace StartupMenu
         public void ChangeResolution(int newResolution) =>
             CurrentResolutionId = newResolution;
 
-        public void ChangeGraphics(int newGraphicsId) =>
-            CurrentGraphicsId = newGraphicsId;
-
         public void ChangeShadow(int newShadowId) =>
             CurrentShadowId = newShadowId;
 
@@ -189,9 +160,6 @@ namespace StartupMenu
 
         public void ChangeVSyncMode(bool state) =>
            IsFVSyncOn = state;
-
-        public void ChangeBlurMode(bool state) =>
-           IsBlurnOn = state;
 
         public void ChangeMasterVolume(float volume) =>
             MasterVolumeValue = volume;

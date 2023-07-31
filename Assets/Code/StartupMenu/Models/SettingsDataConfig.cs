@@ -13,12 +13,10 @@ namespace StartupMenu
 
         public int ResolutionWidth => _baseSceenWidth;
         public int ResolutionHeight => _baseSceenHeight;
-
-        public int GraphicsId => _graphicsId;
         public int ShadowId => _shadowId;
+
         public bool IsFullScreenOn => _isFullScreenOn;
         public bool IsVSyncOn => _isFVSyncOn;
-        public bool IsBlurnOn => _isBlurnOn;
 
         public float MasterVolumeValue => ConvertRange(_masterVolumeValue);
         public float MusicVolumeValue => ConvertRange(_musicVolumeValue);
@@ -30,11 +28,9 @@ namespace StartupMenu
         [Header("Graphics Settings")]
         [SerializeField] private int _baseSceenWidth = 1920;
         [SerializeField] private int _baseSceenHeight = 1080;
-        [SerializeField] private int _graphicsId = 1;
         [SerializeField] private int _shadowId = 1;
         [SerializeField] private bool _isFullScreenOn = true;
         [SerializeField] private bool _isFVSyncOn = true;
-        [SerializeField] private bool _isBlurnOn = false;
 
         [Space(10)]
         [Header("Sound Settings")]

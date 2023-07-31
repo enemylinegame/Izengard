@@ -30,7 +30,7 @@ namespace StartupMenu
 
             _dataManager = new PlayerPrefsSettings();
 
-            _model = CreateSettignsModel(_dataManager, _baseSettingsData);
+            _model = CreateSettignsModel(_dataManager);
     
             _currentRefreshRate = Screen.currentResolution.refreshRate;
 
@@ -42,7 +42,7 @@ namespace StartupMenu
                 }
             }
 
-           // ChangeGraphicsSettings(SettingsType.Graphics);
+            ChangeGraphicsSettings(SettingsType.Graphics);
             ChangeSoundSettings(SettingsType.Sound);
         }
 
@@ -66,7 +66,7 @@ namespace StartupMenu
             return resultIndex;
         }
 
-        private SettingsModel CreateSettignsModel(SettingsDataManager dataManager, ISettingsData baseData)
+        private SettingsModel CreateSettignsModel(SettingsDataManager dataManager)
         {
             if (dataManager.IsDataStored == true)
             {
@@ -74,7 +74,7 @@ namespace StartupMenu
             }
             else
             {
-                _deafaultSettingsData = baseData;
+                _deafaultSettingsData = _baseSettingsData;
             }
 
             var model = new SettingsModel();
@@ -90,9 +90,11 @@ namespace StartupMenu
                 return;
 
             var currentResolution = _resolutionList[_model.CurrentResolutionId];
-            Screen.SetResolution(currentResolution.width, currentResolution.height, _model.IsFullScreenOn, currentResolution.refreshRate);
-
-            QualitySettings.SetQualityLevel(_model.CurrentGraphicsId);
+            Screen.SetResolution(
+                currentResolution.width, 
+                currentResolution.height, 
+                _model.IsFullScreenOn, 
+                currentResolution.refreshRate);
 
             QualitySettings.shadowResolution = (ShadowResolution)_model.CurrentShadowId;
 
@@ -114,30 +116,19 @@ namespace StartupMenu
         public void ApplyCurrentSettings()
         {
             _dataManager.SaveData(_model);
-
-            _deafaultSettingsData = _dataManager.LoadData();
-        }
-
-        public void RestoreBaseSettings()
-        {
-            RestoreByData(_baseSettingsData);
+            var loadData =  _dataManager.LoadData();
+            _deafaultSettingsData = loadData;
         }
 
         public void RestoreDefaultSettings()
         {
-            RestoreByData(_deafaultSettingsData);
-        }
-
-        private void RestoreByData(ISettingsData data)
-        {
-            _model.SetBaseData(data);
+            _model.SetBaseData(_deafaultSettingsData);
 
             ChangeGraphicsSettings(SettingsType.Graphics);
             ChangeSoundSettings(SettingsType.Sound);
 
             _dataManager.SaveData(_model);
         }
-
 
         private void SubscribeModel(SettingsModel model)
         {
