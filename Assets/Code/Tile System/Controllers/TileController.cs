@@ -41,17 +41,18 @@ namespace Code.TileSystem
             ProductionManager productionManager, LevelOfLifeButtonsCustomizer level, 
             GlobalStock stock)
         {
+            _buttonsController = new ButtonsControllerOnTile(uiController, inputController);
+            
             _productionManager = productionManager;
-
             _playerNotificationSystem = uiController.CenterUI.BaseNotificationUI;
             _list = tileList;
             _uiView = uiController.BottomUI.TileUIView;
             _uiController = uiController;
             _buildingFactory = buildingController;
             _inputController = inputController;
-            _buttonsController = new ButtonsControllerOnTile(uiController, inputController);
             _level = level;
             _stock = stock;
+            
             inputController.Add(this);
         }
 
