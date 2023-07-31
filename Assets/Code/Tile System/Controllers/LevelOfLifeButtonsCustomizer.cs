@@ -28,7 +28,7 @@ namespace Code.TileSystem
             if(!IsResourcesEnoughRepair(model.TileConfig)) return;
             if (model.CenterBuilding.CurrentHealth < model.CenterBuilding.MaxHealth)
             {
-                model.TileConfig.RepairCost.ForEach(resourcePrice => 
+                model.TileConfig.PriceRepair.ForEach(resourcePrice => 
                     _stock.GetResourceFromStock(resourcePrice.ResourceType, resourcePrice.Cost));
                 model.CenterBuilding.CurrentHealth = model.CenterBuilding.MaxHealth;
             }
@@ -40,7 +40,7 @@ namespace Code.TileSystem
             if(!IsResourcesEnoughRecovery(model.TileConfig)) return;
             if (model.CenterBuilding.CurrentHealth < model.CenterBuilding.MaxHealth)
             {
-                model.TileConfig.RecoveryCost.ForEach(resourcePrice =>
+                model.TileConfig.PriceRecovery.ForEach(resourcePrice =>
                 {
                     _stock.GetResourceFromStock(resourcePrice.ResourceType, resourcePrice.Cost);
                 });
@@ -53,7 +53,7 @@ namespace Code.TileSystem
         
         private bool IsResourcesEnoughRepair(TileConfig cost)
         {
-            foreach (ResourcePriceModel resourcePriceModel in cost.RepairCost)
+            foreach (ResourcePriceModel resourcePriceModel in cost.PriceRepair)
             {
                 if (!_stock.CheckResourceInStock(resourcePriceModel.ResourceType, resourcePriceModel.Cost))
                 {
@@ -65,7 +65,7 @@ namespace Code.TileSystem
         }
         private bool IsResourcesEnoughRecovery(TileConfig cost)
         {
-            foreach (ResourcePriceModel resourcePriceModel in cost.RecoveryCost)
+            foreach (ResourcePriceModel resourcePriceModel in cost.PriceRecovery)
             {
                 if (!_stock.CheckResourceInStock(resourcePriceModel.ResourceType, resourcePriceModel.Cost))
                 {

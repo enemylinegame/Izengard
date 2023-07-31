@@ -1,15 +1,20 @@
 using System.Collections.Generic;
+using Code.BuildingSystem;
+using Code.Player;
 using Code.UI;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Code.TileSystem
 {
     public class ButtonsControllerOnTile
     {
+        private readonly InputController _inputController;
         private readonly List<ButtonView> _holder;
 
-        public ButtonsControllerOnTile(UIController uiController)
+        public ButtonsControllerOnTile(UIController uiController, InputController inputController)
         {
+            _inputController = inputController;
             _holder = uiController.BottomUI.TileUIView.ButtonsHolder;
         }
         /// <summary>
@@ -51,11 +56,40 @@ namespace Code.TileSystem
                 upgrade.gameObject.SetActive(true);
                 HolderButton(ButtonTypes.Recovery).gameObject.SetActive(false);
             });
+            
+            if (model.HouseType == HouseType.All)
+            {
+                HolderButton(ButtonTypes.Destroy).gameObject.SetActive(false);
+            }
+            else
+            {
+                HolderButton(ButtonTypes.Destroy).gameObject.SetActive(true);
+                HolderButton(ButtonTypes.Destroy).onClick.AddListener(() =>
+                {
+                    while (true)
+                    {
+                        foreach (var build in model.FloodedBuildings)
+                        {
+                            if (build.BuildingTypes != 0)
+                            {
+                                model.FloodedBuildings.Remove(build);
+                                Object.Destroy(build.Prefab);
+                                if(!model.FloodedBuildings.Exists(building => building.BuildingTypes != 0)) break;
+                            }
+                        }
+                        model.HouseType = HouseType.None;
+                        model.CenterBuilding.gameObject.SetActive(false);
+                        _inputController.HardOffTile();
+                        return;
+                    }
+                });
+                
+            }
+            
         }
         /// <summary>
         /// Checks the health level, if it changes, then the button changes
         /// </summary>
-        /// <param name="model"></param>
         public void ButtonsChecker(TileModel model)
         {
             if(model.CenterBuilding == null) return;
@@ -83,8 +117,6 @@ namespace Code.TileSystem
         /// <summary>
         /// Removes all dependencies from buttons
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="model"></param>
         public void RemoveListeners(ButtonTypes type, TileModel model)
         {
             if(model.CenterBuilding == null) return;
