@@ -227,6 +227,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41e0f114166a4abdba1ead67a3f0d43f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &77750752 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3836295042712984258, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
+  m_PrefabInstance: {fileID: 246770081}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee2fd02051434cc98f763e6cbe6830a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &230149505
 GameObject:
   m_ObjectHideFlags: 0
@@ -425,6 +436,14 @@ PrefabInstance:
       propertyPath: _upgrade
       value: 
       objectReference: {fileID: 680892872}
+    - target: {fileID: 1768718661469220081, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
+      propertyPath: _buttonsHolder.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1768718661469220081, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
+      propertyPath: _buttonsHolder.Array.data[3]
+      value: 
+      objectReference: {fileID: 77750752}
     - target: {fileID: 3014397336594897047, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
       propertyPath: m_CellSize.x
       value: 550
@@ -517,6 +536,10 @@ PrefabInstance:
       propertyPath: m_RaycastTarget
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5064343491036389859, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
+      propertyPath: m_Name
+      value: Rigt board
+      objectReference: {fileID: 0}
     - target: {fileID: 5064343491368005663, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
       propertyPath: <BuildingInfo>k__BackingField
       value: 
@@ -533,6 +556,10 @@ PrefabInstance:
       propertyPath: <PrefabButtonClear>k__BackingField
       value: 
       objectReference: {fileID: 623994360}
+    - target: {fileID: 5064343491748065343, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
+      propertyPath: m_Name
+      value: Left board
+      objectReference: {fileID: 0}
     - target: {fileID: 5064343491968657878, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
       propertyPath: m_fontSize
       value: 16

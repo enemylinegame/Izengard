@@ -1,6 +1,7 @@
 using LevelGenerator.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -42,11 +43,12 @@ namespace LevelGenerator
             _navMeshSurface.BuildNavMesh();//_navMeshSurface.UpdateNavMesh(_navMeshSurface.navMeshData);
         }
 
-        public void SetTile(TileSpawnInfo spawnInfo)
+        public async void SetTile(TileSpawnInfo spawnInfo)
         {
             var side = (spawnInfo.GridSpawnPosition - spawnInfo.GridBasePosition);
             _spawnedTiles.Add(spawnInfo.GridSpawnPosition, GetTile(side, spawnInfo.GridBasePosition));
             _spawnedTiles[spawnInfo.GridSpawnPosition].IsDefendTile = spawnInfo.IsDefendTile;
+            await Task.Delay(200);
             _navMeshSurface.UpdateNavMesh(_navMeshSurface.navMeshData);
         }
 
