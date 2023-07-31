@@ -15,15 +15,20 @@ namespace Code.TileSystem
         [SerializeField] private int maxUnits;
         [Space, Header("Здесь будет храниться список зданий на данный уровень")]
         [SerializeField] private List<BuildingConfig> _buildingTirs;
+        [FormerlySerializedAs("_repairCost")]
         [Space, Header("Стоимость починки")]
-        [SerializeField] private List<ResourcePriceModel> _repairCost;
+        [SerializeField] private List<ResourcePriceModel> _priceRepair;
+        [FormerlySerializedAs("_recoveryCost")]
         [Header("Стоимость Восстановления")]
-        [SerializeField] private List<ResourcePriceModel> _recoveryCost;
+        [SerializeField] private List<ResourcePriceModel> _priceRecovery;
+        [Header("Стоимость Апгрейда")]
+        [SerializeField] private List<ResourcePriceModel> _priceUpgrade;
         
         
         
-        public List<ResourcePriceModel> RecoveryCost => _recoveryCost;
-        public List<ResourcePriceModel> RepairCost => _repairCost;
+        public List<ResourcePriceModel> PriceRecovery => _priceRecovery;
+        public List<ResourcePriceModel> PriceRepair => _priceRepair;
+        public List<ResourcePriceModel> PriceUpgrade => _priceUpgrade;
         public Sprite IconTile => _icon;
         public TileLvl TileLvl => _tileLvl;
         public int MaxUnits => maxUnits;
