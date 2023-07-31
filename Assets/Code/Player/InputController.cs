@@ -94,14 +94,15 @@ namespace Code.Player
             foreach (var selector in _loadInfoToTheUis)
                 if (!_isSpecialMode)
                 {
+                    selector.Cancel();
                     _outlineController.DisableOutLine(_tile.Renderer);
                     LockRightClick = true;
-                    selector.Cancel();
                 }
     
             if (_isSpecialMode) _tileSelector.Cancel();
 
-            IsOnTile = !_isSpecialMode;
+            IsOnTile = true;
+            _tile = null;
         }
     }
 }

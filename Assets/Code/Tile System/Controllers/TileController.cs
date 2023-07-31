@@ -38,7 +38,8 @@ namespace Code.TileSystem
         #endregion
         public TileController(TileList tileList, UIController uiController,
             BuildingFactory buildingController, InputController inputController,
-            ProductionManager productionManager, LevelOfLifeButtonsCustomizer level, GlobalStock stock)
+            ProductionManager productionManager, LevelOfLifeButtonsCustomizer level, 
+            GlobalStock stock)
         {
             _productionManager = productionManager;
 
@@ -48,7 +49,7 @@ namespace Code.TileSystem
             _uiController = uiController;
             _buildingFactory = buildingController;
             _inputController = inputController;
-            _buttonsController = new ButtonsControllerOnTile(uiController);
+            _buttonsController = new ButtonsControllerOnTile(uiController, inputController);
             _level = level;
             _stock = stock;
             inputController.Add(this);
@@ -176,8 +177,7 @@ namespace Code.TileSystem
             LevelCheck();
         }
 
-        private void DestroyBuilding(
-            BuildingUIInfo buildingHud, ICollectable building)
+        private void DestroyBuilding(BuildingUIInfo buildingHud, ICollectable building)
         {
             _productionManager.StopAllProductions(building);
 
@@ -186,7 +186,6 @@ namespace Code.TileSystem
 
             ResetWorkersAccount(building);
         }
-
         public bool IsThereFreeWorkers(ICollectable building)
         {
             if (building.WorkersCount >= building.MaxWorkers ||
