@@ -28,6 +28,7 @@ namespace StartupMenu
             _view.Init(
                 ApplySettings, 
                 BackToMenu,
+                OnResolutionChange,
                 _gameSettings.ResolutionList,
                 _gameSettings.Model, 
                 clickSource);
@@ -61,5 +62,12 @@ namespace StartupMenu
 
             _menuMonitor.CurrentState = MenuState.Start;
         }
+
+        private void OnResolutionChange(int index)
+        {
+            var newResolution = _gameSettings.ResolutionList[index];
+            _gameSettings.Model.ChangeResolution(newResolution.width, newResolution.height);
+        }
+
     }
 }

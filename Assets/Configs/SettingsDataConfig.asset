@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4aa48997ecf673a488f29eabdcb04206, type: 3}
   m_Name: SettingsDataConfig
   m_EditorClassIdentifier: 
-  _graphicsId: 1
-  _shadowId: 1
-  _isFullScreenOn: 1
+  _baseSceenWidth: 1920
+  _baseSceenHeight: 1080
+  _shadowId: 0
+  _isFullScreenOn: 0
   _isFVSyncOn: 1
-  _isBlurnOn: 0
   _masterVolumeValue: 100
   _musicVolumeValue: 100
   _voiceVolumeValue: 100

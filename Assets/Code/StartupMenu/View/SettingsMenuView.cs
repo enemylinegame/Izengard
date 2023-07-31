@@ -29,10 +29,11 @@ namespace StartupMenu
         [SerializeField] private Slider _effectsVolumeSlider;
 
         private AudioSource _clickAudioSource;
-
+        private List<Resolution> _resolutions;
         public void Init(
             UnityAction applySettings,
             UnityAction backToMenu,
+            UnityAction<int> onResolutionChange,
             IList<Resolution> resolutions,
             SettingsModel model, 
             AudioSource clickAudioSource)
@@ -45,7 +46,7 @@ namespace StartupMenu
             _backToMenuButton.onClick.AddListener(backToMenu);
             _backToMenuButton.onClick.AddListener(PlayClickSound);
 
-            _resolutionDropdown.onValueChanged.AddListener(model.ChangeResolution);
+            _resolutionDropdown.onValueChanged.AddListener(onResolutionChange);
 
             _shadowDropdown.onValueChanged.AddListener(model.ChangeShadow);
 
@@ -67,11 +68,14 @@ namespace StartupMenu
         private void CreateResolutions(IList<Resolution> resolutions)
         {
             _resolutionDropdown.ClearOptions();
+            
+            _resolutions = new List<Resolution>();
 
             var options = new List<string>();
 
             for (int i = 0; i < resolutions.Count; i++)
             {
+                _resolutions.Add(resolutions[i]);
                 string option = $"{resolutions[i].width} x {resolutions[i].height} @ {resolutions[i].refreshRate}Hz";
                 options.Add(option);
             }
@@ -80,7 +84,17 @@ namespace StartupMenu
 
         public void UpdateViewOptions(SettingsModel model)
         {
-            _resolutionDropdown.value = model.CurrentResolutionId;
+            var currentResolutionIndex = 0;
+            for (int i = 0; i < _resolutions.Count; i++) 
+            {
+                if (_resolutions[i].width == model.CurrentResolutionWidth
+                    && _resolutions[i].height == model.CurrentResolutionHeight)
+                {
+                    currentResolutionIndex = i;
+                }
+            }
+
+            _resolutionDropdown.value = currentResolutionIndex;
             _resolutionDropdown.RefreshShownValue();
 
             _shadowDropdown.value = model.CurrentShadowId;

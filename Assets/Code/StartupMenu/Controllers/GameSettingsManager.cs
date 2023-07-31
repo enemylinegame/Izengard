@@ -15,7 +15,6 @@ namespace StartupMenu
         private readonly List<Resolution> _resolutionList = new List<Resolution>();
         private readonly int _currentRefreshRate;
 
-        private ISettingsData _deafaultSettingsData;
         private SettingsModel _model;
 
         public SettingsModel Model => _model;
@@ -30,55 +29,37 @@ namespace StartupMenu
 
             _dataManager = new PlayerPrefsSettings();
 
-            _model = CreateSettignsModel(_dataManager);
-    
             _currentRefreshRate = Screen.currentResolution.refreshRate;
 
             foreach (var resolution in Screen.resolutions)
             {
-                if(resolution.refreshRate == _currentRefreshRate)
+                if (resolution.refreshRate == _currentRefreshRate)
                 {
                     _resolutionList.Add(resolution);
                 }
             }
 
+            _model = CreateSettignsModel(_dataManager);
+      
             ChangeGraphicsSettings(SettingsType.Graphics);
             ChangeSoundSettings(SettingsType.Sound);
         }
 
-        private int GetBaseResolutionIndex(int widht, int height)
-        {
-            var resultIndex = 0;
-
-            var resolutions = Screen.resolutions;
-            var currentRefreshRate = Screen.currentResolution.refreshRate;
-
-            for (int i = 0; i < resolutions.Length; i++)
-            {
-                if (resolutions[i].width == widht
-                    && resolutions[i].height == height
-                    && resolutions[i].refreshRate == currentRefreshRate)
-                {
-                    resultIndex = i;
-                }
-            }
-
-            return resultIndex;
-        }
-
         private SettingsModel CreateSettignsModel(SettingsDataManager dataManager)
         {
+            ISettingsData initData;
+            
             if (dataManager.IsDataStored == true)
             {
-                _deafaultSettingsData = dataManager.LoadData();
+                initData = dataManager.LoadData();
             }
             else
             {
-                _deafaultSettingsData = _baseSettingsData;
+                initData = _baseSettingsData;
             }
 
             var model = new SettingsModel();
-            model.SetBaseData(_deafaultSettingsData);
+            model.SetBaseData(initData);
             SubscribeModel(model);
             
             return model;
@@ -89,12 +70,10 @@ namespace StartupMenu
             if (type != SettingsType.Graphics)
                 return;
 
-            var currentResolution = _resolutionList[_model.CurrentResolutionId];
             Screen.SetResolution(
-                currentResolution.width, 
-                currentResolution.height, 
-                _model.IsFullScreenOn, 
-                currentResolution.refreshRate);
+                _model.CurrentResolutionWidth,
+                _model.CurrentResolutionHeight, 
+                _model.IsFullScreenOn);
 
             QualitySettings.shadowResolution = (ShadowResolution)_model.CurrentShadowId;
 
@@ -116,18 +95,15 @@ namespace StartupMenu
         public void ApplyCurrentSettings()
         {
             _dataManager.SaveData(_model);
-            var loadData =  _dataManager.LoadData();
-            _deafaultSettingsData = loadData;
         }
 
         public void RestoreDefaultSettings()
         {
-            _model.SetBaseData(_deafaultSettingsData);
+            var loadData = _dataManager.LoadData();
+            _model.SetBaseData(loadData);
 
             ChangeGraphicsSettings(SettingsType.Graphics);
             ChangeSoundSettings(SettingsType.Sound);
-
-            _dataManager.SaveData(_model);
         }
 
         private void SubscribeModel(SettingsModel model)

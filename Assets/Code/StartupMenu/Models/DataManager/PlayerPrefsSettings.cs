@@ -43,11 +43,8 @@ namespace StartupMenu.DataManager
 
         public override void SaveData(SettingsModel data)
         {
-
-            var screenWidth = Screen.resolutions[data.CurrentResolutionId].width;
-            var screenHeight = Screen.resolutions[data.CurrentResolutionId].height;
-            PlayerPrefs.SetInt(SCREEN_RESOLUTION_WIDTH, screenWidth);
-            PlayerPrefs.SetInt(SCREEN_RESOLUTION_HEIGHT, screenHeight);
+            PlayerPrefs.SetInt(SCREEN_RESOLUTION_WIDTH, data.CurrentResolutionWidth);
+            PlayerPrefs.SetInt(SCREEN_RESOLUTION_HEIGHT, data.CurrentResolutionHeight);
 
             PlayerPrefs.SetInt(SHADOW_QUALITY, data.CurrentShadowId);
 

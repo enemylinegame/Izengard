@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace StartupMenu
@@ -14,7 +15,9 @@ namespace StartupMenu
     {
         public event Action<SettingsType> OnSettingsChanged;
 
-        private int _currentResolutionId;
+        private int _currentResolutionWidth;
+        private int _currentResolutionHeight;
+
         private int _currentShadowId;
 
         private bool _isFullScreenOn = true;
@@ -27,14 +30,16 @@ namespace StartupMenu
 
         #region Public fields
 
-        public int CurrentResolutionId
-        {
-            get => _currentResolutionId;
-            private set
-            {
-                _currentResolutionId = value;
-                OnSettingsChanged?.Invoke(SettingsType.Graphics);
-            }
+        public int CurrentResolutionWidth 
+        { 
+            get => _currentResolutionWidth; 
+            set => _currentResolutionWidth = value; 
+        }
+
+        public int CurrentResolutionHeight 
+        { 
+            get => _currentResolutionHeight; 
+            set => _currentResolutionHeight = value; 
         }
 
         public int CurrentShadowId
@@ -116,8 +121,9 @@ namespace StartupMenu
 
         public void SetBaseData(ISettingsData data)
         {
-            _currentResolutionId 
-                = GetBaseResolutionIndex(data.ResolutionWidth, data.ResolutionHeight);
+            _currentResolutionWidth = data.ResolutionWidth;
+            _currentResolutionHeight = data.ResolutionHeight;
+
             _currentShadowId = data.ShadowId;
 
             _isFullScreenOn = data.IsFullScreenOn;
@@ -129,28 +135,12 @@ namespace StartupMenu
             _effectsVolumeValue = data.EffectsVolumeValue;
         }
 
-        private int GetBaseResolutionIndex(int widht, int height)
+        public void ChangeResolution(int newWidth, int newHeight) 
         {
-            var resultIndex = 0;
-
-            var resolutions = Screen.resolutions;
-            var currentRefreshRate = Screen.currentResolution.refreshRate;
-
-            for (int i = 0; i < resolutions.Length; i++)
-            {
-                if (resolutions[i].width == widht
-                    && resolutions[i].height == height
-                    && resolutions[i].refreshRate == currentRefreshRate)
-                {
-                    resultIndex = i;
-                }
-            }
-
-            return resultIndex;
+            CurrentResolutionWidth = newWidth;
+            CurrentResolutionHeight = newHeight;
+            OnSettingsChanged?.Invoke(SettingsType.Graphics);
         }
-
-        public void ChangeResolution(int newResolution) =>
-            CurrentResolutionId = newResolution;
 
         public void ChangeShadow(int newShadowId) =>
             CurrentShadowId = newShadowId;
