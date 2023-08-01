@@ -7,8 +7,8 @@ namespace CombatSystem
 {
     public class EnemyAttackAnimation : IEnemyAnimation
     {
-        private const float DASH_DISTANCE = 0.1f;
-        private const float DASH_SPEED = 1;
+        private const float DASH_DISTANCE = 0.000000001f;  //fix for jiggling
+        private const float DASH_SPEED = 0.00000001f;
 
         public event Action ActionMoment;
         public event Action AnimationComplete;

@@ -16,3 +16,14 @@ MonoBehaviour:
   _tileLvl: 3
   maxUnits: 15
   _buildingTirs: []
+  _priceRepair:
+  - _resourceType: 1
+    _cost: 40
+  _priceRecovery:
+  - _resourceType: 1
+    _cost: 60
+  _priceUpgrade:
+  - _resourceType: 1
+    _cost: 50
+  - _resourceType: 2
+    _cost: 10

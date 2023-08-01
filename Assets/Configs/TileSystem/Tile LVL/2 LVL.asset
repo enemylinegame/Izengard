@@ -19,3 +19,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0349b3159c87464682fe53d991f95918, type: 2}
   - {fileID: 11400000, guid: 5e8e9012970c4464989c9feeee6b47e3, type: 2}
   - {fileID: 11400000, guid: c78963b97e1e4de7b6d739f38f86346d, type: 2}
+  _priceRepair:
+  - _resourceType: 1
+    _cost: 30
+  _priceRecovery:
+  - _resourceType: 1
+    _cost: 40
+  _priceUpgrade:
+  - _resourceType: 1
+    _cost: 30
+  - _resourceType: 6
+    _cost: 10

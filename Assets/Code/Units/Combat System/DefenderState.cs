@@ -8,6 +8,7 @@
         Idle        = 3,
         InBarrack   = 4,
         GotoBarrack = 5,
-        Pursuit     = 6
+        Pursuit     = 6,
+        Dying       = 7
     }
 }

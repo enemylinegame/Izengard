@@ -50,9 +50,7 @@ namespace Code.TileSystem
             if (!_tileController.IsThereFreeWorkers(building))
                 return;
 
-            _tileController.WorkerMenager.StartMiningProduction(
-                _tileController.View.transform.position,
-                building);
+            _tileController.WorkerMenager.StartMiningProduction(_tileController.View.transform.position, building);
 
             _tileController.IncrementWorkersAccount(building);
 
@@ -65,8 +63,7 @@ namespace Code.TileSystem
             if (!_tileController.IsThereBusyWorkers(building))
                 return;
 
-            _tileController.WorkerMenager.StopFirstFindedWorker(
-                building);
+            _tileController.WorkerMenager.StopFirstFindedWorker(building);
             _tileController.DecrementWorkersAccount(building);
 
             resourceView.WorkersCount = building.WorkersCount;

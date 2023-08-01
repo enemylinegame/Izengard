@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Code.TileSystem;
+using Code.TowerShot;
 using Code.UI;
 using CombatSystem;
+using LevelGenerator.Interfaces;
 using ResourceSystem;
 using ResourceSystem.SupportClases;
 using UnityEngine;
@@ -12,19 +14,26 @@ using Random = UnityEngine.Random;
 
 namespace Code.BuildingSystem
 {
-    public class BuildingFactory: IDisposable
+    public class BuildingFactory: IDisposable, IOnController, IOnUpdate
     {
+        public event Action<BuildingTypes, bool> OnBuildingsChange;
+        
         private UIController _uiController;
         private ITextVisualizationOnUI _notificationUI;
         private GlobalStock _stock;
         private GameConfig _gameConfig;
         private GeneratorLevelController _levelController;
-
-
+        public TowerShotBehavior TowerShot;
+        
+        
+        public Damageable MainBuilding { get; private set; }
         private readonly HashSet<DummyController> _instantiatedDummys = 
             new HashSet<DummyController>();
 
-        public event Action<BuildingTypes, bool> OnBuildingsChange;
+        
+        //TODO Это временно!!
+        public DummyController DummyController;
+        private TileView _tileView;
 
         public BuildingFactory(UIController uiController, GlobalStock stock, 
             GameConfig gameConfig, GeneratorLevelController levelController)
@@ -39,14 +48,14 @@ namespace Code.BuildingSystem
             //_stock.AddResourceToStock(ResourceType.Deer, 100);
 
             _levelController = levelController;
-            _levelController.OnCombatPhaseStart += RespawnDummies;
+            //_levelController.OnCombatPhaseStart += RespawnDummies;
+            _levelController.SpawnTower += PlaceMainTower;
         }
         
         /// <summary>
         /// Проверяет на наличие ресурса если он есть ставим здание.
         /// </summary>
-        public void BuildBuilding(BuildingConfig buildingConfig, 
-            TileModel model, TileController controller)
+        public void BuildBuilding(BuildingConfig buildingConfig, TileModel model, TileController controller)
         {
             if (!IsResourcesEnough(buildingConfig))
             {
@@ -76,8 +85,7 @@ namespace Code.BuildingSystem
             controller.LevelCheck();
         }
         
-        public void DestroyBuilding(List<ICollectable> buildings, 
-            BuildingUIInfo buildingUI, TileModel model, 
+        public void DestroyBuilding(List<ICollectable> buildings, BuildingUIInfo buildingUI, TileModel model, 
             TileController tileController)
         {
             var buildingToRemove = buildings.Find(kvp => kvp.BuildingID == buildingUI.BuildingID);
@@ -103,8 +111,7 @@ namespace Code.BuildingSystem
             tileController.LevelCheck();
         }
 
-        void AddWorkerPreparation(GameObject building, 
-            ICollectable buildingModel)
+        void AddWorkerPreparation(GameObject building, ICollectable buildingModel)
         {
             if (!building.TryGetComponent(out IWorkerPreparation preporation))
                 return;
@@ -112,8 +119,7 @@ namespace Code.BuildingSystem
             buildingModel.WorkerPreparation = preporation;
         }
 
-        private ICollectable CreateBuilding(
-            TileModel model, BuildingConfig config)
+        private ICollectable CreateBuilding(TileModel model, BuildingConfig config)
         {
             var dot = CheckDot(model);
             if (null == dot)
@@ -184,7 +190,37 @@ namespace Code.BuildingSystem
             var instaniatedDummy = Object.Instantiate(_gameConfig.TestBuilding, view.transform.position, Quaternion.identity);
             var dummyController = new DummyController(instaniatedDummy);
             _instantiatedDummys.Add(dummyController);
+            _tileView = view;
+            view.TileModel.CenterBuilding = dummyController.Dummy;
+            DummyController = dummyController;
+            dummyController.Dummy.OnHealthChanged += HealthChanged;
             foreach (var dummy in _instantiatedDummys) dummy.Spawn();
+        }
+
+        public void PlaceMainTower(Dictionary<Vector2Int, VoxelTile> spawnedTiles, ITileSetter tileSetter, Transform pointSpawnUnits)
+        {
+            var config = _gameConfig.MainTowerConfig as BuildingConfig;
+
+            var firstTile = spawnedTiles[tileSetter.FirstTileGridPosition];
+            var mainBuilding = Object.Instantiate(config.BuildingPrefab, firstTile.transform.position, Quaternion.identity);
+            _tileView = firstTile.TileView;
+            pointSpawnUnits = mainBuilding.transform;
+            MainBuilding = mainBuilding.GetComponent<Damageable>();
+            _tileView.TileModel.CenterBuilding = MainBuilding;
+            if (mainBuilding != null)
+            {
+                TowerShot = mainBuilding.GetComponentInChildren<TowerShotBehavior>();
+                firstTile.TileView.TileModel.HouseType = HouseType.All;
+                MainBuilding.OnHealthChanged += HealthChanged;
+            }
+       
+            MainBuilding.Init((int)config.MaxHealth);
+            _levelController.SpawnTower -= PlaceMainTower;
+        }
+
+        private void HealthChanged(float MaxHealh, float CurrentHealth)
+        {
+            Debug.Log($"<color=aqua>healthChanged: {CurrentHealth}</color>");
         }
         
         public void Dispose()
@@ -192,6 +228,11 @@ namespace Code.BuildingSystem
             _levelController.OnCombatPhaseStart -= RespawnDummies;
             // _levelGenerator.SpawnResources -= OnNewTile;
             foreach (var dummyController in _instantiatedDummys) dummyController.Dispose();
+        }
+
+        public void OnUpdate(float deltaTime)
+        {
+            
         }
     }
 }

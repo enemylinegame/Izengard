@@ -12,8 +12,8 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
 
     
     public Sprite Icon => _icon;
-    public float CurrentHealth { get; private set; }
-    public float MaxHealth {get; private set;}
+    public float CurrentHealth { get; set; }
+    public float MaxHealth {get; set;}
 
     public Vector3 Position => transform.position;
 
@@ -23,7 +23,7 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
     
     public event Action<float, float> OnHealthChanged; 
     public event Action OnDeath;
-    public event Action<IDamageable> OnDamaged; 
+    public event Action<IDamageable> OnDamaged;
 
     public bool IsDead { get; private set; }
 
@@ -63,6 +63,11 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
 
     }
 
+    public float AddHp(float value)
+    {
+        return CurrentHealth = value;
+    }
+
     private void MeAttackedDead()
     {
         for (int i =0; i < _listAttackedUnits.Count; i++)
@@ -78,14 +83,14 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
 
     public void MakeDamage(int damage)
     {
-        animator.SetTrigger("TakeDamage"); //анимация получения урона (работает, но неконсистентно)
+        animator.SetTrigger("TakeDamage"); //Р°РЅРёРјР°С†РёСЏ РїРѕР»СѓС‡РµРЅРёСЏ СѓСЂРѕРЅР° 
         CurrentHealth -= damage;
         OnHealthChanged?.Invoke(MaxHealth,CurrentHealth);
         
 
         if (CurrentHealth <= 0)
         {
-            animator.SetBool("EnemyDead", true); //анимация смерти (пока что не работает, так как враг деспаунится быстрее анимации)
+            animator.SetBool("EnemyDead", true); //Р°РЅРёРјР°С†РёСЏ СЃРјРµСЂС‚Рё (РїРѕРєР° С‡С‚Рѕ РЅРµ СЂР°Р±РѕС‚Р°РµС‚, С‚Р°Рє РєР°Рє РІСЂР°Рі РґРµСЃРїР°СѓРЅРёС‚СЃСЏ Р±С‹СЃС‚СЂРµРµ Р°РЅРёРјР°С†РёРё)
             IsDead = true;
             _listAttackedUnits.Clear();
             OnDeath?.Invoke();

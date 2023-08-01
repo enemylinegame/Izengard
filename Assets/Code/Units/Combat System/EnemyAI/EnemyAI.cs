@@ -40,7 +40,7 @@ namespace CombatSystem
             _onUpdate = _findTarget as IOnUpdate;
             _planRoute = new PlanRouteAction(navmesh);
             _actionList.Add(_planRoute);
-            animator = unit.MyDamagable.GetComponent<Animator>(); //аниматор
+            animator = unit.MyDamagable.GetComponent<Animator>(); //Р°РЅРёРјР°С‚РѕСЂ
 
             if (unit.Type == EnemyType.Archer)
             {
@@ -125,7 +125,7 @@ namespace CombatSystem
             }
             else _nextAction = _checkAttackDistance;
             IsActionComplete = true;
-            animator.SetTrigger("AttackTrigger"); //анимация атаки
+            animator.SetTrigger("AttackTrigger"); //Р°РЅРёРјР°С†РёСЏ Р°С‚Р°РєРё
             
         }
 
@@ -164,6 +164,7 @@ namespace CombatSystem
             if (!IsActionComplete)
             {
                 _onUpdate?.OnUpdate(deltaTime);
+                animator.SetBool("IsMoving", true);  //Р°РЅРёРјР°С†РёСЏ Р±РµРіР°
             }
         }
 
@@ -185,7 +186,7 @@ namespace CombatSystem
         {
             _currentTarget = _primaryTarget;
             _actionList.ForEach(action => action.ClearTarget());
-            animator.SetTrigger("SwitchTrigger"); //анимация смены цели
+            
         }
 
         private void DrawLineToTarget()

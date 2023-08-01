@@ -1,17 +1,20 @@
 using System;
 using System.Collections.Generic;
+using Code.TileSystem;
 using UnityEngine;
 
 
 namespace CombatSystem
 {
-    public class TestDummyTargetController : IDisposable, IOnController
+    public class TestDummyTargetController : IDisposable, IOnController, IOnUpdate
     {
         private readonly GeneratorLevelController _levelGenerator;
         private readonly GameObject _dummyPrefab;
         private readonly HashSet<DummyController> _instantiatedDummys = new HashSet<DummyController>();
 
         public HashSet<DummyController> InstatiatedDummys => _instantiatedDummys;
+        private DummyController _dummyController;
+        private TileView _tileView;
 
 
         public TestDummyTargetController(GeneratorLevelController levelGenerator, GameObject testBuilding)
@@ -32,9 +35,11 @@ namespace CombatSystem
         private void OnNewTile(VoxelTile tile)
         {
             if (tile.NumZone == 1) return;
+            _tileView = tile.TileView;
             var instaniatedDummy = UnityEngine.Object.Instantiate(_dummyPrefab, tile.transform.position, Quaternion.identity);
-            var dummyController = new DummyController(instaniatedDummy);
-            _instantiatedDummys.Add(dummyController);
+            _dummyController = new DummyController(instaniatedDummy);
+            
+            _instantiatedDummys.Add(_dummyController);
             foreach (var dummy in _instantiatedDummys) dummy.Spawn();
         }
 
@@ -42,6 +47,11 @@ namespace CombatSystem
         {
             // _levelGenerator.SpawnResources -= OnNewTile;
             foreach (var dummyController in _instantiatedDummys) dummyController.Dispose();
+        }
+
+        public void OnUpdate(float deltaTime)
+        {
+            
         }
     }
 }
