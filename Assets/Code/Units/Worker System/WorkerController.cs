@@ -15,9 +15,7 @@ namespace Controllers.Worker
         {
             Model = workerModel;
             View = workerView;
-            View.OnCollideWithOtherWorker += OnCollideWithOtherWorker;
         }
-
         private void InitTask(Vector3 fromPlace, Vector3 target)
         {
             fromPlace.y = 0.0f;
@@ -70,11 +68,22 @@ namespace Controllers.Worker
         private void ProduceWork()
         {
             View.ProduceWork();
+            Model.State = WorkerStates.PRODUCE_WORK;
+            Model.WorkTimeLeft = Model.TimeOfWork;
         }
 
         private void BringProducts()
         {
+            Model.WorkTimeLeft = 0;
+            Model.State = WorkerStates.GO_TO_HOME;
             View.DragToPlace(Model.StatrtingPlace);
+        }
+
+        private void MissionIsCompleted()
+        {
+            OnMissionCompleted.Invoke(this);
+            Model.State = WorkerStates.NONE;
+            View.Deactivate();
         }
 
         public void OnUpdate(float deltaTime)
@@ -82,20 +91,11 @@ namespace Controllers.Worker
             if (WorkerStates.NONE == Model.State)
                 return;
 
-            if (_sleepTime > 0)
-            {
-                _sleepTime -= deltaTime;
-                if (_sleepTime < 0)
-                    Resume();
-            }
-
             if (WorkerStates.PRODUCE_WORK == Model.State)
             {
                 Model.WorkTimeLeft -= deltaTime;
                 if (Model.WorkTimeLeft < 0)
                 {
-                    Model.WorkTimeLeft = 0;
-                    Model.State = WorkerStates.GO_TO_HOME;
                     BringProducts();
                 }
             }
@@ -104,15 +104,11 @@ namespace Controllers.Worker
                 if (WorkerStates.GO_TO_WORK == Model.State)
                 {
                     ProduceWork();
-                    Model.State = WorkerStates.PRODUCE_WORK;
-                    Model.WorkTimeLeft = Model.TimeOfWork;
                 }
                 else if (WorkerStates.GO_TO_HOME == Model.State ||
                     WorkerStates.GO_TO_PLACE == Model.State)
                 {
-                    OnMissionCompleted.Invoke(this);
-                    Model.State = WorkerStates.NONE;
-                    View.Deactivate();
+                    MissionIsCompleted();
                 }
             }
         }
@@ -140,21 +136,9 @@ namespace Controllers.Worker
                     break;
             }
         }
-
-        private float _sleepTime = 0;
-        private void OnCollideWithOtherWorker()
-        {
-            if (WorkerStates.GO_TO_WORK == Model.State)
-            {
-                View.Pause();
-                _sleepTime = GameContants.WORKER_AWAITING_TIME_SEC;
-            }
-        }
-
         public void Dispose()
         {
             Model = null;
-            View.OnCollideWithOtherWorker -= OnCollideWithOtherWorker;
             View = null;
         }
     }
