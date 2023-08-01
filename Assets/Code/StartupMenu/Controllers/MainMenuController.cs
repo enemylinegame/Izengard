@@ -10,16 +10,12 @@ namespace StartupMenu
       
         private MainMenuView _view;
     
-        public MainMenuController(Transform placeForUI, StateModel menuMonitor)
+        public MainMenuController(Transform placeForUI, StateModel menuMonitor, AudioSource clickSource)
         {
             _menuMonitor = menuMonitor;
 
-            CreateView(placeForUI);
-        }
-        private void CreateView(Transform placeForUI)
-        {
             _view = LoadView(placeForUI);
-            _view.Init(StartGame, OpenSettings, Exit);
+            _view.Init(StartGame, OpenSettings, Exit, clickSource);
         }
 
         private MainMenuView LoadView(Transform placeForUI)
