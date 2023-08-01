@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f74e1fc33094f639d06075c4f6e4584, type: 3}
   m_Name: OutLineSettings
   m_EditorClassIdentifier: 
-  <OutLineColor>k__BackingField: {r: 0.090196095, g: 0.90588236, b: 0.19104448, a: 1}
-  <OutlineWidth>k__BackingField: 8.53
+  <OutLineColor>k__BackingField: {r: 0.742494, g: 0.8018868, b: 0.03404235, a: 1}
+  <OutlineWidth>k__BackingField: 6.22
   OutlineMaskMaterial: {fileID: 2100000, guid: 106f3ff43a17d4967a2b64c7a92e49ec, type: 2}
   OutlineFillMaterial: {fileID: 2100000, guid: 311313efa011949e98b6761d652ad13c, type: 2}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Code.BuildingSystem;
 using Controllers.Pool;
 using Models.BaseUnit;
 using UnityEngine;
@@ -13,7 +14,7 @@ namespace Code.TowerShot
 	private TowerShotConfig _config;
 	private TowerShotBehavior _view;
 	private BaseBulletFactory _baseBulletFactory;
-	private GeneratorLevelController _generatorLevelController;
+	private BuildingFactory _buildingFactory;
 
 	private List<Damageable> Enemys = new List<Damageable>();
 	private GameObject _prefab;
@@ -26,11 +27,11 @@ namespace Code.TowerShot
 
 	#endregion
 	#region Unity Methods
-	public TowerShotController(TowerShotConfig config, GeneratorLevelController lvlController, GameObject Prefab)
+	public TowerShotController(TowerShotConfig config, BuildingFactory buildingFactory, GameObject Prefab)
 	{
 		_config = config;
 		_prefab = Prefab;
-		_generatorLevelController = lvlController;
+		_buildingFactory = buildingFactory;
 		_curFireRate = config.FireRate;
 		
 	}
@@ -38,7 +39,7 @@ namespace Code.TowerShot
 	{
         if (_view == null)
 		{
-            _view = _generatorLevelController.TowerShot;
+            _view = _buildingFactory.TowerShot;
             if (_view != null)
             {
                 _view.Trigger += OnTriggerEnter;
@@ -80,7 +81,6 @@ namespace Code.TowerShot
 		private void OnTriggerEnter(Collider other) //Это именно просто метод для экшона
 		{
 			Enemys.Add(other.GetComponent<Damageable>());
-			Debug.Log("врагов осталось: " + Enemys.Count);
 		}
 		private void NearestObject(Transform target) // поиск ближайшего объекта
 		{
@@ -160,7 +160,6 @@ namespace Code.TowerShot
 	private void RemoveFromList(Damageable target)
 	{
 		Enemys.Remove(target);
-		Debug.Log("врагов осталось: " + Enemys.Count);
 	}
 	//private void Choice()
 	//{

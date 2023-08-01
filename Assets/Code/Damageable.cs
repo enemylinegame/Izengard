@@ -12,8 +12,8 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
 
     
     public Sprite Icon => _icon;
-    public float CurrentHealth { get; private set; }
-    public float MaxHealth {get; private set;}
+    public float CurrentHealth { get; set; }
+    public float MaxHealth {get; set;}
 
     public Vector3 Position => transform.position;
 
@@ -23,7 +23,7 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
     
     public event Action<float, float> OnHealthChanged; 
     public event Action OnDeath;
-    public event Action<IDamageable> OnDamaged; 
+    public event Action<IDamageable> OnDamaged;
 
     public bool IsDead { get; private set; }
 
@@ -63,6 +63,11 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
 
     }
 
+    public float AddHp(float value)
+    {
+        return CurrentHealth = value;
+    }
+
     private void MeAttackedDead()
     {
         for (int i =0; i < _listAttackedUnits.Count; i++)
@@ -78,14 +83,14 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
 
     public void MakeDamage(int damage)
     {
-        //animator.SetTrigger("TakeDamage"); //àíèìàöèÿ ïîëó÷åíèÿ óðîíà 
+        animator.SetTrigger("TakeDamage"); //Ð°Ð½Ð¸Ð¼Ð°Ñ†Ð¸Ñ Ð¿Ð¾Ð»ÑƒÑ‡ÐµÐ½Ð¸Ñ ÑƒÑ€Ð¾Ð½Ð° 
         CurrentHealth -= damage;
         OnHealthChanged?.Invoke(MaxHealth,CurrentHealth);
         
 
         if (CurrentHealth <= 0)
         {
-            //animator.SetBool("DeathTrigger", true); //àíèìàöèÿ ñìåðòè (ïîêà ÷òî íå ðàáîòàåò, òàê êàê âðàã äåñïàóíèòñÿ áûñòðåå àíèìàöèè)
+            animator.SetBool("EnemyDead", true); //Ð°Ð½Ð¸Ð¼Ð°Ñ†Ð¸Ñ ÑÐ¼ÐµÑ€Ñ‚Ð¸ (Ð¿Ð¾ÐºÐ° Ñ‡Ñ‚Ð¾ Ð½Ðµ Ñ€Ð°Ð±Ð¾Ñ‚Ð°ÐµÑ‚, Ñ‚Ð°Ðº ÐºÐ°Ðº Ð²Ñ€Ð°Ð³ Ð´ÐµÑÐ¿Ð°ÑƒÐ½Ð¸Ñ‚ÑÑ Ð±Ñ‹ÑÑ‚Ñ€ÐµÐµ Ð°Ð½Ð¸Ð¼Ð°Ñ†Ð¸Ð¸)
             IsDead = true;
             _listAttackedUnits.Clear();
             OnDeath?.Invoke();
