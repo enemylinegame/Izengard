@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace StartupMenu.DataManager
 {
-    public class PlayerPrefsSettings : SettingsDataManager
+    public class PlayerPrefsSettingsDataManager : SettingsDataManager
     {
         #region Const Names
 
@@ -20,7 +20,7 @@ namespace StartupMenu.DataManager
 
         #endregion
 
-        public PlayerPrefsSettings() 
+        public PlayerPrefsSettingsDataManager() 
         {
             var parametesStateList = new List<bool>();
 
@@ -41,7 +41,7 @@ namespace StartupMenu.DataManager
         }
 
 
-        public override void SaveData(SettingsModel data)
+        public override void SaveData(SaveLoadSettingsModel data)
         {
             PlayerPrefs.SetInt(SCREEN_RESOLUTION_WIDTH, data.ResolutionWidth);
             PlayerPrefs.SetInt(SCREEN_RESOLUTION_HEIGHT, data.ResolutionHeight);
@@ -57,10 +57,8 @@ namespace StartupMenu.DataManager
             PlayerPrefs.SetFloat(EFFECTS_VOLUME_LEVEL, data.EffectsVolumeValue);
         }
 
-        public override ISettingsData LoadData()
+        public override SaveLoadSettingsModel LoadData()
         {
-            var loadData = new LoadSettingsModel();
-
             var screenWidth = PlayerPrefs.GetInt(SCREEN_RESOLUTION_WIDTH);
             var screenHeight = PlayerPrefs.GetInt(SCREEN_RESOLUTION_HEIGHT);
 
@@ -74,16 +72,18 @@ namespace StartupMenu.DataManager
             var voiceVolume = PlayerPrefs.GetFloat(VOICE_VOLUME_LEVEL);
             var effectsVolume = PlayerPrefs.GetFloat(EFFECTS_VOLUME_LEVEL);
 
-            loadData.SetResolution(screenWidth, screenHeight);
-            loadData.SetShadowId(shadowId); 
-
-            loadData.SetFullScreenMode(isFullScreen);
-            loadData.SetVSyncMode(isVSync);
-
-            loadData.SetMasterVolume(masterVolume);
-            loadData.SetMusicVolume(musicVolume);
-            loadData.SetVoiceVolume(voiceVolume);
-            loadData.SetEffectsVolume(effectsVolume);
+            var loadData = new SaveLoadSettingsModel
+            {
+                ResolutionWidth = screenWidth,
+                ResolutionHeight = screenHeight,
+                ShadowId = shadowId,
+                IsFullScreenOn = isFullScreen,
+                IsVSyncOn = isVSync,
+                MasterVolumeValue = masterVolume,
+                MusicVolumeValue = musicVolume,
+                VoiceVolumeValue = voiceVolume,
+                EffectsVolumeValue = effectsVolume
+            };
 
             return loadData;
         }

@@ -27,7 +27,7 @@ namespace StartupMenu
             _audioMixer = audioMixer;
             _baseSettingsData = baseSettingsData;
 
-            _dataManager = new PlayerPrefsSettings();
+            _dataManager = new XMLSettingsDataManager();
 
             _currentRefreshRate = Screen.currentResolution.refreshRate;
 
@@ -67,6 +67,18 @@ namespace StartupMenu
             return model;
         }
 
+        private void SubscribeModel(SettingsModel model)
+        {
+            model.OnSettingsChanged += ChangeGraphicsSettings;
+            model.OnSettingsChanged += ChangeSoundSettings;
+        }
+
+        private void UnsubscribeModel(SettingsModel model)
+        {
+            model.OnSettingsChanged -= ChangeGraphicsSettings;
+            model.OnSettingsChanged -= ChangeSoundSettings;
+        }
+
         private void ChangeGraphicsSettings(SettingsType type)
         {
             if (type != SettingsType.Graphics)
@@ -96,13 +108,13 @@ namespace StartupMenu
 
         public void ApplyCurrentSettings()
         {
-            _dataManager.SaveData(_model);
+            _dataManager.SaveData(ConvertToSaveData(_model));
         }
 
         public void RestoreDefaultSettings()
         {
             _model.SetBaseData(_baseSettingsData);
-            _dataManager.SaveData(_model);
+            _dataManager.SaveData(ConvertToSaveData(_model));
 
             ChangeGraphicsSettings(SettingsType.Graphics);
             ChangeSoundSettings(SettingsType.Sound);
@@ -116,19 +128,24 @@ namespace StartupMenu
             ChangeGraphicsSettings(SettingsType.Graphics);
             ChangeSoundSettings(SettingsType.Sound);
         }
-   
-        private void SubscribeModel(SettingsModel model)
-        {
-            model.OnSettingsChanged += ChangeGraphicsSettings;
-            model.OnSettingsChanged += ChangeSoundSettings;
-        }
 
-        private void UnsubscribeModel(SettingsModel model)
+        private SaveLoadSettingsModel ConvertToSaveData(SettingsModel model)
         {
-            model.OnSettingsChanged -= ChangeGraphicsSettings;
-            model.OnSettingsChanged -= ChangeSoundSettings;
-        }
+            var saveData = new SaveLoadSettingsModel
+            {
+                ResolutionWidth = model.ResolutionWidth,
+                ResolutionHeight = model.ResolutionHeight,
+                ShadowId = model.ShadowId,
+                IsFullScreenOn = model.IsFullScreenOn,
+                IsVSyncOn = model.IsVSyncOn,
+                MasterVolumeValue = model.MasterVolumeValue,
+                MusicVolumeValue = model.MusicVolumeValue,
+                VoiceVolumeValue = model.VoiceVolumeValue,
+                EffectsVolumeValue = model.EffectsVolumeValue
+            };
 
+            return saveData;
+        }
 
         #region IDisposable
 

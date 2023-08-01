@@ -1,11 +1,11 @@
 ﻿namespace StartupMenu
 {
-    public interface IDataManager<TSave, TLoad>
+    public interface IDataManager<T>
     {
         bool IsDataStored { get; }
 
-        void SaveData(TSave data);
+        void SaveData(T data);
 
-        TLoad LoadData();
+        T LoadData();
     }
 }
