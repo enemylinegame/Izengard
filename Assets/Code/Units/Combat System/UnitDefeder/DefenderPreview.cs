@@ -12,6 +12,8 @@ namespace CombatSystem
         private DefenderSettings _settings;
         private DefenderUnit _unit;
         private HireProgress _hireProgress;
+
+        private bool _isInBarrack;
         
         public Sprite Icon { get; private set; }
 
@@ -23,7 +25,18 @@ namespace CombatSystem
             }
         }
 
-        public bool IsInBarrack => _unit?.IsInBarrack ?? false;
+        public bool IsInBarrack
+        {
+            get => _unit?.IsInBarrack ?? _isInBarrack;
+            set
+            {
+                if (_unit == null)
+                {
+                    _isInBarrack = value;
+                }
+            }
+            
+        }
         
 
         public DefenderUnit Unit
@@ -41,6 +54,10 @@ namespace CombatSystem
 
         public IHealthHolder HealthHolder  => _unit?.HealthHolder ?? null;
 
+        public bool IsInHiringProcess => _unit == null;
+
+        public DefenderSettings Settings => _settings; 
+        
         public DefenderPreview(DefenderSettings settings)
         {
             _settings = settings;

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: DefenderRange
   m_EditorClassIdentifier: 
   <Type>k__BackingField: 2
+  <Name>k__BackingField: Archer
   <UnitStats>k__BackingField:
     AttackInterval: 1
     AttackRange: 2
