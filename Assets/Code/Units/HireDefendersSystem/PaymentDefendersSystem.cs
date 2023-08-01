@@ -46,6 +46,18 @@ namespace Code.Units.HireDefendersSystem
 
             return isResourcesEnough;
         }
+
+        public void ReturnCostForCancelHireDefender(List<ResourcePriceModel> hireCost)
+        {
+            if (hireCost == null) return;
+
+            for (int i = 0; i < hireCost.Count; i++)
+            {
+                ResourcePriceModel pricePart = hireCost[i];
+                _globalStock.AddResourceToStock(pricePart.ResourceType, pricePart.Cost);
+            }
+        }
+        
         
     }
 }

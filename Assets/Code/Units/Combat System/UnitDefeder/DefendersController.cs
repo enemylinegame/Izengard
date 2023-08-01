@@ -24,6 +24,9 @@ namespace CombatSystem
             _defendersRoot = new GameObject(DEFENDERS_GO_ROOT_NAME).transform;
         }
 
+        
+        #region IDefendersControll
+        
         public DefenderUnit CreateDefender(TileModel tile, DefenderSettings settings)
         {
             GameObject go = GameObject.Instantiate(settings.Prefab,_unitsSpawnPosition, Quaternion.identity, 
@@ -34,14 +37,7 @@ namespace CombatSystem
             _defenderUnits.Add(defender);
             return defender;
         }
-
-        private Vector3 GeneratePositionNearTileCentre(Vector3 tilePosition)
-        {
-            Vector3 position = UnityEngine.Random.insideUnitSphere * POSITION_RADIUS;
-            position.y = 0f;
-            return position + tilePosition;
-        }
-
+        
         public void SendDefendersToBarrack(List<DefenderUnit> defenderUnits, TileModel tile)
         {
             if (defenderUnits.Count > 0)
@@ -56,7 +52,7 @@ namespace CombatSystem
                 }
             }
         }
-
+        
         public void SendDefenderToBarrack(DefenderUnit unit, TileModel tile)
         {
             if (unit.IsInBarrack == false)
@@ -64,7 +60,7 @@ namespace CombatSystem
                 unit.GoToBarrack(tile.TilePosition);
             }
         }
-
+        
         public void KickDefendersOutOfBarrack(List<DefenderUnit> defenderUnits, TileModel tile)
         {
             for (int i = 0; i < defenderUnits.Count; i++)
@@ -73,13 +69,13 @@ namespace CombatSystem
                 KickDefenderOutOfBarrack(unit, tile);
             }
         }
-
+        
         public void KickDefenderOutOfBarrack(DefenderUnit unit, TileModel tile)
         {
             unit.ExitFromBarrack();
             SendDefenderToTile(unit, tile);
         }
-
+        
         public void SendDefenderToTile(DefenderUnit unit, TileModel tile)
         {
             Vector3 position = GeneratePositionNearTileCentre(tile.TilePosition);
@@ -91,6 +87,16 @@ namespace CombatSystem
             unit.DefenderUnitDead -= DefenderDead;
             _defenderUnits.Remove(unit);
             unit.Dismiss();
+        }
+        
+        #endregion
+
+
+        private Vector3 GeneratePositionNearTileCentre(Vector3 tilePosition)
+        {
+            Vector3 position = UnityEngine.Random.insideUnitSphere * POSITION_RADIUS;
+            position.y = 0f;
+            return position + tilePosition;
         }
 
         private void DefenderDead(DefenderUnit defender)
