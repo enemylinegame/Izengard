@@ -9,6 +9,7 @@ namespace CombatSystem
     public class DefenderSettings : ScriptableObject
     {
         [field: SerializeField] public DefenderType Type { get; private set; }
+        [field: SerializeField] public string Name { get; private set; }
         [field: SerializeField] public DefenderUnitStats UnitStats { get; private set; }
         [field: SerializeField] public GameObject Prefab { get; private set; }
         [field: SerializeField] public Sprite Icon { get; private set; }

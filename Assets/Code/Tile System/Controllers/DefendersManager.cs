@@ -3,6 +3,7 @@ using Code.UI;
 using Code.Units.HireDefendersSystem;
 using CombatSystem;
 using CombatSystem.Views;
+using ResourceSystem.SupportClases;
 using UnityEngine;
 
 
@@ -52,10 +53,11 @@ namespace Code.TileSystem
 
         public void HireDefender()
         {
-            List<Sprite> sprites = new List<Sprite>();
+            List<(Sprite, string, List<ResourcePriceModel>)> sprites = new();
             for (int i = 0; i < _defendersSet.Defenders.Count; i++)
             {
-                sprites.Add( _defendersSet.Defenders[i].Icon);
+                DefenderSettings defenderData = _defendersSet.Defenders[i];
+                sprites.Add( (defenderData.Icon, defenderData.Name, defenderData.HireCost));
             }
             _hireUnitView.Show(sprites);
             _isHireDefenderPenelOpened = true;
