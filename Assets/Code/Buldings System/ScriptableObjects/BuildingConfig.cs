@@ -3,6 +3,7 @@ using Code.BuildingSystem;
 using ResourceSystem;
 using ResourceSystem.SupportClases;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Code.BuildingSystem
 {
@@ -16,7 +17,7 @@ namespace Code.BuildingSystem
         [SerializeField] private GameObject _buildingPrefab;
         [SerializeField] private TierNumber _tierNumber;
         [SerializeField] private BuildingTypes _buildingType;
-        [SerializeField] private HouseType _houseType;
+        [SerializeField] private List<TileType> _tileType;
         [SerializeField] private string _description;
 
         [Header("Production building")]
@@ -33,7 +34,7 @@ namespace Code.BuildingSystem
         public GameObject BuildingPrefab => _buildingPrefab;
         public TierNumber TierNumber => _tierNumber;
         public BuildingTypes BuildingType => _buildingType;
-        public HouseType HouseType => _houseType;
+        public List<TileType> TileType => _tileType;
         public float BuildingTime => _buildingTime;
         public string Description => _description;
 

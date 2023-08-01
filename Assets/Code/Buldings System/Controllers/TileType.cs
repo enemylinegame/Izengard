@@ -1,6 +1,6 @@
 ﻿namespace Code.BuildingSystem
 {
-    public enum HouseType: int
+    public enum TileType: int
     {
         None = 0,
         All = 1,

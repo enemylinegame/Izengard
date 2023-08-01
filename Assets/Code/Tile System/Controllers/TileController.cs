@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Code.BuildingSystem;
 using Code.UI;
 using Code.Player;
 using ResourceSystem;
 using ResourceSystem.SupportClases;
-using UnityEngine;
 using UnityEngine.UI;
 using Views.BuildBuildingsUI;
+using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
 
 namespace Code.TileSystem
@@ -61,9 +62,9 @@ namespace Code.TileSystem
         {
             TileTypeCheck(tile);
             _tileView = tile;
-            if (tile.TileModel.HouseType == HouseType.None) return;
+            if (tile.TileModel.TileType == BuildingSystem.TileType.None) return;
 
-            LoadBuildings(tile.TileModel);
+            LoadBuildings(tile.TileModel, tile.TileModel.TileType);
             _buttonsController.ButtonAddListener(tile.TileModel, _level);
             _buttonsController.HolderButton(ButtonTypes.Upgrade).onClick.AddListener(LVLUp);
             LoadAllTextsFieldsAndImaged(tile.TileModel.TileConfig);
@@ -79,31 +80,38 @@ namespace Code.TileSystem
         #endregion
         #region BuildingBuy
 
-        private void LoadBuildings(TileModel model)
+        private void LoadBuildings(TileModel model, TileType type)
         {
-            List<BuildingConfig> buildingConfigs;
+            List<BuildingConfig> buildingConfigs = null;
             _uiController.Deinit();
             _buildingConfigs = model.CurrBuildingConfigs;
-            if (TileModel.HouseType == HouseType.All)
+
+            switch (type)
             {
-                buildingConfigs = _buildingConfigs;
-            }
-            else
-            {
-                buildingConfigs = _buildingConfigs.FindAll(building => building.HouseType == TileModel.HouseType);
+                case BuildingSystem.TileType.All:
+                    buildingConfigs = _buildingConfigs;
+                    break;
+                case BuildingSystem.TileType.war:
+                    buildingConfigs = _buildingConfigs.FindAll(building => building.TileType.Exists(x => x == BuildingSystem.TileType.war));
+                    break;
+                case BuildingSystem.TileType.Eco:
+                    buildingConfigs = _buildingConfigs.FindAll(building => building.TileType.Exists(x => x == BuildingSystem.TileType.Eco));
+                    break;
             }
 
-            foreach (var building in buildingConfigs)
+            buildingConfigs.ForEach(building =>
             {
                 var button = Object.Instantiate(_uiController.BottomUI.BuildingMenu.BuyPrefabButton, _uiController.CenterUI.BuildButtonsHolder);
                 _uiController.ButtonsInMenu.Add(building, button);
                 CreateButtonUI(building, button);
-            }
-
+            });
+            
             foreach (var kvp in _uiController.ButtonsInMenu)
             {
-                kvp.Value.onClick.AddListener(() => 
-                    _buildingFactory.BuildBuilding(kvp.Key, model, this));
+                kvp.Value.onClick.AddListener(() =>
+                {
+                    _buildingFactory.BuildBuilding(kvp.Key, model, this);
+                });
             }
         }
         private void CreateButtonUI(BuildingConfig buildingConfig, Button button)
@@ -265,17 +273,30 @@ namespace Code.TileSystem
         #region TileTypeChange
         private void TileTypeCheck(TileView view)
         {
-            if(view.TileModel.HouseType != HouseType.None) return;
+            if(view.TileModel.TileType != BuildingSystem.TileType.None) return;
             
             _uiController.IsWorkUI(UIType.TileSel, true);
 
-            _uiController.CenterUI.TIleSelection.TileEco.onClick.AddListener(() => TileType(HouseType.Eco, view));
-            _uiController.CenterUI.TIleSelection.TileWar.onClick.AddListener(() => TileType(HouseType.war, view));
+            _uiController.CenterUI.TIleSelection.TileEco.onClick.AddListener(() => TileType(BuildingSystem.TileType.Eco, view));
+            _uiController.CenterUI.TIleSelection.TileWar.onClick.AddListener(() => TileType(BuildingSystem.TileType.war, view));
             _uiController.CenterUI.TIleSelection.Back.onClick.AddListener(() => RemoveListenersTileSelection(true));
         }
-        private void TileType(HouseType type, TileView tile)
+        private void TileType(TileType type, TileView tile)
         {
-            tile.TileModel.HouseType = type;
+            switch (type)
+            {
+                case BuildingSystem.TileType.Eco:
+                    tile.TileModel.MaxWarriors = 3;
+                    break;
+                case BuildingSystem.TileType.war:
+                    tile.TileModel.MaxWarriors = 8;
+                    break;
+                case BuildingSystem.TileType.All:
+                    tile.TileModel.MaxWarriors = 8;
+                    break;
+            }
+            
+            tile.TileModel.TileType = type;
 
             RemoveListenersTileSelection(false);
             _buildingFactory.PlaceCenterBuilding(tile);
@@ -335,7 +356,7 @@ namespace Code.TileSystem
             TileModel.CurrBuildingConfigs.AddRange(TileModel.SaveTileConfig.BuildingTirs);
                 
             LoadAllTextsFieldsAndImaged(TileModel.SaveTileConfig);
-            LoadBuildings(TileModel);
+            LoadBuildings(TileModel, TileModel.TileType);
             LevelCheck();
         }
         
@@ -349,7 +370,7 @@ namespace Code.TileSystem
             _uiView.WorkersCount = TileModel.WorkersCount;
             
             _uiView.Icon.sprite = config.IconTile;
-            _uiView.NameTile.text = TileModel.HouseType.ToString();
+            _uiView.NameTile.text = TileModel.TileType.ToString();
         }
         
         private bool IsResourcesEnough(TileConfig tileConfig)

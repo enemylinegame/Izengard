@@ -149,7 +149,7 @@ namespace Code.UI
 
         public void LoadInfoToTheUI(TileView tile)
         {
-            if(tile.TileModel.HouseType == HouseType.None) return;
+            if(tile.TileModel.TileType == TileType.None) return;
             IsWorkUI(UIType.Tile, true);
         }
 

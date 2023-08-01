@@ -57,7 +57,7 @@ namespace Code.TileSystem
                 HolderButton(ButtonTypes.Recovery).gameObject.SetActive(false);
             });
             
-            if (model.HouseType == HouseType.All)
+            if (model.TileType == TileType.All)
             {
                 HolderButton(ButtonTypes.Destroy).gameObject.SetActive(false);
             }
@@ -77,7 +77,7 @@ namespace Code.TileSystem
                                 if(!model.FloodedBuildings.Exists(building => building.BuildingTypes != 0)) break;
                             }
                         }
-                        model.HouseType = HouseType.None;
+                        model.TileType = TileType.None;
                         model.CenterBuilding.gameObject.SetActive(false);
                         _inputController.HardOffTile();
                         return;

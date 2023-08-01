@@ -210,7 +210,7 @@ namespace Code.BuildingSystem
             if (mainBuilding != null)
             {
                 TowerShot = mainBuilding.GetComponentInChildren<TowerShotBehavior>();
-                firstTile.TileView.TileModel.HouseType = HouseType.All;
+                firstTile.TileView.TileModel.TileType = TileType.All;
                 MainBuilding.OnHealthChanged += HealthChanged;
             }
        
