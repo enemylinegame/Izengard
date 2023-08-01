@@ -101,13 +101,22 @@ namespace StartupMenu
 
         public void RestoreDefaultSettings()
         {
+            _model.SetBaseData(_baseSettingsData);
+            _dataManager.SaveData(_model);
+
+            ChangeGraphicsSettings(SettingsType.Graphics);
+            ChangeSoundSettings(SettingsType.Sound);
+        }
+
+        public void CancelSettings()
+        {
             var loadData = _dataManager.LoadData();
             _model.SetBaseData(loadData);
 
             ChangeGraphicsSettings(SettingsType.Graphics);
             ChangeSoundSettings(SettingsType.Sound);
         }
-
+   
         private void SubscribeModel(SettingsModel model)
         {
             model.OnSettingsChanged += ChangeGraphicsSettings;

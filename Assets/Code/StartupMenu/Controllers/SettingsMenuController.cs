@@ -49,11 +49,19 @@ namespace StartupMenu
             _isSettingsChanged = true;
         }
 
+        internal void RestoreToDefautls()
+        {
+            _gameSettings.RestoreDefaultSettings();
+            _view.UpdateViewOptions(_gameSettings.Model);
+
+            _isSettingsChanged = true;
+        }
+
         internal void BackToMenu()
         {
             if(_isSettingsChanged != true)
             {
-                _gameSettings.RestoreDefaultSettings();
+                _gameSettings.CancelSettings();
                 _view.UpdateViewOptions(_gameSettings.Model);
             }
 

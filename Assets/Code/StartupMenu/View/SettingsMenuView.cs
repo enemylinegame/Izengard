@@ -9,6 +9,7 @@ namespace StartupMenu
     public class SettingsMenuView : MonoBehaviour
     {
         [SerializeField] private Button _applySettingsButton;
+        [SerializeField] private Button _restoreToDefaultsButton;
         [SerializeField] private Button _backToMenuButton;
 
         [Space(10)]
@@ -41,6 +42,9 @@ namespace StartupMenu
 
             _applySettingsButton.onClick.AddListener(controller.ApplySettings);
             _applySettingsButton.onClick.AddListener(PlayClickSound);
+
+            _restoreToDefaultsButton.onClick.AddListener(controller.RestoreToDefautls);
+            _restoreToDefaultsButton.onClick.AddListener(PlayClickSound);
 
             _backToMenuButton.onClick.AddListener(controller.BackToMenu);
             _backToMenuButton.onClick.AddListener(PlayClickSound);
@@ -139,7 +143,8 @@ namespace StartupMenu
         {
             _applySettingsButton.onClick.RemoveAllListeners();
             _backToMenuButton.onClick.RemoveAllListeners();
-            
+            _restoreToDefaultsButton.onClick.RemoveAllListeners();
+
             _resolutionDropdown.onValueChanged.RemoveAllListeners();
             _shadowDropdown.onValueChanged.RemoveAllListeners();
 
