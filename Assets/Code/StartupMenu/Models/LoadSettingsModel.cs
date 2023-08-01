@@ -13,6 +13,11 @@
         public bool IsVSyncOn { get; private set; }
 
 
+        public float MixerMaxValue { get; private set; }
+
+        public float MixerMinValue { get; private set; }
+
+
         public float MasterVolumeValue { get; private set; }
 
         public float MusicVolumeValue { get; private set; }
@@ -22,10 +27,11 @@
         public float EffectsVolumeValue { get; private set; }
 
 
-        public void SetResolutionWidth(int value) => 
-            ResolutionWidth = value;
-        public void SetResolutionHeight(int value) =>
-            ResolutionHeight = value;
+        public void SetResolution(int widthValue, int heightValue) 
+        {
+            ResolutionWidth = widthValue;
+            ResolutionHeight = heightValue;
+        }
 
         public void SetShadowId(int value) =>
             ShadowId = value;

@@ -15,11 +15,11 @@ MonoBehaviour:
   _baseSceenWidth: 1920
   _baseSceenHeight: 1080
   _shadowId: 0
-  _isFullScreenOn: 0
+  _isFullScreenOn: 1
   _isFVSyncOn: 1
+  _maxMixerValue: 0
+  _minMixerVBalue: -50
   _masterVolumeValue: 100
   _musicVolumeValue: 80
   _voiceVolumeValue: 100
   _effectsVolumeValue: 80
-  _maxMixerValue: 0
-  _minMixerVBalue: -80

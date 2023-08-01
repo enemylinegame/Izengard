@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace StartupMenu
 {
@@ -11,43 +9,48 @@ namespace StartupMenu
         Sound
     }
 
-    public class SettingsModel
+    public class SettingsModel : ISettingsData
     {
         public event Action<SettingsType> OnSettingsChanged;
 
-        private int _currentResolutionWidth;
-        private int _currentResolutionHeight;
+        private int _resolutionWidth;
+        private int _resolutionHeight;
 
-        private int _currentShadowId;
+        private int _shadowId;
 
         private bool _isFullScreenOn = true;
-        private bool _isFVSyncOn = true;
+        private bool _isVSyncOn = true;
+
+        private float _mixerMaxValue;
+        private float _mixerMinValue;
 
         private float _masterVolumeValue;
         private float _musicVolumeValue;
         private float _voiceVolumeValue;
         private float _effectsVolumeValue;
 
-        #region Public fields
 
-        public int CurrentResolutionWidth 
+        #region Public ISettingsData fields
+
+
+        public int ResolutionWidth 
         { 
-            get => _currentResolutionWidth; 
-            set => _currentResolutionWidth = value; 
+            get => _resolutionWidth; 
+            set => _resolutionWidth = value; 
         }
 
-        public int CurrentResolutionHeight 
+        public int ResolutionHeight 
         { 
-            get => _currentResolutionHeight; 
-            set => _currentResolutionHeight = value; 
+            get => _resolutionHeight; 
+            set => _resolutionHeight = value; 
         }
 
-        public int CurrentShadowId
+        public int ShadowId
         {
-            get => _currentShadowId;
+            get => _shadowId;
             private set
             {
-                _currentShadowId = value;
+                _shadowId = value;
                 OnSettingsChanged?.Invoke(SettingsType.Graphics);
             }
         }
@@ -62,15 +65,34 @@ namespace StartupMenu
             }
         }
 
-        public bool IsFVSyncOn
+        public bool IsVSyncOn
         {
-            get => _isFVSyncOn;
+            get => _isVSyncOn;
             private set
             {
-                _isFVSyncOn = value;
+                _isVSyncOn = value;
                 OnSettingsChanged?.Invoke(SettingsType.Graphics);
             }
         }
+
+        public float MixerMaxValue 
+        {
+            get => _mixerMaxValue;
+            private set
+            {
+                _mixerMinValue = value;
+            }
+        }
+
+        public float MixerMinValue
+        {
+            get => _mixerMinValue;
+            private set
+            {
+                _mixerMinValue = value;
+            }
+        }
+
 
         public float MasterVolumeValue
         {
@@ -112,6 +134,8 @@ namespace StartupMenu
             }
         }
 
+ 
+
         #endregion
 
         public SettingsModel()
@@ -121,13 +145,16 @@ namespace StartupMenu
 
         public void SetBaseData(ISettingsData data)
         {
-            _currentResolutionWidth = data.ResolutionWidth;
-            _currentResolutionHeight = data.ResolutionHeight;
+            _resolutionWidth = data.ResolutionWidth;
+            _resolutionHeight = data.ResolutionHeight;
 
-            _currentShadowId = data.ShadowId;
+            _shadowId = data.ShadowId;
 
             _isFullScreenOn = data.IsFullScreenOn;
-            _isFVSyncOn = data.IsVSyncOn;
+            _isVSyncOn = data.IsVSyncOn;
+
+            _mixerMaxValue = data.MixerMaxValue;
+            _mixerMinValue = data.MixerMinValue;
 
             _masterVolumeValue = data.MasterVolumeValue;
             _musicVolumeValue = data.MusicVolumeValue;
@@ -137,19 +164,19 @@ namespace StartupMenu
 
         public void ChangeResolution(int newWidth, int newHeight) 
         {
-            CurrentResolutionWidth = newWidth;
-            CurrentResolutionHeight = newHeight;
+            ResolutionWidth = newWidth;
+            ResolutionHeight = newHeight;
             OnSettingsChanged?.Invoke(SettingsType.Graphics);
         }
 
         public void ChangeShadow(int newShadowId) =>
-            CurrentShadowId = newShadowId;
+            ShadowId = newShadowId;
 
         public void ChangeFullScreenMode(bool state) =>
            IsFullScreenOn = state;
 
         public void ChangeVSyncMode(bool state) =>
-           IsFVSyncOn = state;
+           IsVSyncOn = state;
 
         public void ChangeMasterVolume(float volume) =>
             MasterVolumeValue = volume;

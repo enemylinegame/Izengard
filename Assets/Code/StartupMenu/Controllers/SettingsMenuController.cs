@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Reflection;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace StartupMenu
@@ -17,6 +19,7 @@ namespace StartupMenu
         public SettingsMenuController(
             Transform placeForUI, 
             GameSettingsManager gameSettings,
+            ISettingsData baseSettings,
             StateModel menuMonitor,
             AudioSource clickSource)
         {
@@ -25,13 +28,7 @@ namespace StartupMenu
  
             _view = LoadView(placeForUI);
 
-            _view.Init(
-                ApplySettings, 
-                BackToMenu,
-                OnResolutionChange,
-                _gameSettings.ResolutionList,
-                _gameSettings.Model, 
-                clickSource);
+            _view.Init(this, baseSettings, _gameSettings.ResolutionList, clickSource);
 
             _view.UpdateViewOptions(_gameSettings.Model);
 
@@ -45,14 +42,14 @@ namespace StartupMenu
             return objectView.GetComponent<SettingsMenuView>();
         }
 
-        private void ApplySettings()
+        internal void ApplySettings()
         {
             _gameSettings.ApplyCurrentSettings();
 
             _isSettingsChanged = true;
         }
 
-        private void BackToMenu()
+        internal void BackToMenu()
         {
             if(_isSettingsChanged != true)
             {
@@ -63,11 +60,45 @@ namespace StartupMenu
             _menuMonitor.CurrentState = MenuState.Start;
         }
 
-        private void OnResolutionChange(int index)
+        internal void OnResolutionChange(int index)
         {
             var newResolution = _gameSettings.ResolutionList[index];
             _gameSettings.Model.ChangeResolution(newResolution.width, newResolution.height);
         }
 
+        internal void OnShadowChange(int index)
+        {
+            _gameSettings.Model.ChangeShadow(index);
+        }
+
+        internal void OnFullScreenChange(bool value)
+{
+            _gameSettings.Model.ChangeFullScreenMode(value);
+        }
+
+        internal void OnVSyncChange(bool value)
+{
+            _gameSettings.Model.ChangeVSyncMode(value);
+        }
+
+        internal void OnMasterVolumeChange(float value)
+        {
+            _gameSettings.Model.ChangeMasterVolume(value);
+        }
+
+        internal void OnMusicVolumeChange(float value)
+        {
+            _gameSettings.Model.ChangeMusicVolume(value);
+        }
+        
+        internal void OnVoiceVolumeChange(float value)
+        {
+            _gameSettings.Model.ChangeVoiceVolume(value);
+        }
+
+        internal void OnEffectsVolumeChange(float value)
+        {
+            _gameSettings.Model.ChangeEffectsVolume(value);
+        }
     }
 }

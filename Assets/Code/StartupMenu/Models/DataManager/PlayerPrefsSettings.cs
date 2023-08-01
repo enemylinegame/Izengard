@@ -43,13 +43,13 @@ namespace StartupMenu.DataManager
 
         public override void SaveData(SettingsModel data)
         {
-            PlayerPrefs.SetInt(SCREEN_RESOLUTION_WIDTH, data.CurrentResolutionWidth);
-            PlayerPrefs.SetInt(SCREEN_RESOLUTION_HEIGHT, data.CurrentResolutionHeight);
+            PlayerPrefs.SetInt(SCREEN_RESOLUTION_WIDTH, data.ResolutionWidth);
+            PlayerPrefs.SetInt(SCREEN_RESOLUTION_HEIGHT, data.ResolutionHeight);
 
-            PlayerPrefs.SetInt(SHADOW_QUALITY, data.CurrentShadowId);
+            PlayerPrefs.SetInt(SHADOW_QUALITY, data.ShadowId);
 
             PlayerPrefs.SetInt(FULLSCREEN_MODE, data.IsFullScreenOn ? 1 : 0);
-            PlayerPrefs.SetInt(VSYNC_MODE, data.IsFVSyncOn ? 1 : 0);
+            PlayerPrefs.SetInt(VSYNC_MODE, data.IsVSyncOn ? 1 : 0);
 
             PlayerPrefs.SetFloat(MASTER_VOLUME_LEVEL, data.MasterVolumeValue);
             PlayerPrefs.SetFloat(MUSIC_VOLUME_LEVEL, data.MusicVolumeValue);
@@ -74,8 +74,7 @@ namespace StartupMenu.DataManager
             var voiceVolume = PlayerPrefs.GetFloat(VOICE_VOLUME_LEVEL);
             var effectsVolume = PlayerPrefs.GetFloat(EFFECTS_VOLUME_LEVEL);
 
-            loadData.SetResolutionWidth(screenWidth);
-            loadData.SetResolutionHeight(screenHeight);
+            loadData.SetResolution(screenWidth, screenHeight);
             loadData.SetShadowId(shadowId); 
 
             loadData.SetFullScreenMode(isFullScreen);

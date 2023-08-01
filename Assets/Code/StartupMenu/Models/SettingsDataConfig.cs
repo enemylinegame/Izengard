@@ -18,6 +18,9 @@ namespace StartupMenu
         public bool IsFullScreenOn => _isFullScreenOn;
         public bool IsVSyncOn => _isFVSyncOn;
 
+        public float MixerMaxValue => _maxMixerValue;
+        public float MixerMinValue => _minMixerVBalue;
+
         public float MasterVolumeValue => ConvertRange(_masterVolumeValue);
         public float MusicVolumeValue => ConvertRange(_musicVolumeValue);
         public float VoiceVolumeValue => ConvertRange(_voiceVolumeValue);
@@ -33,7 +36,14 @@ namespace StartupMenu
         [SerializeField] private bool _isFVSyncOn = true;
 
         [Space(10)]
-        [Header("Sound Settings")]
+        [Header("AudioMixer Parametrs")]
+        [Tooltip("Set value in dB")]
+        [SerializeField] private float _maxMixerValue = 0;
+        [Tooltip("Set value in dB")]
+        [SerializeField] private float _minMixerVBalue = -80;
+
+        [Space(10)]
+        [Header("Sound Settings (value in %)")]
 
         [Range(0f, 100f)]
         [SerializeField] private float _masterVolumeValue = 100f;
@@ -44,10 +54,6 @@ namespace StartupMenu
         [Range(0f, 100f)]
         [SerializeField] private float _effectsVolumeValue = 100f;
 
-        [Space(10)]
-        [Header("AudioMixer Parametrs")]
-        [SerializeField] private float _maxMixerValue = 0;
-        [SerializeField] private float _minMixerVBalue = -80;
 
         private float ConvertRange(float value)
         {

@@ -73,14 +73,14 @@ namespace StartupMenu
                 return;
 
             Screen.SetResolution(
-                _model.CurrentResolutionWidth,
-                _model.CurrentResolutionHeight, 
+                _model.ResolutionWidth,
+                _model.ResolutionHeight, 
                 _model.IsFullScreenOn);
 
-            QualitySettings.shadowResolution = (ShadowResolution)_model.CurrentShadowId;
+            QualitySettings.shadowResolution = (ShadowResolution)_model.ShadowId;
 
             Screen.fullScreen = _model.IsFullScreenOn;
-            QualitySettings.vSyncCount = _model.IsFVSyncOn ? 1 : 0;
+            QualitySettings.vSyncCount = _model.IsVSyncOn ? 1 : 0;
         }
 
         private void ChangeSoundSettings(SettingsType type)

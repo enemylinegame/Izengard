@@ -9,6 +9,9 @@
         public bool IsFullScreenOn { get; }
         public bool IsVSyncOn { get; }
 
+        public float MixerMaxValue { get; }
+        public float MixerMinValue { get; }
+
         public float MasterVolumeValue { get; }
         public float MusicVolumeValue { get; }
         public float VoiceVolumeValue { get; }

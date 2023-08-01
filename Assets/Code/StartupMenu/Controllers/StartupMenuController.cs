@@ -60,6 +60,7 @@ namespace StartupMenu
                             = new SettingsMenuController(
                                 _placeForUi, 
                                 _gameSettings,
+                                _baseSettingsData,
                                 _startupSceneState,
                                 _clickSource);
                         break;
