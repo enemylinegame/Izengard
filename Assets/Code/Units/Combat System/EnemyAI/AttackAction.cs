@@ -12,7 +12,7 @@ namespace CombatSystem
 
         public event Action<Damageable> OnComplete;
 
-        private readonly IEnemyAnimationController _animation;
+        //private readonly IEnemyAnimationController _animation;
         private readonly Enemy _unit;
         private Damageable _currentTarget;
         private float cooldownTime = 3.0f;
@@ -20,23 +20,22 @@ namespace CombatSystem
 
 
 
-        public AttackAction(IEnemyAnimationController animation, Enemy unit)
+        public AttackAction(Enemy unit)
         {
-            _animation = animation;
+
             _unit = unit;
         }
 
         public void StartAction(Damageable target)
         {
             _currentTarget = target;
-            Cooldown();
+            
             
             if (!isCooldown)
             {
-                _animation.ActionMoment += OnActionMoment;
-                _animation.AnimationComplete += OnAnimationComplete;
-                
-                _animation.PlayAnimation(AnimationType.Attack);
+
+
+                OnActionMoment();
             }
            
   
@@ -54,23 +53,15 @@ namespace CombatSystem
             {
                 _currentTarget.MakeDamage(_unit.Stats.Attack, _unit.MyDamagable);
             }
-            _animation.ActionMoment -= OnActionMoment;
+            
             
         }
 
         private void OnAnimationComplete()
         {
-            _animation.AnimationComplete -= OnAnimationComplete;
+            
             OnComplete?.Invoke(_currentTarget);
         }
-        private IEnumerator Cooldown()
-        {
-            
-            isCooldown = true;
-            
-            yield return new WaitForSeconds(cooldownTime);
-            
-            isCooldown = false;
-        }
+       
     }
 }

@@ -12,7 +12,7 @@ namespace Wave
         public Enemy Enemy { get; private set; }
         public event Action<IEnemyController> OnEnemyDead;
 
-        private readonly IEnemyAnimationController _enemyAnimation;
+       
         private IEnemyAI _enemyAI;
         private readonly BuildingFactory _buildingFactory;
         private readonly IEnemyAIController _enemyAIController;
@@ -28,7 +28,7 @@ namespace Wave
             _damageable.OnDeath += KillEnemy;
             
             Enemy = new Enemy(enemySettings, enemyRootGo, _damageable);
-            _enemyAnimation = new EnemyAnimationController(Enemy);
+            
             _buildingFactory = buildingFactory;
             _enemyAIController = enemyAIController;
             _bulletsController = bulletsController;
@@ -40,19 +40,19 @@ namespace Wave
         {
             _enemyAIController.RemoveEnemyAI(_enemyAI);
             _enemyAI.StopAction();
-            _enemyAnimation.StopAnimation();
+           
             _tileDislocation.Off();
             OnEnemyDead?.Invoke(this);
         }
 
         public void OnFixedUpdate(float fixedDeltaTime)
         {
-            _enemyAnimation?.OnFixedUpdate(fixedDeltaTime);
+          
         }
 
         public void SpawnEnemy()
         {
-            _enemyAI ??= new EnemyAI(Enemy, _buildingFactory.MainBuilding, _enemyAnimation, _bulletsController);
+            _enemyAI ??= new EnemyAI(Enemy, _buildingFactory.MainBuilding, _bulletsController);
             _enemyAIController.AddEnemyAI(_enemyAI);
             _damageable.Init(Enemy.Stats.Health);
             _tileDislocation.On();

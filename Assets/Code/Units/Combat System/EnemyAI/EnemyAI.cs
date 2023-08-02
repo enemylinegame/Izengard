@@ -27,7 +27,7 @@ namespace CombatSystem
         public bool IsActionComplete { get; private set; }
 
 
-        public EnemyAI(Enemy unit, Damageable primaryTarget, IEnemyAnimationController animationController,
+        public EnemyAI(Enemy unit, Damageable primaryTarget,
             IBulletsController bulletsController)
         {
             
@@ -51,7 +51,7 @@ namespace CombatSystem
             }
             else
             {
-                _attack = new AttackAction(animationController, unit);
+                _attack = new AttackAction(unit);
             }
             _actionList.Add(_attack);
             
