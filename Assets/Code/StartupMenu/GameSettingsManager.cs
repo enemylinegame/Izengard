@@ -15,9 +15,9 @@ namespace StartupMenu
         private readonly List<Resolution> _resolutionList = new List<Resolution>();
         private readonly int _currentRefreshRate;
 
-        private SettingsModel _model;
+        private SettingsModel _currentSettingsModel;
 
-        public SettingsModel Model => _model;
+        public SettingsModel Model => _currentSettingsModel;
         public List<Resolution> ResolutionList => _resolutionList;
 
         public GameSettingsManager(
@@ -39,11 +39,8 @@ namespace StartupMenu
                 }
             }
 
-            _model = CreateSettignsModel(_dataManager);
+            _currentSettingsModel = CreateSettignsModel(_dataManager);
       
-            ChangeGraphicsSettings(SettingsType.Graphics);
-            ChangeSoundSettings(SettingsType.Sound);
-
             ApplyCurrentSettings();
         }
 
@@ -61,72 +58,74 @@ namespace StartupMenu
             }
 
             var model = new SettingsModel();
-            model.SetBaseData(initData);
             SubscribeModel(model);
             
+            model.SetData(initData);
+
             return model;
         }
 
         private void SubscribeModel(SettingsModel model)
         {
-            model.OnSettingsChanged += ChangeGraphicsSettings;
-            model.OnSettingsChanged += ChangeSoundSettings;
+            model.OnSettingsChanged += ChangeSettings;
         }
 
         private void UnsubscribeModel(SettingsModel model)
         {
-            model.OnSettingsChanged -= ChangeGraphicsSettings;
-            model.OnSettingsChanged -= ChangeSoundSettings;
+            model.OnSettingsChanged -= ChangeSettings;
         }
 
-        private void ChangeGraphicsSettings(SettingsType type)
+        private void ChangeSettings(GameSettingsType settingsType, ISettingsData senderData)
         {
-            if (type != SettingsType.Graphics)
-                return;
+            switch (settingsType) 
+            {
+                default:
+                    break;
+                case GameSettingsType.Resolution:
+                case GameSettingsType.ShadowQuality:
+                case GameSettingsType.FullScreenMode:
+                case GameSettingsType.VSyncMode:
+                    {
+                        Screen.SetResolution(senderData.ResolutionWidth, senderData.ResolutionHeight, senderData.IsFullScreenOn);
 
-            Screen.SetResolution(
-                _model.ResolutionWidth,
-                _model.ResolutionHeight, 
-                _model.IsFullScreenOn);
+                        QualitySettings.shadowResolution = (ShadowResolution)senderData.ShadowId;
 
-            QualitySettings.shadowResolution = (ShadowResolution)_model.ShadowId;
-
-            Screen.fullScreen = _model.IsFullScreenOn;
-            QualitySettings.vSyncCount = _model.IsVSyncOn ? 1 : 0;
-        }
-
-        private void ChangeSoundSettings(SettingsType type)
-        {
-            if (type != SettingsType.Sound)
-                return;
-
-            _audioMixer.SetFloat("MasterVolume", _model.MasterVolumeValue);
-            _audioMixer.SetFloat("MusicVolume", _model.MusicVolumeValue);
-            _audioMixer.SetFloat("VoiceVolume", _model.VoiceVolumeValue);
-            _audioMixer.SetFloat("EffectsVolume", _model.EffectsVolumeValue);
+                        Screen.fullScreen = senderData.IsFullScreenOn;
+                        QualitySettings.vSyncCount = senderData.IsVSyncOn ? 1 : 0;
+                        break;
+                    }
+                case GameSettingsType.MasterVolume:
+                case GameSettingsType.MusicVolume:
+                case GameSettingsType.VoiceVolume:
+                case GameSettingsType.EffectsVolume:
+                    {
+                        _audioMixer.SetFloat("MasterVolume", senderData.MasterVolumeValue);
+                        _audioMixer.SetFloat("MusicVolume", senderData.MusicVolumeValue);
+                        _audioMixer.SetFloat("VoiceVolume", senderData.VoiceVolumeValue);
+                        _audioMixer.SetFloat("EffectsVolume", senderData.EffectsVolumeValue);
+                        break;
+                    }
+            }
+        
         }
 
         public void ApplyCurrentSettings()
         {
-            _dataManager.SaveData(ConvertToSaveData(_model));
+            _dataManager.SaveData(ConvertToSaveData(_currentSettingsModel));
         }
 
         public void RestoreDefaultSettings()
         {
-            _model.SetBaseData(_baseSettingsData);
-            _dataManager.SaveData(ConvertToSaveData(_model));
+            _currentSettingsModel.SetData(_baseSettingsData);
 
-            ChangeGraphicsSettings(SettingsType.Graphics);
-            ChangeSoundSettings(SettingsType.Sound);
+            _dataManager.SaveData(ConvertToSaveData(_currentSettingsModel));
         }
 
         public void CancelSettings()
         {
             var loadData = _dataManager.LoadData();
-            _model.SetBaseData(loadData);
 
-            ChangeGraphicsSettings(SettingsType.Graphics);
-            ChangeSoundSettings(SettingsType.Sound);
+            _currentSettingsModel.SetData(loadData);
         }
 
         private SaveLoadSettingsModel ConvertToSaveData(SettingsModel model)
@@ -158,7 +157,7 @@ namespace StartupMenu
 
             _isDisposed = true;
 
-            UnsubscribeModel(_model);
+            UnsubscribeModel(_currentSettingsModel);
         }
 
         #endregion
