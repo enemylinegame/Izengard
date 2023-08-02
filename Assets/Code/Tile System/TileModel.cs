@@ -19,7 +19,7 @@ namespace Code.TileSystem
         public List<DefenderPreview> DefenderUnits { get; private set; }
         public List<IDamageable> EnemiesInTile { get; private set; }
         public TileConfig SaveTileConfig { get; set; }
-        public int MaxWorkers => TileConfig.MaxUnits;
+        public int MaxWorkers => TileConfig.MaxWorkers;
         public int MaxWarriors;
         public int WorkersCount { get; set; }
         public Vector3 TilePosition { get; set; } // TODO: after merging, redo this ...

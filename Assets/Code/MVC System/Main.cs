@@ -11,14 +11,12 @@ public class Main : MonoBehaviour
 {
     [Header("Configs")]
     [SerializeField] private GameConfig _gameConfig;
-    [SerializeField] private BuildingList _buildingList;
-    [SerializeField] private TileList _tileList;
     [SerializeField] private GlobalResourceData _globalResourceList;
     [SerializeField] private WorkersTeamConfig _workersTeamConfig;
     [SerializeField] private OutLineSettings _outLineSettings;
     [SerializeField] private TowerShotConfig _towerShotConfig;
     [SerializeField] private MarketDataConfig _marketDataConfig;
-    [SerializeField] private RepairAndRecoberCostCenterBuilding _recoberCostCenter;
+    [SerializeField] private GlobalTileSettings _globalTileSettings;
 
     [Header("UI")]
     [SerializeField] private RightUI _rightUI;
@@ -47,8 +45,8 @@ public class Main : MonoBehaviour
             _rightUI,  _btnParents,_centerUI ,_bottonUI,
             _topUI, _endGameScreen, _towerShotConfig,
             _buyItemScreenView, _hireSystemView, _equipScreenView, 
-            _screenCamera, _tileList, _globalResourceList, _outLineSettings,
-            _marketDataConfig, _marketUI, _recoberCostCenter);
+            _screenCamera, _globalResourceList, _outLineSettings,
+            _marketDataConfig, _marketUI, _globalTileSettings);
 
         _controllers.OnStart();
     }

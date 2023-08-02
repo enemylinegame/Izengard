@@ -16,8 +16,7 @@ namespace Code.TileSystem
     public class TileController : IDisposable, IOnController, IOnTile, ITileLoadInfo, IOnUpdate
     {
         #region Fields
-
-        private TileList _list;
+        
         private TileUIView _uiView;
         private TileView _tileView;
 
@@ -31,29 +30,31 @@ namespace Code.TileSystem
         private ButtonsControllerOnTile _buttonsController;
         private LevelOfLifeButtonsCustomizer _level;
         private readonly GlobalStock _stock;
+        private readonly GlobalTileSettings _tileSettings;
         private int _currentLVL;
         public ProductionManager WorkerMenager => _productionManager;
         public TileModel TileModel => _tileView.TileModel;
         public TileView View => _tileView;
 
+        public GlobalTileSettings GlobalTileSettings => _tileSettings;
+
         #endregion
-        public TileController(TileList tileList, UIController uiController,
-            BuildingFactory buildingController, InputController inputController,
-            ProductionManager productionManager, LevelOfLifeButtonsCustomizer level, 
-            GlobalStock stock)
+        public TileController(UIController uiController, BuildingFactory buildingController, 
+            InputController inputController, ProductionManager productionManager, 
+            LevelOfLifeButtonsCustomizer level, GlobalStock stock, GlobalTileSettings tileSettings)
         {
             _buttonsController = new ButtonsControllerOnTile(uiController, inputController);
             
             _productionManager = productionManager;
             _playerNotificationSystem = uiController.CenterUI.BaseNotificationUI;
-            _list = tileList;
             _uiView = uiController.BottomUI.TileUIView;
             _uiController = uiController;
             _buildingFactory = buildingController;
             _inputController = inputController;
             _level = level;
             _stock = stock;
-            
+            _tileSettings = tileSettings;
+
             inputController.Add(this);
         }
 
@@ -286,13 +287,13 @@ namespace Code.TileSystem
             switch (type)
             {
                 case BuildingSystem.TileType.Eco:
-                    tile.TileModel.MaxWarriors = 3;
+                    tile.TileModel.MaxWarriors = _tileSettings.MaxWarriorsEco;
                     break;
                 case BuildingSystem.TileType.war:
-                    tile.TileModel.MaxWarriors = 8;
+                    tile.TileModel.MaxWarriors = _tileSettings.MaxWorkersWar;
                     break;
                 case BuildingSystem.TileType.All:
-                    tile.TileModel.MaxWarriors = 8;
+                    tile.TileModel.MaxWarriors = _tileSettings.MaxWorkersWar;
                     break;
             }
             
@@ -345,13 +346,13 @@ namespace Code.TileSystem
             });
             
             int currentLevel = TileModel.SaveTileConfig.TileLvl.GetHashCode();
-            if (currentLevel == _list.LVLList.Count)
+            if (currentLevel == _tileSettings.LVLList.Count)
             {
                 _playerNotificationSystem.BasicTemporaryUIVisualization("Max LVL", 2);
                 return;
             }
             
-            TileModel.SaveTileConfig = _list.LVLList[currentLevel];
+            TileModel.SaveTileConfig = _tileSettings.LVLList[currentLevel];
             TileModel.TileConfig = TileModel.SaveTileConfig;
             TileModel.CurrBuildingConfigs.AddRange(TileModel.SaveTileConfig.BuildingTirs);
                 
@@ -366,7 +367,7 @@ namespace Code.TileSystem
             _uiView.LvlText.text = $"{hashCode} LVL";
             _currentLVL = hashCode;
 
-            _uiView.MaxWorkersCount = config.MaxUnits;
+            _uiView.MaxWorkersCount = config.MaxWorkers;
             _uiView.WorkersCount = TileModel.WorkersCount;
             
             _uiView.Icon.sprite = config.IconTile;

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Code.BuildingSystem;
 using Code.Player;
 using Code.UI;
@@ -68,7 +69,7 @@ namespace Code.TileSystem
                 {
                     while (true)
                     {
-                        foreach (var build in model.FloodedBuildings)
+                        foreach (var build in model.FloodedBuildings.ToList())
                         {
                             if (build.BuildingTypes != 0)
                             {

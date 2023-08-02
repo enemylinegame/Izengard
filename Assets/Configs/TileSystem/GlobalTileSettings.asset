@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 281a8835de5d452fba9a55f883b88abd, type: 3}
+  m_Name: GlobalTileSettings
+  m_EditorClassIdentifier: 
+  MaxWorkersWar: 8
+  MaxWarriorsEco: 3
+  MaxHealthMainTower: 3000
+  MaxHealthCenterBuilding: 1000
+  LVLList:
+  - {fileID: 11400000, guid: 9565a228ea7f390448b26a5a1b3ef329, type: 2}
+  - {fileID: 11400000, guid: 98c2f906a41db354aa3a51f4e0b89784, type: 2}
+  - {fileID: 11400000, guid: 17d2cf0f9fa08054ca294acb0b8b15c9, type: 2}
+  - {fileID: 11400000, guid: 08f0532ca1d88d94daedc8ab99f2624d, type: 2}
+  - {fileID: 11400000, guid: 754259aca500a9d4587c1e4b70b975a7, type: 2}
