@@ -15,9 +15,9 @@ namespace StartupMenu
         private readonly List<Resolution> _resolutionList = new List<Resolution>();
         private readonly int _currentRefreshRate;
 
-        private SettingsModel _currentSettingsModel;
+        private SettingsModel _gameSettingsModel;
 
-        public SettingsModel Model => _currentSettingsModel;
+        public SettingsModel GameSttingsModel => _gameSettingsModel;
         public List<Resolution> ResolutionList => _resolutionList;
 
         public GameSettingsManager(
@@ -39,9 +39,9 @@ namespace StartupMenu
                 }
             }
 
-            _currentSettingsModel = CreateSettignsModel(_dataManager);
+            _gameSettingsModel = CreateSettignsModel(_dataManager);
       
-            ApplyCurrentSettings();
+            SaveGameSettings();
         }
 
         private SettingsModel CreateSettignsModel(SettingsDataManager dataManager)
@@ -109,23 +109,23 @@ namespace StartupMenu
         
         }
 
-        public void ApplyCurrentSettings()
+        public void SaveGameSettings()
         {
-            _dataManager.SaveData(ConvertToSaveData(_currentSettingsModel));
+            _dataManager.SaveData(ConvertToSaveData(_gameSettingsModel));
         }
 
-        public void RestoreDefaultSettings()
+        public void RestoreGameSettings()
         {
-            _currentSettingsModel.SetData(_baseSettingsData);
+            _gameSettingsModel.SetData(_baseSettingsData);
 
-            _dataManager.SaveData(ConvertToSaveData(_currentSettingsModel));
+            _dataManager.SaveData(ConvertToSaveData(_gameSettingsModel));
         }
 
-        public void CancelSettings()
+        public void LoadGameSettings()
         {
             var loadData = _dataManager.LoadData();
 
-            _currentSettingsModel.SetData(loadData);
+            _gameSettingsModel.SetData(loadData);
         }
 
         private SaveLoadSettingsModel ConvertToSaveData(SettingsModel model)
@@ -157,7 +157,7 @@ namespace StartupMenu
 
             _isDisposed = true;
 
-            UnsubscribeModel(_currentSettingsModel);
+            UnsubscribeModel(_gameSettingsModel);
         }
 
         #endregion

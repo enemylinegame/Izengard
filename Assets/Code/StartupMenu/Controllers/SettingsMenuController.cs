@@ -9,7 +9,7 @@ namespace StartupMenu
     {
         private readonly string _viewPath = "UI/StartupMenuUI/OptionsMenuUI";
 
-        private readonly GameSettingsManager _gameSettings;
+        private readonly GameSettingsManager _settingsManager;
         private readonly StateModel _menuMonitor;
 
         private Dictionary<SettingsMenuActionType, Action> _settingsMenuActions;
@@ -21,12 +21,12 @@ namespace StartupMenu
 
         public SettingsMenuController(
             Transform placeForUI, 
-            GameSettingsManager gameSettings,
+            GameSettingsManager settingsManager,
             ISettingsData baseSettings,
             StateModel menuMonitor,
             AudioSource clickSource)
         {
-            _gameSettings = gameSettings;
+            _settingsManager = settingsManager;
             _menuMonitor = menuMonitor;
 
             _settingsMenuActions = GetMenuActions();
@@ -38,10 +38,10 @@ namespace StartupMenu
                 _settingsMenuActions, 
                 _changeSettingsActions, 
                 baseSettings, 
-                _gameSettings.ResolutionList, 
+                _settingsManager.ResolutionList, 
                 clickSource);
 
-            _view.UpdateViewOptions(_gameSettings.Model);
+            _view.UpdateViewOptions(_settingsManager.GameSttingsModel);
 
             _isSettingsChanged = false;
         }
@@ -92,15 +92,15 @@ namespace StartupMenu
 
         private void ApplySettings()
         {
-            _gameSettings.ApplyCurrentSettings();
+            _settingsManager.SaveGameSettings();
 
             _isSettingsChanged = true;
         }
 
         private void RestoreToDefautls()
         {
-            _gameSettings.RestoreDefaultSettings();
-            _view.UpdateViewOptions(_gameSettings.Model);
+            _settingsManager.RestoreGameSettings();
+            _view.UpdateViewOptions(_settingsManager.GameSttingsModel);
 
             _isSettingsChanged = true;
         }
@@ -109,8 +109,8 @@ namespace StartupMenu
         {
             if(_isSettingsChanged != true)
             {
-                _gameSettings.CancelSettings();
-                _view.UpdateViewOptions(_gameSettings.Model);
+                _settingsManager.LoadGameSettings();
+                _view.UpdateViewOptions(_settingsManager.GameSttingsModel);
             }
 
             _menuMonitor.CurrentState = MenuState.Start;
@@ -122,43 +122,43 @@ namespace StartupMenu
 
         private void OnResolutionChange(int index)
         {
-            var newResolution = _gameSettings.ResolutionList[index];
-            _gameSettings.Model.ChangeResolution(newResolution.width, newResolution.height);
+            var newResolution = _settingsManager.ResolutionList[index];
+            _settingsManager.GameSttingsModel.ChangeResolution(newResolution.width, newResolution.height);
         }
 
         private void OnShadowChange(int index)
         {
-            _gameSettings.Model.ChangeShadow(index);
+            _settingsManager.GameSttingsModel.ChangeShadow(index);
         }
 
         private void OnFullScreenChange(bool value)
 {
-            _gameSettings.Model.ChangeFullScreenMode(value);
+            _settingsManager.GameSttingsModel.ChangeFullScreenMode(value);
         }
 
         private void OnVSyncChange(bool value)
 {
-            _gameSettings.Model.ChangeVSyncMode(value);
+            _settingsManager.GameSttingsModel.ChangeVSyncMode(value);
         }
 
         private void OnMasterVolumeChange(float value)
         {
-            _gameSettings.Model.ChangeMasterVolume(value);
+            _settingsManager.GameSttingsModel.ChangeMasterVolume(value);
         }
 
         private void OnMusicVolumeChange(float value)
         {
-            _gameSettings.Model.ChangeMusicVolume(value);
+            _settingsManager.GameSttingsModel.ChangeMusicVolume(value);
         }
 
         private void OnVoiceVolumeChange(float value)
         {
-            _gameSettings.Model.ChangeVoiceVolume(value);
+            _settingsManager.GameSttingsModel.ChangeVoiceVolume(value);
         }
 
         private void OnEffectsVolumeChange(float value)
         {
-            _gameSettings.Model.ChangeEffectsVolume(value);
+            _settingsManager.GameSttingsModel.ChangeEffectsVolume(value);
         }
 
         #endregion
