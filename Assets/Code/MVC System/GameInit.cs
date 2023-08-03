@@ -1,4 +1,5 @@
 using Code.BuildingSystem;
+using Code.Game;
 using Code.Player;
 using Code.QuickOutline.Scripts;
 using Code.TileSystem;
@@ -28,6 +29,7 @@ public class GameInit
         var outlineController = new OutlineController(outLineSettings);
         var globalResStock = new GlobalStock(globalResourceList, topResUiVew);
         var btnConroller = new BtnUIController(rightUI, gameConfig);
+        var pauseManager = new PauseManager();
         var inputController = new InputController(outlineController);
         var uiController = new UIController(rightUI, bottomUI, centerUI, inputController, marketView);
 
@@ -63,7 +65,6 @@ public class GameInit
 
         if (!gameConfig.ChangeVariant) new ResourceGenerator(/*buildController.Buildings, */gameConfig, levelGenerator, buildingController);
         else new ResourceGenerator(/*.Buildings, */gameConfig, levelGenerator, buildingController, 2);
-
 
         inputController.Add(defendersAssignController);
         controller.Add(workersTeamComtroller);
