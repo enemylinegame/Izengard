@@ -31,6 +31,7 @@ public class GameInit
         var btnConroller = new BtnUIController(rightUI, gameConfig);
         var pauseManager = new PauseManager();
         var inputController = new InputController(outlineController);
+        var keyInputController = new KeyInputController();
         var uiController = new UIController(rightUI, bottomUI, centerUI, inputController, marketView);
 
         var levelGenerator = new GeneratorLevelController(tiles, gameConfig, btnConroller, btnParents, uiController);
@@ -83,6 +84,7 @@ public class GameInit
         controller.Add(bulletsController);
         controller.Add(marketController);
         controller.Add(hireDefendersManager);
+        controller.Add(keyInputController);
 
         // var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
         // controller.Add(testDummyTargetController);
