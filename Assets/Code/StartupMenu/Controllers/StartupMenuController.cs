@@ -16,7 +16,7 @@ namespace StartupMenu
 
         private readonly ISettingsData _baseSettingsData;
 
-        private readonly GameSettingsManager _gameSettings;
+        private readonly GameSettingsManager _settingsManager;
 
         private MainMenuController _mainMenuController;
         private SettingsMenuController _settingsMenuContoller;
@@ -34,7 +34,7 @@ namespace StartupMenu
 
             _startupSceneState = new StateModel();
 
-            _gameSettings 
+            _settingsManager 
                 = new GameSettingsManager(_audioMixer, _baseSettingsData);
 
             _startupSceneState.OnStateChange += OnChangeGameState;
@@ -59,7 +59,7 @@ namespace StartupMenu
                         _settingsMenuContoller 
                             = new SettingsMenuController(
                                 _placeForUi, 
-                                _gameSettings,
+                                _settingsManager,
                                 _baseSettingsData,
                                 _startupSceneState,
                                 _clickSource);
@@ -106,7 +106,7 @@ namespace StartupMenu
             
             _startupSceneState.OnStateChange -= OnChangeGameState;
          
-            _gameSettings?.Dispose();
+            _settingsManager?.Dispose();
         }
 
     }
