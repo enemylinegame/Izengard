@@ -21,7 +21,8 @@ public class GameInit
         EndGameScreen endGameScreen, TowerShotConfig towerShotConfig, BuyItemScreenView buyItemScreenView, 
         HireSystemView hireSystemView, EquipScreenView equipScreenView, Camera camera, TileList tileList,
         GlobalResourceData globalResourceList, OutLineSettings outLineSettings, MarketDataConfig marketData, 
-        MarketView marketView, RepairAndRecoberCostCenterBuilding repairAndRecoberCostCenterBuilding)
+        MarketView marketView, RepairAndRecoberCostCenterBuilding repairAndRecoberCostCenterBuilding, 
+        InGameMenuUI inGameMenuUI)
     {
         //TODO Do not change the structure of the script
         var tiles = GetTileList.GetTiles(gameConfig);
@@ -63,6 +64,7 @@ public class GameInit
         var hireDefendersManager = new HireDefenderProgressManager();
         var defendersAssignController = new DefendersManager(tileController, defenderController, uiController, hireUnitView, gameConfig.DefendersSets, paymentDefendersSystem, hireDefendersManager);
         inputController.Add(defendersAssignController);
+        var inGameMenuController = new InGameMenuController(inGameMenuUI, pauseManager);
 
         if (!gameConfig.ChangeVariant) new ResourceGenerator(/*buildController.Buildings, */gameConfig, levelGenerator, buildingController);
         else new ResourceGenerator(/*.Buildings, */gameConfig, levelGenerator, buildingController, 2);
