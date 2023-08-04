@@ -1,17 +1,21 @@
 ﻿using Code.Game;
 using Code.Player;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Code.UI
 {
     public class InGameMenuController
     {
+        private readonly int _mainMenuSceneId = 0;
+        private readonly int _gameSceneId = 1;
+
         private readonly InGameMenuUI _inGameMenuUI;
         private readonly PauseManager _pauseManager;
 
         private bool _isPauseMode;
 
-        public InGameMenuController(InGameMenuUI inGameMenuUI, PauseManager pauseManager, 
+        public InGameMenuController(InGameMenuUI inGameMenuUI, PauseManager pauseManager,
             KeyInputController keyInputController)
         {
             _inGameMenuUI = inGameMenuUI;
@@ -41,12 +45,14 @@ namespace Code.UI
 
         private void OnRestartButtonClick()
         {
-            
+            OffPauseMode();
+            SceneManager.LoadScene(_gameSceneId);
         }
 
         private void OnQuitButtonClick()
         {
-            
+            OffPauseMode();
+            SceneManager.LoadScene(_mainMenuSceneId);
         }
 
         private void OnPauseMode()
@@ -68,6 +74,5 @@ namespace Code.UI
                 _isPauseMode = false;
             }
         }
-        
     }
 }
