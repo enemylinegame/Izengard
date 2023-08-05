@@ -1,17 +1,19 @@
-﻿using Code.Game;
+﻿using System;
+using Code.Game;
 using Code.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Code.UI
 {
-    public class InGameMenuController
+    public class InGameMenuController : IDisposable
     {
         private readonly int _mainMenuSceneId = 0;
         private readonly int _gameSceneId = 1;
 
         private readonly InGameMenuUI _inGameMenuUI;
         private readonly PauseManager _pauseManager;
+        private readonly KeyInputController _keyInputController;
 
         private bool _isPauseMode;
 
@@ -20,7 +22,8 @@ namespace Code.UI
         {
             _inGameMenuUI = inGameMenuUI;
             _pauseManager = pauseManager;
-            keyInputController.OnCancelAxisClick += OnCancelButtonClick;
+            _keyInputController = keyInputController;
+            _keyInputController.OnCancelAxisClick += OnCancelButtonClick;
             _inGameMenuUI.ContinueButton.onClick.AddListener(OnContinueButtonClick);
             _inGameMenuUI.RestartButton.onClick.AddListener(OnRestartButtonClick);
             _inGameMenuUI.QuitButton.onClick.AddListener(OnQuitButtonClick);
@@ -80,5 +83,24 @@ namespace Code.UI
                 _isPauseMode = false;
             }
         }
+
+        private void SettingsClosed()
+        {
+            
+        }
+
+        #region IDisposable
+
+        public void Dispose()
+        {
+            _keyInputController.OnCancelAxisClick -= OnCancelButtonClick;
+            _inGameMenuUI.ContinueButton.onClick.RemoveListener(OnContinueButtonClick);
+            _inGameMenuUI.RestartButton.onClick.RemoveListener(OnRestartButtonClick);
+            _inGameMenuUI.QuitButton.onClick.RemoveListener(OnQuitButtonClick);
+            _inGameMenuUI.SettingsButton.onClick.RemoveListener(OnSettingsButtonClick);
+        }
+
+        #endregion
+
     }
 }
