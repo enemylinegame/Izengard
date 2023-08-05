@@ -24,6 +24,7 @@ namespace Code.UI
             _inGameMenuUI.ContinueButton.onClick.AddListener(OnContinueButtonClick);
             _inGameMenuUI.RestartButton.onClick.AddListener(OnRestartButtonClick);
             _inGameMenuUI.QuitButton.onClick.AddListener(OnQuitButtonClick);
+            _inGameMenuUI.SettingsButton.onClick.AddListener(OnSettingsButtonClick);
         }
 
         private void OnCancelButtonClick()
@@ -53,6 +54,11 @@ namespace Code.UI
         {
             OffPauseMode();
             SceneManager.LoadScene(_mainMenuSceneId);
+        }
+
+        private void OnSettingsButtonClick()
+        {
+            Debug.Log("InGameMenuController->OnSettingsButtonClick:");
         }
 
         private void OnPauseMode()
