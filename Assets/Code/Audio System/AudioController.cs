@@ -1,37 +1,51 @@
-﻿
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Audio_System
 {
+
     public class AudioController : IAudioController, IMusicPlayer, IAudioPlayer
     {
+        private readonly AudioSource _musicAudioSource;
+
+        private readonly Dictionary<int, AudioSourceData> _sourceMedia;
+
+        public AudioController(AudioManager audioManager)
+        {
+            _musicAudioSource = audioManager.MusicAudioSource;
+            _sourceMedia = new Dictionary<int, AudioSourceData>();
+        }
+
+
+        #region IAudioController
+
         bool IAudioController.SoundEnabled
         {
-            get => throw new System.NotImplementedException(); 
+            get => throw new System.NotImplementedException();
             set => throw new System.NotImplementedException();
         }
 
         bool IAudioController.MusicEnabled
         {
-            get => throw new System.NotImplementedException(); 
+            get => throw new System.NotImplementedException();
             set => throw new System.NotImplementedException();
         }
 
         bool IAudioController.VoiceEnabled
         {
-            get => throw new System.NotImplementedException(); 
+            get => throw new System.NotImplementedException();
             set => throw new System.NotImplementedException();
         }
 
         bool IAudioController.EffectsEnabled
         {
-            get => throw new System.NotImplementedException(); 
+            get => throw new System.NotImplementedException();
             set => throw new System.NotImplementedException();
         }
 
         float IAudioController.SoundVolume
         {
-            get => throw new System.NotImplementedException(); 
+            get => throw new System.NotImplementedException();
             set => throw new System.NotImplementedException();
         }
 
@@ -43,63 +57,136 @@ namespace Audio_System
 
         float IAudioController.VoiceVolume
         {
-            get => throw new System.NotImplementedException(); 
+            get => throw new System.NotImplementedException();
             set => throw new System.NotImplementedException();
         }
 
         float IAudioController.EffectsVolume
         {
-            get => throw new System.NotImplementedException(); 
+            get => throw new System.NotImplementedException();
             set => throw new System.NotImplementedException();
         }
 
-        public void Dispose()
-        {
-            throw new System.NotImplementedException();
-        }
+
+        #endregion
 
         #region IMusicPlayer
 
-        bool IMusicPlayer.IsClipPlaying(int audioCode)
+        int IMusicPlayer.PlaySound(ISound sound)
         {
-            throw new System.NotImplementedException();
+            ScanForEndedSources();
+
+            _musicAudioSource.clip = sound.Clip;
+
+            var source = _musicAudioSource;
+            source.clip = sound.Clip;
+            source.volume = sound.Volume;
+            source.pitch = sound.Pitch;
+            source.loop = sound.IsLoop;
+            source.priority = 0;
+            source.spatialBlend = 0;
+
+            var mediaData = new AudioSourceData
+            {
+                Source = source,
+                SoundCode = sound.SoundCode,
+                Volume = sound.Volume,
+                OnPause = false,
+                Is3DSound = false,
+                IsMusic = true,
+                SourceRequestedPos = Vector3.one,
+            };
+
+            source.Play();
+
+            _sourceMedia.Add(mediaData.SoundCode, mediaData);
+
+            return mediaData.SoundCode;
         }
 
-        void IMusicPlayer.PauseClip(int audioCode)
+        void IMusicPlayer.StopSound(int audioCode)
         {
-            throw new System.NotImplementedException();
+            if (!_sourceMedia.ContainsKey(audioCode))
+                return;
+
+            var source = _sourceMedia[audioCode];
+            _sourceMedia.Remove(audioCode);
+            source.Source.Stop();
         }
 
-        int IMusicPlayer.PlayClip(AudioClip clip, float volumeValue)
+        void IMusicPlayer.PauseSound(int audioCode)
         {
-            throw new System.NotImplementedException();
+            if (!_sourceMedia.ContainsKey(audioCode))
+                return;
+
+            var source = _sourceMedia[audioCode];
+            source.Source.Pause();
+            source.OnPause = true;
         }
 
-        void IMusicPlayer.ResumeClip(int audioCode)
+
+        void IMusicPlayer.ResumeSound(int audioCode)
         {
-            throw new System.NotImplementedException();
+            if (!_sourceMedia.ContainsKey(audioCode))
+                return;
+
+            var source = _sourceMedia[audioCode];
+
+            if (source.OnPause == false)
+                return;
+   
+            source.Source.UnPause();
+            source.OnPause = false;
         }
 
-        void IMusicPlayer.StopClip(int audioCode)
+
+        bool IMusicPlayer.IsSoundPlaying(int audioCode)
         {
-            throw new System.NotImplementedException();
+            if (!_sourceMedia.ContainsKey(audioCode))
+                return false;
+
+            var source = _sourceMedia[audioCode];
+            return source.Source.isPlaying;
         }
 
         #endregion
 
         #region IAudioPlayer
 
-        bool IAudioPlayer.IsAudioClipPlaying(int audioCode)
+        int IAudioPlayer.PlaySound2D(ISound sound)
         {
-            throw new System.NotImplementedException();
+            ScanForEndedSources();
+
+            return 0;
+        }
+ 
+        int IAudioPlayer.PlaySound3D(ISound sound, Vector3 position, float maxSoundDistance)
+        {
+            ScanForEndedSources();
+
+            return 0;
         }
 
-        int IAudioPlayer.PlayAudioClip2D(AudioClip clip, float volumeValue, bool looped)
+        void IAudioPlayer.StopSound(int audioCode)
         {
-            throw new System.NotImplementedException();
+            if (!_sourceMedia.ContainsKey(audioCode))
+                return;
+
+            var source = _sourceMedia[audioCode];
+            _sourceMedia.Remove(audioCode);
+            source.Source.Stop();
         }
 
-        int IAudioPlayer.PlayAudioClip3D(AudioClip clip, Vector3 position, float maxSoundDistance, float volumeValue, bool looped)
+        bool IAudioPlayer.IsSoundPlaying(int audioCode)
+        {
+            if (!_sourceMedia.ContainsKey(audioCode))
+                return false;
+
+            var source = _sourceMedia[audioCode];
+            return source.Source.isPlaying;
+        }
+
+        void IAudioPlayer.SetSourcePositionTo(int audioCode, Vector3 destinationPos)
         {
             throw new System.NotImplementedException();
         }
@@ -109,16 +196,38 @@ namespace Audio_System
             throw new System.NotImplementedException();
         }
 
-        void IAudioPlayer.SetSourcePositionTo(int audioCode, Vector3 destinationPos)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        void IAudioPlayer.StopClip(int audioCode)
-        {
-            throw new System.NotImplementedException();
-        }
-
         #endregion
+
+        private void ScanForEndedSources()
+        {
+            var toDispose = new Dictionary<int, AudioSourceData>();
+
+            foreach (var key in _sourceMedia.Keys)
+            {
+                var source = _sourceMedia[key];
+                if (!source.OnPause && !source.Source.isPlaying)
+                    toDispose.Add(key, source);
+            }
+
+            foreach (var key in toDispose.Keys)
+            {
+                var source = toDispose[key];
+                source.Source.Stop();
+
+                _sourceMedia.Remove(key);
+
+                if (source.Is3DSound && !source.IsMusic)
+                    DestroySource(source.Source.gameObject);
+            }
+        }
+
+        private void DestroySource(Object source) 
+            => Object.Destroy(source);
+
+        public void Dispose()
+        {
+            _sourceMedia.Clear();
+        }
+
     }
 }

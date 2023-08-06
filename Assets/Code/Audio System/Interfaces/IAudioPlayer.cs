@@ -4,13 +4,13 @@ namespace Audio_System
 {
     public interface IAudioPlayer
     {
-        int PlayAudioClip2D(AudioClip clip, float volumeValue = 1f, bool looped = false);
+        int PlaySound2D(ISound sound);
 
-        int PlayAudioClip3D(AudioClip clip, Vector3 position, float maxSoundDistance, float volumeValue = 1f, bool looped = false);
+        int PlaySound3D(ISound sound, Vector3 position, float maxSoundDistance);
 
-        void StopClip(int audioCode);
+        void StopSound(int audioCode);
 
-        bool IsAudioClipPlaying(int audioCode);
+        bool IsSoundPlaying(int audioCode);
 
         void SetAudioListenerToPosition(Vector3 position);
  
