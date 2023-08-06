@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace StartupMenu
@@ -6,24 +8,71 @@ namespace StartupMenu
     public class SettingsMenuController : BaseController
     {
         private readonly string _viewPath = "UI/StartupMenuUI/OptionsMenuUI";
+
+        private readonly GameSettingsManager _settingsManager;
         private readonly StateModel _menuMonitor;
 
-        private readonly SettingsMenuModel _model;
+        private Dictionary<SettingsMenuActionType, Action> _settingsMenuActions;
+        private Dictionary<GameSettingsType, Action<object>> _changeSettingsActions;
 
         private SettingsMenuView _view;
 
-        public SettingsMenuController(Transform placeForUI, StateModel menuMonitor)
+        private bool _isSettingsChanged;
+
+        public SettingsMenuController(
+            Transform placeForUI, 
+            GameSettingsManager settingsManager,
+            ISettingsData baseSettings,
+            StateModel menuMonitor,
+            AudioSource clickSource)
         {
+            _settingsManager = settingsManager;
             _menuMonitor = menuMonitor;
 
-            _model = new SettingsMenuModel();
+            _settingsMenuActions = GetMenuActions();
+            _changeSettingsActions = GetSettingsAction();
 
-            CreateView(placeForUI);
-        }
-        private void CreateView(Transform placeForUI)
-        {
             _view = LoadView(placeForUI);
-            _view.Init(BackToMenu, _model);
+
+            _view.Init(
+                _settingsMenuActions, 
+                _changeSettingsActions, 
+                baseSettings, 
+                _settingsManager.ResolutionList, 
+                clickSource);
+
+            _view.UpdateViewOptions(_settingsManager.GameSttingsModel);
+
+            _isSettingsChanged = false;
+        }
+        
+        private Dictionary<SettingsMenuActionType, Action> GetMenuActions()
+        {
+            var actionsDictionary = new Dictionary<SettingsMenuActionType, Action>
+            {
+                [SettingsMenuActionType.ApplySettings] = ApplySettings,
+                [SettingsMenuActionType.RestoreSettings] = RestoreToDefautls,
+                [SettingsMenuActionType.BackToMenu] = BackToMenu
+            };
+
+            return actionsDictionary;
+        }
+
+        private Dictionary<GameSettingsType, Action<object>> GetSettingsAction()
+        {
+            var actionsDictionary = new Dictionary<GameSettingsType, Action<object>>
+            {
+                [GameSettingsType.Resolution] = new MethodExtension<int>(OnResolutionChange).OnChange,
+                [GameSettingsType.ShadowQuality] = new MethodExtension<int>(OnShadowChange).OnChange,
+                [GameSettingsType.FullScreenMode] = new MethodExtension<bool>(OnFullScreenChange).OnChange,
+                [GameSettingsType.VSyncMode] = new MethodExtension<bool>(OnVSyncChange).OnChange,
+                [GameSettingsType.MasterVolume] = new MethodExtension<float>(OnMasterVolumeChange).OnChange,
+                [GameSettingsType.MusicVolume] = new MethodExtension<float>(OnMusicVolumeChange).OnChange,
+                [GameSettingsType.VoiceVolume] = new MethodExtension<float>(OnVoiceVolumeChange).OnChange,
+                [GameSettingsType.EffectsVolume] = new MethodExtension<float>(OnEffectsVolumeChange).OnChange
+            };
+
+            return actionsDictionary;
         }
 
         private SettingsMenuView LoadView(Transform placeForUI)
@@ -33,9 +82,85 @@ namespace StartupMenu
             return objectView.GetComponent<SettingsMenuView>();
         }
 
+        protected override void OnDispose()
+        {
+            base.OnDispose();
+            _changeSettingsActions.Clear();
+        }
+
+        #region Settings Menu Actions
+
+        private void ApplySettings()
+        {
+            _settingsManager.SaveGameSettings();
+
+            _isSettingsChanged = true;
+        }
+
+        private void RestoreToDefautls()
+        {
+            _settingsManager.RestoreGameSettings();
+            _view.UpdateViewOptions(_settingsManager.GameSttingsModel);
+
+            _isSettingsChanged = true;
+        }
+
         private void BackToMenu()
         {
+            if(_isSettingsChanged != true)
+            {
+                _settingsManager.LoadGameSettings();
+                _view.UpdateViewOptions(_settingsManager.GameSttingsModel);
+            }
+
             _menuMonitor.CurrentState = MenuState.Start;
         }
+
+        #endregion
+
+        #region Change Settings Actions
+
+        private void OnResolutionChange(int index)
+        {
+            var newResolution = _settingsManager.ResolutionList[index];
+            _settingsManager.GameSttingsModel.ChangeResolution(newResolution.width, newResolution.height);
+        }
+
+        private void OnShadowChange(int index)
+        {
+            _settingsManager.GameSttingsModel.ChangeShadow(index);
+        }
+
+        private void OnFullScreenChange(bool value)
+{
+            _settingsManager.GameSttingsModel.ChangeFullScreenMode(value);
+        }
+
+        private void OnVSyncChange(bool value)
+{
+            _settingsManager.GameSttingsModel.ChangeVSyncMode(value);
+        }
+
+        private void OnMasterVolumeChange(float value)
+        {
+            _settingsManager.GameSttingsModel.ChangeMasterVolume(value);
+        }
+
+        private void OnMusicVolumeChange(float value)
+        {
+            _settingsManager.GameSttingsModel.ChangeMusicVolume(value);
+        }
+
+        private void OnVoiceVolumeChange(float value)
+        {
+            _settingsManager.GameSttingsModel.ChangeVoiceVolume(value);
+        }
+
+        private void OnEffectsVolumeChange(float value)
+        {
+            _settingsManager.GameSttingsModel.ChangeEffectsVolume(value);
+        }
+
+        #endregion
     }
 }

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: DefenderMelee
   m_EditorClassIdentifier: 
   <Type>k__BackingField: 1
+  <Name>k__BackingField: Swordswinger
   <UnitStats>k__BackingField:
     AttackInterval: 1
     AttackRange: 0.3

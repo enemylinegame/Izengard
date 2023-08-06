@@ -3,6 +3,7 @@ using Code.UI;
 using Code.Units.HireDefendersSystem;
 using CombatSystem;
 using CombatSystem.Views;
+using ResourceSystem.SupportClases;
 using UnityEngine;
 
 
@@ -52,10 +53,11 @@ namespace Code.TileSystem
 
         public void HireDefender()
         {
-            List<Sprite> sprites = new List<Sprite>();
+            List<(Sprite, string, List<ResourcePriceModel>)> sprites = new();
             for (int i = 0; i < _defendersSet.Defenders.Count; i++)
             {
-                sprites.Add( _defendersSet.Defenders[i].Icon);
+                DefenderSettings defenderData = _defendersSet.Defenders[i];
+                sprites.Add( (defenderData.Icon, defenderData.Name, defenderData.HireCost));
             }
             _hireUnitView.Show(sprites);
             _isHireDefenderPenelOpened = true;
@@ -69,14 +71,16 @@ namespace Code.TileSystem
 
                 for (int i = 0; i < units.Count; i++)
                 {
-                    DefenderPreview defender = units[i];     //TODO: if defender in creating process ...
+                    DefenderPreview defender = units[i];
                     if (defendersOnTile.Remove(defender))
                     {
-                        DefenderUnit unit = defender.Unit;
-                        if (unit != null)
+                        if (defender.IsInHiringProcess)
                         {
-                            unit.DefenderUnitDead -= DefenderDead;
-                            _defendersController.DismissDefender(unit);
+                            CancelHiring(defender);
+                        }
+                        else
+                        {
+                            DismissDefenderInstance(defender);
                         }
                     }
                 }
@@ -86,8 +90,19 @@ namespace Code.TileSystem
 
         public void SendToBarrack(List<DefenderPreview> units)
         {
-            List<DefenderUnit> defenders = units.ConvertAll(preview => preview.Unit)
-                                    .FindAll(unit => unit != null);
+            List<DefenderUnit> defenders = new();
+            units.ForEach(preview =>
+            {
+                if (preview.IsInHiringProcess)
+                {
+                    preview.IsInBarrack = true;
+                }
+                else
+                {
+                    defenders.Add(preview.Unit);
+                }
+            });
+            
             if (defenders.Count > 0)
             {
                 _defendersController.SendDefendersToBarrack(defenders, SelectedTileModel);
@@ -97,8 +112,19 @@ namespace Code.TileSystem
 
         public void KickoutFromBarrack(List<DefenderPreview> units)
         {
-            List<DefenderUnit> defenders = units.ConvertAll(preview => preview.Unit)
-                .FindAll(unit => unit != null);
+            List<DefenderUnit> defenders = new();
+            units.ForEach(preview =>
+            {
+                if (preview.IsInHiringProcess)
+                {
+                    preview.IsInBarrack = false;
+                }
+                else
+                {
+                    defenders.Add(preview.Unit);
+                }
+            });
+
             if (defenders.Count > 0)
             {
                 _defendersController.KickDefendersOutOfBarrack(defenders, SelectedTileModel);
@@ -153,9 +179,14 @@ namespace Code.TileSystem
             DefenderSettings settings)
         {
             DefenderUnit defender = _defendersController.CreateDefender(tile, settings);
-            defenderPreview.Unit = defender;
+            bool isInBarrack = defenderPreview.IsInBarrack;
             defender.Tile = tile;
             defender.DefenderUnitDead += DefenderDead;
+            if (isInBarrack)
+            {
+                _defendersController.SendDefenderToBarrack(defender, tile);
+            }
+            defenderPreview.Unit = defender;
         }
 
         #region ITileLoadInfo
@@ -226,7 +257,19 @@ namespace Code.TileSystem
             _hireUnitView.Hide();
             _isHireDefenderPenelOpened = false;
         }
+
+        private void CancelHiring(DefenderPreview defender)
+        {
+            _paymentSystem.ReturnCostForCancelHireDefender(defender.Settings.HireCost);
+            _hireProgressManager.StopDefenderHiringProcess(defender);
+        }
  
+        private void DismissDefenderInstance(DefenderPreview defender)
+        {
+            DefenderUnit unit = defender.Unit;
+            unit.DefenderUnitDead -= DefenderDead;
+            _defendersController.DismissDefender(unit);
+        }
         
     }
 }

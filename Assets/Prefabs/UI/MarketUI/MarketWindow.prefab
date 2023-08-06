@@ -4706,7 +4706,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _itemPlacement: {fileID: 535509946131136301}
-  _isBlockEnabled: 0
+  _isBlockEnabled: 1
   _blockPannel: {fileID: 535509944842954131}
   _blockInfoText: {fileID: 535509945187170156}
 --- !u!1 &535509946320621264
