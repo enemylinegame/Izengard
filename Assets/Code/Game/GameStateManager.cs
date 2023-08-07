@@ -8,14 +8,19 @@ namespace Code.Game
         private const int GAME_SCENE_ID = 1;
 
 
-        
+
+
+        public void RestartGame()
+        {
+            SceneManager.LoadScene(GAME_SCENE_ID);
+        }
         
         public void SwitchToGame()
         {
             SceneManager.LoadScene(GAME_SCENE_ID);
         }
 
-        private void SwitchToMainMenu()
+        public void SwitchToMainMenu()
         {
             SceneManager.LoadScene(MAIN_MENU_SCENE_ID);
         }

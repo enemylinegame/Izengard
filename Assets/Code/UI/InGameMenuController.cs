@@ -8,20 +8,19 @@ namespace Code.UI
 {
     public class InGameMenuController : IDisposable
     {
-        private readonly int _mainMenuSceneId = 0;
-        private readonly int _gameSceneId = 1;
-
         private readonly InGameMenuUI _inGameMenuUI;
         private readonly PauseManager _pauseManager;
+        private readonly GameStateManager _gameStateManager;
         private readonly KeyInputController _keyInputController;
 
         private bool _isPauseMode;
 
-        public InGameMenuController(InGameMenuUI inGameMenuUI, PauseManager pauseManager,
-            KeyInputController keyInputController)
+        public InGameMenuController(InGameMenuUI inGameMenuUI, PauseManager pauseManager, 
+            GameStateManager gameStateManager, KeyInputController keyInputController)
         {
             _inGameMenuUI = inGameMenuUI;
             _pauseManager = pauseManager;
+            _gameStateManager = gameStateManager;
             _keyInputController = keyInputController;
             _keyInputController.OnCancelAxisClick += OnCancelButtonClick;
             _inGameMenuUI.ContinueButton.onClick.AddListener(OnContinueButtonClick);
@@ -50,13 +49,13 @@ namespace Code.UI
         private void OnRestartButtonClick()
         {
             OffPauseMode();
-            SceneManager.LoadScene(_gameSceneId);
+            _gameStateManager.RestartGame();
         }
 
         private void OnQuitButtonClick()
         {
             OffPauseMode();
-            SceneManager.LoadScene(_mainMenuSceneId);
+            _gameStateManager.SwitchToMainMenu();
         }
 
         private void OnSettingsButtonClick()

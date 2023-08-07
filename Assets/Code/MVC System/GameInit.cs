@@ -51,7 +51,7 @@ public class GameInit
         var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, hireSystemView, levelGenerator);
         var bulletsController = new BulletsController();
         var waveController = new WaveController(levelGenerator, uiController, btnParents, gameConfig, bulletsController, enemyDestroyObserver, buildingController);
-        var endGameController = new EndGameController(endGameScreen, levelGenerator);
+        var endGameController = new EndGameController(gameStateManager, endGameScreen, levelGenerator);
         var renovationOfTheCentralBuilding = new LevelOfLifeButtonsCustomizer(uiController.CenterUI.BaseNotificationUI, globalResStock, uiController.BottomUI.TileUIView, levelGenerator, buildingController);
 
         var workersTeamComtroller = new WorkersTeamController(workersTeamConfig);
@@ -65,7 +65,7 @@ public class GameInit
         var hireDefendersManager = new HireDefenderProgressManager();
         var defendersAssignController = new DefendersManager(tileController, defenderController, uiController, hireUnitView, gameConfig.DefendersSets, paymentDefendersSystem, hireDefendersManager);
         inputController.Add(defendersAssignController);
-        var inGameMenuController = new InGameMenuController(inGameMenuUI, pauseManager, keyInputController);
+        var inGameMenuController = new InGameMenuController(inGameMenuUI, pauseManager, gameStateManager, keyInputController);
 
         if (!gameConfig.ChangeVariant) new ResourceGenerator(/*buildController.Buildings, */gameConfig, levelGenerator, buildingController);
         else new ResourceGenerator(/*.Buildings, */gameConfig, levelGenerator, buildingController, 2);
