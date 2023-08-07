@@ -6,6 +6,7 @@ public class Controller
     public const string updateMethod = "OnUpdate";
     public const string fixedUpdateMethod = "OnFixedUpdate";
     public const string lateUpdate = "OnLateUpdate";
+    public const string onDisableItself = "OnDisableItself";
     
     private List<IOnStart> _onStarts = new List<IOnStart>();
     private List<IOnUpdate> _onUpdates = new List<IOnUpdate>();
@@ -91,7 +92,7 @@ public class Controller
     {
         foreach (var ell in _onDisables)
         {
-            if (ell.HasMethod(startMethod))
+            if (ell.HasMethod(onDisableItself))
             {
                 ell.OnDisableItself();
             }
