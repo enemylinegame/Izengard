@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Audio_System;
+using UnityEngine;
 using UnityEngine.Audio;
 
 namespace StartupMenu
@@ -9,18 +10,20 @@ namespace StartupMenu
         [SerializeField] private ScriptableObject _baseSettings;
         [Space(10)]
         [SerializeField] private AudioMixer _audioMixer;
-        [SerializeField] private AudioSource _clickAudioSource;
+        [SerializeField] private AudioPresenter _audioPresenter;
+        [SerializeField] private SoundConfig _mainMusic;
 
         private StartupMenuController _startupMenuController;
-
+        
         private void Start()
         {
             _startupMenuController 
                 = new StartupMenuController(
                     _placeForUI, 
                     (ISettingsData)_baseSettings, 
-                    _audioMixer, 
-                    _clickAudioSource);
+                    _audioMixer,
+                    _audioPresenter,
+                    _mainMusic);
         }
 
 

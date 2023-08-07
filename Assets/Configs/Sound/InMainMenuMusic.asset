@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbc648cae46c31041a69c0136fa00869, type: 3}
   m_Name: InMainMenuMusic
   m_EditorClassIdentifier: 
-  _soundCode: 111
+  _audioSourceCode: 1
   _clip: {fileID: 8300000, guid: 103bd8880ce694d49af4c27a2605fc71, type: 3}
   _volume: 1
   _pitch: 1

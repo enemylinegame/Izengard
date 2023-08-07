@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbc648cae46c31041a69c0136fa00869, type: 3}
   m_Name: InGameMusic
   m_EditorClassIdentifier: 
-  _soundCode: 123
+  _audioSourceCode: 1
   _clip: {fileID: 8300000, guid: c407c4b4aceae774f986dbb6b4ce203c, type: 3}
   _volume: 1
   _pitch: 1

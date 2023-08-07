@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Audio_System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,18 +30,19 @@ namespace StartupMenu
         [SerializeField] private Slider _voiceVolumeSlider;
         [SerializeField] private Slider _effectsVolumeSlider;
 
-        private AudioSource _clickAudioSource;
+        [Space(5)]
+        [SerializeField] private SoundConfig _clickSound;
+
         private List<Resolution> _resolutions;
-        
+
+        public ISound ClickSound => _clickSound;
+
         public void Init(
             IDictionary<SettingsMenuActionType, Action> settingsMenuActions,
             IDictionary<GameSettingsType, Action<object>> actionsDictionary,
             ISettingsData baseData,
-            IList<Resolution> resolutions,
-            AudioSource clickAudioSource)
+            IList<Resolution> resolutions)
         {
-            _clickAudioSource = clickAudioSource;
-
             Subscribe(settingsMenuActions, actionsDictionary);
 
             SetupVolumeSliders(baseData);
@@ -55,17 +57,11 @@ namespace StartupMenu
             _applySettingsButton.onClick
                 .AddListener(() => settingsMenuActions[SettingsMenuActionType.ApplySettings]?.Invoke());
 
-            _applySettingsButton.onClick.AddListener(PlayClickSound);
-
             _restoreToDefaultsButton.onClick
                 .AddListener(() => settingsMenuActions[SettingsMenuActionType.RestoreSettings]?.Invoke());
 
-            _restoreToDefaultsButton.onClick.AddListener(PlayClickSound);
-
             _backToMenuButton.onClick
                 .AddListener(() => settingsMenuActions[SettingsMenuActionType.BackToMenu]?.Invoke());
-
-            _backToMenuButton.onClick.AddListener(PlayClickSound);
 
             SuscribeViewObjcetToAction(_resolutionDropdown, actionsDictionary[GameSettingsType.Resolution]);
             SuscribeViewObjcetToAction(_shadowDropdown, actionsDictionary[GameSettingsType.ShadowQuality]);
@@ -76,10 +72,6 @@ namespace StartupMenu
             SuscribeViewObjcetToAction(_voiceVolumeSlider, actionsDictionary[GameSettingsType.VoiceVolume]);
             SuscribeViewObjcetToAction(_effectsVolumeSlider, actionsDictionary[GameSettingsType.EffectsVolume]);
         }
-
-        private void PlayClickSound() 
-            => _clickAudioSource.Play();
-
 
         private void SuscribeViewObjcetToAction(MonoBehaviour signableObject, Action<object> action)
         {

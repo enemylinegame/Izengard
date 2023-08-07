@@ -3,19 +3,28 @@ using UnityEngine;
 
 namespace Audio_System
 {
-
     public class AudioController : IAudioController, IMusicPlayer, IAudioPlayer
     {
-        private readonly AudioSource _musicAudioSource;
+        private readonly Dictionary<int, AudioSource> _audioSources;
 
         private readonly Dictionary<int, AudioSourceData> _sourceMedia;
 
-        public AudioController(AudioManager audioManager)
-        {
-            _musicAudioSource = audioManager.MusicAudioSource;
-            _sourceMedia = new Dictionary<int, AudioSourceData>();
-        }
+        private readonly AudioPresenter _presenter;
 
+        private int soundCodeIndex;
+
+        public AudioController(AudioPresenter presenter)
+        {
+            _presenter = presenter;
+
+            _audioSources = new Dictionary<int, AudioSource>();
+            _sourceMedia = new Dictionary<int, AudioSourceData>();
+
+            RegisterSoundSource(_presenter.GloabalMusicSource);
+            RegisterSoundSource(_presenter.GloabalUISource);
+
+            soundCodeIndex = 0;
+        }
 
         #region IAudioController
 
@@ -67,6 +76,11 @@ namespace Audio_System
             set => throw new System.NotImplementedException();
         }
 
+        public void RegisterSoundSource(ISoundSource source)
+        {
+            AddSourceToCollection(source);
+        }
+
 
         #endregion
 
@@ -76,9 +90,10 @@ namespace Audio_System
         {
             ScanForEndedSources();
 
-            _musicAudioSource.clip = sound.Clip;
+            soundCodeIndex++;
 
-            var source = _musicAudioSource;
+            var source = _audioSources[sound.AudioSourceCode];
+
             source.clip = sound.Clip;
             source.volume = sound.Volume;
             source.pitch = sound.Pitch;
@@ -89,7 +104,7 @@ namespace Audio_System
             var mediaData = new AudioSourceData
             {
                 Source = source,
-                SoundCode = sound.SoundCode,
+                SoundCode = soundCodeIndex,
                 Volume = sound.Volume,
                 OnPause = false,
                 Is3DSound = false,
@@ -99,9 +114,9 @@ namespace Audio_System
 
             source.Play();
 
-            _sourceMedia.Add(mediaData.SoundCode, mediaData);
+            _sourceMedia.Add(soundCodeIndex, mediaData);
 
-            return mediaData.SoundCode;
+            return soundCodeIndex;
         }
 
         void IMusicPlayer.StopSound(int audioCode)
@@ -157,14 +172,71 @@ namespace Audio_System
         {
             ScanForEndedSources();
 
-            return 0;
+            soundCodeIndex++;
+
+            var source = _audioSources[sound.AudioSourceCode];
+
+            source.clip = sound.Clip;
+            source.volume = sound.Volume;
+            source.pitch = sound.Pitch;
+            source.loop = sound.IsLoop;
+            source.priority = 0;
+            source.spatialBlend = 0;
+
+            var mediaData = new AudioSourceData
+            {
+                Source = source,
+                SoundCode = soundCodeIndex,
+                Volume = sound.Volume,
+                OnPause = false,
+                Is3DSound = false,
+                IsMusic = false,
+                SourceRequestedPos = Vector3.one,
+            };
+
+            source.Play();
+
+            _sourceMedia.Add(soundCodeIndex, mediaData);
+
+            return soundCodeIndex;
         }
  
         int IAudioPlayer.PlaySound3D(ISound sound, Vector3 position, float maxSoundDistance)
         {
             ScanForEndedSources();
 
-            return 0;
+            soundCodeIndex++;
+
+            var source = _audioSources[sound.AudioSourceCode];
+
+            source.clip = sound.Clip;
+            source.volume = sound.Volume;
+            source.pitch = sound.Pitch;
+            source.loop = sound.IsLoop;
+
+            source.spatialBlend = 1;
+
+            source.minDistance = 0.4f;
+            source.rolloffMode = AudioRolloffMode.Logarithmic;
+            source.maxDistance = maxSoundDistance;
+
+            var mediaData = new AudioSourceData
+            {
+                Source = source,
+                SoundCode = soundCodeIndex,
+                Volume = sound.Volume,
+                OnPause = false,
+                Is3DSound = true,
+                IsMusic = false,
+                SourceRequestedPos = position,
+                CachedTransform = source.transform
+            };
+
+            source.Play();
+
+            _sourceMedia.Add(soundCodeIndex, mediaData);
+
+            return soundCodeIndex;
         }
 
         void IAudioPlayer.StopSound(int audioCode)
@@ -198,6 +270,14 @@ namespace Audio_System
 
         #endregion
 
+        private void AddSourceToCollection(ISoundSource source)
+        {
+            if (_audioSources.ContainsKey(source.SourceCode))
+                return;
+
+            _audioSources[source.SourceCode] = source.AudioSource;
+        }
+
         private void ScanForEndedSources()
         {
             var toDispose = new Dictionary<int, AudioSourceData>();
@@ -226,8 +306,10 @@ namespace Audio_System
 
         public void Dispose()
         {
+            _audioSources.Clear();
             _sourceMedia.Clear();
         }
 
+    
     }
 }

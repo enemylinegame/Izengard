@@ -6,7 +6,8 @@ namespace Audio_System
         menuName = "Audio Data/" + nameof(SoundConfig))]
     public class SoundConfig : ScriptableObject, ISound
     {
-        [SerializeField] private int _soundCode = 1234;
+        
+        [SerializeField] private int _audioSourceCode = 1234;
         
         [Space(10)]
         [SerializeField] private AudioClip _clip;
@@ -15,11 +16,13 @@ namespace Audio_System
         [Range(0.5f, 2f)]
         [SerializeField] private float _pitch = 1;
         [SerializeField] private bool _isLoop;
-
-        public int SoundCode => _soundCode;
+        
+        public int AudioSourceCode => _audioSourceCode;
         public AudioClip Clip => _clip;
         public float Volume => _volume;
         public float Pitch => _pitch;
         public bool IsLoop => _isLoop;
+
+     
     }
 }

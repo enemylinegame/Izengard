@@ -13,5 +13,7 @@ namespace Audio_System
         float MusicVolume { get; set; }
         float VoiceVolume { get; set; }
         float EffectsVolume { get; set; }
+
+        void RegisterSoundSource(ISoundSource source);
     }
 }

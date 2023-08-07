@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Audio_System;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -11,9 +12,13 @@ namespace StartupMenu
 
         private readonly GameSettingsManager _settingsManager;
         private readonly StateModel _menuMonitor;
+        private readonly IAudioPlayer _audioPlayer;
+
+        private readonly ISound _clickSound;
 
         private Dictionary<SettingsMenuActionType, Action> _settingsMenuActions;
         private Dictionary<GameSettingsType, Action<object>> _changeSettingsActions;
+
 
         private SettingsMenuView _view;
 
@@ -24,10 +29,11 @@ namespace StartupMenu
             GameSettingsManager settingsManager,
             ISettingsData baseSettings,
             StateModel menuMonitor,
-            AudioSource clickSource)
+            IAudioPlayer audioPlayer)
         {
             _settingsManager = settingsManager;
             _menuMonitor = menuMonitor;
+            _audioPlayer = audioPlayer;
 
             _settingsMenuActions = GetMenuActions();
             _changeSettingsActions = GetSettingsAction();
@@ -38,11 +44,12 @@ namespace StartupMenu
                 _settingsMenuActions, 
                 _changeSettingsActions, 
                 baseSettings, 
-                _settingsManager.ResolutionList, 
-                clickSource);
+                _settingsManager.ResolutionList);
 
             _view.UpdateViewOptions(_settingsManager.GameSttingsModel);
 
+            _clickSound = _view.ClickSound;
+     
             _isSettingsChanged = false;
         }
         
@@ -92,6 +99,8 @@ namespace StartupMenu
 
         private void ApplySettings()
         {
+            PlayClickSound();
+
             _settingsManager.SaveGameSettings();
 
             _isSettingsChanged = true;
@@ -99,6 +108,8 @@ namespace StartupMenu
 
         private void RestoreToDefautls()
         {
+            PlayClickSound();
+
             _settingsManager.RestoreGameSettings();
             _view.UpdateViewOptions(_settingsManager.GameSttingsModel);
 
@@ -107,13 +118,20 @@ namespace StartupMenu
 
         private void BackToMenu()
         {
-            if(_isSettingsChanged != true)
+            PlayClickSound();
+
+            if (_isSettingsChanged != true)
             {
                 _settingsManager.LoadGameSettings();
                 _view.UpdateViewOptions(_settingsManager.GameSttingsModel);
             }
 
             _menuMonitor.CurrentState = MenuState.Start;
+        }
+
+        private void PlayClickSound()
+        {
+            _audioPlayer.PlaySound2D(_clickSound);
         }
 
         #endregion
