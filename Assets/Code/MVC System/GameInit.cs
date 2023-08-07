@@ -71,6 +71,7 @@ public class GameInit
 
         inputController.Add(defendersAssignController);
         controller.Add(timeRemaining);
+        controller.Add(uiController);
         controller.Add(workersTeamComtroller);
         controller.Add(btnConroller);
         controller.Add(levelGenerator);
