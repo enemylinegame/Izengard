@@ -7,7 +7,7 @@ namespace Code.Game
     public class GameStateManager
     {
 
-        public Action OnDispose;
+        public Action OnDisable;
         
         private const int MAIN_MENU_SCENE_ID = 0;
         private const int GAME_SCENE_ID = 1;
@@ -21,7 +21,7 @@ namespace Code.Game
             {
                 OffPause();
             }
-            OnDispose?.Invoke();
+            OnDisable?.Invoke();
             SceneManager.LoadScene(GAME_SCENE_ID);
         }
 
@@ -31,7 +31,7 @@ namespace Code.Game
             {
                 OffPause();
             }
-            OnDispose?.Invoke();
+            OnDisable?.Invoke();
             SceneManager.LoadScene(GAME_SCENE_ID);
         }
 
@@ -41,7 +41,7 @@ namespace Code.Game
             {
                 OffPause();
             }
-            OnDispose?.Invoke();
+            OnDisable?.Invoke();
             SceneManager.LoadScene(MAIN_MENU_SCENE_ID);
         }
 

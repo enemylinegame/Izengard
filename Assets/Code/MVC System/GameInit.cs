@@ -89,7 +89,7 @@ public class GameInit
         controller.Add(hireDefendersManager);
         controller.Add(keyInputController);
 
-        gameStateManager.OnDispose += controller.OnDisable;
+        gameStateManager.OnDisable += controller.OnDisable;
 
         // var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
         // controller.Add(testDummyTargetController);
