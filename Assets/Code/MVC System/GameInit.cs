@@ -30,6 +30,7 @@ public class GameInit
         var outlineController = new OutlineController(outLineSettings);
         var globalResStock = new GlobalStock(globalResourceList, topResUiVew);
         var btnConroller = new BtnUIController(rightUI, gameConfig);
+        var gameStateManager = new GameStateManager();
         var pauseManager = new PauseManager();
         var inputController = new InputController(outlineController);
         var keyInputController = new KeyInputController();
