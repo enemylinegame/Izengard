@@ -1,10 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Code.Game
 {
     public class GameStateManager
     {
+
+        public Action OnDispose;
+        
         private const int MAIN_MENU_SCENE_ID = 0;
         private const int GAME_SCENE_ID = 1;
 
@@ -17,6 +21,7 @@ namespace Code.Game
             {
                 OffPause();
             }
+            OnDispose?.Invoke();
             SceneManager.LoadScene(GAME_SCENE_ID);
         }
 
@@ -26,6 +31,7 @@ namespace Code.Game
             {
                 OffPause();
             }
+            OnDispose?.Invoke();
             SceneManager.LoadScene(GAME_SCENE_ID);
         }
 
@@ -35,6 +41,7 @@ namespace Code.Game
             {
                 OffPause();
             }
+            OnDispose?.Invoke();
             SceneManager.LoadScene(MAIN_MENU_SCENE_ID);
         }
 

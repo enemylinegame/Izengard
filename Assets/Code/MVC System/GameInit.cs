@@ -70,11 +70,11 @@ public class GameInit
         else new ResourceGenerator(/*.Buildings, */gameConfig, levelGenerator, buildingController, 2);
 
         inputController.Add(defendersAssignController);
+        controller.Add(timeRemaining);
         controller.Add(workersTeamComtroller);
         controller.Add(btnConroller);
         controller.Add(levelGenerator);
         controller.Add(buildingController);
-        controller.Add(timeRemaining);
         controller.Add(unitController);
         controller.Add(inputController);
         controller.Add(waveController);
@@ -87,6 +87,8 @@ public class GameInit
         controller.Add(marketController);
         controller.Add(hireDefendersManager);
         controller.Add(keyInputController);
+
+        gameStateManager.OnDispose += controller.OnDisable;
 
         // var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
         // controller.Add(testDummyTargetController);
