@@ -9,17 +9,15 @@ namespace Code.UI
     public class InGameMenuController : IDisposable
     {
         private readonly InGameMenuUI _inGameMenuUI;
-        private readonly PauseManager _pauseManager;
         private readonly GameStateManager _gameStateManager;
         private readonly KeyInputController _keyInputController;
 
         private bool _isPauseMode;
 
-        public InGameMenuController(InGameMenuUI inGameMenuUI, PauseManager pauseManager, 
+        public InGameMenuController(InGameMenuUI inGameMenuUI,  
             GameStateManager gameStateManager, KeyInputController keyInputController)
         {
             _inGameMenuUI = inGameMenuUI;
-            _pauseManager = pauseManager;
             _gameStateManager = gameStateManager;
             _keyInputController = keyInputController;
             _keyInputController.OnCancelAxisClick += OnCancelButtonClick;
@@ -68,7 +66,7 @@ namespace Code.UI
             if (!_isPauseMode)
             {
                 _inGameMenuUI.RootGameObject.SetActive(true);
-                _pauseManager.OnPause();
+                _gameStateManager.OnPause();
                 _isPauseMode = true;
             }
         }
@@ -78,7 +76,7 @@ namespace Code.UI
             if (_isPauseMode)
             {
                 _inGameMenuUI.RootGameObject.SetActive(false);
-                _pauseManager.OffPause();
+                _gameStateManager.OffPause();
                 _isPauseMode = false;
             }
         }

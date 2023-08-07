@@ -31,7 +31,6 @@ public class GameInit
         var globalResStock = new GlobalStock(globalResourceList, topResUiVew);
         var btnConroller = new BtnUIController(rightUI, gameConfig);
         var gameStateManager = new GameStateManager();
-        var pauseManager = new PauseManager();
         var inputController = new InputController(outlineController);
         var keyInputController = new KeyInputController();
         var uiController = new UIController(rightUI, bottomUI, centerUI, inputController, marketView);
@@ -65,7 +64,7 @@ public class GameInit
         var hireDefendersManager = new HireDefenderProgressManager();
         var defendersAssignController = new DefendersManager(tileController, defenderController, uiController, hireUnitView, gameConfig.DefendersSets, paymentDefendersSystem, hireDefendersManager);
         inputController.Add(defendersAssignController);
-        var inGameMenuController = new InGameMenuController(inGameMenuUI, pauseManager, gameStateManager, keyInputController);
+        var inGameMenuController = new InGameMenuController(inGameMenuUI, gameStateManager, keyInputController);
 
         if (!gameConfig.ChangeVariant) new ResourceGenerator(/*buildController.Buildings, */gameConfig, levelGenerator, buildingController);
         else new ResourceGenerator(/*.Buildings, */gameConfig, levelGenerator, buildingController, 2);
