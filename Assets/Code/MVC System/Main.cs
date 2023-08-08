@@ -37,6 +37,7 @@ public class Main : MonoBehaviour
     [Header("Other")]
     [SerializeField] private Transform _btnParents;
     [SerializeField] private Camera _screenCamera;
+    [SerializeField] private AudioSource _clickAudioSource;
     
     private Controller _controllers;
 
@@ -49,7 +50,7 @@ public class Main : MonoBehaviour
             _topUI, _endGameScreen, _towerShotConfig,
             _buyItemScreenView, _hireSystemView, _equipScreenView, 
             _screenCamera, _tileList, _globalResourceList, _outLineSettings,
-            _marketDataConfig, _marketUI, _recoberCostCenter, _inGameMenuUI);
+            _marketDataConfig, _marketUI, _recoberCostCenter, _inGameMenuUI, _clickAudioSource);
 
         _controllers.OnStart();
     }

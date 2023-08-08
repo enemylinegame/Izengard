@@ -2,7 +2,7 @@
 using Code.Game;
 using Code.Player;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
 
 namespace Code.UI
 {
@@ -11,11 +11,12 @@ namespace Code.UI
         private readonly InGameMenuUI _inGameMenuUI;
         private readonly GameStateManager _gameStateManager;
         private readonly KeyInputController _keyInputController;
+        private readonly SoundPlayer _soundPlayer;
 
         private bool _isPauseMode;
 
         public InGameMenuController(InGameMenuUI inGameMenuUI,  
-            GameStateManager gameStateManager, KeyInputController keyInputController)
+            GameStateManager gameStateManager, KeyInputController keyInputController, SoundPlayer soundPlayer)
         {
             _inGameMenuUI = inGameMenuUI;
             _gameStateManager = gameStateManager;
@@ -25,6 +26,7 @@ namespace Code.UI
             _inGameMenuUI.RestartButton.onClick.AddListener(OnRestartButtonClick);
             _inGameMenuUI.QuitButton.onClick.AddListener(OnQuitButtonClick);
             _inGameMenuUI.SettingsButton.onClick.AddListener(OnSettingsButtonClick);
+            _soundPlayer = soundPlayer;
         }
 
         private void OnCancelButtonClick()
@@ -41,23 +43,27 @@ namespace Code.UI
 
         private void OnContinueButtonClick()
         {
+            _soundPlayer.PlayClickSound();
             OffPauseMode();
         }
 
         private void OnRestartButtonClick()
         {
+            _soundPlayer.PlayClickSound();
             OffPauseMode();
             _gameStateManager.RestartGame();
         }
 
         private void OnQuitButtonClick()
         {
+            _soundPlayer.PlayClickSound();
             OffPauseMode();
             _gameStateManager.SwitchToMainMenu();
         }
 
         private void OnSettingsButtonClick()
         {
+            _soundPlayer.PlayClickSound();
             Debug.Log("InGameMenuController->OnSettingsButtonClick:");
         }
 

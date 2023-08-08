@@ -22,7 +22,7 @@ public class GameInit
         HireSystemView hireSystemView, EquipScreenView equipScreenView, Camera camera, TileList tileList,
         GlobalResourceData globalResourceList, OutLineSettings outLineSettings, MarketDataConfig marketData, 
         MarketView marketView, RepairAndRecoberCostCenterBuilding repairAndRecoberCostCenterBuilding, 
-        InGameMenuUI inGameMenuUI)
+        InGameMenuUI inGameMenuUI, AudioSource clickAudioSource)
     {
         //TODO Do not change the structure of the script
         var tiles = GetTileList.GetTiles(gameConfig);
@@ -33,6 +33,7 @@ public class GameInit
         var gameStateManager = new GameStateManager();
         var inputController = new InputController(outlineController);
         var keyInputController = new KeyInputController();
+        var soundPlayer = new SoundPlayer(clickAudioSource);
         var uiController = new UIController(rightUI, bottomUI, centerUI, inputController, marketView);
 
         var levelGenerator = new GeneratorLevelController(tiles, gameConfig, btnConroller, btnParents, uiController);
@@ -64,7 +65,7 @@ public class GameInit
         var hireDefendersManager = new HireDefenderProgressManager();
         var defendersAssignController = new DefendersManager(tileController, defenderController, uiController, hireUnitView, gameConfig.DefendersSets, paymentDefendersSystem, hireDefendersManager);
         inputController.Add(defendersAssignController);
-        var inGameMenuController = new InGameMenuController(inGameMenuUI, gameStateManager, keyInputController);
+        var inGameMenuController = new InGameMenuController(inGameMenuUI, gameStateManager, keyInputController, soundPlayer);
 
         if (!gameConfig.ChangeVariant) new ResourceGenerator(/*buildController.Buildings, */gameConfig, levelGenerator, buildingController);
         else new ResourceGenerator(/*.Buildings, */gameConfig, levelGenerator, buildingController, 2);
