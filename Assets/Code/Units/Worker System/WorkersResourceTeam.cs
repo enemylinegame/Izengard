@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class WorkersResourceTeam : IOnUpdate
+public sealed class WorkersResourceTeam : IOnUpdate
 {
     public Action<int> OnMissionCompleted = delegate{ };
 
@@ -74,7 +74,7 @@ public class WorkersResourceTeam : IOnUpdate
             return null;
 
         if (null != work.Preparation)
-            work.Preparation.AfterWork();
+            work.Preparation.Stop();
 
         var worker = work.Worker;
         work.Task.Dispose();

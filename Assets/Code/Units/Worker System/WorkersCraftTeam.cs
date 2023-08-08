@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class WorkersCraftTeam : IOnUpdate, IOnController
+public sealed class WorkersCraftTeam : IOnUpdate, IOnController
 {
     public WorkersCraftTeam()
     {
@@ -71,7 +71,7 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
             return null;
 
         if (null != workingWorker.Preparation)
-            workingWorker.Preparation.AfterWork();
+            workingWorker.Preparation.Stop();
 
         var worker = workingWorker.Worker;
 
@@ -94,7 +94,14 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
         CheckReadyWorkers();
 
         foreach (var work in _workingWorkers)
+        {
             work.Value.Work.Produce(deltaTime);
+
+            if (work.Value.Work.IsProductionSuccess)
+                work.Value.Preparation.Begin();
+            else
+                work.Value.Preparation.Stop();
+        }
     }
 
     private void CheckReadyWorkers()
@@ -107,7 +114,7 @@ public class WorkersCraftTeam : IOnUpdate, IOnController
                 work.Worker.OnMissionCompleted -= OnReadyToWork;
                 
                 if (null != work.Preparation)
-                    work.Preparation.BeforWork();
+                    work.Preparation.Begin();
 
                 _workersAreGoingToWork.Remove(workerId);
                 _workingWorkers.Add(workerId, work);

@@ -2,6 +2,6 @@
 
 public interface IWorkerPreparation
 {
-    void BeforWork();
-    void AfterWork();
+    void Begin();
+    void Stop();
 }

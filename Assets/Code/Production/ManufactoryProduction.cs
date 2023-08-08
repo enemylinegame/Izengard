@@ -10,6 +10,7 @@ public sealed class ManufactoryProduction : IWorkerWork
     private GlobalStock _globalStock;
     private Prescription _prescription;
     private IPlayerNotifier _notifier;
+    private bool _isProductionSuccess;
 
     private struct DeficitDescription
     {
@@ -32,12 +33,13 @@ public sealed class ManufactoryProduction : IWorkerWork
 
         _deficitResources = new List<DeficitDescription>();
         _lastDeficitResources = new List<DeficitDescription>();
+
+        _isProductionSuccess = true;
     }
 
-    public void Produce(float deltaTime)
+    public bool Produce(float deltaTime)
     {
         _produced += deltaTime * _productionEfficiency;
-
         if (_produced > _prescription.ResultAmount)
         {
             _produced -= _prescription.ResultAmount;
@@ -49,15 +51,23 @@ public sealed class ManufactoryProduction : IWorkerWork
                 UtilizeResources(_prescription);
                 _globalStock.AddResourceToStock(_prescription.TargetResource,
                     _prescription.ResultAmount);
+                _isProductionSuccess = true;
             }
             else
             {
-                _produced = 0;
+                _produced = 0.0f;
                 NotifyPlayer(_deficitResources);
+                _isProductionSuccess = false;
             }
             ExchangeLists(ref _deficitResources, ref _lastDeficitResources);
             _deficitResources.Clear();
         }
+        return _isProductionSuccess;
+    }
+
+    public bool IsProductionSuccess
+    {
+        get => _isProductionSuccess;
     }
 
     private void AppendDeficitFormat(StringBuilder message, 

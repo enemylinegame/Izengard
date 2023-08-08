@@ -13,7 +13,7 @@ public class HouseAnimation : MonoBehaviour, IWorkerPreparation
         _particleSystem.SetActive(false);
     }
 
-    public void AfterWork()
+    public void Stop()
     {
         if (0 == _workersCount)
             return;
@@ -24,7 +24,7 @@ public class HouseAnimation : MonoBehaviour, IWorkerPreparation
             _particleSystem.SetActive(false);
     }
 
-    public void BeforWork()
+    public void Begin()
     {
         if (0 == _workersCount)
             _particleSystem.SetActive(true);

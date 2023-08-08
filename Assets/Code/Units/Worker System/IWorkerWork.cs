@@ -2,6 +2,7 @@
 
 public interface IWorkerWork
 {
-    void Produce(float deltaTime);
+    bool Produce(float deltaTime);
+    bool IsProductionSuccess { get; }
     void Dispose();
 }
