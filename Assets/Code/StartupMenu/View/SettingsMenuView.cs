@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace StartupMenu 
@@ -33,41 +33,75 @@ namespace StartupMenu
         private List<Resolution> _resolutions;
         
         public void Init(
-            SettingsMenuController controller,
+            IDictionary<SettingsMenuActionType, Action> settingsMenuActions,
+            IDictionary<GameSettingsType, Action<object>> actionsDictionary,
             ISettingsData baseData,
             IList<Resolution> resolutions,
             AudioSource clickAudioSource)
         {
             _clickAudioSource = clickAudioSource;
 
-            _applySettingsButton.onClick.AddListener(controller.ApplySettings);
-            _applySettingsButton.onClick.AddListener(PlayClickSound);
-
-            _restoreToDefaultsButton.onClick.AddListener(controller.RestoreToDefautls);
-            _restoreToDefaultsButton.onClick.AddListener(PlayClickSound);
-
-            _backToMenuButton.onClick.AddListener(controller.BackToMenu);
-            _backToMenuButton.onClick.AddListener(PlayClickSound);
-
-            _resolutionDropdown.onValueChanged.AddListener(controller.OnResolutionChange);
-            _shadowDropdown.onValueChanged.AddListener(controller.OnShadowChange);
-
-            _fullScreenToggle.onValueChanged.AddListener(controller.OnFullScreenChange);
-            _vsyncToggle.onValueChanged.AddListener(controller.OnVSyncChange);
-
-            _masterVolumeSlider.onValueChanged.AddListener(controller.OnMasterVolumeChange);
-            _musicVolumeSlider.onValueChanged.AddListener(controller.OnMusicVolumeChange);
-            _voiceVolumeSlider.onValueChanged.AddListener(controller.OnVoiceVolumeChange);
-            _effectsVolumeSlider.onValueChanged.AddListener(controller.OnEffectsVolumeChange);
+            Subscribe(settingsMenuActions, actionsDictionary);
 
             SetupVolumeSliders(baseData);
 
             CreateResolutions(resolutions);
         }
 
+        private void Subscribe(
+            IDictionary<SettingsMenuActionType, Action> settingsMenuActions, 
+            IDictionary<GameSettingsType, Action<object>> actionsDictionary)
+        {
+            _applySettingsButton.onClick
+                .AddListener(() => settingsMenuActions[SettingsMenuActionType.ApplySettings]?.Invoke());
+
+            _applySettingsButton.onClick.AddListener(PlayClickSound);
+
+            _restoreToDefaultsButton.onClick
+                .AddListener(() => settingsMenuActions[SettingsMenuActionType.RestoreSettings]?.Invoke());
+
+            _restoreToDefaultsButton.onClick.AddListener(PlayClickSound);
+
+            _backToMenuButton.onClick
+                .AddListener(() => settingsMenuActions[SettingsMenuActionType.BackToMenu]?.Invoke());
+
+            _backToMenuButton.onClick.AddListener(PlayClickSound);
+
+            SuscribeViewObjcetToAction(_resolutionDropdown, actionsDictionary[GameSettingsType.Resolution]);
+            SuscribeViewObjcetToAction(_shadowDropdown, actionsDictionary[GameSettingsType.ShadowQuality]);
+            SuscribeViewObjcetToAction(_fullScreenToggle, actionsDictionary[GameSettingsType.FullScreenMode]);
+            SuscribeViewObjcetToAction(_vsyncToggle, actionsDictionary[GameSettingsType.VSyncMode]);
+            SuscribeViewObjcetToAction(_masterVolumeSlider, actionsDictionary[GameSettingsType.MasterVolume]);
+            SuscribeViewObjcetToAction(_musicVolumeSlider, actionsDictionary[GameSettingsType.MusicVolume]);
+            SuscribeViewObjcetToAction(_voiceVolumeSlider, actionsDictionary[GameSettingsType.VoiceVolume]);
+            SuscribeViewObjcetToAction(_effectsVolumeSlider, actionsDictionary[GameSettingsType.EffectsVolume]);
+        }
+
         private void PlayClickSound() 
             => _clickAudioSource.Play();
 
+
+        private void SuscribeViewObjcetToAction(MonoBehaviour signableObject, Action<object> action)
+        {
+            switch (signableObject)
+            {
+                case TMP_Dropdown dropdow:
+                    {
+                        dropdow.onValueChanged.AddListener(sender => action?.Invoke(sender));
+                        break;
+                    }
+                case Toggle toggle: 
+                    {
+                        toggle.onValueChanged.AddListener(sender => action?.Invoke(sender));
+                        break;
+                    }
+                case Slider slider:
+                    {
+                        slider.onValueChanged.AddListener(sender => action?.Invoke(sender));
+                        break;
+                    }
+            }         
+        }
 
         private void SetupVolumeSliders(ISettingsData data)
         {
@@ -100,7 +134,6 @@ namespace StartupMenu
             }
             _resolutionDropdown.AddOptions(options);
         }
-
 
         public void UpdateViewOptions(ISettingsData data)
         {

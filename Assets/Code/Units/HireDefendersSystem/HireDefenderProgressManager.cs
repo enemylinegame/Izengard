@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using Code.TileSystem;
 using CombatSystem;
+using UnityEngine;
 
 namespace Code.Units.HireDefendersSystem
 {
-    public class HireDefenderProgressManager : IOnController, IOnUpdate
+    public class HireDefenderProgressManager : IOnController, IOnUpdate, IOnDisable
     {
 
         private Action<DefenderPreview, TileModel, DefenderSettings> _finishProgressListener;
@@ -83,10 +84,29 @@ namespace Code.Units.HireDefendersSystem
             }
         }
 
-        public void Clear()
+        private void Clear()
         {
-            
+            if (_queues.Count > 0)
+            {
+                foreach (var tileQueue in _queues)
+                {
+                    var que = tileQueue.Value;
+                    while (que.Count > 0)
+                    {
+                        var hireProgress = que.Dequeue();
+                        hireProgress.Defender.SetHireProgress(null);
+                        hireProgress.Defender = null;
+                        hireProgress.Tile = null;
+                    }
+                }
+                
+                _queues.Clear();
+            }
         }
-        
+
+        public void OnDisableItself()
+        {
+            Clear();
+        }
     }
 }

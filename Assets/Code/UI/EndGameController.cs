@@ -1,18 +1,20 @@
 using System;
+using Code.Game;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class EndGameController : IOnController, IOnStart, IOnUpdate, IDisposable
-{ 
-    private readonly int _mainMenuSceneId = 0;
-    private readonly int _gameSceneId = 1;
+{
 
+    private GameStateManager _gameStateManager;
     private EndGameScreen _endGameScreen;
     private GeneratorLevelController _levelController;
     private float _t;
 
-    public EndGameController(EndGameScreen endGameScreen, GeneratorLevelController levelController)
+    public EndGameController(GameStateManager gameStateManager, EndGameScreen endGameScreen, 
+        GeneratorLevelController levelController)
     {
+        _gameStateManager = gameStateManager;
         _endGameScreen = endGameScreen;
         _levelController = levelController;
     }
@@ -41,12 +43,12 @@ public class EndGameController : IOnController, IOnStart, IOnUpdate, IDisposable
     
     private void RestartGame()
     {
-        SceneManager.LoadScene(_gameSceneId);
+        _gameStateManager.RestartGame();
     }
 
     private void BackToMenu()
     {
-        SceneManager.LoadScene(_mainMenuSceneId);
+        _gameStateManager.SwitchToMainMenu();
     }
 
     public void Dispose()
