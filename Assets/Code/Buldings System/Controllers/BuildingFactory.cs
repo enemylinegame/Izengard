@@ -55,8 +55,7 @@ namespace Code.BuildingSystem
         /// <summary>
         /// Проверяет на наличие ресурса если он есть ставим здание.
         /// </summary>
-        public void BuildBuilding(BuildingConfig buildingConfig, 
-            TileModel model, TileController controller)
+        public void BuildBuilding(BuildingConfig buildingConfig, TileModel model, TileController controller)
         {
             if (!IsResourcesEnough(buildingConfig))
             {
@@ -86,8 +85,7 @@ namespace Code.BuildingSystem
             controller.LevelCheck();
         }
         
-        public void DestroyBuilding(List<ICollectable> buildings, 
-            BuildingUIInfo buildingUI, TileModel model, 
+        public void DestroyBuilding(List<ICollectable> buildings, BuildingUIInfo buildingUI, TileModel model, 
             TileController tileController)
         {
             var buildingToRemove = buildings.Find(kvp => kvp.BuildingID == buildingUI.BuildingID);
@@ -113,8 +111,7 @@ namespace Code.BuildingSystem
             tileController.LevelCheck();
         }
 
-        void AddWorkerPreparation(GameObject building, 
-            ICollectable buildingModel)
+        void AddWorkerPreparation(GameObject building, ICollectable buildingModel)
         {
             if (!building.TryGetComponent(out IWorkerPreparation preporation))
                 return;
@@ -122,8 +119,7 @@ namespace Code.BuildingSystem
             buildingModel.WorkerPreparation = preporation;
         }
 
-        private ICollectable CreateBuilding(
-            TileModel model, BuildingConfig config)
+        private ICollectable CreateBuilding(TileModel model, BuildingConfig config)
         {
             var dot = CheckDot(model);
             if (null == dot)

@@ -38,6 +38,7 @@ namespace CombatSystem.Views
         {
             if (_isTiming)
             {
+                _timer.RemoveTimeRemaining();
                 _image.enabled = false;
                 _isTiming = false;
             }

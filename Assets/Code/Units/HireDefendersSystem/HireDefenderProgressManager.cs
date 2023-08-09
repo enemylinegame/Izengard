@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using Code.TileSystem;
 using CombatSystem;
+using UnityEngine;
 
 namespace Code.Units.HireDefendersSystem
 {
-    public class HireDefenderProgressManager : IOnController, IOnUpdate
+    public class HireDefenderProgressManager : IOnController, IOnUpdate, IOnDisable
     {
 
         private Action<DefenderPreview, TileModel, DefenderSettings> _finishProgressListener;
 
-        private Dictionary<TileModel, Queue<HireProgress>> _queues = new();
-        
-        
+        private readonly Dictionary<TileModel, Queue<HireProgress>> _queues = new();
+
+        private readonly Dictionary<DefenderPreview, HireProgress> _defenderProgressTable = new ();
+
         public void StartDefenderHireProcess(DefenderPreview defenderPreview, TileModel tile, 
             DefenderSettings settings, float hireDuration)
         {
@@ -24,13 +26,13 @@ namespace Code.Units.HireDefendersSystem
             HireProgress newProgress = new HireProgress()
             {
                 Defender = defenderPreview,
-                Settings = settings,
                 Tile = tile,
                 Duration = hireDuration,
                 TimePassed = 0.0f
             };
             _queues[tile].Enqueue(newProgress);
             defenderPreview.SetHireProgress(newProgress);
+            _defenderProgressTable.Add(defenderPreview, newProgress);
         }
         
         
@@ -42,12 +44,21 @@ namespace Code.Units.HireDefendersSystem
                 if (queue.Count > 0)
                 {
                     HireProgress progress = queue.Peek();
-                    progress.TimePassed += deltaTime;
-                    if (progress.TimePassed >= progress.Duration)
+                    if (progress.Defender != null)
+                    {
+                        progress.TimePassed += deltaTime;
+                        if (progress.TimePassed >= progress.Duration)
+                        {
+                            queue.Dequeue();
+                            _defenderProgressTable.Remove(progress.Defender);
+                            ProgressCompleted(progress, kvp.Key);
+                        }
+                    }
+                    else
                     {
                         queue.Dequeue();
-                        ProgressCompleted(progress, kvp.Key);
                     }
+
                 }
                 
             }
@@ -56,7 +67,7 @@ namespace Code.Units.HireDefendersSystem
         private void ProgressCompleted(HireProgress progress, TileModel tile)
         {
             progress.Defender.SetHireProgress(null);
-            _finishProgressListener?.Invoke(progress.Defender, tile, progress.Settings);
+            _finishProgressListener?.Invoke(progress.Defender, tile, progress.Defender.Settings);
         }
 
         public void AddFinishProgressListener(Action<DefenderPreview, TileModel, DefenderSettings> listener)
@@ -64,10 +75,38 @@ namespace Code.Units.HireDefendersSystem
             _finishProgressListener += listener;
         }
 
-        public void Clear()
+        public void StopDefenderHiringProcess(DefenderPreview defenderPreview)
         {
-            
+            if (_defenderProgressTable.TryGetValue(defenderPreview, out HireProgress progress))
+            {
+                progress.Defender = null;
+                _defenderProgressTable.Remove(defenderPreview);
+            }
         }
-        
+
+        private void Clear()
+        {
+            if (_queues.Count > 0)
+            {
+                foreach (var tileQueue in _queues)
+                {
+                    var que = tileQueue.Value;
+                    while (que.Count > 0)
+                    {
+                        var hireProgress = que.Dequeue();
+                        hireProgress.Defender.SetHireProgress(null);
+                        hireProgress.Defender = null;
+                        hireProgress.Tile = null;
+                    }
+                }
+                
+                _queues.Clear();
+            }
+        }
+
+        public void OnDisableItself()
+        {
+            Clear();
+        }
     }
 }
