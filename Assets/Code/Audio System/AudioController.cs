@@ -6,7 +6,6 @@ namespace Audio_System
     public class AudioController : IAudioController, IMusicPlayer, IAudioPlayer
     {
         private readonly Dictionary<int, AudioSource> _audioSources;
-
         private readonly Dictionary<int, AudioSourceData> _sourceMedia;
 
         private readonly AudioPresenter _presenter;
@@ -28,53 +27,53 @@ namespace Audio_System
 
         #region IAudioController
 
+        private bool _soundEnabled;
+        private bool _musicEnabled;
+
         bool IAudioController.SoundEnabled
         {
-            get => throw new System.NotImplementedException();
-            set => throw new System.NotImplementedException();
+            get => _soundEnabled;
+            set 
+            {
+                if(_soundEnabled != value)
+                {
+                    foreach (var key in _sourceMedia.Keys)
+                    {
+                        var sourceData = _sourceMedia[key];
+
+                        if (!sourceData.IsMusic)
+                        {
+                            sourceData.Source.volume = value ? sourceData.Volume : 0;
+                        }
+                    }
+
+                    _soundEnabled = value;
+                }
+            }
         }
 
         bool IAudioController.MusicEnabled
         {
-            get => throw new System.NotImplementedException();
-            set => throw new System.NotImplementedException();
+            get => _musicEnabled;
+            set
+            {
+                if (_musicEnabled != value)
+                {
+                    foreach (var key in _sourceMedia.Keys)
+                    {
+                        var sourceData = _sourceMedia[key];
+
+                        if (sourceData.IsMusic)
+                        {
+                            sourceData.Source.volume = value ? sourceData.Volume : 0;
+                        }
+                    }
+
+                    _musicEnabled = value;
+                }
+            }
         }
 
-        bool IAudioController.VoiceEnabled
-        {
-            get => throw new System.NotImplementedException();
-            set => throw new System.NotImplementedException();
-        }
-
-        bool IAudioController.EffectsEnabled
-        {
-            get => throw new System.NotImplementedException();
-            set => throw new System.NotImplementedException();
-        }
-
-        float IAudioController.SoundVolume
-        {
-            get => throw new System.NotImplementedException();
-            set => throw new System.NotImplementedException();
-        }
-
-        float IAudioController.MusicVolume
-        {
-            get => throw new System.NotImplementedException();
-            set => throw new System.NotImplementedException();
-        }
-
-        float IAudioController.VoiceVolume
-        {
-            get => throw new System.NotImplementedException();
-            set => throw new System.NotImplementedException();
-        }
-
-        float IAudioController.EffectsVolume
-        {
-            get => throw new System.NotImplementedException();
-            set => throw new System.NotImplementedException();
-        }
 
         public void RegisterSoundSource(ISoundSource source)
         {
@@ -149,7 +148,7 @@ namespace Audio_System
 
             if (source.OnPause == false)
                 return;
-   
+
             source.Source.UnPause();
             source.OnPause = false;
         }
@@ -200,7 +199,7 @@ namespace Audio_System
 
             return soundCodeIndex;
         }
- 
+
         int IAudioPlayer.PlaySound3D(ISound sound, Vector3 position, float maxSoundDistance)
         {
             ScanForEndedSources();
@@ -301,7 +300,7 @@ namespace Audio_System
             }
         }
 
-        private void DestroySource(Object source) 
+        private void DestroySource(Object source)
             => Object.Destroy(source);
 
         public void Dispose()
@@ -310,6 +309,6 @@ namespace Audio_System
             _sourceMedia.Clear();
         }
 
-    
+
     }
 }
