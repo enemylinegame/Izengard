@@ -52,7 +52,7 @@ public class GameConfig : ScriptableObject
         " 1 - сумма всех весов = вероятности спавна пустоты";
 
     [SerializeField]
-    private PrescriptionsStorage _prescriptionsStorage;
+    private RecipesStorage _recipesStorage;
 
     public DefendersSet DefendersSets => _defendersSet;
     public GameObject Enemy => _enemy;
@@ -100,5 +100,5 @@ public class GameConfig : ScriptableObject
     public GameObject Res => _Res;
     public GameObject ResTopUI => _resTopUI;
 
-    public PrescriptionsStorage PrescriptionsStorage => _prescriptionsStorage;
+    public RecipesStorage PrescriptionsStorage => _recipesStorage;
 }

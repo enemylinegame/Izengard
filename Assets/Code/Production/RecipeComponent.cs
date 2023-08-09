@@ -2,7 +2,7 @@ using ResourceSystem;
 using System;
 
 [Serializable]
-public struct PrescriptionComponent
+public struct RecipeComponent
 {
     public ResourceType ResourceType;
     public int ResourceAmount;

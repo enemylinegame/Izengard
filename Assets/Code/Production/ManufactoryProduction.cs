@@ -8,7 +8,7 @@ public sealed class ManufactoryProduction : IWorkerWork
     private float _produced;
     private float _productionEfficiency;
     private GlobalStock _globalStock;
-    private Prescription _prescription;
+    private Recipe _prescription;
     private IPlayerNotifier _notifier;
     private bool _isProductionSuccess;
 
@@ -22,7 +22,7 @@ public sealed class ManufactoryProduction : IWorkerWork
     private IList<DeficitDescription> _lastDeficitResources;
 
     public ManufactoryProduction(GlobalStock stock,
-        Prescription prescription,
+        Recipe prescription,
         float productionEfficiency,
         IPlayerNotifier notifier)
     {
@@ -126,7 +126,7 @@ public sealed class ManufactoryProduction : IWorkerWork
             _notifier.Notify(CreateNotificationMessage(deficitList));
     }
 
-    private void  FindDeficitResources(Prescription prescription, 
+    private void  FindDeficitResources(Recipe prescription, 
         IList<DeficitDescription> deficit)
     {
         deficit.Clear();
@@ -151,7 +151,7 @@ public sealed class ManufactoryProduction : IWorkerWork
         }
     }
 
-    public void UtilizeResources(Prescription prescription)
+    public void UtilizeResources(Recipe prescription)
     {
         Array.ForEach(prescription.Components, (prescriptionComponent) =>
         {

@@ -59,5 +59,5 @@ MonoBehaviour:
     \u0418\u043E\u0430\u043D\u043D\u0430,  1 - \u0441\u0443\u043C\u043C\u0430 \u0432\u0441\u0435\u0445
     \u0432\u0435\u0441\u043E\u0432 = \u0432\u0435\u0440\u043E\u044F\u0442\u043D\u043E\u0441\u0442\u0438
     \u0441\u043F\u0430\u0432\u043D\u0430 \u043F\u0443\u0441\u0442\u043E\u0442\u044B"
-  _prescriptionsStorage: {fileID: 11400000, guid: 7c39cd56705294040bc557f1f63c6470, type: 2}
+  _recipesStorage: {fileID: 11400000, guid: 92fcd8fbc7b32194ab28323de6d6ba87, type: 2}
   TestBuilding: {fileID: 8048208380929675822, guid: 3d12417f0311adc4a8dc6decc7d50a6a, type: 3}

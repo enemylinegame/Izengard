@@ -16,7 +16,7 @@ namespace Code.TileSystem
 
         private int _mineWorkerPortionSize;
         private float _craftWorkerEfficiency;
-        private PrescriptionsStorage _prescriptionsStorage;
+        private RecipesStorage _recipesStorage;
         private IPlayerNotifier _notifier;
 
         private sealed class WorkDescriptor
@@ -28,11 +28,11 @@ namespace Code.TileSystem
 
         public ProductionManager(GlobalStock globalStock,
             WorkersTeamController teamController, WorkersTeamConfig workerConfig,
-            PrescriptionsStorage prescriptionsStorage,
+            RecipesStorage recipesStorage,
             IPlayerNotifier notifier)
         {
             _teamController = teamController;
-            _prescriptionsStorage = prescriptionsStorage;
+            _recipesStorage = recipesStorage;
             _globalStock = globalStock;
             _notifier = notifier;
 
@@ -137,7 +137,7 @@ namespace Code.TileSystem
             Vector3 workerInitPlace, Vector3 workPlace,
             ResourceType resourceType, IWorkerPreparation preparation)
         {
-            var prescription = _prescriptionsStorage.GetPrescription(
+            var prescription = _recipesStorage.GetPrescription(
                 resourceType);
 
             IWorkerWork work = new ManufactoryProduction(

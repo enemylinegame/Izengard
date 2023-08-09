@@ -98,9 +98,9 @@ public sealed class WorkersCraftTeam : IOnUpdate, IOnController
             work.Value.Work.Produce(deltaTime);
 
             if (work.Value.Work.IsProductionSuccess)
-                work.Value.Preparation.Begin();
+                work.Value.Preparation.EnableAll();
             else
-                work.Value.Preparation.Stop();
+                work.Value.Preparation.DisableAll();
         }
     }
 
