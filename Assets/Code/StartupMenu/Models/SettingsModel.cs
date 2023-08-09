@@ -2,16 +2,9 @@
 
 namespace StartupMenu
 {
-    public enum SettingsType
-    {
-        None, 
-        Graphics,
-        Sound
-    }
-
     public class SettingsModel : ISettingsData
     {
-        public event Action<SettingsType> OnSettingsChanged;
+        public event Action<GameSettingsType, ISettingsData> OnSettingsChanged;
 
         private int _resolutionWidth;
         private int _resolutionHeight;
@@ -29,20 +22,18 @@ namespace StartupMenu
         private float _voiceVolumeValue;
         private float _effectsVolumeValue;
 
-
         #region Public ISettingsData fields
-
 
         public int ResolutionWidth 
         { 
-            get => _resolutionWidth; 
-            set => _resolutionWidth = value; 
+            get => _resolutionWidth;
+            private set => _resolutionWidth = value; 
         }
 
         public int ResolutionHeight 
         { 
             get => _resolutionHeight; 
-            set => _resolutionHeight = value; 
+            private set => _resolutionHeight = value; 
         }
 
         public int ShadowId
@@ -51,7 +42,7 @@ namespace StartupMenu
             private set
             {
                 _shadowId = value;
-                OnSettingsChanged?.Invoke(SettingsType.Graphics);
+                OnSettingsChanged?.Invoke(GameSettingsType.ShadowQuality, this);
             }
         }
 
@@ -61,7 +52,7 @@ namespace StartupMenu
             private set
             {
                 _isFullScreenOn = value;
-                OnSettingsChanged?.Invoke(SettingsType.Graphics);
+                OnSettingsChanged?.Invoke(GameSettingsType.FullScreenMode, this);
             }
         }
 
@@ -71,7 +62,7 @@ namespace StartupMenu
             private set
             {
                 _isVSyncOn = value;
-                OnSettingsChanged?.Invoke(SettingsType.Graphics);
+                OnSettingsChanged?.Invoke(GameSettingsType.VSyncMode, this);
             }
         }
 
@@ -100,7 +91,7 @@ namespace StartupMenu
             private set
             {
                 _masterVolumeValue = value;
-                OnSettingsChanged?.Invoke(SettingsType.Sound);
+                OnSettingsChanged?.Invoke(GameSettingsType.MasterVolume, this);
             }
         }
 
@@ -110,7 +101,7 @@ namespace StartupMenu
             private set
             {
                 _musicVolumeValue = value;
-                OnSettingsChanged?.Invoke(SettingsType.Sound);
+                OnSettingsChanged?.Invoke(GameSettingsType.MusicVolume, this);
             }
         }
 
@@ -120,7 +111,7 @@ namespace StartupMenu
             private set
             {
                 _voiceVolumeValue = value;
-                OnSettingsChanged?.Invoke(SettingsType.Sound);
+                OnSettingsChanged?.Invoke(GameSettingsType.VoiceVolume, this);
             }
         }
 
@@ -130,43 +121,37 @@ namespace StartupMenu
             private set
             {
                 _effectsVolumeValue = value;
-                OnSettingsChanged?.Invoke(SettingsType.Sound);
+                OnSettingsChanged?.Invoke(GameSettingsType.EffectsVolume, this);
             }
         }
 
- 
-
         #endregion
 
-        public SettingsModel()
+        public SettingsModel() { }
+
+        public void SetData(ISettingsData data)
         {
-          
-        }
+            ChangeResolution(data.ResolutionWidth, data.ResolutionHeight);
 
-        public void SetBaseData(ISettingsData data)
-        {
-            _resolutionWidth = data.ResolutionWidth;
-            _resolutionHeight = data.ResolutionHeight;
+            ShadowId = data.ShadowId;
 
-            _shadowId = data.ShadowId;
+            IsFullScreenOn = data.IsFullScreenOn;
+            IsVSyncOn = data.IsVSyncOn;
 
-            _isFullScreenOn = data.IsFullScreenOn;
-            _isVSyncOn = data.IsVSyncOn;
+            MixerMaxValue = data.MixerMaxValue;
+            MixerMinValue = data.MixerMinValue;
 
-            _mixerMaxValue = data.MixerMaxValue;
-            _mixerMinValue = data.MixerMinValue;
-
-            _masterVolumeValue = data.MasterVolumeValue;
-            _musicVolumeValue = data.MusicVolumeValue;
-            _voiceVolumeValue = data.VoiceVolumeValue;
-            _effectsVolumeValue = data.EffectsVolumeValue;
+            MasterVolumeValue = data.MasterVolumeValue;
+            MusicVolumeValue = data.MusicVolumeValue;
+            VoiceVolumeValue = data.VoiceVolumeValue;
+            EffectsVolumeValue = data.EffectsVolumeValue;
         }
 
         public void ChangeResolution(int newWidth, int newHeight) 
         {
             ResolutionWidth = newWidth;
             ResolutionHeight = newHeight;
-            OnSettingsChanged?.Invoke(SettingsType.Graphics);
+            OnSettingsChanged?.Invoke(GameSettingsType.Resolution, this);
         }
 
         public void ChangeShadow(int newShadowId) =>
@@ -183,7 +168,6 @@ namespace StartupMenu
 
         public void ChangeMusicVolume(float volume) =>
             MusicVolumeValue = volume;
-
 
         public void ChangeVoiceVolume(float volume) => 
             VoiceVolumeValue = volume;

@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
+using Code.TileSystem;
 using Code.UI;
 using Code.Units.HireDefendersSystem;
-using CombatSystem;
 using CombatSystem.Views;
 using ResourceSystem.SupportClases;
 using UnityEngine;
 
 
-namespace Code.TileSystem
+namespace CombatSystem
 {
     public class DefendersManager : IDefendersManager, ITileLoadInfo, IOnTile
     {
