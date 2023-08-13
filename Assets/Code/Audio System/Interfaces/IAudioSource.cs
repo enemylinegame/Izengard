@@ -2,7 +2,7 @@
 
 namespace Audio_System
 {
-    public interface ISoundSource
+    public interface IAudioSource
     {
         int SourceCode { get; }
         AudioSource AudioSource { get; }

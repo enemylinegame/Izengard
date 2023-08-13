@@ -2,11 +2,10 @@
 
 namespace Audio_System
 {
-    [CreateAssetMenu(fileName = nameof(SoundConfig), 
-        menuName = "Audio Data/" + nameof(SoundConfig))]
-    public class SoundConfig : ScriptableObject, ISound
+    [CreateAssetMenu(fileName = nameof(AudioConfig), 
+        menuName = "Audio Data/" + nameof(AudioConfig))]
+    public class AudioConfig : ScriptableObject, IAudio
     {
-        
         [SerializeField] private int _audioSourceCode = 1234;
         
         [Space(10)]
@@ -22,7 +21,5 @@ namespace Audio_System
         public float Volume => _volume;
         public float Pitch => _pitch;
         public bool IsLoop => _isLoop;
-
-     
     }
 }

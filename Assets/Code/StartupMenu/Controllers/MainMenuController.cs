@@ -8,21 +8,20 @@ namespace StartupMenu
     {
         private readonly string _viewPath = "UI/StartupMenuUI/MainMenuUI";
         private readonly StateModel _menuMonitor;
-        private readonly IAudioPlayer _audioPlayer;
+        private readonly IUIAudioProvider _uIAudioProvider;
 
-        private readonly ISound _clickSound;
-        
         private MainMenuView _view;
     
-        public MainMenuController(Transform placeForUI, StateModel menuMonitor, IAudioPlayer audioPlayer)
+        public MainMenuController(
+            Transform placeForUI, 
+            StateModel menuMonitor, 
+            IUIAudioProvider uIAudioProvider)
         {
             _menuMonitor = menuMonitor;
-            _audioPlayer = audioPlayer;
+            _uIAudioProvider = uIAudioProvider;
             
             _view = LoadView(placeForUI);
             _view.Init(StartGame, OpenSettings, Exit);
-
-            _clickSound = _view.ClickSound;
         }
 
         private MainMenuView LoadView(Transform placeForUI)
@@ -51,7 +50,7 @@ namespace StartupMenu
         }
 
         private void PlaySound() 
-            => _audioPlayer.PlaySound2D(_clickSound);
+            => _uIAudioProvider.PlayButtonClickCound();
 
     }
 }

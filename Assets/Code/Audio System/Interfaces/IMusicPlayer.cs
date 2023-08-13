@@ -2,14 +2,14 @@
 {
     public interface IMusicPlayer
     {
-        int PlaySound(ISound clip);
+        int Play(IAudio clip);
 
-        void StopSound(int audioCode);
+        void Stop(int audioCode);
    
-        void PauseSound(int audioCode);
+        void Pause(int audioCode);
 
-        void ResumeSound(int audioCode);
+        void Resume(int audioCode);
   
-        bool IsSoundPlaying(int audioCode);
+        bool IsAudioPlaying(int audioCode);
     }
 }

@@ -11,11 +11,6 @@ namespace StartupMenu
         [SerializeField] private Button _playButton;
         [SerializeField] private Button _settingsButton;
         [SerializeField] private Button _quitButton;
-        
-        [Space(5)]
-        [SerializeField] private SoundConfig _clickSound;
-
-        public ISound ClickSound => _clickSound;
 
         internal void Init(
             UnityAction startGame, 

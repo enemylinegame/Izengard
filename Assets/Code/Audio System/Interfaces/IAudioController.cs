@@ -7,6 +7,6 @@ namespace Audio_System
         bool SoundEnabled { get; set; }
         bool MusicEnabled { get; set; }
 
-        void RegisterSoundSource(ISoundSource source);
+        void RegisterAudioSource(IAudioSource source);
     }
 }

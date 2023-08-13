@@ -16,7 +16,11 @@ namespace StartupMenu
         private readonly StateModel _startupSceneState;
 
         private readonly GameSettingsManager _settingsManager;
+        
         private readonly AudioController _audioController;
+
+        private readonly IGameMusicAudioProvider _gameMusicAudioProvider;
+        private readonly IUIAudioProvider _uIAudioProvider;
 
         private MainMenuController _mainMenuController;
         private SettingsMenuController _settingsMenuContoller;
@@ -27,8 +31,7 @@ namespace StartupMenu
             Transform placeForUi,
             ISettingsData baseSettingsData,
             AudioMixer audioMixer, 
-            AudioPresenter audioPresenter,
-            ISound mainMusic)
+            AudioPresenter audioPresenter)
         {
             _placeForUi = placeForUi;
             _baseSettingsData = baseSettingsData;
@@ -42,7 +45,11 @@ namespace StartupMenu
             _startupSceneState.OnStateChange += OnChangeGameState;
 
             _audioController = new AudioController(audioPresenter);
-            PlayMainMusic(_audioController, mainMusic);
+
+            _gameMusicAudioProvider = new GameMusicAudioProvider(_audioController);
+            _uIAudioProvider = new UIAudioProvider(_audioController);
+
+            _gameMusicAudioProvider.PlayMainMenuMusic();
 
             _startupSceneState.CurrentState = MenuState.Start;
         }
@@ -57,7 +64,10 @@ namespace StartupMenu
                 case MenuState.Start:
                     {
                         _mainMenuController 
-                            = new MainMenuController(_placeForUi, _startupSceneState, _audioController);
+                            = new MainMenuController(
+                                _placeForUi, 
+                                _startupSceneState,
+                                _uIAudioProvider);
                         break;
                     }
                 case MenuState.Settings:
@@ -68,7 +78,7 @@ namespace StartupMenu
                                 _settingsManager,
                                 _baseSettingsData,
                                 _startupSceneState,
-                                _audioController);
+                                _uIAudioProvider);
                         break;
                     }
                 case MenuState.Game:
@@ -84,14 +94,14 @@ namespace StartupMenu
             }
         }
 
-        private void PlayMainMusic(IMusicPlayer musicPlayer, ISound mainMusic)
+        private void PlayMainMusic(IMusicPlayer musicPlayer, IAudio mainMusic)
         {
-            _mainMusicId = musicPlayer.PlaySound(mainMusic);
+            _mainMusicId = musicPlayer.Play(mainMusic);
         }
 
         private void StopMainMusic(IMusicPlayer musicPlayer, int id)
         {
-            musicPlayer.StopSound(id);
+            musicPlayer.Stop(id);
         }
 
         private void DisposeControllers()
@@ -124,7 +134,9 @@ namespace StartupMenu
          
             _settingsManager?.Dispose();
 
-            StopMainMusic(_audioController, _mainMusicId);
+            _uIAudioProvider?.Dispose();
+            _gameMusicAudioProvider?.Dispose();
+
             _audioController?.Dispose();
         }
 

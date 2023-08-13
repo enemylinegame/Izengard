@@ -12,13 +12,10 @@ namespace StartupMenu
 
         private readonly GameSettingsManager _settingsManager;
         private readonly StateModel _menuMonitor;
-        private readonly IAudioPlayer _audioPlayer;
-
-        private readonly ISound _clickSound;
+        private readonly IUIAudioProvider _uIAudioProvider;
 
         private Dictionary<SettingsMenuActionType, Action> _settingsMenuActions;
         private Dictionary<GameSettingsType, Action<object>> _changeSettingsActions;
-
 
         private SettingsMenuView _view;
 
@@ -29,11 +26,11 @@ namespace StartupMenu
             GameSettingsManager settingsManager,
             ISettingsData baseSettings,
             StateModel menuMonitor,
-            IAudioPlayer audioPlayer)
+            IUIAudioProvider uIAudioProvider)
         {
             _settingsManager = settingsManager;
             _menuMonitor = menuMonitor;
-            _audioPlayer = audioPlayer;
+            _uIAudioProvider = uIAudioProvider;
 
             _settingsMenuActions = GetMenuActions();
             _changeSettingsActions = GetSettingsAction();
@@ -48,8 +45,6 @@ namespace StartupMenu
 
             _view.UpdateViewOptions(_settingsManager.GameSttingsModel);
 
-            _clickSound = _view.ClickSound;
-     
             _isSettingsChanged = false;
         }
         
@@ -131,7 +126,7 @@ namespace StartupMenu
 
         private void PlayClickSound()
         {
-            _audioPlayer.PlaySound2D(_clickSound);
+            _uIAudioProvider.PlayButtonClickCound();
         }
 
         #endregion

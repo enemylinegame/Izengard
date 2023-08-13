@@ -2,7 +2,7 @@
 {
     public interface IAudioReproducer
     {
-        ISound SoundData { get; }
-        ISoundSource SoundSourceData { get; }
+        IAudio SoundData { get; }
+        IAudioSource SoundSourceData { get; }
     }
 }

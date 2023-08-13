@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Audio_System
 {
-    public class AudioController : IAudioController, IMusicPlayer, IAudioPlayer
+    public class AudioController : IAudioController, IMusicPlayer, ISoundPlayer
     {
         private readonly Dictionary<int, AudioSource> _audioSources;
         private readonly Dictionary<int, AudioSourceData> _sourceMedia;
@@ -19,8 +19,12 @@ namespace Audio_System
             _audioSources = new Dictionary<int, AudioSource>();
             _sourceMedia = new Dictionary<int, AudioSourceData>();
 
-            RegisterSoundSource(_presenter.GloabalMusicSource);
-            RegisterSoundSource(_presenter.GloabalUISource);
+            RegisterAudioSource(_presenter.GloabalMusicSource);
+            RegisterAudioSource(_presenter.GloabalUISource);
+
+            var initAudioController = (IAudioController)this;
+            initAudioController.SoundEnabled = presenter.SoundEnabled;
+            initAudioController.MusicEnabled = presenter.MusicEnabled;
 
             soundCodeIndex = 0;
         }
@@ -38,16 +42,16 @@ namespace Audio_System
                 if(_soundEnabled != value)
                 {
                     foreach (var key in _sourceMedia.Keys)
-                    {
+                    { 
+                        _soundEnabled = value;
+
                         var sourceData = _sourceMedia[key];
 
                         if (!sourceData.IsMusic)
                         {
-                            sourceData.Source.volume = value ? sourceData.Volume : 0;
+                            sourceData.Source.volume = _soundEnabled ? sourceData.Volume : 0;
                         }
-                    }
-
-                    _soundEnabled = value;
+                    }                 
                 }
             }
         }
@@ -61,21 +65,21 @@ namespace Audio_System
                 {
                     foreach (var key in _sourceMedia.Keys)
                     {
-                        var sourceData = _sourceMedia[key];
+                        _musicEnabled = value;
 
+                        var sourceData = _sourceMedia[key];
+                        
                         if (sourceData.IsMusic)
                         {
-                            sourceData.Source.volume = value ? sourceData.Volume : 0;
+                            sourceData.Source.volume = _musicEnabled ? sourceData.Volume : 0;
                         }
-                    }
-
-                    _musicEnabled = value;
+                    }                   
                 }
             }
         }
 
 
-        public void RegisterSoundSource(ISoundSource source)
+        public void RegisterAudioSource(IAudioSource source)
         {
             AddSourceToCollection(source);
         }
@@ -85,7 +89,7 @@ namespace Audio_System
 
         #region IMusicPlayer
 
-        int IMusicPlayer.PlaySound(ISound sound)
+        int IMusicPlayer.Play(IAudio sound)
         {
             ScanForEndedSources();
 
@@ -118,7 +122,7 @@ namespace Audio_System
             return soundCodeIndex;
         }
 
-        void IMusicPlayer.StopSound(int audioCode)
+        void IMusicPlayer.Stop(int audioCode)
         {
             if (!_sourceMedia.ContainsKey(audioCode))
                 return;
@@ -128,7 +132,7 @@ namespace Audio_System
             source.Source.Stop();
         }
 
-        void IMusicPlayer.PauseSound(int audioCode)
+        void IMusicPlayer.Pause(int audioCode)
         {
             if (!_sourceMedia.ContainsKey(audioCode))
                 return;
@@ -139,7 +143,7 @@ namespace Audio_System
         }
 
 
-        void IMusicPlayer.ResumeSound(int audioCode)
+        void IMusicPlayer.Resume(int audioCode)
         {
             if (!_sourceMedia.ContainsKey(audioCode))
                 return;
@@ -154,7 +158,7 @@ namespace Audio_System
         }
 
 
-        bool IMusicPlayer.IsSoundPlaying(int audioCode)
+        bool IMusicPlayer.IsAudioPlaying(int audioCode)
         {
             if (!_sourceMedia.ContainsKey(audioCode))
                 return false;
@@ -167,7 +171,7 @@ namespace Audio_System
 
         #region IAudioPlayer
 
-        int IAudioPlayer.PlaySound2D(ISound sound)
+        int ISoundPlayer.PlayIn2D(IAudio sound)
         {
             ScanForEndedSources();
 
@@ -200,7 +204,7 @@ namespace Audio_System
             return soundCodeIndex;
         }
 
-        int IAudioPlayer.PlaySound3D(ISound sound, Vector3 position, float maxSoundDistance)
+        int ISoundPlayer.PlayIn3D(IAudio sound, Vector3 position, float maxSoundDistance)
         {
             ScanForEndedSources();
 
@@ -238,7 +242,7 @@ namespace Audio_System
             return soundCodeIndex;
         }
 
-        void IAudioPlayer.StopSound(int audioCode)
+        void ISoundPlayer.Stop(int audioCode)
         {
             if (!_sourceMedia.ContainsKey(audioCode))
                 return;
@@ -248,7 +252,7 @@ namespace Audio_System
             source.Source.Stop();
         }
 
-        bool IAudioPlayer.IsSoundPlaying(int audioCode)
+        bool ISoundPlayer.IsSoundPlaying(int audioCode)
         {
             if (!_sourceMedia.ContainsKey(audioCode))
                 return false;
@@ -257,19 +261,19 @@ namespace Audio_System
             return source.Source.isPlaying;
         }
 
-        void IAudioPlayer.SetSourcePositionTo(int audioCode, Vector3 destinationPos)
+        void ISoundPlayer.SetSourcePositionTo(int audioCode, Vector3 destinationPos)
         {
             throw new System.NotImplementedException();
         }
 
-        void IAudioPlayer.SetAudioListenerToPosition(Vector3 position)
+        void ISoundPlayer.SetAudioListenerToPosition(Vector3 position)
         {
             throw new System.NotImplementedException();
         }
 
         #endregion
 
-        private void AddSourceToCollection(ISoundSource source)
+        private void AddSourceToCollection(IAudioSource source)
         {
             if (_audioSources.ContainsKey(source.SourceCode))
                 return;

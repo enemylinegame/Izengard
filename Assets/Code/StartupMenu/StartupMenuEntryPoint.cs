@@ -11,7 +11,6 @@ namespace StartupMenu
         [Space(10)]
         [SerializeField] private AudioMixer _audioMixer;
         [SerializeField] private AudioPresenter _audioPresenter;
-        [SerializeField] private SoundConfig _mainMusic;
 
         private StartupMenuController _startupMenuController;
         
@@ -22,8 +21,7 @@ namespace StartupMenu
                     _placeForUI, 
                     (ISettingsData)_baseSettings, 
                     _audioMixer,
-                    _audioPresenter,
-                    _mainMusic);
+                    _audioPresenter);
         }
 
 

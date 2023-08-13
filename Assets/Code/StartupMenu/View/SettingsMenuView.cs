@@ -30,12 +30,7 @@ namespace StartupMenu
         [SerializeField] private Slider _voiceVolumeSlider;
         [SerializeField] private Slider _effectsVolumeSlider;
 
-        [Space(5)]
-        [SerializeField] private SoundConfig _clickSound;
-
         private List<Resolution> _resolutions;
-
-        public ISound ClickSound => _clickSound;
 
         public void Init(
             IDictionary<SettingsMenuActionType, Action> settingsMenuActions,

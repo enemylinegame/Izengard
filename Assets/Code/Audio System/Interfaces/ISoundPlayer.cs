@@ -2,13 +2,13 @@
 
 namespace Audio_System
 {
-    public interface IAudioPlayer
+    public interface ISoundPlayer
     {
-        int PlaySound2D(ISound sound);
+        int PlayIn2D(IAudio sound);
 
-        int PlaySound3D(ISound sound, Vector3 position, float maxSoundDistance);
+        int PlayIn3D(IAudio sound, Vector3 position, float maxSoundDistance);
 
-        void StopSound(int audioCode);
+        void Stop(int audioCode);
 
         bool IsSoundPlaying(int audioCode);
 
