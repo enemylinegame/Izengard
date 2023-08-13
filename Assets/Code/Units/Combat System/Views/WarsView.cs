@@ -7,7 +7,7 @@ using Code.TileSystem;
 
 namespace CombatSystem.Views
 {
-    public sealed class WarsView : ITileSelector
+    public sealed class WarsView : ITileSelector, IOnDisable
     {
         private enum BarrackButtonsStatus
         {
@@ -475,6 +475,11 @@ namespace CombatSystem.Views
                 _isSendDefendersMode = false;
                 _inputController.SetSpecialTileSelector(null);
             }
+        }
+
+        public void OnDisableItself()
+        {
+            ClearDefenders();
         }
     }
 }

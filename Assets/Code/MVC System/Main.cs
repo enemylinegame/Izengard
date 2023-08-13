@@ -11,12 +11,14 @@ public class Main : MonoBehaviour
 {
     [Header("Configs")]
     [SerializeField] private GameConfig _gameConfig;
+    [SerializeField] private BuildingList _buildingList;
+    [SerializeField] private TileList _tileList;
     [SerializeField] private GlobalResourceData _globalResourceList;
     [SerializeField] private WorkersTeamConfig _workersTeamConfig;
     [SerializeField] private OutLineSettings _outLineSettings;
     [SerializeField] private TowerShotConfig _towerShotConfig;
     [SerializeField] private MarketDataConfig _marketDataConfig;
-    [SerializeField] private GlobalTileSettings _globalTileSettings;
+    [SerializeField] private RepairAndRecoberCostCenterBuilding _recoberCostCenter;
 
     [Header("UI")]
     [SerializeField] private RightUI _rightUI;
@@ -26,6 +28,7 @@ public class Main : MonoBehaviour
     [SerializeField] private EndGameScreen _endGameScreen;
     [SerializeField] private BuildingsUI buildingsUI;
     [SerializeField] private MarketView _marketUI;
+    [SerializeField] private InGameMenuUI _inGameMenuUI;
     [Header("Equip")]
     [SerializeField] private BuyItemScreenView _buyItemScreenView;
     [SerializeField] private HireSystemView _hireSystemView;
@@ -34,6 +37,7 @@ public class Main : MonoBehaviour
     [Header("Other")]
     [SerializeField] private Transform _btnParents;
     [SerializeField] private Camera _screenCamera;
+    [SerializeField] private AudioSource _clickAudioSource;
     
     private Controller _controllers;
 
@@ -45,8 +49,8 @@ public class Main : MonoBehaviour
             _rightUI,  _btnParents,_centerUI ,_bottonUI,
             _topUI, _endGameScreen, _towerShotConfig,
             _buyItemScreenView, _hireSystemView, _equipScreenView, 
-            _screenCamera, _globalResourceList, _outLineSettings,
-            _marketDataConfig, _marketUI, _globalTileSettings);
+            _screenCamera, _tileList, _globalResourceList, _outLineSettings,
+            _marketDataConfig, _marketUI, _recoberCostCenter, _inGameMenuUI, _clickAudioSource);
 
         _controllers.OnStart();
     }
