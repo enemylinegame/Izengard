@@ -313,7 +313,7 @@ namespace Code.TileSystem
             _uiController.CenterUI.TIleSelection.TileWar.onClick.RemoveAllListeners();
             if (IsBack)
             {
-                _inputController.IsOnTile = true;
+                _inputController.LockLeftClick = true;
                 _inputController.HardOffTile();
             }
             _uiController.CenterUI.TIleSelection.Back.onClick.RemoveListener(() => RemoveListenersTileSelection(true));
