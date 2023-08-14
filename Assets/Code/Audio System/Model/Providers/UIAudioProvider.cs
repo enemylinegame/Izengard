@@ -15,7 +15,19 @@ namespace Audio_System
 
         private readonly IAudio _onClickSound;
 
-        private int _currentPlayedSound;
+        private int _currentSoundId;
+
+        public override int CurrentAudioId
+        {
+            get => _currentSoundId;
+            protected set
+            {
+                if (_currentSoundId != value)
+                {
+                    _currentSoundId = value;
+                }
+            }
+        }
 
         public UIAudioProvider(ISoundPlayer audioPlayer)
         {
@@ -24,16 +36,19 @@ namespace Audio_System
             _onClickSound = LoadSound(_onClickSoundPath);
         }
 
+        public override void StopCurrentAudio()
+        {
+            _audioPlayer.Stop(_currentSoundId);
+        }
+
         public void PlayButtonClickCound() 
         {
-            _currentPlayedSound = _audioPlayer.PlayIn2D(_onClickSound);
+            _currentSoundId = _audioPlayer.PlayIn2D(_onClickSound);
         }
 
         protected override void OnDispose()
         {
             base.OnDispose();
-
-            _audioPlayer.Stop(_currentPlayedSound);
         }
     }
 }

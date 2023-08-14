@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Audio_System
+﻿namespace Audio_System
 {
-    public interface IGameMusicAudioProvider : IDisposable
+    public interface IGameMusicAudioProvider : IAudioProvider
     {
         void PlayMainMenuMusic();
         void PlayInGameMusic();
@@ -18,7 +16,19 @@ namespace Audio_System
         private readonly IAudio _mainMenuMusic;
         private readonly IAudio _inGameMusic;
 
-        private int _currentPlayedMusic;
+        private int _currentMusicId;
+
+        public override int CurrentAudioId 
+        {
+            get => _currentMusicId;
+            protected set 
+            {
+                if(_currentMusicId != value)
+                {
+                    _currentMusicId = value;
+                }
+            }
+        }
 
         public GameMusicAudioProvider(IMusicPlayer musicPlayer)
         {
@@ -28,21 +38,24 @@ namespace Audio_System
             _inGameMusic = LoadMusic(inGameMusicPath);
         }
 
+        public override void StopCurrentAudio()
+        {
+            _musicPlayer.Stop(_currentMusicId);
+        }
+
         public void PlayInGameMusic()
         {
-            _currentPlayedMusic = _musicPlayer.Play(_mainMenuMusic);
+            _currentMusicId = _musicPlayer.Play(_mainMenuMusic);
         }
 
         public void PlayMainMenuMusic()
         {
-            _currentPlayedMusic = _musicPlayer.Play(_inGameMusic);
+            _currentMusicId = _musicPlayer.Play(_inGameMusic);
         }
 
         protected override void OnDispose()
         {
             base.OnDispose();
-
-            _musicPlayer.Stop(_currentPlayedMusic);
         }
     }
 }

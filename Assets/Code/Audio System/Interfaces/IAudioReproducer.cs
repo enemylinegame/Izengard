@@ -1,8 +1,11 @@
-﻿namespace Audio_System
+﻿using System;
+
+namespace Audio_System
 {
-    public interface IAudioReproducer
+    public interface IAudioProvider : IDisposable
     {
-        IAudio SoundData { get; }
-        IAudioSource SoundSourceData { get; }
+        int CurrentAudioId { get; }
+
+        void StopCurrentAudio();
     }
 }

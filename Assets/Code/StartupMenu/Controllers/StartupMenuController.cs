@@ -2,7 +2,6 @@ using Audio_System;
 using Code.Game;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.SceneManagement;
 
 namespace StartupMenu
 {
@@ -25,8 +24,6 @@ namespace StartupMenu
 
         private MainMenuController _mainMenuController;
         private SettingsMenuController _settingsMenuContoller;
-
-        private int _mainMusicId;
 
         public StartupMenuController(
             GameStateManager gameStateManager,
@@ -95,16 +92,6 @@ namespace StartupMenu
                         break;
                     }
             }
-        }
-
-        private void PlayMainMusic(IMusicPlayer musicPlayer, IAudio mainMusic)
-        {
-            _mainMusicId = musicPlayer.Play(mainMusic);
-        }
-
-        private void StopMainMusic(IMusicPlayer musicPlayer, int id)
-        {
-            musicPlayer.Stop(id);
         }
 
         private void DisposeControllers()

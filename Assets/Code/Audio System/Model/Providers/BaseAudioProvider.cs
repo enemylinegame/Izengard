@@ -1,14 +1,17 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Audio_System
 {
-    public abstract class BaseAudioProvider: IDisposable
+    public abstract class BaseAudioProvider: IAudioProvider
     {
         private readonly string _soundRootResources = "AudioData/Sound";
         private readonly string _musicRootResourcesName = "AudioData/Music";
 
+        public abstract int CurrentAudioId { get; protected set; }
+        
         public BaseAudioProvider() { }
+
+        public abstract void StopCurrentAudio();
 
         protected IAudio LoadSound(string soundPath)
         {
@@ -35,6 +38,8 @@ namespace Audio_System
                 return;
 
             _isDisposed = true;
+
+            StopCurrentAudio();
 
             OnDispose();
         }
