@@ -1,4 +1,5 @@
-﻿using Audio_System;
+using Audio_System;
+using Code.Game;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
@@ -7,7 +8,6 @@ namespace StartupMenu
 {
     public class StartupMenuController : BaseController
     {
-        private readonly int _gameSceneIndex = 1;
 
         private readonly Transform _placeForUi;
         private readonly ISettingsData _baseSettingsData;
@@ -18,6 +18,7 @@ namespace StartupMenu
         private readonly GameSettingsManager _settingsManager;
         
         private readonly AudioController _audioController;
+        private readonly GameStateManager _gameStateManager;
 
         private readonly IGameMusicAudioProvider _gameMusicAudioProvider;
         private readonly IUIAudioProvider _uIAudioProvider;
@@ -28,11 +29,13 @@ namespace StartupMenu
         private int _mainMusicId;
 
         public StartupMenuController(
+            GameStateManager gameStateManager,
             Transform placeForUi,
             ISettingsData baseSettingsData,
             AudioMixer audioMixer, 
             AudioPresenter audioPresenter)
         {
+            _gameStateManager = gameStateManager;
             _placeForUi = placeForUi;
             _baseSettingsData = baseSettingsData;
             _audioMixer = audioMixer;
@@ -113,7 +116,7 @@ namespace StartupMenu
 
         private void Playgame()
         {
-            SceneManager.LoadScene(_gameSceneIndex);
+            _gameStateManager.SwitchToGame();
         }
 
         private void QuitGame()

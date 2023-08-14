@@ -10,7 +10,7 @@ using ResourceMarket;
 
 namespace Code.UI
 {
-    public class UIController : IOnTile, ITileLoadInfo
+    public class UIController : IOnTile, ITileLoadInfo, IOnController, IOnDisable
     {
         private RightUI _rightUI;
         private BottomUI _bottomUI;
@@ -149,7 +149,7 @@ namespace Code.UI
 
         public void LoadInfoToTheUI(TileView tile)
         {
-            if(tile.TileModel.HouseType == HouseType.None) return;
+            if(tile.TileModel.TileType == TileType.None) return;
             IsWorkUI(UIType.Tile, true);
         }
 
@@ -158,6 +158,11 @@ namespace Code.UI
             IsWorkUI(UIType.All, false);
             Deinit();
             _bottomUI.TileUIView.ButtonsHolder.ForEach(x => x.Button.onClick.RemoveAllListeners());
+        }
+
+        public void OnDisableItself()
+        {
+            _warsView.OnDisableItself();
         }
     }
 

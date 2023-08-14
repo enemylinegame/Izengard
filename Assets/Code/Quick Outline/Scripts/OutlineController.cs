@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Code.QuickOutline.Scripts;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -29,32 +30,34 @@ public class OutlineController
     _outlineFillMaterial = Object.Instantiate(config.OutlineFillMaterial);
     _outlineColor = config.OutLineColor;
     _outlineWidth = config.OutlineWidth;
-  }
-
-  public void EnableOutLine(Renderer renderer) 
-  {
-    LoadSmoothNormals(renderer.GetComponentInChildren<MeshFilter>(), renderer);
-    _outlineFillMaterial.SetColor("_OutlineColor", _outlineColor);
+    
     _outlineMaskMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
     _outlineFillMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
     _outlineFillMaterial.SetFloat("_OutlineWidth", _outlineWidth);
+  }
+
+  public void EnableOutLine(Renderer renderer)
+  {
+    LoadSmoothNormals(renderer.GetComponentInChildren<MeshFilter>(), renderer);
+    _outlineFillMaterial.SetColor("_OutlineColor", _outlineColor);
     var materials = renderer.sharedMaterials.ToList();
   
     materials.Add(_outlineMaskMaterial);
     materials.Add(_outlineFillMaterial);
-    
+
     renderer.materials = materials.ToArray();
   }
   
   public void DisableOutLine(Renderer renderer) 
   {
+    LoadSmoothNormals(renderer.GetComponentInChildren<MeshFilter>(), renderer);
     var materials = renderer.sharedMaterials.ToList();
 
     _outlineFillMaterial.SetColor("_OutlineColor", Color.clear);
 
     materials.Remove(_outlineFillMaterial);
     materials.Remove(_outlineMaskMaterial);
-      
+    
     renderer.materials = materials.ToArray();
   }
   

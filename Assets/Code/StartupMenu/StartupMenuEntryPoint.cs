@@ -1,4 +1,5 @@
-﻿using Audio_System;
+using Code.Game;
+using Audio_System;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -18,6 +19,7 @@ namespace StartupMenu
         {
             _startupMenuController 
                 = new StartupMenuController(
+                    new GameStateManager(),
                     _placeForUI, 
                     (ISettingsData)_baseSettings, 
                     _audioMixer,

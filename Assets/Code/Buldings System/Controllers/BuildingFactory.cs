@@ -23,6 +23,7 @@ namespace Code.BuildingSystem
         private GlobalStock _stock;
         private GameConfig _gameConfig;
         private GeneratorLevelController _levelController;
+        private readonly GlobalTileSettings _tileSettings;
         public TowerShotBehavior TowerShot;
         
         
@@ -36,7 +37,7 @@ namespace Code.BuildingSystem
         private TileView _tileView;
 
         public BuildingFactory(UIController uiController, GlobalStock stock, 
-            GameConfig gameConfig, GeneratorLevelController levelController)
+            GameConfig gameConfig, GeneratorLevelController levelController, GlobalTileSettings tileSettings)
         {
             _uiController = uiController;
             _notificationUI = uiController.CenterUI.BaseNotificationUI;
@@ -48,6 +49,7 @@ namespace Code.BuildingSystem
             //_stock.AddResourceToStock(ResourceType.Deer, 100);
 
             _levelController = levelController;
+            _tileSettings = tileSettings;
             //_levelController.OnCombatPhaseStart += RespawnDummies;
             _levelController.SpawnTower += PlaceMainTower;
         }
@@ -180,10 +182,10 @@ namespace Code.BuildingSystem
             return true;
         }
         
-        private void RespawnDummies()
-        {
-            foreach (var dummy in _instantiatedDummys) dummy.Spawn();
-        }
+        // private void RespawnDummies()
+        // {
+        //     foreach (var dummy in _instantiatedDummys) dummy.Spawn();
+        // }
 
         public void PlaceCenterBuilding(TileView view)
         {
@@ -194,7 +196,7 @@ namespace Code.BuildingSystem
             view.TileModel.CenterBuilding = dummyController.Dummy;
             DummyController = dummyController;
             dummyController.Dummy.OnHealthChanged += HealthChanged;
-            foreach (var dummy in _instantiatedDummys) dummy.Spawn();
+            foreach (var dummy in _instantiatedDummys) dummy.Spawn(_tileSettings.MaxHealthCenterBuilding);
         }
 
         public void PlaceMainTower(Dictionary<Vector2Int, VoxelTile> spawnedTiles, ITileSetter tileSetter, Transform pointSpawnUnits)
@@ -210,11 +212,11 @@ namespace Code.BuildingSystem
             if (mainBuilding != null)
             {
                 TowerShot = mainBuilding.GetComponentInChildren<TowerShotBehavior>();
-                firstTile.TileView.TileModel.HouseType = HouseType.All;
+                firstTile.TileView.TileModel.TileType = TileType.All;
                 MainBuilding.OnHealthChanged += HealthChanged;
             }
        
-            MainBuilding.Init((int)config.MaxHealth);
+            MainBuilding.Init(_tileSettings.MaxHealthMainTower);
             _levelController.SpawnTower -= PlaceMainTower;
         }
 
@@ -225,7 +227,7 @@ namespace Code.BuildingSystem
         
         public void Dispose()
         {
-            _levelController.OnCombatPhaseStart -= RespawnDummies;
+            //_levelController.OnCombatPhaseStart -= RespawnDummies;
             // _levelGenerator.SpawnResources -= OnNewTile;
             foreach (var dummyController in _instantiatedDummys) dummyController.Dispose();
         }

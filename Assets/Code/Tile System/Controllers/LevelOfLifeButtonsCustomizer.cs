@@ -12,15 +12,17 @@ namespace Code.TileSystem
         private TileUIView _uiView;
         private readonly GeneratorLevelController _levelController;
         private readonly BuildingFactory _buildingFactory;
+        private readonly GlobalTileSettings _tileSettings;
 
         public LevelOfLifeButtonsCustomizer(ITextVisualizationOnUI notificationUI, GlobalStock stock, TileUIView uiView,
-            GeneratorLevelController levelController, BuildingFactory buildingFactory)
+            GeneratorLevelController levelController, BuildingFactory buildingFactory, GlobalTileSettings tileSettings)
         {
             _notificationUI = notificationUI;
             _stock = stock;
             _uiView = uiView;
             _levelController = levelController;
             _buildingFactory = buildingFactory;
+            _tileSettings = tileSettings;
         }
 
         public void RepairBuilding(TileModel model)
@@ -44,7 +46,7 @@ namespace Code.TileSystem
                 {
                     _stock.GetResourceFromStock(resourcePrice.ResourceType, resourcePrice.Cost);
                 });
-                _buildingFactory.DummyController.Spawn();
+                _buildingFactory.DummyController.Spawn(_tileSettings.MaxHealthCenterBuilding);
             }
         }
         
