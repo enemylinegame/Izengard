@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Audio_System;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace StartupMenu
@@ -7,15 +8,20 @@ namespace StartupMenu
     {
         private readonly string _viewPath = "UI/StartupMenuUI/MainMenuUI";
         private readonly StateModel _menuMonitor;
-      
+        private readonly UIAudioProvider _uIAudioProvider;
+
         private MainMenuView _view;
     
-        public MainMenuController(Transform placeForUI, StateModel menuMonitor, AudioSource clickSource)
+        public MainMenuController(
+            Transform placeForUI, 
+            StateModel menuMonitor, 
+            UIAudioProvider uIAudioProvider)
         {
             _menuMonitor = menuMonitor;
-
+            _uIAudioProvider = uIAudioProvider;
+            
             _view = LoadView(placeForUI);
-            _view.Init(StartGame, OpenSettings, Exit, clickSource);
+            _view.Init(StartGame, OpenSettings, Exit);
         }
 
         private MainMenuView LoadView(Transform placeForUI)
@@ -27,18 +33,24 @@ namespace StartupMenu
 
         private void StartGame()
         {
+            PlaySound();
             _menuMonitor.CurrentState = MenuState.Game;
         }
 
         private void OpenSettings()
         {
+            PlaySound();
             _menuMonitor.CurrentState = MenuState.Settings;
         }
 
         private void Exit()
         {
+            PlaySound();
             _menuMonitor.CurrentState = MenuState.Exit;
         }
+
+        private void PlaySound() 
+            => _uIAudioProvider.PlayButtonClickCound();
 
     }
 }
