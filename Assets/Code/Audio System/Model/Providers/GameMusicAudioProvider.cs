@@ -1,12 +1,6 @@
 ﻿namespace Audio_System
 {
-    public interface IGameMusicAudioProvider : IAudioProvider
-    {
-        void PlayMainMenuMusic();
-        void PlayInGameMusic();
-    }
-
-    public class GameMusicAudioProvider : BaseAudioProvider, IGameMusicAudioProvider
+    public class GameMusicAudioProvider : BaseAudioProvider
     {
         private readonly string mainMenuMusicPath = "Game/InMainMenuMusic";
         private readonly string inGameMusicPath = "Game/InGameMusic";

@@ -19,8 +19,8 @@ namespace StartupMenu
         private readonly AudioController _audioController;
         private readonly GameStateManager _gameStateManager;
 
-        private readonly IGameMusicAudioProvider _gameMusicAudioProvider;
-        private readonly IUIAudioProvider _uIAudioProvider;
+        private readonly GameMusicAudioProvider _gameMusicAudioProvider;
+        private readonly UIAudioProvider _uIAudioProvider;
 
         private MainMenuController _mainMenuController;
         private SettingsMenuController _settingsMenuContoller;

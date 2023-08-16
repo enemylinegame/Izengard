@@ -12,7 +12,7 @@ namespace StartupMenu
 
         private readonly GameSettingsManager _settingsManager;
         private readonly StateModel _menuMonitor;
-        private readonly IUIAudioProvider _uIAudioProvider;
+        private readonly UIAudioProvider _uIAudioProvider;
 
         private Dictionary<SettingsMenuActionType, Action> _settingsMenuActions;
         private Dictionary<GameSettingsType, Action<object>> _changeSettingsActions;
@@ -26,7 +26,7 @@ namespace StartupMenu
             GameSettingsManager settingsManager,
             ISettingsData baseSettings,
             StateModel menuMonitor,
-            IUIAudioProvider uIAudioProvider)
+            UIAudioProvider uIAudioProvider)
         {
             _settingsManager = settingsManager;
             _menuMonitor = menuMonitor;

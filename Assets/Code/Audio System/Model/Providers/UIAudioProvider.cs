@@ -2,12 +2,7 @@
 
 namespace Audio_System
 {
-    public interface IUIAudioProvider: IDisposable 
-    {
-        void PlayButtonClickCound();
-    }
-
-    public class UIAudioProvider : BaseAudioProvider, IUIAudioProvider
+    public class UIAudioProvider : BaseAudioProvider
     {
         private readonly string _onClickSoundPath = "UI/OnClickSound";
         

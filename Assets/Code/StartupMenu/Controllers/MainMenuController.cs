@@ -8,14 +8,14 @@ namespace StartupMenu
     {
         private readonly string _viewPath = "UI/StartupMenuUI/MainMenuUI";
         private readonly StateModel _menuMonitor;
-        private readonly IUIAudioProvider _uIAudioProvider;
+        private readonly UIAudioProvider _uIAudioProvider;
 
         private MainMenuView _view;
     
         public MainMenuController(
             Transform placeForUI, 
             StateModel menuMonitor, 
-            IUIAudioProvider uIAudioProvider)
+            UIAudioProvider uIAudioProvider)
         {
             _menuMonitor = menuMonitor;
             _uIAudioProvider = uIAudioProvider;
