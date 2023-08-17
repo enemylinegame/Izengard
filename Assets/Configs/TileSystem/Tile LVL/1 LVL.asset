@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _icon: {fileID: 0}
   _tileLvl: 1
-  maxUnits: 5
+  _maxWorkers: 5
   _buildingTirs:
   - {fileID: 11400000, guid: 85c39d02527e5774da6b9c7281fa5b41, type: 2}
   - {fileID: 11400000, guid: 7cb7122a470131a438156fd427f13055, type: 2}
