@@ -10,12 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: beaac01dcc715274cad5dab613e707c5, type: 3}
-<<<<<<<< HEAD:Assets/Configs/Recipes.asset
-  m_Name: Recipes
-========
-  m_Name: Convertation Res
->>>>>>>> Dev-Master:Assets/Configs/Convertation Res.asset
-  m_EditorClassIdentifier: 
+  m_Name: ConvertationRecipes
   _recipes:
   - TargetResource: 6
     ResultAmount: 2
