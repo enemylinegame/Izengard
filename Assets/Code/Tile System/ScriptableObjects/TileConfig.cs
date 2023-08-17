@@ -12,13 +12,12 @@ namespace Code.TileSystem
         [Header("Настройки тайла на данный уровень")]
         [SerializeField] private Sprite _icon;
         [SerializeField] private TileLvl _tileLvl;
-        [SerializeField] private int maxUnits;
+        [SerializeField] private int _maxWorkers;
         [Space, Header("Здесь будет храниться список зданий на данный уровень")]
         [SerializeField] private List<BuildingConfig> _buildingTirs;
         [FormerlySerializedAs("_repairCost")]
         [Space, Header("Стоимость починки")]
         [SerializeField] private List<ResourcePriceModel> _priceRepair;
-        [FormerlySerializedAs("_recoveryCost")]
         [Header("Стоимость Восстановления")]
         [SerializeField] private List<ResourcePriceModel> _priceRecovery;
         [Header("Стоимость Апгрейда")]
@@ -31,7 +30,7 @@ namespace Code.TileSystem
         public List<ResourcePriceModel> PriceUpgrade => _priceUpgrade;
         public Sprite IconTile => _icon;
         public TileLvl TileLvl => _tileLvl;
-        public int MaxUnits => maxUnits;
+        public int MaxWorkers => _maxWorkers;
         public List<BuildingConfig> BuildingTirs => _buildingTirs;
     }
 }

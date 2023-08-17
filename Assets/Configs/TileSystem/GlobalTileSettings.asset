@@ -9,10 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e970d25cbb334d839758f5d63e69d779, type: 3}
-  m_Name: TileList
+  m_Script: {fileID: 11500000, guid: 281a8835de5d452fba9a55f883b88abd, type: 3}
+  m_Name: GlobalTileSettings
   m_EditorClassIdentifier: 
-  _LVLList:
+  MaxWorkersWar: 8
+  MaxWarriorsEco: 3
+  MaxHealthMainTower: 3000
+  MaxHealthCenterBuilding: 1000
+  LVLList:
   - {fileID: 11400000, guid: 9565a228ea7f390448b26a5a1b3ef329, type: 2}
   - {fileID: 11400000, guid: 98c2f906a41db354aa3a51f4e0b89784, type: 2}
   - {fileID: 11400000, guid: 17d2cf0f9fa08054ca294acb0b8b15c9, type: 2}

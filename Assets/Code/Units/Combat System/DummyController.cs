@@ -18,10 +18,10 @@ namespace CombatSystem
             _dummy.OnDeath += OnDead;
         }
 
-        public void Spawn() 
+        public void Spawn(int MaxHealth) 
         {
             _dummy.gameObject.SetActive(true);
-            _dummy.Init((int)_dummy.MaxHealth);
+            _dummy.Init(MaxHealth);
             _dummyRenderer.material.color = Color.white;
         }
 

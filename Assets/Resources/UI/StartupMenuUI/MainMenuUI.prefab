@@ -577,10 +577,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfab6525087e52446ac6bcfeeb8c625b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameSceneIndex: 1
   _playButton: {fileID: 5370523702368646675}
   _settingsButton: {fileID: 5370523702495779401}
   _quitButton: {fileID: 5370523701219610285}
+  _clickSound: {fileID: 11400000, guid: c326690be6a74c24394b732c51456ffd, type: 2}
 --- !u!1 &5370523702032597714
 GameObject:
   m_ObjectHideFlags: 0

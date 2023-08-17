@@ -19,7 +19,7 @@ MonoBehaviour:
   _buildingPrefab: {fileID: 8901040941739594243, guid: a3a22ed8d083a894aaefc4efd031b92c, type: 3}
   _tierNumber: 1
   _buildingType: 202
-  _houseType: 3
+  _tileType: 03000000
   _description: 
   _maxWorkers: 5
   _resource: 6

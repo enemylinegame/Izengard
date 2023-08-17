@@ -9,12 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72827fa6c3904fd48e962d6aecf05e5b, type: 3}
-  m_Name: RepairAndRecoberCostCenterBuilding
+  m_Script: {fileID: 11500000, guid: fbc648cae46c31041a69c0136fa00869, type: 3}
+  m_Name: OnClickSound
   m_EditorClassIdentifier: 
-  _repairCost:
-  - _resourceType: 1
-    _cost: 1
-  _recoveryCost:
-  - _resourceType: 1
-    _cost: 2
+  _audioSourceCode: 2
+  _clip: {fileID: 8300000, guid: 2b27beac877809342987f20df6222843, type: 3}
+  _volume: 1
+  _pitch: 1
+  _isLoop: 0
