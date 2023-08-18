@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 public class Controller
@@ -12,7 +13,7 @@ public class Controller
     private List<IOnUpdate> _onUpdates = new List<IOnUpdate>();
     private List<IOnFixedUpdate> _onFixedUpdates = new List<IOnFixedUpdate>();
     private List<IOnLateUpdate> _onLateUpdates = new List<IOnLateUpdate>();
-    private List<IOnDisable> _onDisables = new List<IOnDisable>();
+    private List<IDisposable> _dispoisables = new List<IDisposable>();
 
     public Controller Add(IOnController controller)
     {
@@ -36,9 +37,9 @@ public class Controller
             _onLateUpdates.Add(onLateUpdate);
         }
 
-        if (controller is IOnDisable onDisable)
+        if (controller is IDisposable onDisable)
         {
-            _onDisables.Add(onDisable);
+            _dispoisables.Add(onDisable);
         }
             
         return this;
@@ -90,11 +91,11 @@ public class Controller
 
     public void OnDisable()
     {
-        foreach (var ell in _onDisables)
+        foreach (var ell in _dispoisables)
         {
             if (ell.HasMethod(onDisableItself))
             {
-                ell.OnDisableItself();
+                ell.Dispose();
             }
         }
     }
