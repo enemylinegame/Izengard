@@ -7,7 +7,7 @@ public class Controller
     public const string updateMethod = "OnUpdate";
     public const string fixedUpdateMethod = "OnFixedUpdate";
     public const string lateUpdate = "OnLateUpdate";
-    public const string onDisableItself = "OnDisableItself";
+    public const string dispose = "Dispose";
     
     private List<IOnStart> _onStarts = new List<IOnStart>();
     private List<IOnUpdate> _onUpdates = new List<IOnUpdate>();
@@ -93,7 +93,7 @@ public class Controller
     {
         foreach (var ell in _dispoisables)
         {
-            if (ell.HasMethod(onDisableItself))
+            if (ell.HasMethod(dispose))
             {
                 ell.Dispose();
             }
