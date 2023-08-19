@@ -23,21 +23,23 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
     private readonly BtnUIController _btnUIController;
     private readonly BuildingFactory _buildingFactory;
     private readonly Dictionary<Vector2Int, VoxelTile> _spawnedTiles = new Dictionary<Vector2Int, VoxelTile>();
+    private TileView _tileView;
+    private GlobalTileSettings _tileSettings;
     public IReadOnlyDictionary<Vector2Int, VoxelTile> SpawnedTiles => _spawnedTiles;
     private ITileSetter _tileSetter;
     private readonly IButtonsSetter _buttonsSetter;
     private int _numZone;
     public TowerShotBehavior TowerShot;
     public Transform PointSpawnUnits;
-    private TileView _tileView;
 
 
     public GeneratorLevelController(List<VoxelTile> tiles, GameConfig gameConfig, BtnUIController btnUIController, 
-        Transform btnParents, UIController uiController)
+        Transform btnParents, UIController uiController, GlobalTileSettings tileSettings)
     {
         _voxelTiles = tiles;
         _gameConfig = gameConfig;
         _btnUIController = btnUIController;
+        _tileSettings = tileSettings;
         _rightUI = uiController.RightUI;
         
         _buttonsSetter = new ButtonsSetter(SpawnTile, btnParents, tiles[0].SizeTile, _spawnedTiles, gameConfig.ButtonSetterView);
@@ -49,7 +51,7 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
     }
     private void SpawnTile(TileSpawnInfo tileSpawnInfo)
     {
-        _tileSetter.SetTile(tileSpawnInfo);
+        _tileSetter.SetTile(tileSpawnInfo, _tileSettings);
         _buttonsSetter.SetButtons(tileSpawnInfo.GridSpawnPosition);
         SetTileNumZone(tileSpawnInfo.GridSpawnPosition);
         SpawnResources?.Invoke(_spawnedTiles[tileSpawnInfo.GridSpawnPosition]);
@@ -57,7 +59,7 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
     }
     private void SelectFirstTile(int numTile)
     {
-        _tileSetter = new TileSetter(_voxelTiles, _spawnedTiles, _voxelTiles[numTile], _gameConfig.TestBuilding);
+        _tileSetter = new TileSetter(_voxelTiles, _spawnedTiles, _voxelTiles[numTile], _tileSettings);
         _buttonsSetter.SetButtons(_tileSetter.FirstTileGridPosition);
         
         _btnUIController.TileSelected -= SelectFirstTile;

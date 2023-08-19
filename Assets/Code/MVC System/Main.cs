@@ -12,7 +12,6 @@ public class Main : MonoBehaviour
 {
     [Header("Configs")]
     [SerializeField] private GameConfig _gameConfig;
-    [SerializeField] private BuildingList _buildingList;
     [SerializeField] private GlobalTileSettings _globalTileSettings;
     [SerializeField] private GlobalResourceData _globalResourceList;
     [SerializeField] private WorkersTeamConfig _workersTeamConfig;

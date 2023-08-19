@@ -1,4 +1,5 @@
 using System;
+using Code.BuildingSystem;
 using Code.Game;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,15 +9,15 @@ public class EndGameController : IOnController, IOnStart, IOnUpdate, IDisposable
 
     private GameStateManager _gameStateManager;
     private EndGameScreen _endGameScreen;
-    private GeneratorLevelController _levelController;
+    private BuildingFactory _buildingFactory;
     private float _t;
 
     public EndGameController(GameStateManager gameStateManager, EndGameScreen endGameScreen, 
-        GeneratorLevelController levelController)
+        BuildingFactory buildingFactory)
     {
         _gameStateManager = gameStateManager;
         _endGameScreen = endGameScreen;
-        _levelController = levelController;
+        _buildingFactory = buildingFactory;
     }
 
     public void OnStart()
@@ -34,9 +35,9 @@ public class EndGameController : IOnController, IOnStart, IOnUpdate, IDisposable
                 Color.Lerp(new Color(0f, 0f, 0f, 0f), new Color(0f, 0f, 0f, 1f), _t);
         }
 
-        if (_levelController.TowerShot != null)
+        if (_buildingFactory.MainBuilding != null)
         {
-            if(_levelController.MainBuilding.CurrentHealth <= 0) 
+            if(_buildingFactory.MainBuilding.CurrentHealth <= 0) 
                 _endGameScreen.BackGroundGameOverScreen.gameObject.SetActive(true);
         }
     }

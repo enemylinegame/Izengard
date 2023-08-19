@@ -10,16 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56cc04b83def0f14d89f8aea0a2c71d4, type: 3}
-  m_Name: Textile Fabrick
+  m_Name: Textile Fabrick 1
   m_EditorClassIdentifier: 
   _icon: {fileID: 21300000, guid: 2f06b58ed0b529547bf45753f35993d7, type: 3}
   _maxHealth: 1000
-  _name: Textile Factory
-  _buildingCost: []
+  _name: 
+  _buildingCost:
+  - _resourceType: 1
+    _cost: 0
   _buildingPrefab: {fileID: 8901040941739594243, guid: a3a22ed8d083a894aaefc4efd031b92c, type: 3}
-  _tierNumber: 1
+  _tierNumber: 2
   _buildingType: 202
-  _tileType: 03000000
   _description: 
-  _maxWorkers: 5
-  _resource: 6
+  _tileType: 
+  _levelTile: 2
+  _maxWorkers: 0
+  _resource: 0
