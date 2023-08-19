@@ -19,9 +19,9 @@ public class GameInit
     public GameInit(Controller controller, GameConfig gameConfig, WorkersTeamConfig workersTeamConfig,
         RightUI rightUI, Transform btnParents, CenterUI centerUI, BottomUI bottomUI, TopResUiVew topResUiVew,
         EndGameScreen endGameScreen, TowerShotConfig towerShotConfig, BuyItemScreenView buyItemScreenView, 
-        HireSystemView hireSystemView, EquipScreenView equipScreenView, Camera camera, TileList tileList,
+        HireSystemView hireSystemView, EquipScreenView equipScreenView, Camera camera, GlobalTileSettings globalTileSettings,
         GlobalResourceData globalResourceList, OutLineSettings outLineSettings, MarketDataConfig marketData, 
-        MarketView marketView, RepairAndRecoberCostCenterBuilding repairAndRecoberCostCenterBuilding, 
+        MarketView marketView, 
         InGameMenuUI inGameMenuUI, AudioSource clickAudioSource)
     {
         //TODO Do not change the structure of the script
@@ -36,9 +36,9 @@ public class GameInit
         var soundPlayer = new SoundPlayer(clickAudioSource);
         var uiController = new UIController(rightUI, bottomUI, centerUI, inputController, marketView);
 
-        var levelGenerator = new GeneratorLevelController(tiles, gameConfig, btnConroller, btnParents, uiController);
+        var levelGenerator = new GeneratorLevelController(tiles, gameConfig, btnConroller, btnParents, uiController, globalTileSettings);
         // var buildController = new BuildGenerator(gameConfig);
-        var buildingController = new BuildingFactory(uiController, globalResStock, gameConfig, levelGenerator);
+        var buildingController = new BuildingFactory(uiController, globalResStock, gameConfig, levelGenerator, globalTileSettings);
 
         /* Market */
         var marketController = new MarketController(uiController, globalResStock, buildingController, marketData);
@@ -51,13 +51,13 @@ public class GameInit
         var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, hireSystemView, levelGenerator);
         var bulletsController = new BulletsController();
         var waveController = new WaveController(levelGenerator, uiController, btnParents, gameConfig, bulletsController, enemyDestroyObserver, buildingController);
-        var endGameController = new EndGameController(gameStateManager, endGameScreen, levelGenerator);
-        var renovationOfTheCentralBuilding = new LevelOfLifeButtonsCustomizer(uiController.CenterUI.BaseNotificationUI, globalResStock, uiController.BottomUI.TileUIView, levelGenerator, buildingController);
+        var endGameController = new EndGameController(gameStateManager, endGameScreen, buildingController);
+        var renovationOfTheCentralBuilding = new LevelOfLifeButtonsCustomizer(uiController.CenterUI.BaseNotificationUI, globalResStock, uiController.BottomUI.TileUIView, levelGenerator, buildingController, globalTileSettings);
 
         var workersTeamComtroller = new WorkersTeamController(workersTeamConfig);
         var productionManager = new ProductionManager(globalResStock, workersTeamComtroller, workersTeamConfig, gameConfig.PrescriptionsStorage, uiController.CenterUI.BaseNotificationUI);
         
-        var tileController = new TileController(tileList, uiController, buildingController, inputController, productionManager, renovationOfTheCentralBuilding, globalResStock);
+        var tileController = new TileController(uiController, buildingController, inputController, productionManager, renovationOfTheCentralBuilding, globalResStock, globalTileSettings);
         var defenderController = new DefendersController(bulletsController);
         var tileResourceUIController = new TileResourceUIController(uiController, inputController, tileController, gameConfig);
         var hireUnitView = new HireUnitView(rightUI.HireUnits);

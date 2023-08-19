@@ -19,7 +19,7 @@ namespace Code.Player
 
         private bool _isSpecialMode;
 
-        public bool IsOnTile = true;
+        public bool LockLeftClick = false;
         public bool LockRightClick = true;
 
         public InputController(OutlineController outlineController)
@@ -29,6 +29,50 @@ namespace Code.Player
 
 
         public void OnUpdate(float deltaTime)
+        {
+            if (Input.GetMouseButtonDown(0)) LeftMouseButton();
+            else if(Input.GetMouseButtonDown(1)) RightMouseButton();
+        }
+
+        private void LeftMouseButton()
+        {
+            var bitmask = 1 << 6;
+            if (!Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 100, bitmask)) return;
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+            var tile = hit.collider.GetComponentInParent<TileView>();
+            var buttonSetterView = hit.collider.GetComponent<ButtonSetterView>();
+            
+            if(buttonSetterView != null && !LockLeftClick) buttonSetterView.OnClick();
+            if (!tile) return;
+
+            if (_isSpecialMode)
+            {
+                _tileSelector.SelectTile(tile);
+            }
+            
+            if (_tile != null)
+            {
+                _loadInfoToTheUis.ForEach(selector =>
+                {
+                    selector.Cancel();
+                    _outlineController.DisableOutLine(_tile.Renderer);
+                });
+                
+                _tile = null;
+                LockLeftClick = false;
+            }
+            
+            if(LockLeftClick) return;
+            
+            _loadInfoToTheUis.ForEach(selector =>
+            {
+                selector.LoadInfoToTheUI(tile);
+                _outlineController.EnableOutLine(tile.Renderer);
+                LockLeftClick = true;
+            });
+            _tile = tile;
+        }
+        private void RightMouseButton()
         {
             if (!LockRightClick)
             {
@@ -44,34 +88,9 @@ namespace Code.Player
     
                     if (_isSpecialMode) _tileSelector.Cancel();
 
-                    IsOnTile = true;
+                    LockLeftClick = false;
                     _tile = null;
                 }
-            }
-            if (!Input.GetMouseButtonDown(0)) return;
-
-            var bitmask = 1 << 6;
-            if (!Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 100, bitmask)) return;
-            if (EventSystem.current.IsPointerOverGameObject()) return;
-            var tile = hit.collider.GetComponentInParent<TileView>();
-            var buttonSetterView = hit.collider.GetComponent<ButtonSetterView>();
-            
-            if(buttonSetterView != null && IsOnTile) buttonSetterView.OnClick();
-            if (!tile) return;
-
-            if (_isSpecialMode)
-            {
-                _tileSelector.SelectTile(tile);
-            }
-            
-            if (!IsOnTile) return;
-            _tile = tile;
-            
-            foreach (var selector in _loadInfoToTheUis)
-            {
-                selector.LoadInfoToTheUI(tile);
-                _outlineController.EnableOutLine(tile.Renderer);
-                IsOnTile = false;
             }
         }
 
@@ -80,7 +99,6 @@ namespace Code.Player
             _tileSelector = tileSelector;
             _isSpecialMode = _tileSelector != null;
         }
-
         public void Add(IOnTile tile)
         {
             if (tile is ITileLoadInfo loadInfoToTheUI)
@@ -101,7 +119,7 @@ namespace Code.Player
     
             if (_isSpecialMode) _tileSelector.Cancel();
 
-            IsOnTile = true;
+            LockLeftClick = true;
             _tile = null;
         }
     }

@@ -29,7 +29,7 @@ namespace CombatSystem
 
         private void RespawnDummies()
         {
-            foreach (var dummy in _instantiatedDummys) dummy.Spawn();
+            //foreach (var dummy in _instantiatedDummys) dummy.Spawn();
         }
 
         private void OnNewTile(VoxelTile tile)
@@ -40,7 +40,7 @@ namespace CombatSystem
             _dummyController = new DummyController(instaniatedDummy);
             
             _instantiatedDummys.Add(_dummyController);
-            foreach (var dummy in _instantiatedDummys) dummy.Spawn();
+            //foreach (var dummy in _instantiatedDummys) dummy.Spawn();
         }
 
         public void Dispose()

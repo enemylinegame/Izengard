@@ -1,14 +1,17 @@
 using System.Collections.Generic;
 using Code.BuildingSystem;
+using Code.TileSystem;
 using ResourceSystem;
 using ResourceSystem.SupportClases;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Code.BuildingSystem
 {
     [CreateAssetMenu(fileName = nameof(BuildingConfig), menuName = "Tile System/" + nameof(BuildingConfig))]
     public class BuildingConfig : ScriptableObject, IBuildingModel
     {
+        [Header("Building settings")]
         [SerializeField] private Sprite _icon;
         [SerializeField] private float _maxHealth;
         [SerializeField] private string _name;
@@ -16,9 +19,13 @@ namespace Code.BuildingSystem
         [SerializeField] private GameObject _buildingPrefab;
         [SerializeField] private TierNumber _tierNumber;
         [SerializeField] private BuildingTypes _buildingType;
-        [SerializeField] private HouseType _houseType;
         [SerializeField] private string _description;
+        
+        [Header("Load Settings")]
+        [SerializeField] private List<TileType> _tileType;
 
+        [SerializeField] private TileLvl _levelTile;
+        
         [Header("Production building")]
         [SerializeField] private int _maxWorkers;
         [SerializeField] private ResourceType _resource;
@@ -33,12 +40,11 @@ namespace Code.BuildingSystem
         public GameObject BuildingPrefab => _buildingPrefab;
         public TierNumber TierNumber => _tierNumber;
         public BuildingTypes BuildingType => _buildingType;
-        public HouseType HouseType => _houseType;
+        public List<TileType> TileType => _tileType;
         public float BuildingTime => _buildingTime;
         public string Description => _description;
-
-        
         public int MaxWorkers => _maxWorkers;
         public ResourceType Resource => _resource;
+        public TileLvl LevelTile => _levelTile;
     }
 }

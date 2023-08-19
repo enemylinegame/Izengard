@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Code.Units.HireDefendersSystem
 {
-    public class HireDefenderProgressManager : IOnController, IOnUpdate, IOnDisable
+    public class HireDefenderProgressManager : IOnController, IOnUpdate, IDisposable
     {
 
         private Action<DefenderPreview, TileModel, DefenderSettings> _finishProgressListener;
@@ -104,7 +104,7 @@ namespace Code.Units.HireDefendersSystem
             }
         }
 
-        public void OnDisableItself()
+        public void Dispose()
         {
             Clear();
         }

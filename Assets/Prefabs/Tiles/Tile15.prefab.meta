@@ -1,5 +1,8 @@
 fileFormatVersion: 2
 guid: a67c8b559127fab48a92eb601565e76c
+labels:
+- Prefab
+- Tiles
 PrefabImporter:
   externalObjects: {}
   userData: 
