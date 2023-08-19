@@ -61,7 +61,7 @@ namespace Wave
 
         public void Dispose()
         {
-            _enemyAI.Dispose();
+            _enemyAI?.Dispose();
             _damageable.OnDeath -= KillEnemy;
             _tileDislocation.Off();
             UnityEngine.Object.Destroy(Enemy.RootGameObject);
