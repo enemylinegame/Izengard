@@ -19,8 +19,6 @@ namespace Code.TileSystem
         
         private TileUIView _uiView;
         private TileView _tileView;
-
-
         private ITextVisualizationOnUI _playerNotificationSystem;
         private BuildingFactory _buildingFactory;
         private InputController _inputController;
@@ -35,8 +33,6 @@ namespace Code.TileSystem
         public ProductionManager WorkerMenager => _productionManager;
         public TileModel TileModel => _tileView.TileModel;
         public TileView View => _tileView;
-
-        public GlobalTileSettings GlobalTileSettings => _tileSettings;
 
         #endregion
         public TileController(UIController uiController, BuildingFactory buildingController, 
@@ -61,9 +57,12 @@ namespace Code.TileSystem
         #region LoadAndUnloadTile
         public void LoadInfoToTheUI(TileView tile)
         {
-            TileTypeCheck(tile);
+            if (tile.TileModel.TileType == BuildingSystem.TileType.None)
+            {
+                TileTypeCheck(tile);
+                return;
+            } 
             _tileView = tile;
-            if (tile.TileModel.TileType == BuildingSystem.TileType.None) return;
 
             LoadBuildings(tile.TileModel, tile.TileModel.TileType);
             _buttonsController.ButtonAddListener(tile.TileModel, _level);
@@ -274,7 +273,7 @@ namespace Code.TileSystem
         #region TileTypeChange
         private void TileTypeCheck(TileView view)
         {
-            if(view.TileModel.TileType != BuildingSystem.TileType.None) return;
+            if(view.TileModel.TileType != BuildingSystem.TileType.None && view.TileModel.TileType == BuildingSystem.TileType.All) return;
             
             _uiController.IsWorkUI(UIType.TileSel, true);
 
@@ -292,13 +291,9 @@ namespace Code.TileSystem
                 case BuildingSystem.TileType.war:
                     tile.TileModel.MaxWarriors = _tileSettings.MaxWorkersWar;
                     break;
-                case BuildingSystem.TileType.All:
-                    tile.TileModel.MaxWarriors = _tileSettings.MaxWorkersWar;
-                    break;
             }
             
             tile.TileModel.TileType = type;
-
             RemoveListenersTileSelection(false);
             _buildingFactory.PlaceCenterBuilding(tile);
 
@@ -336,7 +331,7 @@ namespace Code.TileSystem
             _uiController.BottomUI.BuildingMenu.PrefabButtonClear.
                 gameObject.SetActive(levelExceedDestroyBuildingInfo);
         }
-        public void LVLUp()
+        private void LVLUp()
         {
             if (!IsResourcesEnough(TileModel.TileConfig)) return;
             
@@ -346,13 +341,13 @@ namespace Code.TileSystem
             });
             
             int currentLevel = TileModel.SaveTileConfig.TileLvl.GetHashCode();
-            if (currentLevel == _tileSettings.LVLList.Count)
+            if (currentLevel == _tileSettings.Levels.Count)
             {
                 _playerNotificationSystem.BasicTemporaryUIVisualization("Max LVL", 2);
                 return;
             }
             
-            TileModel.SaveTileConfig = _tileSettings.LVLList[currentLevel];
+            TileModel.SaveTileConfig = _tileSettings.Levels[currentLevel];
             TileModel.TileConfig = TileModel.SaveTileConfig;
             TileModel.CurrBuildingConfigs.AddRange(TileModel.SaveTileConfig.BuildingTirs);
                 

@@ -16,9 +16,32 @@ MonoBehaviour:
   MaxWarriorsEco: 3
   MaxHealthMainTower: 3000
   MaxHealthCenterBuilding: 1000
-  LVLList:
-  - {fileID: 11400000, guid: 9565a228ea7f390448b26a5a1b3ef329, type: 2}
-  - {fileID: 11400000, guid: 98c2f906a41db354aa3a51f4e0b89784, type: 2}
-  - {fileID: 11400000, guid: 17d2cf0f9fa08054ca294acb0b8b15c9, type: 2}
-  - {fileID: 11400000, guid: 08f0532ca1d88d94daedc8ab99f2624d, type: 2}
-  - {fileID: 11400000, guid: 754259aca500a9d4587c1e4b70b975a7, type: 2}
+  Levels:
+  - IconTile: {fileID: 0}
+    TileLvl: 1
+    MaxWorkers: 5
+    BuildingTirs:
+    - {fileID: 11400000, guid: f659413232fe2aa459bab826358acb96, type: 2}
+    - {fileID: 11400000, guid: 85c39d02527e5774da6b9c7281fa5b41, type: 2}
+    - {fileID: 11400000, guid: 7cb7122a470131a438156fd427f13055, type: 2}
+    - {fileID: 11400000, guid: 9ed9cde684325fe469ed2c982d491537, type: 2}
+    PriceRepair: []
+    PriceRecovery: []
+    PriceUpgrade: []
+  - IconTile: {fileID: 0}
+    TileLvl: 2
+    MaxWorkers: 10
+    BuildingTirs:
+    - {fileID: 11400000, guid: c78963b97e1e4de7b6d739f38f86346d, type: 2}
+    - {fileID: 11400000, guid: 5e8e9012970c4464989c9feeee6b47e3, type: 2}
+    - {fileID: 11400000, guid: 0349b3159c87464682fe53d991f95918, type: 2}
+    PriceRepair: []
+    PriceRecovery: []
+    PriceUpgrade: []
+  - IconTile: {fileID: 0}
+    TileLvl: 3
+    MaxWorkers: 5
+    BuildingTirs: []
+    PriceRepair: []
+    PriceRecovery: []
+    PriceUpgrade: []
