@@ -46,6 +46,7 @@ namespace CombatSystem
             _paymentSystem = paymentSystem;
             _hireProgressManager = hireProgressManager;
             _hireProgressManager.AddFinishProgressListener(FinishHireDefenderProcess);
+            tileController.TileTypeChange += TypeChange;
         }
 
 
@@ -195,6 +196,12 @@ namespace CombatSystem
         {
             _warsView.SetMexDefenders(tile.TileModel.MaxWarriors);
             _warsView.SetDefenders(tile.TileModel.DefenderUnits);
+        }
+        private void TypeChange(TileView tile)
+        {
+            _warsView.SetMexDefenders(tile.TileModel.MaxWarriors);
+            _warsView.SetDefenders(tile.TileModel.DefenderUnits);
+            _tileController.TileTypeChange -= TypeChange;
         }
 
         public void Cancel()

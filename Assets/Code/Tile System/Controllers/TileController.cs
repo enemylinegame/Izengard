@@ -16,6 +16,8 @@ namespace Code.TileSystem
     public class TileController : IDisposable, IOnController, IOnTile, ITileLoadInfo, IOnUpdate
     {
         #region Fields
+
+        public event Action<TileView> TileTypeChange;
         
         private TileUIView _uiView;
         private TileView _tileView;
@@ -300,6 +302,7 @@ namespace Code.TileSystem
             _uiController.IsWorkUI(UIType.TileSel, false);
             _uiController.IsWorkUI(UIType.Tile, true);
             LoadInfoToTheUI(tile);
+            TileTypeChange?.Invoke(tile);
         }
 
         private void RemoveListenersTileSelection(bool IsBack)
