@@ -4,22 +4,21 @@
 
     public sealed class TimeRemainingController: IOnController, IOnUpdate
     {
-        #region Fields
-        
+
         private readonly List<ITimeRemaining> _timeRemainings;
         
-        #endregion
-
-        
-        #region ClassLifeCycles
 
         public TimeRemainingController()
         {
             _timeRemainings = TimeRemainingExtensions.TimeRemainings;
         }
-        
-        #endregion
 
+
+        public void Clear()
+        {
+            _timeRemainings.Clear();
+        }
+        
         
         #region IExecute
 
@@ -32,7 +31,6 @@
                 obj.CurrentTime -= time;
                 if (obj.CurrentTime <= 0.0f)
                 {
-                    obj?.Method?.Invoke();
                     if (!obj.IsRepeating)
                     {
                         obj.RemoveTimeRemaining();
@@ -41,6 +39,7 @@
                     {
                         obj.CurrentTime = obj.Time;
                     }
+                    obj?.Method?.Invoke();
                 }
             }
         }

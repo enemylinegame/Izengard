@@ -2,6 +2,7 @@
 
 public sealed class TimeRemaining: ITimeRemaining
 {
+    
     #region ITimeRemaining
         
     public Action Method { get; }
@@ -11,8 +12,6 @@ public sealed class TimeRemaining: ITimeRemaining
         
     #endregion
 
-        
-    #region ClassLifeCycles
 
     public TimeRemaining(Action method, float time, bool isRepeating = false)
     {
@@ -21,6 +20,5 @@ public sealed class TimeRemaining: ITimeRemaining
         CurrentTime = time;
         IsRepeating = isRepeating;
     }
-        
-    #endregion
+
 }
