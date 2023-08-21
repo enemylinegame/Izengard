@@ -36,7 +36,7 @@ public class GameInit
         var soundPlayer = new SoundPlayer(clickAudioSource);
         var uiController = new UIController(rightUI, bottomUI, centerUI, inputController, marketView);
 
-        var levelGenerator = new GeneratorLevelController(tiles, gameConfig, btnConroller, btnParents, uiController);
+        var levelGenerator = new GeneratorLevelController(tiles, gameConfig, btnConroller, btnParents, uiController, globalTileSettings);
         // var buildController = new BuildGenerator(gameConfig);
         var buildingController = new BuildingFactory(uiController, globalResStock, gameConfig, levelGenerator, globalTileSettings);
 
@@ -51,7 +51,7 @@ public class GameInit
         var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, hireSystemView, levelGenerator);
         var bulletsController = new BulletsController();
         var waveController = new WaveController(levelGenerator, uiController, btnParents, gameConfig, bulletsController, enemyDestroyObserver, buildingController);
-        var endGameController = new EndGameController(gameStateManager, endGameScreen, levelGenerator);
+        var endGameController = new EndGameController(gameStateManager, endGameScreen, buildingController);
         var renovationOfTheCentralBuilding = new LevelOfLifeButtonsCustomizer(uiController.CenterUI.BaseNotificationUI, globalResStock, uiController.BottomUI.TileUIView, levelGenerator, buildingController, globalTileSettings);
 
         var workersTeamComtroller = new WorkersTeamController(workersTeamConfig);
