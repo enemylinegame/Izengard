@@ -45,7 +45,8 @@ public class GameInit
 
         var enemyDestroyObserver = new EnemyDestroyObserver(globalResStock);
         var unitController = new UnitController();
-        var timeRemaining = new TimeRemainingController();
+        var timersHolder = new TimersHolder();
+        var timeRemaining = new TimeRemainingController(timersHolder);
         var towershotcontroller = new TowerShotController(towerShotConfig, buildingController, gameConfig.Bullet);
         var eqScreenController = new EquipScreenController(equipScreenView, camera);
         var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, hireSystemView, levelGenerator);

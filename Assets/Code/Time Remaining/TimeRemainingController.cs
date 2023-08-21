@@ -5,18 +5,17 @@
     public sealed class TimeRemainingController: IOnController, IOnUpdate
     {
 
-        private readonly List<ITimeRemaining> _timeRemainings;
+        private TimersHolder _timersHolder;
         
-
-        public TimeRemainingController()
+        public TimeRemainingController(TimersHolder timersHolder)
         {
-            _timeRemainings = TimeRemainingExtensions.TimeRemainings;
+            _timersHolder = timersHolder;
         }
 
 
         public void Clear()
         {
-            _timeRemainings.Clear();
+            _timersHolder.Timers.Clear();
         }
         
         
@@ -25,21 +24,23 @@
         public void OnUpdate(float deltatime)
         {
             var time = Time.deltaTime;
-            for (var i = 0; i < _timeRemainings.Count; i++)
+            var timers = _timersHolder.Timers;
+            for (var i = 0; i < timers.Count; i++)
             {
-                var obj = _timeRemainings[i];
-                obj.CurrentTime -= time;
-                if (obj.CurrentTime <= 0.0f)
+                var timer = timers[i];
+                timer.TimeLeft -= time;
+                if (timer.TimeLeft <= 0.0f)
                 {
-                    if (!obj.IsRepeating)
+                    if (!timer.IsRepeating)
                     {
-                        obj.RemoveTimeRemaining();
+                        timers.RemoveAt(i);
+                        i--;
                     }
                     else
                     {
-                        obj.CurrentTime = obj.Time;
+                        timer.TimeLeft = timer.Duration;
                     }
-                    obj?.Method?.Invoke();
+                    timer?.Method?.Invoke();
                 }
             }
         }

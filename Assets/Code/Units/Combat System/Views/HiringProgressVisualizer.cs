@@ -28,7 +28,7 @@ namespace CombatSystem.Views
 
                 _progress = progress;
                 _image.enabled = true;
-                _timer.AddTimeRemaining();
+                TimersHolder.AddTimer(_timer);
                 OnUpdate();
                 _isTiming = true;
             }
@@ -38,7 +38,7 @@ namespace CombatSystem.Views
         {
             if (_isTiming)
             {
-                _timer.RemoveTimeRemaining();
+                TimersHolder.RemoveTimer(_timer);
                 _image.enabled = false;
                 _isTiming = false;
             }

@@ -7,17 +7,17 @@ public sealed class TimeRemaining: ITimeRemaining
         
     public Action Method { get; }
     public bool IsRepeating { get; }
-    public float Time { get; }
-    public float CurrentTime { get; set; }
+    public float Duration { get; set; }
+    public float TimeLeft { get; set; }
         
     #endregion
 
 
-    public TimeRemaining(Action method, float time, bool isRepeating = false)
+    public TimeRemaining(Action method, float duration, bool isRepeating = false)
     {
         Method = method;
-        Time = time;
-        CurrentTime = time;
+        Duration = duration;
+        TimeLeft = duration;
         IsRepeating = isRepeating;
     }
 

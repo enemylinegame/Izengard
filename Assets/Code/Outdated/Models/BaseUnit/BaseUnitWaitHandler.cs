@@ -21,7 +21,8 @@ public sealed class BaseUnitWaitHandler : UnitHandler
     public override IUnitHandler Handle()
     {
         _baseUnitController.CurrentUnitHandler = GetCurrent();
-        TimeRemainingExtensions.AddTimeRemaining(new TimeRemaining(TimeIsUp,_time,false));
+        TimeRemaining timer = new TimeRemaining(TimeIsUp, _time);
+        TimersHolder.AddTimer(timer);
         return this;
     }
 

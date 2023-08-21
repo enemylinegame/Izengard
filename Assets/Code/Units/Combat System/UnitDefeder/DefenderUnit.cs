@@ -259,7 +259,8 @@ namespace CombatSystem
         public void DestroyItself()
         {
             SetState(DefenderState.Dying);
-            (new TimeRemaining(DestroyBody, _bodyDestroyDelay)).AddTimeRemaining();
+            TimeRemaining destroyTimer = new TimeRemaining(DestroyBody, _bodyDestroyDelay);
+            TimersHolder.AddTimer(destroyTimer);
         }
 
         private void DestroyBody()
