@@ -7,17 +7,10 @@
     public sealed class TimeRemainingController: IOnController, IOnUpdate, IDisposable
     {
 
-        private TimersHolder _timersHolder;
-        
-        public TimeRemainingController(TimersHolder timersHolder)
-        {
-            _timersHolder = timersHolder;
-        }
-
 
         public void Dispose()
         {
-            _timersHolder.Timers.Clear();
+            TimersHolder.Timers.Clear();
         }
         
         
@@ -25,7 +18,7 @@
 
         public void OnUpdate(float deltatime)
         {
-            List<ITimeRemaining> timers = _timersHolder.Timers;
+            List<ITimeRemaining> timers = TimersHolder.Timers;
             for (int i = 0; i < timers.Count; i++)
             {
                 ITimeRemaining timer = timers[i];

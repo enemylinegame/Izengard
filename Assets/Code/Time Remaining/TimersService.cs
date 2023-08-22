@@ -5,17 +5,15 @@ using Code.Time_Remaining;
 public static class TimersService
 {
 
-    public static TimersHolder TamersContainer;
-
     public static bool AddTimer(TimeRemaining timer)
     {
         bool isAdded = false;
 
-        if (TamersContainer != null && timer != null)
+        if (timer != null)
         {
-            if (!TamersContainer.Timers.Contains(timer))
+            if (!TimersHolder.Timers.Contains(timer))
             {
-                TamersContainer.Timers.Add(timer);
+                TimersHolder.Timers.Add(timer);
                 isAdded = true;
             }
         }
@@ -25,9 +23,9 @@ public static class TimersService
 
     public static bool RemoveTimer(TimeRemaining timer)
     {
-        if (TamersContainer != null && timer != null)
+        if (timer != null)
         {
-            return TamersContainer.Timers.Remove(timer);
+            return TimersHolder.Timers.Remove(timer);
         }
 
         return false;
