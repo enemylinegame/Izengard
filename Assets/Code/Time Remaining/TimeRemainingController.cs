@@ -1,16 +1,14 @@
-﻿
-    using System;
+﻿    using System;
     using System.Collections.Generic;
-    using Code.Time_Remaining;
-    using UnityEngine;
+
 
     public sealed class TimeRemainingController: IOnController, IOnUpdate, IDisposable
     {
-
+        public Func<List<ITimeRemaining>> GetTimersList;
 
         public void Dispose()
         {
-            TimersHolder.Timers.Clear();
+            GetTimersList().Clear();
         }
         
         
@@ -18,7 +16,7 @@
 
         public void OnUpdate(float deltatime)
         {
-            List<ITimeRemaining> timers = TimersHolder.Timers;
+            List<ITimeRemaining> timers = GetTimersList();
             for (int i = 0; i < timers.Count; i++)
             {
                 ITimeRemaining timer = timers[i];

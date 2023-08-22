@@ -260,7 +260,7 @@ namespace CombatSystem
         {
             SetState(DefenderState.Dying);
             TimeRemaining destroyTimer = new TimeRemaining(DestroyBody, _bodyDestroyDelay);
-            TimersService.AddTimer(destroyTimer);
+            TimersHolder.AddTimer(destroyTimer);
         }
 
         private void DestroyBody()

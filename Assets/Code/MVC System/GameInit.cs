@@ -3,7 +3,6 @@ using Code.Game;
 using Code.Player;
 using Code.QuickOutline.Scripts;
 using Code.TileSystem;
-using Code.Time_Remaining;
 using Code.TowerShot;
 using Code.UI;
 using Code.Units.HireDefendersSystem;
@@ -47,6 +46,7 @@ public class GameInit
         var enemyDestroyObserver = new EnemyDestroyObserver(globalResStock);
         var unitController = new UnitController();
         var timeRemaining = new TimeRemainingController();
+        TimersHolder.SetTimeRemainingController(timeRemaining);
         var towershotcontroller = new TowerShotController(towerShotConfig, buildingController, gameConfig.Bullet);
         var eqScreenController = new EquipScreenController(equipScreenView, camera);
         var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, hireSystemView, levelGenerator);
