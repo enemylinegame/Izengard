@@ -1,52 +1,10 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-public class TimersHolder
+
+namespace Code.Time_Remaining
 {
-
-    public List<ITimeRemaining> Timers;
-    
-    private static TimersHolder Instance { get; set; }
-
-    public TimersHolder()
+    public class TimersHolder
     {
-        if (Instance == null)
-        {
-            Timers = new();
-        }
-        else
-        {
-            Timers = Instance.Timers;
-        }
-        Instance = this;
+        public List<ITimeRemaining> Timers = new();
     }
-
-    public static bool AddTimer(TimeRemaining timer )
-    {
-        bool isAdded = false;
-
-        if (Instance != null && timer != null)
-        {
-            if (!Instance.Timers.Contains(timer))
-            {
-                Instance.Timers.Add(timer);
-                isAdded = true;
-            }
-        }
-        
-        return isAdded;
-    }
-
-    public static bool RemoveTimer(TimeRemaining timer)
-    {
-        if (Instance != null && timer != null)
-        {
-            return Instance.Timers.Remove(timer);
-        }
-        return false;
-    }
-    
 }
-
-

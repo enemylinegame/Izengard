@@ -22,7 +22,7 @@ public sealed class BaseUnitWaitHandler : UnitHandler
     {
         _baseUnitController.CurrentUnitHandler = GetCurrent();
         TimeRemaining timer = new TimeRemaining(TimeIsUp, _time);
-        TimersHolder.AddTimer(timer);
+        TimersService.AddTimer(timer);
         return this;
     }
 

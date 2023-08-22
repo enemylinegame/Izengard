@@ -187,7 +187,7 @@ namespace ResourceMarket
 
         public void OnStart()
         {
-            TimersHolder.AddTimer(_resetTimer);
+            TimersService.AddTimer(_resetTimer);
         }
   
         public void OnUpdate(float deltaTime)
@@ -203,7 +203,7 @@ namespace ResourceMarket
 
             _uiController.RightUI.OpenMarketButton.onClick.RemoveListener(ShowView);
 
-            TimersHolder.RemoveTimer(_resetTimer);
+            TimersService.RemoveTimer(_resetTimer);
 
             _view.Deinit();
         }  
