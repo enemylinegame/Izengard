@@ -1,9 +1,10 @@
 ﻿
+    using System;
     using System.Collections.Generic;
     using Code.Time_Remaining;
     using UnityEngine;
 
-    public sealed class TimeRemainingController: IOnController, IOnUpdate
+    public sealed class TimeRemainingController: IOnController, IOnUpdate, IDisposable
     {
 
         private TimersHolder _timersHolder;
@@ -14,7 +15,7 @@
         }
 
 
-        public void Clear()
+        public void Dispose()
         {
             _timersHolder.Timers.Clear();
         }
@@ -24,12 +25,11 @@
 
         public void OnUpdate(float deltatime)
         {
-            var time = Time.deltaTime;
-            var timers = _timersHolder.Timers;
-            for (var i = 0; i < timers.Count; i++)
+            List<ITimeRemaining> timers = _timersHolder.Timers;
+            for (int i = 0; i < timers.Count; i++)
             {
-                var timer = timers[i];
-                timer.TimeLeft -= time;
+                ITimeRemaining timer = timers[i];
+                timer.TimeLeft -= deltatime;
                 if (timer.TimeLeft <= 0.0f)
                 {
                     if (!timer.IsRepeating)
@@ -41,7 +41,7 @@
                     {
                         timer.TimeLeft = timer.Duration;
                     }
-                    timer?.Method?.Invoke();
+                    timer.Method?.Invoke();
                 }
             }
         }
