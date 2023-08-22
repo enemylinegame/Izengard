@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class TimersHolder
 {
 
-    public List<ITimeRemaining> Timers = new();
+    public List<ITimeRemaining> Timers;
     
     private static TimersHolder Instance { get; set; }
 
@@ -13,12 +13,13 @@ public class TimersHolder
     {
         if (Instance == null)
         {
-            Instance = this;
+            Timers = new();
         }
         else
         {
-            throw new Exception("Can not create instance of the TimersHolder, already exist.");
+            Timers = Instance.Timers;
         }
+        Instance = this;
     }
 
     public static bool AddTimer(TimeRemaining timer )
