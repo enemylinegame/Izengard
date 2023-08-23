@@ -7,7 +7,9 @@ public sealed class TimeRemaining: ITimeRemaining
         
     public Action Method { get; }
     public bool IsRepeating { get; }
-    public float Duration { get; set; }
+
+    public float Duration { get; private set; }
+    
     public float TimeLeft { get; set; }
         
     #endregion
@@ -19,6 +21,11 @@ public sealed class TimeRemaining: ITimeRemaining
         Duration = duration;
         TimeLeft = duration;
         IsRepeating = isRepeating;
+    }
+
+    public void ChangeDuration(float newDuration)
+    {
+        Duration = newDuration;
     }
 
 }

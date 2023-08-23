@@ -4,29 +4,25 @@
 
     public sealed class TimeRemainingController: IOnController, IOnUpdate, IDisposable
     {
-        public Func<List<ITimeRemaining>> GetTimersList;
-
+        
         public void Dispose()
         {
-            GetTimersList().Clear();
+            //GetTimersList().Clear();
         }
-        
         
         #region IExecute
 
         public void OnUpdate(float deltatime)
         {
-            List<ITimeRemaining> timers = GetTimersList();
-            for (int i = 0; i < timers.Count; i++)
+            for (int i = TimersHolder.Timers.Count - 1; i >= 0; i--)
             {
-                ITimeRemaining timer = timers[i];
+                ITimeRemaining timer = TimersHolder.Timers[i];
                 timer.TimeLeft -= deltatime;
                 if (timer.TimeLeft <= 0.0f)
                 {
                     if (!timer.IsRepeating)
                     {
-                        timers.RemoveAt(i);
-                        i--;
+                        TimersHolder.RemoveTimer(timer);
                     }
                     else
                     {
