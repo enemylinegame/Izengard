@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Code.BuildingSystem;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Code.TileSystem
 {
@@ -13,6 +15,6 @@ namespace Code.TileSystem
         public int MaxHealthMainTower;
         public int MaxHealthCenterBuilding;
         [Space, Header("Разные списки для настроки тайла")]
-        public List<TileConfig> LVLList;
+        public List<TileConfig> Levels;
     }
 }

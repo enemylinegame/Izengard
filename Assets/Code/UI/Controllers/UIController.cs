@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Code.BuildingSystem;
 using Code.TileSystem;
 using UnityEngine;
@@ -10,7 +11,7 @@ using ResourceMarket;
 
 namespace Code.UI
 {
-    public class UIController : IOnTile, ITileLoadInfo, IOnController, IOnDisable
+    public class UIController : IOnTile, ITileLoadInfo, IOnController, IDisposable
     {
         private RightUI _rightUI;
         private BottomUI _bottomUI;
@@ -160,9 +161,9 @@ namespace Code.UI
             _bottomUI.TileUIView.ButtonsHolder.ForEach(x => x.Button.onClick.RemoveAllListeners());
         }
 
-        public void OnDisableItself()
+        public void Dispose()
         {
-            _warsView.OnDisableItself();
+            _warsView.Dispose();
         }
     }
 

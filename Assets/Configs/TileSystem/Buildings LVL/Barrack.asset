@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56cc04b83def0f14d89f8aea0a2c71d4, type: 3}
-  m_Name: Forge
+  m_Name: Barrack
   m_EditorClassIdentifier: 
-  _icon: {fileID: 21300000, guid: d0e48145068601a46b271b9865fdf390, type: 3}
+  _icon: {fileID: 21300000, guid: 9f705dd328be8b14d90c11b6caaa2361, type: 3}
   _maxHealth: 1000
   _name: 
   _buildingCost:
-  - _resourceType: 2
-    _cost: 0
   - _resourceType: 1
-    _cost: 0
+    _cost: 1
   _buildingPrefab: {fileID: 7792856555819872173, guid: b6337cf5402de7640a955740aa72a575, type: 3}
-  _tierNumber: 2
-  _buildingType: 203
-  _houseType: 0
+  _tierNumber: 1
+  _buildingType: 214
   _description: 
+  _tileType: 02000000
+  _levelTile: 1
+  _maxWorkers: 0
+  _resource: 0

@@ -27,7 +27,7 @@ namespace Code.TileSystem
         public void Init()
         {
             SaveTileConfig = new TileConfig();
-            CurrBuildingConfigs = new List<BuildingConfig>(TileConfig.BuildingTirs);
+            if(TileConfig != null) CurrBuildingConfigs = new List<BuildingConfig>(TileConfig.BuildingTirs);
             FloodedBuildings = new List<ICollectable>();
             DefenderUnits = new List<DefenderPreview>();
             EnemiesInTile = new List<IDamageable>();
