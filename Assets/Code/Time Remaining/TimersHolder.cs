@@ -3,9 +3,9 @@
 
 public static class TimersHolder
 {
-    public static IReadOnlyList<ITimeRemaining> Timers => _timers;
-
     private static List<ITimeRemaining> _timers = new();
+    
+    public static IReadOnlyList<ITimeRemaining> Timers => _timers;
 
     public static void AddTimer(ITimeRemaining timer)
     {

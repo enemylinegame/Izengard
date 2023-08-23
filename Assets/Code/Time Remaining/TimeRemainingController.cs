@@ -1,5 +1,4 @@
 ﻿    using System;
-    using System.Collections.Generic;
 
 
     public sealed class TimeRemainingController: IOnController, IOnUpdate, IDisposable
@@ -7,7 +6,11 @@
         
         public void Dispose()
         {
-            //GetTimersList().Clear();
+            for (int i = TimersHolder.Timers.Count - 1; i >= 0; i--)
+            {
+                ITimeRemaining timer = TimersHolder.Timers[i];
+                TimersHolder.RemoveTimer(timer);
+            }
         }
         
         #region IExecute
