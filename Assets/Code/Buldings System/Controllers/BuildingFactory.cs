@@ -213,6 +213,7 @@ namespace Code.BuildingSystem
             {
                 TowerShot = mainBuilding.GetComponentInChildren<TowerShotBehavior>();
                 firstTile.TileView.TileModel.TileType = TileType.All;
+                firstTile.TileView.TileModel.MaxWarriors = _tileSettings.MaxWorkersWar;
                 MainBuilding.OnHealthChanged += HealthChanged;
             }
        

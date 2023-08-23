@@ -1482,12 +1482,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameConfig: {fileID: 11400000, guid: 98e5e98fb8896b9469ebb3186cc7dbbd, type: 2}
+  _globalTileSettings: {fileID: 11400000, guid: f26ecae4e24e8f04fb6cd4e14c753f6a, type: 2}
   _globalResourceList: {fileID: 11400000, guid: dd801d0d2bc2cab40a6492c4aba5cd12, type: 2}
   _workersTeamConfig: {fileID: 11400000, guid: 3e86790439286b948808624d1fc71ea3, type: 2}
   _outLineSettings: {fileID: 11400000, guid: f0435a7215607a74692130a7eeab0ea7, type: 2}
   _towerShotConfig: {fileID: 11400000, guid: 434693b8852395646991acdccd102705, type: 2}
   _marketDataConfig: {fileID: 11400000, guid: 5f5d932c8baafe847ad1f532a9661ea5, type: 2}
-  _globalTileSettings: {fileID: 11400000, guid: f26ecae4e24e8f04fb6cd4e14c753f6a, type: 2}
   _rightUI: {fileID: 298062939}
   _centerUI: {fileID: 584311494}
   _bottonUI: {fileID: 74857055}
