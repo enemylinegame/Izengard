@@ -12,7 +12,6 @@ namespace Code.TileSystem
         [SerializeField] private TMP_Text _LVLText;
         [SerializeField] private TMP_Text _nameTile;
         [SerializeField] private List<ButtonView> _buttonsHolder;
-        [SerializeField] private Button _destroy;
         [SerializeField] private TMP_Text _unitMax;
 
         private int _workersAccount;
@@ -27,7 +26,6 @@ namespace Code.TileSystem
         }
 
         public List<ButtonView> ButtonsHolder => _buttonsHolder;
-        public Button Destroy => _destroy;
 
         public int WorkersCount
         {

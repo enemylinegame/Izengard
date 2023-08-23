@@ -13,10 +13,10 @@ namespace Code.TileSystem
         private readonly InputController _inputController;
         private readonly List<ButtonView> _holder;
 
-        public ButtonsControllerOnTile(UIController uiController, InputController inputController)
+        public ButtonsControllerOnTile(TileUIView tileUIView, InputController inputController)
         {
             _inputController = inputController;
-            _holder = uiController.BottomUI.TileUIView.ButtonsHolder;
+            _holder = tileUIView.ButtonsHolder;
         }
         /// <summary>
         /// Returns a button with a specific type

@@ -69,6 +69,7 @@ namespace Code.Player
                 selector.LoadInfoToTheUI(tile);
                 _outlineController.EnableOutLine(tile.Renderer);
                 LockLeftClick = true;
+                LockRightClick = false;
             });
             _tile = tile;
         }
@@ -119,7 +120,7 @@ namespace Code.Player
     
             if (_isSpecialMode) _tileSelector.Cancel();
 
-            LockLeftClick = true;
+            LockLeftClick = false;
             _tile = null;
         }
     }

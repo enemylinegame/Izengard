@@ -32,12 +32,12 @@ namespace CombatSystem
         
 
         public DefendersManager(TileController tileController, IDefendersControll defendersController, 
-            UIController uiController, HireUnitView hireUnitView, DefendersSet defendersSet, 
+            WarsView warsView, HireUnitView hireUnitView, DefendersSet defendersSet, 
             PaymentDefendersSystem paymentSystem, HireDefenderProgressManager hireProgressManager)
         {
             _tileController = tileController;
             _defendersController = defendersController;
-            _warsView = uiController.WarsView;
+            _warsView = warsView;
             _warsView.SetDefendersManager(this);
             _defendersSet = defendersSet;
             _hireUnitView = hireUnitView;

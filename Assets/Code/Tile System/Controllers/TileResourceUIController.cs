@@ -10,12 +10,12 @@ namespace Code.TileSystem
         private TileController _tileController;
         private TileResouceUIFactory _resourceFactory;
 
-        public TileResourceUIController(UIController uiController, 
+        public TileResourceUIController(TileUIController tileUI, 
             InputController inputController, TileController controller, GameConfig gameConfig)
         {
-            _resourceUiView = uiController.BottomUI.ResourcesLayoutUIView;
+            _resourceUiView = tileUI.ResourcesLayoutUIView;
             _tileController = controller;
-            _resourceFactory = new TileResouceUIFactory(uiController, this, controller, gameConfig);
+            _resourceFactory = new TileResouceUIFactory(tileUI, this, controller, gameConfig);
             inputController.Add(this);
             
         }

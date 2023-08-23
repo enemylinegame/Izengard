@@ -15,11 +15,11 @@ namespace Code.TileSystem
         private List<ICollectable> _buildings;
         private GameConfig _gameConfig;
 
-        public TileResouceUIFactory(UIController uiController, TileResourceUIController tileResourceController
+        public TileResouceUIFactory(TileUIController tileUI, TileResourceUIController tileResourceController
             , TileController tileController, GameConfig gameConfig)
         {
-            _layoutTransform = uiController.BottomUI.ResourcesLayoutUIView.LayoutRectTransform;
-            _resourcesLayoutUIView = uiController.BottomUI.ResourcesLayoutUIView;
+            _layoutTransform = tileUI.ResourcesLayoutUIView.LayoutRectTransform;
+            _resourcesLayoutUIView = tileUI.ResourcesLayoutUIView;
             _tileResourceController = tileResourceController;
             _tileController = tileController;
             _gameConfig = gameConfig;

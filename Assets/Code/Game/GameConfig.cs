@@ -1,6 +1,7 @@
 using Code.Level_Generation;
 using Code.Scriptable;
 using CombatSystem;
+using Core;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ using Wave;
 [CreateAssetMenu(fileName = "GameConfig", menuName = "GameConfig", order = 0)]
 public class GameConfig : ScriptableObject
 {
+    [field: SerializeField] public UIElementsConfig UIElementsConfig { get; private set; }
     [SerializeField] private int _mapSizeX;
     [SerializeField] private int _mapSizeY;
     [SerializeField] private VoxelTile[] _tilePrefabs;

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 249e43f2dda143a695f75c287a87e61c, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
+  <UIElementsConfig>k__BackingField: {fileID: 11400000, guid: 91f98b7a79953b44da68db268cceed9e, type: 2}
   _mapSizeX: 400
   _mapSizeY: 400
   _tilePrefabs:

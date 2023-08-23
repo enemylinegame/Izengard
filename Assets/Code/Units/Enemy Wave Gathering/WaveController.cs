@@ -3,6 +3,7 @@ using System;
 using Code;
 using Code.BuildingSystem;
 using Code.UI;
+using Code.UI.CenterPanel;
 using UnityEngine;
 using Wave;
 using Wave.Interfaces;
@@ -29,7 +30,7 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
     public bool IsDowntime { get; private set; }
 
 
-    public WaveController(GeneratorLevelController levelGenerator, UIController controller, Transform btnParents, 
+    public WaveController(GeneratorLevelController levelGenerator, UIPanelsInitialization controller, Transform btnParents, 
         GameConfig gameConfig, BulletsController bulletsController, EnemyDestroyObserver destroyObserver, BuildingFactory buildingFactory)
     {
         _levelGenerator = levelGenerator;
@@ -44,10 +45,10 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
         _combatPhaseWaiting = new CombatPhaseWaiting(_sendingEnemys);
         _combatPhaseWaiting.PhaseEnded += OnCombatPhaseEnding;
 
-        var timeCountShower = new TimerCountUI(controller.RightUI.Timer);
-        _peacefulPhaseWaiting = new PeacefulPhaseWaiting(gameConfig.PhasesSettings.PeacefulPhaseDuration, timeCountShower.TimeCountShow, controller.CenterUI.BaseNotificationUI);
+        //var timeCountShower = new TimerCountUI(controller.RightUI.Timer);
+        _peacefulPhaseWaiting = new PeacefulPhaseWaiting(gameConfig.PhasesSettings.PeacefulPhaseDuration, controller.RightPanelController.TimeCountShow, controller.CenterPanelController);
         _peacefulPhaseWaiting.PhaseEnded += OnPeacefulPhaseEnding;
-        _preparatoryPhaseWaiting = new PreparatoryPhaseWaiting(gameConfig.PhasesSettings.PreparatoryPhaseDuration, timeCountShower.TimeCountShow, this, controller.CenterUI.BaseNotificationUI);
+        _preparatoryPhaseWaiting = new PreparatoryPhaseWaiting(gameConfig.PhasesSettings.PreparatoryPhaseDuration, controller.RightPanelController.TimeCountShow, this, controller.CenterPanelController);
         _preparatoryPhaseWaiting.PhaseEnded += OnPreparatoryPhaseEnding;
 
         _posibleSpawnPointsFinder = new PosibleSpawnPointsFinder(levelGenerator.SpawnedTiles);

@@ -19,7 +19,7 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
 
     private readonly List<VoxelTile> _voxelTiles;
     private readonly GameConfig _gameConfig;
-    private readonly RightUI _rightUI;
+    private readonly RightPanelController _rightpanel;
     private readonly BtnUIController _btnUIController;
     private readonly BuildingFactory _buildingFactory;
     private readonly Dictionary<Vector2Int, VoxelTile> _spawnedTiles = new Dictionary<Vector2Int, VoxelTile>();
@@ -34,20 +34,20 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
 
 
     public GeneratorLevelController(List<VoxelTile> tiles, GameConfig gameConfig, BtnUIController btnUIController, 
-        Transform btnParents, UIController uiController, GlobalTileSettings tileSettings)
+        Transform btnParents, RightPanelController rightPanel, GlobalTileSettings tileSettings)
     {
         _voxelTiles = tiles;
         _gameConfig = gameConfig;
         _btnUIController = btnUIController;
         _tileSettings = tileSettings;
-        _rightUI = uiController.RightUI;
+        _rightpanel = rightPanel;
         
         _buttonsSetter = new ButtonsSetter(SpawnTile, btnParents, tiles[0].SizeTile, _spawnedTiles, gameConfig.ButtonSetterView);
     }
 
     public void OnStart()
     {
-        _btnUIController.TileSelected += SelectFirstTile;
+        _rightpanel.TileSelected += SelectFirstTile;
     }
     private void SpawnTile(TileSpawnInfo tileSpawnInfo)
     {
@@ -62,11 +62,9 @@ public class GeneratorLevelController : IOnController, IOnStart, IOnLateUpdate
         _tileSetter = new TileSetter(_voxelTiles, _spawnedTiles, _voxelTiles[numTile], _tileSettings);
         _buttonsSetter.SetButtons(_tileSetter.FirstTileGridPosition);
         
-        _btnUIController.TileSelected -= SelectFirstTile;
-        _rightUI.ButtonSelectTileFirst.gameObject.SetActive(false);
-        _rightUI.ButtonSelectTileSecond.gameObject.SetActive(false);
-        _rightUI.ButtonSelectTileThird.gameObject.SetActive(false);
-        // _rightUI.ButtonHireUnits.gameObject.SetActive(true);
+        _rightpanel.TileSelected -= SelectFirstTile;
+        _rightpanel.DeactivateTileSelButtons();
+        // _rightpanel.ButtonHireUnits.gameObject.SetActive(true);
 
         SpawnTower?.Invoke(_spawnedTiles, _tileSetter, PointSpawnUnits);
         SetTileNumZone(_tileSetter.FirstTileGridPosition);

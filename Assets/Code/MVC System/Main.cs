@@ -19,23 +19,14 @@ public class Main : MonoBehaviour
     [SerializeField] private TowerShotConfig _towerShotConfig;
     [SerializeField] private MarketDataConfig _marketDataConfig;
 
-    [Header("UI")]
-    [SerializeField] private RightUI _rightUI;
-    [SerializeField] private CenterUI _centerUI;
-    [SerializeField] private BottomUI _bottonUI;
-    [SerializeField] private TopResUiVew _topUI;
+    [Header("UI")] 
+    [SerializeField] private Canvas _canvas;
     [SerializeField] private EndGameScreen _endGameScreen;
-    [SerializeField] private BuildingsUI buildingsUI;
-    [SerializeField] private MarketView _marketUI;
     [SerializeField] private InGameMenuUI _inGameMenuUI;
     [Header("Equip")]
-    [SerializeField] private BuyItemScreenView _buyItemScreenView;
-    [SerializeField] private HireSystemView _hireSystemView;
-    [SerializeField] private EquipScreenView _equipScreenView;
 
     [Header("Other")]
     [SerializeField] private Transform _btnParents;
-    [SerializeField] private Camera _screenCamera;
     [SerializeField] private AudioSource _clickAudioSource;
     
     private Controller _controllers;
@@ -44,12 +35,9 @@ public class Main : MonoBehaviour
     {
         _controllers = new Controller();
 
-        new GameInit(_controllers, _gameConfig, _workersTeamConfig, 
-            _rightUI,  _btnParents,_centerUI ,_bottonUI,
-            _topUI, _endGameScreen, _towerShotConfig,
-            _buyItemScreenView, _hireSystemView, _equipScreenView, 
-            _screenCamera, _globalTileSettings, _globalResourceList, _outLineSettings,
-            _marketDataConfig, _marketUI, _inGameMenuUI, _clickAudioSource);
+        new GameInit(_controllers, _gameConfig, _workersTeamConfig, _btnParents, _endGameScreen, 
+            _towerShotConfig, _globalTileSettings, _globalResourceList, _outLineSettings,
+            _marketDataConfig, _inGameMenuUI, _clickAudioSource, _canvas);
 
         _controllers.OnStart();
     }
