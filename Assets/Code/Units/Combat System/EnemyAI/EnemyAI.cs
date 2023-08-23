@@ -43,11 +43,8 @@ namespace CombatSystem
             animator = unit.MyDamagable.GetComponent<Animator>(); //аниматор
 
             if (unit.Type == EnemyType.Archer)
-            {
-                
+            {                
                 _attack = new RangedAttackAction(bulletsController, unit);
-               
-
             }
             else
             {
@@ -186,7 +183,6 @@ namespace CombatSystem
         {
             _currentTarget = _primaryTarget;
             _actionList.ForEach(action => action.ClearTarget());
-            
         }
 
         private void DrawLineToTarget()

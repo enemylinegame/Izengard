@@ -22,10 +22,12 @@ namespace CombatSystem.UnitEnemy
 
         public EnemyStatesHolder(
             Enemy unit,
-            IEnemyAnimationController animationController) 
+            IEnemyAnimationController animationController, 
+            PlanRouteAction planRoute, 
+            Damageable currentTarget) 
         {
             _enemyStates[EnemyStateType.Idle] = new EnemyIdleState(unit, animationController);
-            _enemyStates[EnemyStateType.Move] = new EnemyMoveState(unit, animationController);
+            _enemyStates[EnemyStateType.Move] = new EnemyMoveState(unit, animationController, planRoute, currentTarget);
             _enemyStates[EnemyStateType.Attack] = new EnemyAttackState(unit, animationController);
             _enemyStates[EnemyStateType.SearchForTarget] = new EnemySearchForTargetState(unit, animationController);
             _enemyStates[EnemyStateType.ChangeTarget] = new EnemyChangeTargetState(unit, animationController);

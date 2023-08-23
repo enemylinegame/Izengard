@@ -13,10 +13,20 @@ namespace CombatSystem.UnitEnemy.EnemyStates
 
         public override void OnEnter()
         {
-
+            _animationController.PlayAnimation(AnimationType.Dying);
         }
 
         public override void OnExit()
+        {
+            _animationController.StopAnimation();
+        }
+
+        public override void OnUpdate()
+        {
+
+        }
+
+        public override void OnFixedUpdate()
         {
 
         }

@@ -19,5 +19,15 @@ namespace CombatSystem.UnitEnemy.EnemyStates
         {
 
         }
+
+        public override void OnUpdate()
+        {
+
+        }
+
+        public override void OnFixedUpdate()
+        {
+
+        }
     }
 }
