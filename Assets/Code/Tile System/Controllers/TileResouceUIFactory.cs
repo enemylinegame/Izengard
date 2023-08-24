@@ -1,6 +1,7 @@
 ﻿using ResourceSystem;
 using System.Collections.Generic;
 using Code.BuildingSystem;
+using Code.Game;
 using Code.UI;
 using UnityEngine;
 
@@ -12,16 +13,16 @@ namespace Code.TileSystem
         private TileResourceUIController _tileResourceController;
         private TileController _tileController;
         private List<ICollectable> _buildings;
-        private GameConfig _gameConfig;
+        private PrefabsHolder _prefabsHolder;
 
         private List<ResourceView> Resources => _tileResourceController.Resources;
         public TileResouceUIFactory(TilePanelController tilePanel, TileResourceUIController tileResourceController
-            , TileController tileController, GameConfig gameConfig)
+            , TileController tileController, PrefabsHolder prefabsHolder)
         {
             _layoutTransform = tilePanel.TileResourcesPanel.GetLayoutTransform();
             _tileResourceController = tileResourceController;
             _tileController = tileController;
-            _gameConfig = gameConfig;
+            _prefabsHolder = prefabsHolder;
         }
         
         public void LoadInfoToTheUI(TileView tile)
@@ -59,7 +60,7 @@ namespace Code.TileSystem
 
         private void AddNewLayoutElement(ICollectable mineralConfig)
         {
-            CreateResourceUIOnLayout(_gameConfig.Res, mineralConfig);
+            CreateResourceUIOnLayout(_prefabsHolder.Res, mineralConfig);
         }
         private void RemoveLayoutElement()
         {

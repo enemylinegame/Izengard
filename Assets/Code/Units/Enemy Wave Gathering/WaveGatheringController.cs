@@ -2,6 +2,7 @@ using CombatSystem;
 using Interfaces;
 using System.Collections.Generic;
 using Code.BuildingSystem;
+using Code.Game;
 using UnityEngine;
 using Wave.Interfaces;
 
@@ -22,11 +23,11 @@ namespace Wave
 
 
         public WaveGatheringController(BuildingFactory buildingFactory, IEnemyAIController enemyAIController, 
-            IBulletsController bulletsController, GameConfig gameConfig)
+            IBulletsController bulletsController, ConfigsHolder configsHolder)
         {
-            _calculator = new WaveCalculator(gameConfig.BattlePhaseConfig.WaveSettings);
+            _calculator = new WaveCalculator(configsHolder.BattlePhaseConfig.WaveSettings);
             //var enemySet = Resources.Load<EnemySet>(nameof(EnemySet));
-            EquipEnemyPool(gameConfig.BattlePhaseConfig.EnemySet, buildingFactory, enemyAIController, bulletsController);
+            EquipEnemyPool(configsHolder.BattlePhaseConfig.EnemySet, buildingFactory, enemyAIController, bulletsController);
 
             _enemySorter = new EnemySorterTanksPriority();
         }

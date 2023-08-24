@@ -1,5 +1,6 @@
 using Code.Player;
 using CombatSystem.Views;
+using Core;
 using UnityEngine;
 
 namespace Code.UI
@@ -19,15 +20,15 @@ namespace Code.UI
         public readonly InGameMenuPanelController InGameMenuPanel;
         public readonly WarsView WarsView;
         
-        public UIPanelsInitialization(GameConfig config, Canvas canvas, InputController inputController)
+        public UIPanelsInitialization(UIElementsConfig config, Canvas canvas, InputController inputController)
         {
-            var topPanelFactory = new ResourcesPanelFactory(config.UIElementsConfig, canvas);
-            var bottomUIFactory = new TilePanelFactory(config.UIElementsConfig, canvas);
-            var centerPanelFactory = new CenterPanelFactory(config.UIElementsConfig, canvas);
-            var RightPanelFactory = new RightPanelFactory(config.UIElementsConfig, canvas);
-            var marketPanelFactory = new MarketPanelFactory(config.UIElementsConfig, canvas);
-            var endGameScreenPanelFactory = new EndGameScreenPanelFactory(config.UIElementsConfig, canvas);
-            var inGameMenuPanelFactory = new InGameMenuPanelFactory(config.UIElementsConfig, canvas);
+            var topPanelFactory = new ResourcesPanelFactory(config, canvas);
+            var bottomUIFactory = new TilePanelFactory(config, canvas);
+            var centerPanelFactory = new CenterPanelFactory(config, canvas);
+            var RightPanelFactory = new RightPanelFactory(config, canvas);
+            var marketPanelFactory = new MarketPanelFactory(config, canvas);
+            var endGameScreenPanelFactory = new EndGameScreenPanelFactory(config, canvas);
+            var inGameMenuPanelFactory = new InGameMenuPanelFactory(config, canvas);
 
             ResourcesPanelController = new ResourcesPanelController(topPanelFactory);
             CenterPanelController = new CenterPanelController(centerPanelFactory);

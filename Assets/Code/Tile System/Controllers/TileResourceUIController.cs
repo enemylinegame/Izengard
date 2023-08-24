@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Code.Game;
 using Code.UI;
 using Code.Player;
 
@@ -13,10 +14,10 @@ namespace Code.TileSystem
         public List<ResourceView> Resources = new List<ResourceView>();
 
         public TileResourceUIController(TilePanelController tilePanel, 
-            InputController inputController, TileController controller, GameConfig gameConfig)
+            InputController inputController, TileController controller, PrefabsHolder prefabsHolder)
         {
             _tileController = controller;
-            _resourceFactory = new TileResouceUIFactory(tilePanel, this, controller, gameConfig);
+            _resourceFactory = new TileResouceUIFactory(tilePanel, this, controller, prefabsHolder);
             inputController.Add(this);
             
         }

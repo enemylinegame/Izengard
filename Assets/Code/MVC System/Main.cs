@@ -1,3 +1,4 @@
+using Code.Game;
 using UnityEngine;
 using ResourceSystem;
 using Code.QuickOutline.Scripts;
@@ -10,22 +11,8 @@ using UnityEngine.Serialization;
 
 public class Main : MonoBehaviour
 {
-    [Header("Configs")]
-    [SerializeField] private GameConfig _gameConfig;
-    [SerializeField] private GlobalTileSettings _globalTileSettings;
-    [SerializeField] private GlobalResourceData _globalResourceList;
-    [SerializeField] private WorkersTeamConfig _workersTeamConfig;
-    [SerializeField] private OutLineSettings _outLineSettings;
-    [SerializeField] private TowerShotConfig _towerShotConfig;
-    [SerializeField] private MarketDataConfig _marketDataConfig;
-
-    [Header("UI")] 
+    [SerializeField] private ConfigsHolder _configsHolder;
     [SerializeField] private Canvas _canvas;
-    [FormerlySerializedAs("_endGameScreen")] [SerializeField] private EndGameScreenPanel endGameScreenPanel;
-    [FormerlySerializedAs("_inGameMenuUI")] [SerializeField] private InGameMenuPanel inGameMenuPanel;
-    [Header("Equip")]
-
-    [Header("Other")]
     [SerializeField] private Transform _btnParents;
     [SerializeField] private AudioSource _clickAudioSource;
     
@@ -35,9 +22,7 @@ public class Main : MonoBehaviour
     {
         _controllers = new Controller();
 
-        new GameInit(_controllers, _gameConfig, _workersTeamConfig, _btnParents, endGameScreenPanel, 
-            _towerShotConfig, _globalTileSettings, _globalResourceList, _outLineSettings,
-            _marketDataConfig, inGameMenuPanel, _clickAudioSource, _canvas);
+        new GameInit(_controllers, _configsHolder.GameConfig, _configsHolder, _configsHolder.PrefabsHolder, _btnParents, _clickAudioSource, _canvas);
 
         _controllers.OnStart();
     }

@@ -1,6 +1,7 @@
 using CombatSystem;
 using System;
 using Code.BuildingSystem;
+using Code.Game;
 using Code.UI;
 using UnityEngine;
 using Wave;
@@ -29,7 +30,7 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
 
 
     public WaveController(GeneratorLevelController levelGenerator, UIPanelsInitialization controller, Transform btnParents, 
-        GameConfig gameConfig, BulletsController bulletsController, EnemyDestroyObserver destroyObserver, BuildingFactory buildingFactory)
+        ConfigsHolder configsHolder, BulletsController bulletsController, EnemyDestroyObserver destroyObserver, BuildingFactory buildingFactory)
     {
         _levelGenerator = levelGenerator;
         _btnParents = btnParents;
@@ -37,16 +38,16 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
         _enemyAIController = new EnemyAIController();
         _bulletsController = bulletsController;
         
-        _waveGathering = new WaveGatheringController(buildingFactory, _enemyAIController, _bulletsController, gameConfig);
+        _waveGathering = new WaveGatheringController(buildingFactory, _enemyAIController, _bulletsController, configsHolder);
         _sendingEnemys = new SendingEnemies(_enemyAIController, _levelGenerator, 
-            gameConfig.BattlePhaseConfig.EnemySpawnSettings, destroyObserver);
+            configsHolder.BattlePhaseConfig.EnemySpawnSettings, destroyObserver);
         _combatPhaseWaiting = new CombatPhaseWaiting(_sendingEnemys);
         _combatPhaseWaiting.PhaseEnded += OnCombatPhaseEnding;
 
         //var timeCountShower = new TimerCountUI(controller.RightPanel.Timer);
-        _peacefulPhaseWaiting = new PeacefulPhaseWaiting(gameConfig.PhasesSettings.PeacefulPhaseDuration, controller.RightPanelController.TimeCountShow, controller.NotificationPanel);
+        _peacefulPhaseWaiting = new PeacefulPhaseWaiting(configsHolder.PhasesSettings.PeacefulPhaseDuration, controller.RightPanelController.TimeCountShow, controller.NotificationPanel);
         _peacefulPhaseWaiting.PhaseEnded += OnPeacefulPhaseEnding;
-        _preparatoryPhaseWaiting = new PreparatoryPhaseWaiting(gameConfig.PhasesSettings.PreparatoryPhaseDuration, controller.RightPanelController.TimeCountShow, this, controller.NotificationPanel);
+        _preparatoryPhaseWaiting = new PreparatoryPhaseWaiting(configsHolder.PhasesSettings.PreparatoryPhaseDuration, controller.RightPanelController.TimeCountShow, this, controller.NotificationPanel);
         _preparatoryPhaseWaiting.PhaseEnded += OnPreparatoryPhaseEnding;
 
         _posibleSpawnPointsFinder = new PosibleSpawnPointsFinder(levelGenerator.SpawnedTiles);

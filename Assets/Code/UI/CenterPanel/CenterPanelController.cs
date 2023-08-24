@@ -17,7 +17,7 @@ namespace Code.UI
         {
             _view = factory.GetView(factory.UIElementsConfig.CenterPanel);
 
-            NotificationPanel = new NotificationPanelController(_view.BaseNotificationUI);
+            NotificationPanel = new NotificationPanelController(_view.NotificationPanel);
             
             _view.CloseBuildingsBuy.onClick.AddListener((() =>
             {

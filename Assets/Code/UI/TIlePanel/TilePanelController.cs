@@ -15,7 +15,6 @@ namespace Code.UI
     {
         private readonly CenterPanelController _centerPanel;
         private readonly TilePanel _view;
-        
         public readonly TileBuildingBoardController TileMenu;
         public readonly TileMainBoardController TileMainBoard;
         public readonly TileResourcesPanelController TileResourcesPanel;

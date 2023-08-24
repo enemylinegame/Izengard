@@ -5,9 +5,9 @@ namespace Code.UI
 {
     public class NotificationPanelController : ITextVisualizationOnUI, IPlayerNotifier
     {
-        private readonly BaseNotificationUI _notification;
+        private readonly NotificationPanel _notification;
 
-        public NotificationPanelController(BaseNotificationUI view)
+        public NotificationPanelController(NotificationPanel view)
         {
             _notification = view;
         }

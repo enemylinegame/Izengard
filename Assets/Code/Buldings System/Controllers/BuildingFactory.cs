@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Code.Game;
 using Code.TileSystem;
 using Code.TowerShot;
 using Code.UI;
@@ -19,7 +20,8 @@ namespace Code.BuildingSystem
         public event Action<BuildingTypes, bool> OnBuildingsChange;
         private ITextVisualizationOnUI _notificationUI;
         private GlobalStock _stock;
-        private GameConfig _gameConfig;
+        private PrefabsHolder _prefabsHolder;
+        private readonly ConfigsHolder _configsHolder;
         private GeneratorLevelController _levelController;
         private readonly GlobalTileSettings _tileSettings;
         public TowerShotBehavior TowerShot;
@@ -28,11 +30,12 @@ namespace Code.BuildingSystem
         private TileView _tileView;
 
         public BuildingFactory(NotificationPanelController notificationPanel, GlobalStock stock, 
-            GameConfig gameConfig, GeneratorLevelController levelController, GlobalTileSettings tileSettings)
+            PrefabsHolder prefabsHolder, ConfigsHolder configsHolder, GeneratorLevelController levelController, GlobalTileSettings tileSettings)
         {
             _notificationUI = notificationPanel;
             _stock = stock;
-            _gameConfig = gameConfig;
+            _prefabsHolder = prefabsHolder;
+            _configsHolder = configsHolder;
 
             _levelController = levelController;
             _tileSettings = tileSettings;
@@ -121,7 +124,7 @@ namespace Code.BuildingSystem
 
         public void PlaceCenterBuilding(TileView view)
         {
-            var instaniatedDummy = Object.Instantiate(_gameConfig.TestBuilding, view.transform.position, Quaternion.identity);
+            var instaniatedDummy = Object.Instantiate(_prefabsHolder.TestBuilding, view.transform.position, Quaternion.identity);
             var dummyController = new DummyController(instaniatedDummy);
             
             _tileView = view;
@@ -134,7 +137,7 @@ namespace Code.BuildingSystem
 
         private void PlaceMainTower(Dictionary<Vector2Int, VoxelTile> spawnedTiles, ITileSetter tileSetter, Transform pointSpawnUnits)
         {
-            var config = _gameConfig.MainTowerConfig as BuildingConfig;
+            var config = _configsHolder.MainTowerConfig as BuildingConfig;
             var firstTile = spawnedTiles[tileSetter.FirstTileGridPosition];
             
             var mainBuilding = Object.Instantiate(config.BuildingPrefab, firstTile.transform.position, Quaternion.identity);
