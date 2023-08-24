@@ -2,9 +2,9 @@ using Core;
 using UnityEngine;
 using Utils;
 
-namespace Code.UI.CenterPanel
+namespace Code.UI
 {
-    public class CenterPanelFactory: UIViewFactory<CenterUI>
+    public class CenterPanelFactory: UIViewFactory<CenterPanel>
     {
         public CenterPanelFactory(UIElementsConfig uIElementsConfig, Canvas mainCanvas) : base(uIElementsConfig, mainCanvas){}
     }

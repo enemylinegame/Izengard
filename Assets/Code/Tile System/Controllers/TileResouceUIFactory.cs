@@ -9,17 +9,16 @@ namespace Code.TileSystem
     public class TileResouceUIFactory
     {
         private RectTransform _layoutTransform;
-        private ResourcesLayoutUIView _resourcesLayoutUIView;
         private TileResourceUIController _tileResourceController;
         private TileController _tileController;
         private List<ICollectable> _buildings;
         private GameConfig _gameConfig;
 
-        public TileResouceUIFactory(TileUIController tileUI, TileResourceUIController tileResourceController
+        private List<ResourceView> Resources => _tileResourceController.Resources;
+        public TileResouceUIFactory(TilePanelController tilePanel, TileResourceUIController tileResourceController
             , TileController tileController, GameConfig gameConfig)
         {
-            _layoutTransform = tileUI.ResourcesLayoutUIView.LayoutRectTransform;
-            _resourcesLayoutUIView = tileUI.ResourcesLayoutUIView;
+            _layoutTransform = tilePanel.TileResourcesPanel.GetLayoutTransform();
             _tileResourceController = tileResourceController;
             _tileController = tileController;
             _gameConfig = gameConfig;
@@ -42,7 +41,7 @@ namespace Code.TileSystem
             var minerals = _buildings.FindAll(x => x.MineralConfig != null);
             foreach (var mineral in minerals)
             {
-                RemoveLayoutElement(mineral.MineralConfig);
+                RemoveLayoutElement();
             }
         }
 
@@ -54,7 +53,7 @@ namespace Code.TileSystem
             resourceUIObjectView.InitViewData(mineralConfig.ResourceType.ToString(),
                 mineralConfig.WorkersCount, mineralConfig);
 
-            _resourcesLayoutUIView.Resources.Add(resourceUIObjectView);
+            Resources.Add(resourceUIObjectView);
             _tileResourceController.AddNewLayoutElement(resourceUIObjectView);
         }
 
@@ -62,12 +61,12 @@ namespace Code.TileSystem
         {
             CreateResourceUIOnLayout(_gameConfig.Res, mineralConfig);
         }
-        private void RemoveLayoutElement(MineralConfig mineralConfig)
+        private void RemoveLayoutElement()
         {
-            foreach (var res in _resourcesLayoutUIView.Resources)
+            foreach (var res in Resources)
             {
                 Object.Destroy(res.gameObject);
-                _resourcesLayoutUIView.Resources.Remove(res);
+                Resources.Remove(res);
                 break;
             }
         }

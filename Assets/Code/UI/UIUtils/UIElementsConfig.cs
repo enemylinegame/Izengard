@@ -11,5 +11,7 @@ namespace Core
         [field: SerializeField] public GameObject BottonPanel { get; private set; }
         [field: SerializeField] public GameObject CenterPanel { get; private set; }
         [field: SerializeField] public GameObject MarketPanel { get; private set; }
+        [field: SerializeField] public GameObject EndGameScreenPanel { get; private set; }
+        [field: SerializeField] public GameObject InGameMenu { get; private set; }
     }
 }

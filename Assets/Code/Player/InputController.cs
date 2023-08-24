@@ -12,7 +12,7 @@ namespace Code.Player
     public class InputController : IOnController, IOnUpdate
     {
         private OutlineController _outlineController;
-        private CenterUI _centerUI;
+        private CenterPanel _centerPanel;
         private ITileSelector _tileSelector;
         private List<ITileLoadInfo> _loadInfoToTheUis = new List<ITileLoadInfo>();
         private TileView _tile;

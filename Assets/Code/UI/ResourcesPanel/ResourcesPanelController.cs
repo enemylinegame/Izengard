@@ -6,7 +6,7 @@ namespace Code.UI
     {
         private ResourcesPanelView _view;
         
-        public ResourcesPanelController(TopPanelFactory factory)
+        public ResourcesPanelController(ResourcesPanelFactory factory)
         {
             _view = factory.GetView(factory.UIElementsConfig.TopPanel);
         }

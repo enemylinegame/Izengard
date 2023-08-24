@@ -1,9 +1,7 @@
 using CombatSystem;
 using System;
-using Code;
 using Code.BuildingSystem;
 using Code.UI;
-using Code.UI.CenterPanel;
 using UnityEngine;
 using Wave;
 using Wave.Interfaces;
@@ -45,10 +43,10 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
         _combatPhaseWaiting = new CombatPhaseWaiting(_sendingEnemys);
         _combatPhaseWaiting.PhaseEnded += OnCombatPhaseEnding;
 
-        //var timeCountShower = new TimerCountUI(controller.RightUI.Timer);
-        _peacefulPhaseWaiting = new PeacefulPhaseWaiting(gameConfig.PhasesSettings.PeacefulPhaseDuration, controller.RightPanelController.TimeCountShow, controller.CenterPanelController);
+        //var timeCountShower = new TimerCountUI(controller.RightPanel.Timer);
+        _peacefulPhaseWaiting = new PeacefulPhaseWaiting(gameConfig.PhasesSettings.PeacefulPhaseDuration, controller.RightPanelController.TimeCountShow, controller.NotificationPanel);
         _peacefulPhaseWaiting.PhaseEnded += OnPeacefulPhaseEnding;
-        _preparatoryPhaseWaiting = new PreparatoryPhaseWaiting(gameConfig.PhasesSettings.PreparatoryPhaseDuration, controller.RightPanelController.TimeCountShow, this, controller.CenterPanelController);
+        _preparatoryPhaseWaiting = new PreparatoryPhaseWaiting(gameConfig.PhasesSettings.PreparatoryPhaseDuration, controller.RightPanelController.TimeCountShow, this, controller.NotificationPanel);
         _preparatoryPhaseWaiting.PhaseEnded += OnPreparatoryPhaseEnding;
 
         _posibleSpawnPointsFinder = new PosibleSpawnPointsFinder(levelGenerator.SpawnedTiles);

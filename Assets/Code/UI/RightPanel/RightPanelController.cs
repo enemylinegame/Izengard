@@ -5,7 +5,7 @@ namespace Code.UI
 {
     public class RightPanelController
     {
-        private RightUI _view;
+        private RightPanel _view;
         public HireUnitUIView HireUnitView => _view.HireUnits;
         public event Action<int> TileSelected;
         public RightPanelController(RightPanelFactory factory)

@@ -21,8 +21,8 @@ public class Main : MonoBehaviour
 
     [Header("UI")] 
     [SerializeField] private Canvas _canvas;
-    [SerializeField] private EndGameScreen _endGameScreen;
-    [SerializeField] private InGameMenuUI _inGameMenuUI;
+    [FormerlySerializedAs("_endGameScreen")] [SerializeField] private EndGameScreenPanel endGameScreenPanel;
+    [FormerlySerializedAs("_inGameMenuUI")] [SerializeField] private InGameMenuPanel inGameMenuPanel;
     [Header("Equip")]
 
     [Header("Other")]
@@ -35,9 +35,9 @@ public class Main : MonoBehaviour
     {
         _controllers = new Controller();
 
-        new GameInit(_controllers, _gameConfig, _workersTeamConfig, _btnParents, _endGameScreen, 
+        new GameInit(_controllers, _gameConfig, _workersTeamConfig, _btnParents, endGameScreenPanel, 
             _towerShotConfig, _globalTileSettings, _globalResourceList, _outLineSettings,
-            _marketDataConfig, _inGameMenuUI, _clickAudioSource, _canvas);
+            _marketDataConfig, inGameMenuPanel, _clickAudioSource, _canvas);
 
         _controllers.OnStart();
     }

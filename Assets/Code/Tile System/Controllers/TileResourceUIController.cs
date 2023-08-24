@@ -1,4 +1,5 @@
-﻿using Code.UI;
+﻿using System.Collections.Generic;
+using Code.UI;
 using Code.Player;
 
 
@@ -6,31 +7,31 @@ namespace Code.TileSystem
 {
     public class TileResourceUIController : IOnTile, ITileLoadInfo
     {
-        private ResourcesLayoutUIView _resourceUiView;
         private TileController _tileController;
         private TileResouceUIFactory _resourceFactory;
 
-        public TileResourceUIController(TileUIController tileUI, 
+        public List<ResourceView> Resources = new List<ResourceView>();
+
+        public TileResourceUIController(TilePanelController tilePanel, 
             InputController inputController, TileController controller, GameConfig gameConfig)
         {
-            _resourceUiView = tileUI.ResourcesLayoutUIView;
             _tileController = controller;
-            _resourceFactory = new TileResouceUIFactory(tileUI, this, controller, gameConfig);
+            _resourceFactory = new TileResouceUIFactory(tilePanel, this, controller, gameConfig);
             inputController.Add(this);
             
         }
         public void LoadInfoToTheUI(TileView tile)
         {
-            _resourceUiView.Resources.ForEach(res => AddNewLayoutElement(res));
+            Resources.ForEach(res => AddNewLayoutElement(res));
             _resourceFactory.LoadInfoToTheUI(tile);
         }
 
         public void Cancel()
         {
-            if(_resourceUiView.Resources == null) 
+            if(Resources == null) 
                 return;
             
-            foreach (ResourceView res in _resourceUiView.Resources)
+            foreach (ResourceView res in Resources)
             {
                 res.ResourceAddButton.onClick.RemoveAllListeners();
                 res.ResourceRemoveButton.onClick.RemoveAllListeners();

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxWorkersWar: 8
   MaxWarriorsEco: 3
-  MaxHealthMainTower: 3000
+  MaxHealthMainTower: 100
   MaxHealthCenterBuilding: 100
   Levels:
   - IconTile: {fileID: 0}

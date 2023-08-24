@@ -18,3 +18,5 @@ MonoBehaviour:
   <BottonPanel>k__BackingField: {fileID: 1647890524003939111, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
   <CenterPanel>k__BackingField: {fileID: 1142824412881604353, guid: 51228ba2fec261c41a7326bc9e86653e, type: 3}
   <MarketPanel>k__BackingField: {fileID: 535509944781465265, guid: a6d68d52de0e79e458d078e05dcd7405, type: 3}
+  <EndGameScreenPanel>k__BackingField: {fileID: 3794030719732621188, guid: 86e4b7730a371ee45947cdf994918285, type: 3}
+  <InGameMenu>k__BackingField: {fileID: 1551367843627212298, guid: 106481dcccaf3a747a512ffb8ee2beba, type: 3}

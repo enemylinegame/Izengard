@@ -194,6 +194,7 @@ namespace CombatSystem
         
         public void LoadInfoToTheUI(TileView tile)
         {
+            _warsView.SetMexDefenders(tile.TileModel.MaxWarriors);
             _warsView.SetDefenders(tile.TileModel.DefenderUnits);
         }
         private void TypeChange(TileView tile)

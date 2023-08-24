@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Code.BuildingSystem;
 using Code.UI;
-using Code.UI.MarketPanel;
 using ResourceSystem;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ namespace ResourceMarket
 {
     public sealed class MarketController : IOnController, IOnUpdate, IOnStart, IDisposable
     {
-        private readonly List<IMarketItem> _marketItems = new List<IMarketItem>();
+        private readonly List<IMarketItem> _marketItems;
 
         private readonly UIPanelsInitialization _uiPanels;
         private readonly MarketPanelController _marketPanel;
@@ -57,6 +56,7 @@ namespace ResourceMarket
             MarketDataConfig marketData)
         {
             _uiPanels = uiPanels;
+            _marketItems = new List<IMarketItem>();
 
             _marketPanel = uiPanels.MarketPanelController;
 

@@ -13,13 +13,4 @@ public class ResourcesPanelView : MonoBehaviour
     [field: SerializeField] public TextMeshProUGUI magikStonescount;
     [field: SerializeField] public TextMeshProUGUI workerCount;
     [field: SerializeField] public TextMeshProUGUI goldCount;
-
-    public void DeactivatePanel()
-    {
-        gameObject.SetActive(false);
-    }
-    public void ActivatePanel()
-    {
-        gameObject.SetActive(true);
-    }
 }

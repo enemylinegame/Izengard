@@ -6,29 +6,29 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Code.UI.MarketPanel
+namespace Code.UI
 {
     public class MarketPanelController
     {
-        private MarketView _view;
+        private MarketPanel _panel;
 
-        private TMP_Text _exchangeAmountText => _view.ExchangeAmountText;
-        private TMP_Text _statusText => _view.StatusText;
-        private TMP_Text _marketAmountText => _view.MarketAmountText;
-        private TMP_Text _timerText => _view.TimerText;
-        private GameObject _marketItemPrefab => _view.MarketItemPrefab;
+        private TMP_Text _exchangeAmountText => _panel.ExchangeAmountText;
+        private TMP_Text _statusText => _panel.StatusText;
+        private TMP_Text _marketAmountText => _panel.MarketAmountText;
+        private TMP_Text _timerText => _panel.TimerText;
+        private GameObject _marketItemPrefab => _panel.MarketItemPrefab;
         
-        private Button _byItemButton => _view.ByItemButton;
-        private Button _sellItemButton => _view.SellItemButton;
-        private Button _increaseExchangeButton => _view.IncreaseExchangeButton;
-        private Button _decreaseExchangeButton => _view.DecreaseExchangeButton;
-        private Button _closeMarketButton => _view.CloseMarketButton;
+        private Button _byItemButton => _panel.ByItemButton;
+        private Button _sellItemButton => _panel.SellItemButton;
+        private Button _increaseExchangeButton => _panel.IncreaseExchangeButton;
+        private Button _decreaseExchangeButton => _panel.DecreaseExchangeButton;
+        private Button _closeMarketButton => _panel.CloseMarketButton;
 
-        private ItemsContainerView _tierOneItems => _view.TierOneItems;
-        private ItemsContainerView _tierTwoItems => _view.TierTwoItems;
-        private ItemsContainerView _tierThreeItems => _view.TierThreeItems;
+        private ItemsContainerView _tierOneItems => _panel.TierOneItems;
+        private ItemsContainerView _tierTwoItems => _panel.TierTwoItems;
+        private ItemsContainerView _tierThreeItems => _panel.TierThreeItems;
 
-        private MarketTradeInfoView _marketTradeInfo => _view.MarketTradeInfo;
+        private MarketTradeInfoView _marketTradeInfo => _panel.MarketTradeInfo;
 
         private List<MarketItemView> _itemsViewList;
         private ResourceType _currentSelectedType;
@@ -36,7 +36,7 @@ namespace Code.UI.MarketPanel
         
         public MarketPanelController(MarketPanelFactory factory)
         {
-            _view = factory.GetView(factory.UIElementsConfig.MarketPanel);
+            _panel = factory.GetView(factory.UIElementsConfig.MarketPanel);
         }
         
         public void InitViewData(
@@ -156,7 +156,7 @@ namespace Code.UI.MarketPanel
             
             _onResetTradeValue = resetTradeValue;
 
-            _closeMarketButton.onClick.AddListener(() => _view.gameObject.SetActive(false));
+            _closeMarketButton.onClick.AddListener(() => _panel.gameObject.SetActive(false));
 
             SetButtonsInteraction(false);
         }
@@ -193,7 +193,7 @@ namespace Code.UI.MarketPanel
                 SetButtonsInteraction(false);
             }
 
-            _view.gameObject.SetActive(state);
+            _panel.gameObject.SetActive(state);
         }
 
         public void UpdateStatus(string message)

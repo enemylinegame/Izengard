@@ -4,7 +4,7 @@ using Utils;
 
 namespace Code.UI
 {
-    public class RightPanelFactory : UIViewFactory<RightUI>
+    public class RightPanelFactory : UIViewFactory<RightPanel>
     {
         public RightPanelFactory(UIElementsConfig uIElementsConfig, Canvas mainCanvas) : base(uIElementsConfig, mainCanvas){}
     }

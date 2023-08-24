@@ -1,7 +1,4 @@
 using Code.Player;
-using Code.UI;
-using Code.UI.CenterPanel;
-using Code.UI.MarketPanel;
 using CombatSystem.Views;
 using UnityEngine;
 
@@ -9,28 +6,42 @@ namespace Code.UI
 {
     public class UIPanelsInitialization
     {
-        public ResourcesPanelController ResourcesPanelController;
-        public TileUIController TileUIController;
-        public CenterPanelController CenterPanelController;
-        public RightPanelController RightPanelController;
-        public MarketPanelController MarketPanelController;
-        public WarsView WarsView;
+        public readonly ResourcesPanelController ResourcesPanelController;
+        public readonly TilePanelController TilePanelController;
+        public readonly CenterPanelController CenterPanelController;
+        public readonly RightPanelController RightPanelController;
+        public readonly MarketPanelController MarketPanelController;
+        public readonly TileBuildingBoardController TileMenu;
+        public readonly TileMainBoardController TileMainBoard;
+        public readonly TileResourcesPanelController TileResourcesPanel;
+        public readonly NotificationPanelController NotificationPanel;
+        public readonly EndGameScreenPanelController EndGameScreenPanel;
+        public readonly InGameMenuPanelController InGameMenuPanel;
+        public readonly WarsView WarsView;
         
         public UIPanelsInitialization(GameConfig config, Canvas canvas, InputController inputController)
         {
-            var topPanelFactory = new TopPanelFactory(config.UIElementsConfig, canvas);
-            var bottomUIFactory = new TileUIFactory(config.UIElementsConfig, canvas);
+            var topPanelFactory = new ResourcesPanelFactory(config.UIElementsConfig, canvas);
+            var bottomUIFactory = new TilePanelFactory(config.UIElementsConfig, canvas);
             var centerPanelFactory = new CenterPanelFactory(config.UIElementsConfig, canvas);
             var RightPanelFactory = new RightPanelFactory(config.UIElementsConfig, canvas);
             var marketPanelFactory = new MarketPanelFactory(config.UIElementsConfig, canvas);
-
+            var endGameScreenPanelFactory = new EndGameScreenPanelFactory(config.UIElementsConfig, canvas);
+            var inGameMenuPanelFactory = new InGameMenuPanelFactory(config.UIElementsConfig, canvas);
 
             ResourcesPanelController = new ResourcesPanelController(topPanelFactory);
             CenterPanelController = new CenterPanelController(centerPanelFactory);
-            TileUIController = new TileUIController(bottomUIFactory, inputController, CenterPanelController);
+            TilePanelController = new TilePanelController(bottomUIFactory, inputController, CenterPanelController);
             RightPanelController = new RightPanelController(RightPanelFactory);
             MarketPanelController = new MarketPanelController(marketPanelFactory);
-            WarsView = new WarsView(TileUIController.WarsUIView, inputController);
+            EndGameScreenPanel = new EndGameScreenPanelController(endGameScreenPanelFactory);
+            InGameMenuPanel = new InGameMenuPanelController(inGameMenuPanelFactory);
+            WarsView = new WarsView(TilePanelController.WarsPanel, inputController);
+
+            TileMenu = TilePanelController.TileMenu;
+            TileMainBoard = TilePanelController.TileMainBoard;
+            TileResourcesPanel = TilePanelController.TileResourcesPanel;
+            NotificationPanel = CenterPanelController.NotificationPanel;
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Code.TileSystem;
 using Code.TowerShot;
 using Code.UI;
-using Code.UI.CenterPanel;
 using CombatSystem;
 using LevelGenerator.Interfaces;
 using ResourceSystem;
@@ -25,14 +24,13 @@ namespace Code.BuildingSystem
         private readonly GlobalTileSettings _tileSettings;
         public TowerShotBehavior TowerShot;
         public Damageable MainBuilding { get; private set; }
-        //TODO Это временно!!
         public DummyController DummyController;
         private TileView _tileView;
 
-        public BuildingFactory(CenterPanelController centerPanel, GlobalStock stock, 
+        public BuildingFactory(NotificationPanelController notificationPanel, GlobalStock stock, 
             GameConfig gameConfig, GeneratorLevelController levelController, GlobalTileSettings tileSettings)
         {
-            _notificationUI = centerPanel;
+            _notificationUI = notificationPanel;
             _stock = stock;
             _gameConfig = gameConfig;
 
@@ -44,7 +42,7 @@ namespace Code.BuildingSystem
         /// <summary>
         /// Проверяет на наличие ресурса если он есть ставим здание.
         /// </summary>
-        public ICollectable BuildBuilding(BuildingConfig buildingConfig, TileModel model, TileController controller)
+        public ICollectable BuildBuilding(BuildingConfig buildingConfig, TileModel model)
         {
             if (!IsResourcesEnough(buildingConfig))
             {
