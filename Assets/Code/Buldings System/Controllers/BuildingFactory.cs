@@ -29,16 +29,15 @@ namespace Code.BuildingSystem
         public DummyController DummyController;
         private TileView _tileView;
 
-        public BuildingFactory(NotificationPanelController notificationPanel, GlobalStock stock, 
-            PrefabsHolder prefabsHolder, ConfigsHolder configsHolder, GeneratorLevelController levelController, GlobalTileSettings tileSettings)
+        public BuildingFactory(NotificationPanelController notificationPanel, GlobalStock stock, ConfigsHolder configsHolder, GeneratorLevelController levelController)
         {
             _notificationUI = notificationPanel;
             _stock = stock;
-            _prefabsHolder = prefabsHolder;
+            _prefabsHolder = configsHolder.PrefabsHolder;
             _configsHolder = configsHolder;
 
             _levelController = levelController;
-            _tileSettings = tileSettings;
+            _tileSettings = configsHolder.GlobalTileSettings;
             _levelController.SpawnTower += PlaceMainTower;
         }
         

@@ -1,5 +1,6 @@
 using System;
 using Code.Units.HireDefendersSystem;
+using UnityEngine;
 
 namespace Code.UI
 {
@@ -45,6 +46,20 @@ namespace Code.UI
             _view.ButtonSelectTileFirst.gameObject.SetActive(false);
             _view.ButtonSelectTileSecond.gameObject.SetActive(false);
             _view.ButtonSelectTileThird.gameObject.SetActive(false);
+        }
+
+        public Transform GetButtonParents()
+        {
+            return _view.buttonParents;
+        }
+
+        public void ActivateButtonParents()
+        {
+            _view.buttonParents.gameObject.SetActive(true);
+        }
+        public void DeactivateButtonParents()
+        {
+            _view.buttonParents.gameObject.SetActive(false);
         }
 
         public void Dispose()

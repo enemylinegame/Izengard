@@ -13,7 +13,6 @@ public class Main : MonoBehaviour
 {
     [SerializeField] private ConfigsHolder _configsHolder;
     [SerializeField] private Canvas _canvas;
-    [SerializeField] private Transform _btnParents;
     [SerializeField] private AudioSource _clickAudioSource;
     
     private Controller _controllers;
@@ -22,7 +21,7 @@ public class Main : MonoBehaviour
     {
         _controllers = new Controller();
 
-        new GameInit(_controllers, _configsHolder.GameConfig, _configsHolder, _configsHolder.PrefabsHolder, _btnParents, _clickAudioSource, _canvas);
+        new GameInit(_controllers, _configsHolder, _clickAudioSource, _canvas);
 
         _controllers.OnStart();
     }

@@ -15,6 +15,7 @@ namespace Code.UI
         [field: SerializeField] public HireUnitUIView HireUnits;
         [field: SerializeField] public Button OpenMarketButton;
         [field: SerializeField] public TMP_Text Timer;
+        [field: SerializeField] public Transform buttonParents;
 
         #region Comments
 

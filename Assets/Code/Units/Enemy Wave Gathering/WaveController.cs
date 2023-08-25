@@ -11,7 +11,7 @@ using Wave.Interfaces;
 public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpdate, IDowntimeChecker
 {
     private readonly GeneratorLevelController _levelGenerator;
-    private readonly Transform _btnParents;
+    private readonly RightPanelController _rightPanel;
     
     private readonly IWaveGathering _waveGathering;
     private readonly ISendingEnemys _sendingEnemys;
@@ -29,11 +29,11 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
     public bool IsDowntime { get; private set; }
 
 
-    public WaveController(GeneratorLevelController levelGenerator, UIPanelsInitialization controller, Transform btnParents, 
-        ConfigsHolder configsHolder, BulletsController bulletsController, EnemyDestroyObserver destroyObserver, BuildingFactory buildingFactory)
+    public WaveController(GeneratorLevelController levelGenerator, UIPanelsInitialization controller, 
+    ConfigsHolder configsHolder, BulletsController bulletsController, EnemyDestroyObserver destroyObserver, BuildingFactory buildingFactory)
     {
         _levelGenerator = levelGenerator;
-        _btnParents = btnParents;
+        _rightPanel = controller.RightPanelController;
         
         _enemyAIController = new EnemyAIController();
         _bulletsController = bulletsController;
@@ -101,7 +101,7 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
 
         _preparatoryPhaseWaiting.StartPhase();
         IsDowntime = true;
-        _btnParents.gameObject.SetActive(true);
+        _rightPanel.ActivateButtonParents();
     }
 
     private void StartCombatPhase()
@@ -112,7 +112,7 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
         var enemys = _waveGathering.GetEnemysList(_waveNumber, IsDowntime);
         _sendingEnemys.SendEnemys(enemys, _posibleSpawnPointsFinder.GetPosibleSpawnPoints());
         _combatPhaseWaiting.StartPhase();
-        _btnParents.gameObject.SetActive(false);
+        _rightPanel.DeactivateButtonParents();
     }
 
     private void FreeSideForWave(VoxelTile voxelTile)
