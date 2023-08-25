@@ -22,7 +22,9 @@ namespace LevelGenerator
         private NavMeshSurface _navMeshSurface;
 
 
-        public TileSetter(List<VoxelTile> availableTiles, Dictionary<Vector2Int, VoxelTile> spawnedTiles, VoxelTile firstTile, GlobalTileSettings tileSettings)
+        public TileSetter(List<VoxelTile> availableTiles, 
+            Dictionary<Vector2Int, VoxelTile> spawnedTiles, 
+            VoxelTile firstTile, GlobalTileSettings tileSettings)
         {
             _availableTiles = availableTiles;
             _spawnedTiles = spawnedTiles;
@@ -30,10 +32,9 @@ namespace LevelGenerator
             _navMeshSurface = _tilesParent.gameObject.AddComponent<NavMeshSurface>();//Object.FindObjectOfType<NavMeshSurface>();
             _navMeshSurface.useGeometry = NavMeshCollectGeometry.RenderMeshes;
             _navMeshSurface.overrideTileSize = true;
-            _navMeshSurface.tileSize = 128;
+            _navMeshSurface.tileSize = 64;//128;
             _navMeshSurface.overrideVoxelSize = true;
-            _navMeshSurface.voxelSize = 0.03f;
-
+            _navMeshSurface.voxelSize = 0.01f;
 
             PlaceFirstTile(firstTile, tileSettings);
         }
