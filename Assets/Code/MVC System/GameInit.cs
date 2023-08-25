@@ -19,16 +19,16 @@ public class GameInit
     public GameInit(Controller controller, GameConfig gameConfig, WorkersTeamConfig workersTeamConfig,
         RightUI rightUI, Transform btnParents, CenterUI centerUI, BottomUI bottomUI, TopResUiVew topResUiVew,
         EndGameScreen endGameScreen, TowerShotConfig towerShotConfig, BuyItemScreenView buyItemScreenView, 
-        HireSystemView hireSystemView, EquipScreenView equipScreenView, Camera camera, GlobalTileSettings globalTileSettings,
-        GlobalResourceData globalResourceList, OutLineSettings outLineSettings, MarketDataConfig marketData, 
-        MarketView marketView, 
+        HireSystemView hireSystemView, EquipScreenView equipScreenView, Camera camera, GlobalTileSettings globalTileSettings, 
+        OutLineSettings outLineSettings, 
+        MarketDataConfig marketData, MarketView marketView, 
         InGameMenuUI inGameMenuUI, AudioSource clickAudioSource)
     {
         //TODO Do not change the structure of the script
         var tiles = GetTileList.GetTiles(gameConfig);
 
         var outlineController = new OutlineController(outLineSettings);
-        var globalResStock = new GlobalStock(globalResourceList, topResUiVew);
+        var globalResStock = new GlobalStock(gameConfig.GameResourceData.ResourcesData, topResUiVew);
         var btnConroller = new BtnUIController(rightUI, gameConfig);
         var gameStateManager = new GameStateManager();
         var inputController = new InputController(outlineController);
@@ -91,6 +91,12 @@ public class GameInit
         controller.Add(keyInputController);
 
         gameStateManager.OnDisable += controller.OnDisable;
+
+        var initialResources = gameConfig.GameResourceData.InitialResourceData.InitialResources;
+        foreach (var initResData in initialResources)
+        {
+            globalResStock.AddResourceToStock(initResData.ResourceType, initResData.Amount);
+        }
 
         // var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
         // controller.Add(testDummyTargetController);

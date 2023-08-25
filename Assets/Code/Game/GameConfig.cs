@@ -1,6 +1,7 @@
 using Code.Level_Generation;
 using Code.Scriptable;
 using CombatSystem;
+using ResourceSystem;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -30,6 +31,7 @@ public class GameConfig : ScriptableObject
     [SerializeField] private GlobalMineralsList _mineralConfigs;
     [SerializeField] private PhasesSettings _phasesSettings;
     [SerializeField] private DefendersSet _defendersSet;
+    [SerializeField] private GlobalResourceData _gameResourceData; 
 
     [Range(0f, 1f)]
     [SerializeField] private float _tearOneWeightVariantNik = 0.75f;
@@ -53,6 +55,8 @@ public class GameConfig : ScriptableObject
 
     [SerializeField]
     private PrescriptionsStorage _prescriptionsStorage;
+
+    public GlobalResourceData GameResourceData => _gameResourceData;
 
     public DefendersSet DefendersSets => _defendersSet;
     public GameObject Enemy => _enemy;

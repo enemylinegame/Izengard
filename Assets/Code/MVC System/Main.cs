@@ -13,7 +13,6 @@ public class Main : MonoBehaviour
     [Header("Configs")]
     [SerializeField] private GameConfig _gameConfig;
     [SerializeField] private GlobalTileSettings _globalTileSettings;
-    [SerializeField] private GlobalResourceData _globalResourceList;
     [SerializeField] private WorkersTeamConfig _workersTeamConfig;
     [SerializeField] private OutLineSettings _outLineSettings;
     [SerializeField] private TowerShotConfig _towerShotConfig;
@@ -48,7 +47,7 @@ public class Main : MonoBehaviour
             _rightUI,  _btnParents,_centerUI ,_bottonUI,
             _topUI, _endGameScreen, _towerShotConfig,
             _buyItemScreenView, _hireSystemView, _equipScreenView, 
-            _screenCamera, _globalTileSettings, _globalResourceList, _outLineSettings,
+            _screenCamera, _globalTileSettings, _outLineSettings,
             _marketDataConfig, _marketUI, _inGameMenuUI, _clickAudioSource);
 
         _controllers.OnStart();
