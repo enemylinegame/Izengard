@@ -13,7 +13,7 @@ namespace Code.TileSystem
         public Damageable CenterBuilding { get; set; }
         public TileType TileType { get; set; }
         public TileConfig TileConfig { get; set; }
-        public List<Dot> DotSpawns { get; set; }
+        public List<PlaceOfProduction> DotSpawns { get; set; }
         public List<ICollectable> FloodedBuildings { get; set; }
         public List<BuildingConfig> CurrBuildingConfigs { get; set; }
         public List<DefenderPreview> DefenderUnits { get; private set; }

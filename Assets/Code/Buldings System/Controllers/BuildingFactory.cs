@@ -163,7 +163,7 @@ namespace Code.BuildingSystem
             dot.IsActive = true;
         }
 
-        public Dot CheckDot(TileModel model)
+        public PlaceOfProduction CheckDot(TileModel model)
         {
             var cleardots = model.DotSpawns.FindAll(x => x.IsActive);
             return cleardots[Random.Range(0, cleardots.Count)];

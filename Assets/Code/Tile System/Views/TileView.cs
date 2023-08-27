@@ -6,7 +6,7 @@ namespace Code.TileSystem
     public class TileView : MonoBehaviour
     {
         //[SerializeField] private TileConfig _tileConfig;
-        [SerializeField] private List<Dot> _dotSpawns; 
+        [SerializeField] private List<PlaceOfProduction> _dotSpawns; 
         public Renderer Renderer;
         public TileModel TileModel;
         private void Awake()
