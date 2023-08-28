@@ -1,18 +1,14 @@
 ﻿using System;
-using UnityEngine.AI;
 using Wave;
 
 namespace CombatSystem.UnitEnemy
 {
-    public class EnemyController : IDisposable
+    public class EnemyController : IDisposable, IOnController, IOnUpdate
     {
         private readonly Enemy _enemyUnit;
+        private readonly EnemyCore _core;
         private readonly EnemyStatesHolder _statesHolder;
-
-        private readonly PlanRouteAction _planRoute;
-
-        private Damageable _currentTarget;
-        
+    
         public EnemyController(
             Enemy enemyUnit, 
             Damageable target, 
@@ -20,18 +16,13 @@ namespace CombatSystem.UnitEnemy
             IBulletsController bulletsController)
         {
             _enemyUnit = enemyUnit;
-            
-            _currentTarget = target;
 
-            var navMesh 
-                = _enemyUnit.RootGameObject.GetComponent<NavMeshAgent>();
-            
-            _planRoute = new PlanRouteAction(navMesh);
-            _planRoute.OnComplete += OnPlaneRouteComplete;
+            _core = new EnemyCore(_enemyUnit, target);
 
+            _core.PlanRoute.OnComplete += OnPlaneRouteComplete;
 
             _statesHolder 
-                = new EnemyStatesHolder(_enemyUnit, animationController, _planRoute, _currentTarget);
+                = new EnemyStatesHolder(_enemyUnit, animationController, _core);
         }
 
         private void OnPlaneRouteComplete(Damageable target)
@@ -49,6 +40,11 @@ namespace CombatSystem.UnitEnemy
         public void Dispose()
         {
             _statesHolder?.Dispose();
+        }
+
+        public void OnUpdate(float deltaTime)
+        {
+            _statesHolder.OnUpdate(deltaTime);
         }
     }
 }

@@ -10,11 +10,10 @@ namespace CombatSystem.UnitEnemy.EnemyStates
         public EnemyMoveState(
             Enemy unit, 
             IEnemyAnimationController animationController,
-            PlanRouteAction planRoute,
-            Damageable currentTarget) : base(unit, animationController)
+            EnemyCore core) : base(unit, animationController)
         {
-            _planRoute = planRoute;
-            _currentTarget = currentTarget;
+            _planRoute = (PlanRouteAction)core.PlanRoute;
+            _currentTarget = core.CurrentTarget;
         }
 
         public override void OnEnter()
@@ -38,5 +37,7 @@ namespace CombatSystem.UnitEnemy.EnemyStates
         {
 
         }
+
+
     }
 }

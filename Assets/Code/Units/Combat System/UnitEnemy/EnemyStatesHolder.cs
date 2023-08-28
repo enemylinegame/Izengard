@@ -5,7 +5,7 @@ using Wave;
 
 namespace CombatSystem.UnitEnemy
 {
-    public class EnemyStatesHolder : IDisposable
+    public class EnemyStatesHolder : IDisposable, IOnUpdate
     {
         private readonly Dictionary<EnemyStateType, EnemyBaseState> _enemyStates 
             = new Dictionary<EnemyStateType, EnemyBaseState>();
@@ -23,11 +23,10 @@ namespace CombatSystem.UnitEnemy
         public EnemyStatesHolder(
             Enemy unit,
             IEnemyAnimationController animationController, 
-            PlanRouteAction planRoute, 
-            Damageable currentTarget) 
+            EnemyCore core)
         {
             _enemyStates[EnemyStateType.Idle] = new EnemyIdleState(unit, animationController);
-            _enemyStates[EnemyStateType.Move] = new EnemyMoveState(unit, animationController, planRoute, currentTarget);
+            _enemyStates[EnemyStateType.Move] = new EnemyMoveState(unit, animationController, core);
             _enemyStates[EnemyStateType.Attack] = new EnemyAttackState(unit, animationController);
             _enemyStates[EnemyStateType.SearchForTarget] = new EnemySearchForTargetState(unit, animationController);
             _enemyStates[EnemyStateType.ChangeTarget] = new EnemyChangeTargetState(unit, animationController);
@@ -54,6 +53,11 @@ namespace CombatSystem.UnitEnemy
             CurrentState = default;
 
             _enemyStates.Clear();
+        }
+
+        public void OnUpdate(float deltaTime)
+        {
+            CurrentState.OnUpdate();
         }
     }
 }
