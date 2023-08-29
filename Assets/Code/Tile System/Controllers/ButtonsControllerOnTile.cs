@@ -10,32 +10,15 @@ namespace Code.TileSystem
 {
     public class ButtonsControllerOnTile
     {
+        private readonly TileMainBoardController _tileMainBoard;
         private readonly InputController _inputController;
-        private readonly List<ButtonView> _holder;
 
-        public ButtonsControllerOnTile(UIController uiController, InputController inputController)
+        public ButtonsControllerOnTile(TileMainBoardController tileMainBoard, InputController inputController)
         {
+            _tileMainBoard = tileMainBoard;
             _inputController = inputController;
-            _holder = uiController.BottomUI.TileUIView.ButtonsHolder;
         }
-        /// <summary>
-        /// Returns a button with a specific type
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public Button HolderButton(ButtonTypes type)
-        {
-            foreach (var view in _holder)
-            {
-                if (view.Type == type)
-                {
-                    view.gameObject.SetActive(true);
-                    return view.Button;
-                }
-            }
-            
-            return null;
-        } 
+        
         /// <summary>
         /// Adding buttons to the list
         /// </summary>
@@ -44,28 +27,28 @@ namespace Code.TileSystem
         public void ButtonAddListener(TileModel model, LevelOfLifeButtonsCustomizer level)
         {
             if(model.CenterBuilding == null) return;
-            var upgrade = HolderButton(ButtonTypes.Upgrade);
-            HolderButton(ButtonTypes.Repair).onClick.AddListener(() =>
+            var upgrade = _tileMainBoard.HolderButton(ButtonTypes.Upgrade);
+            _tileMainBoard.HolderButton(ButtonTypes.Repair).onClick.AddListener(() =>
             {
                 level.RepairBuilding(model);
                 upgrade.gameObject.SetActive(true);
-                HolderButton(ButtonTypes.Repair).gameObject.SetActive(false);
+                _tileMainBoard.HolderButton(ButtonTypes.Repair).gameObject.SetActive(false);
             });
-            HolderButton(ButtonTypes.Recovery).onClick.AddListener(() =>
+            _tileMainBoard.HolderButton(ButtonTypes.Recovery).onClick.AddListener(() =>
             {
                 level.RecoveryBuilding(model);
                 upgrade.gameObject.SetActive(true);
-                HolderButton(ButtonTypes.Recovery).gameObject.SetActive(false);
+                _tileMainBoard.HolderButton(ButtonTypes.Recovery).gameObject.SetActive(false);
             });
             
             if (model.TileType == TileType.All)
             {
-                HolderButton(ButtonTypes.Destroy).gameObject.SetActive(false);
+                _tileMainBoard.HolderButton(ButtonTypes.Destroy).gameObject.SetActive(false);
             }
             else
             {
-                HolderButton(ButtonTypes.Destroy).gameObject.SetActive(true);
-                HolderButton(ButtonTypes.Destroy).onClick.AddListener(() =>
+                _tileMainBoard.HolderButton(ButtonTypes.Destroy).gameObject.SetActive(true);
+                _tileMainBoard.HolderButton(ButtonTypes.Destroy).onClick.AddListener(() =>
                 {
                     while (true)
                     {
@@ -97,52 +80,24 @@ namespace Code.TileSystem
             if (model.CenterBuilding.CurrentHealth < model.CenterBuilding.MaxHealth &&
                 model.CenterBuilding.CurrentHealth > 0)
             {
-                HolderButton(ButtonTypes.Repair).gameObject.SetActive(true);
-                HolderButton(ButtonTypes.Recovery).gameObject.SetActive(false);
-                HolderButton(ButtonTypes.Upgrade).gameObject.SetActive(false);
+                _tileMainBoard.HolderButton(ButtonTypes.Repair).gameObject.SetActive(true);
+                _tileMainBoard.HolderButton(ButtonTypes.Recovery).gameObject.SetActive(false);
+                _tileMainBoard.HolderButton(ButtonTypes.Upgrade).gameObject.SetActive(false);
             }
             else if (model.CenterBuilding.CurrentHealth <= 0)
             {
-                HolderButton(ButtonTypes.Repair).gameObject.SetActive(false);
-                HolderButton(ButtonTypes.Recovery).gameObject.SetActive(true);
-                HolderButton(ButtonTypes.Upgrade).gameObject.SetActive(false);
+                _tileMainBoard.HolderButton(ButtonTypes.Repair).gameObject.SetActive(false);
+                _tileMainBoard.HolderButton(ButtonTypes.Recovery).gameObject.SetActive(true);
+                _tileMainBoard.HolderButton(ButtonTypes.Upgrade).gameObject.SetActive(false);
                 
             }
             else
             {
-                HolderButton(ButtonTypes.Repair).gameObject.SetActive(false);
-                HolderButton(ButtonTypes.Recovery).gameObject.SetActive(false);
-                HolderButton(ButtonTypes.Upgrade).gameObject.SetActive(true);
+                _tileMainBoard.HolderButton(ButtonTypes.Repair).gameObject.SetActive(false);
+                _tileMainBoard.HolderButton(ButtonTypes.Recovery).gameObject.SetActive(false);
+                _tileMainBoard.HolderButton(ButtonTypes.Upgrade).gameObject.SetActive(true);
             }
         }
-        /// <summary>
-        /// Removes all dependencies from buttons
-        /// </summary>
-        public void RemoveListeners(ButtonTypes type, TileModel model)
-        {
-            if(model.CenterBuilding == null) return;
-            foreach (var view in _holder)
-            {
-                if (view.Type == type)
-                {
-                    view.Button.onClick.RemoveAllListeners();
-                }
-                else
-                {
-                    view.Button.onClick.RemoveAllListeners();
-                }
-            }
-        }
-    }
-
-
-
-    public enum ButtonTypes
-    {
-        Upgrade,
-        Recovery,
-        Repair,
-        Destroy,
-        All
+        
     }
 }

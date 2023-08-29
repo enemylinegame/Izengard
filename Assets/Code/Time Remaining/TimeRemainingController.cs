@@ -1,46 +1,37 @@
-﻿
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿    using System;
 
-    public sealed class TimeRemainingController: IOnController, IOnUpdate
+
+    public sealed class TimeRemainingController: IOnController, IOnUpdate, IDisposable
     {
-        #region Fields
         
-        private readonly List<ITimeRemaining> _timeRemainings;
-        
-        #endregion
-
-        
-        #region ClassLifeCycles
-
-        public TimeRemainingController()
+        public void Dispose()
         {
-            _timeRemainings = TimeRemainingExtensions.TimeRemainings;
+            for (int i = TimersHolder.Timers.Count - 1; i >= 0; i--)
+            {
+                ITimeRemaining timer = TimersHolder.Timers[i];
+                TimersHolder.RemoveTimer(timer);
+            }
         }
-        
-        #endregion
-
         
         #region IExecute
 
         public void OnUpdate(float deltatime)
         {
-            var time = Time.deltaTime;
-            for (var i = 0; i < _timeRemainings.Count; i++)
+            for (int i = TimersHolder.Timers.Count - 1; i >= 0; i--)
             {
-                var obj = _timeRemainings[i];
-                obj.CurrentTime -= time;
-                if (obj.CurrentTime <= 0.0f)
+                ITimeRemaining timer = TimersHolder.Timers[i];
+                timer.TimeLeft -= deltatime;
+                if (timer.TimeLeft <= 0.0f)
                 {
-                    obj?.Method?.Invoke();
-                    if (!obj.IsRepeating)
+                    if (!timer.IsRepeating)
                     {
-                        obj.RemoveTimeRemaining();
+                        TimersHolder.RemoveTimer(timer);
                     }
                     else
                     {
-                        obj.CurrentTime = obj.Time;
+                        timer.TimeLeft = timer.Duration;
                     }
+                    timer.Method?.Invoke();
                 }
             }
         }

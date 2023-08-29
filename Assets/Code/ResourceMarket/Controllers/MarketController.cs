@@ -9,10 +9,10 @@ namespace ResourceMarket
 {
     public sealed class MarketController : IOnController, IOnUpdate, IOnStart, IDisposable
     {
-        private readonly List<IMarketItem> _marketItems = new List<IMarketItem>();
+        private readonly List<IMarketItem> _marketItems;
 
-        private readonly UIController _uiController;
-        private readonly MarketView _view;
+        private readonly UIPanelsInitialization _uiPanels;
+        private readonly MarketPanelController _marketPanel;
         private readonly GlobalStock _stock;
         private readonly BuildingFactory _buildingsFactory;
 
@@ -34,7 +34,7 @@ namespace ResourceMarket
                 {
                     _restoreTimer = value;
 
-                    _view.UpdateTimerTime(_restoreTimer);
+                    _marketPanel.UpdateTimerTime(_restoreTimer);
                 }
             }
         }
@@ -47,21 +47,18 @@ namespace ResourceMarket
                 if (_tradeValue != value)
                 {
                     _tradeValue = Mathf.Clamp(value, 1, int.MaxValue);
-                    _view.UpdateTradeValue(_tradeValue);
+                    _marketPanel.UpdateTradeValue(_tradeValue);
                 }
             }
         }
 
-        public MarketController(
-            UIController uiController,
-            GlobalStock stock,
-            BuildingFactory buildingFactory,
+        public MarketController(UIPanelsInitialization uiPanels, GlobalStock stock, BuildingFactory buildingFactory,
             MarketDataConfig marketData)
         {
-            _uiController = uiController;
-            _uiController.RightUI.OpenMarketButton.onClick.AddListener(ShowView);
+            _uiPanels = uiPanels;
+            _marketItems = new List<IMarketItem>();
 
-            _view = uiController.MarketView;
+            _marketPanel = uiPanels.MarketPanelController;
 
             _stock = stock;
             _stock.ResourceValueChanged += OnGoldChange;
@@ -70,7 +67,7 @@ namespace ResourceMarket
             _buildingsFactory.OnBuildingsChange += OnAddMarkets;
 
             _marketDataProvider = new MarketDataProvider(marketData.MarketCoef);
-            _marketDataProvider.OnMarketAmountChange += _view.UpdateMarketAmount;
+            _marketDataProvider.OnMarketAmountChange += _marketPanel.UpdateMarketAmount;
 
             _itemFactory = new MarketItemFactory(marketData, _marketDataProvider);
 
@@ -81,10 +78,11 @@ namespace ResourceMarket
             var tierthreeItems = _itemFactory.CreateTierThreeItems();
             _marketItems.AddRange(tierthreeItems);
 
-            _view.InitViewData(marketData.MarketTierData, tierOneItems, tierTwoItems, tierthreeItems);
-            _view.InitViewAction(OnBuyItem, OnSellItem, OnIncreaseTradeValue, OnDecreaseTradeValue, ResetTradeValue, OnCloseMarket);
-            _view.UpdateGold(_stock.GetAvailableResourceAccount(ResourceType.Gold));
-            _view.UpdateMarketAmount(_marketDataProvider.MarketAmount);
+            _marketPanel.InitViewData(marketData.MarketTierData, tierOneItems, tierTwoItems, tierthreeItems);
+            _marketPanel.InitViewAction(OnBuyItem, OnSellItem, OnIncreaseTradeValue, OnDecreaseTradeValue, ResetTradeValue);
+            _marketPanel.UpdateGold(_stock.GetAvailableResourceAccount(ResourceType.Gold));
+            _marketPanel.UpdateMarketAmount(_marketDataProvider.MarketAmount);
+            _uiPanels.RightPanelController.SubscribeOpenMarketButton((() => _marketPanel.SetActive(true)));
 
             _resetTimer = new TimeRemaining(RestoreValues, marketData.MarketRestoreValueDelay, true);
         }
@@ -95,7 +93,7 @@ namespace ResourceMarket
                 return;
 
             _currentGold = value;
-            _view.UpdateGold(_currentGold);
+            _marketPanel.UpdateGold(_currentGold);
         }
 
         private void OnAddMarkets(BuildingTypes type, bool isMarketBuild)
@@ -127,11 +125,11 @@ namespace ResourceMarket
 
                 item.DecreaseAmount(item.Data.ExchangeAmount * TradeVale);
 
-                _view.UpdateStatus("");
+                _marketPanel.UpdateStatus("");
             }
             else 
             {
-                _view.UpdateStatus("Нужно больше золота");
+                _marketPanel.UpdateStatus("Нужно больше золота");
             }
         }
 
@@ -149,11 +147,11 @@ namespace ResourceMarket
 
                 item.IncreaseAmount(item.Data.ExchangeAmount * TradeVale);
 
-                _view.UpdateStatus("");
+                _marketPanel.UpdateStatus("");
             }
             else
             {
-                _view.UpdateStatus(item.Data.ErrorMessage);
+                _marketPanel.UpdateStatus(item.Data.ErrorMessage);
             }
         }
 
@@ -166,10 +164,7 @@ namespace ResourceMarket
         private void ResetTradeValue() 
             => TradeVale = 1;
 
-        private void OnCloseMarket()
-        {
-            _uiController.IsWorkUI(UIType.Market, false);
-        }
+        
 
         private void RestoreValues()
         {
@@ -180,32 +175,27 @@ namespace ResourceMarket
             ResetTradeValue();
         }
 
-        public void ShowView()
-        {
-            _uiController.IsWorkUI(UIType.Market, true);
-        }
-
         public void OnStart()
         {
-            TimeRemainingExtensions.AddTimeRemaining(_resetTimer);
+            TimersHolder.AddTimer(_resetTimer);
         }
   
         public void OnUpdate(float deltaTime)
         {
-            RestoreTimer = _resetTimer.CurrentTime;
+            RestoreTimer = _resetTimer.TimeLeft;
         }
   
         public void Dispose()
         {
             _stock.ResourceValueChanged -= OnGoldChange;
             _buildingsFactory.OnBuildingsChange -= OnAddMarkets;
-            _marketDataProvider.OnMarketAmountChange -= _view.UpdateMarketAmount;
+            _marketDataProvider.OnMarketAmountChange -= _marketPanel.UpdateMarketAmount;
 
-            _uiController.RightUI.OpenMarketButton.onClick.RemoveListener(ShowView);
+            _uiPanels.RightPanelController.Dispose();
 
-            TimeRemainingExtensions.RemoveTimeRemaining(_resetTimer);
+            TimersHolder.RemoveTimer(_resetTimer);
 
-            _view.Deinit();
+            _marketPanel.Deinit();
         }  
     }
 }

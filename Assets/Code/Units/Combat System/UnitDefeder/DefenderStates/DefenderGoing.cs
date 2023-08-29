@@ -41,10 +41,10 @@ namespace CombatSystem.DefenderStates
             {
                 ChangeDestination();
             }
-            // Vector3 position = _transform.position;
-            // position.y = _agent.destination.y;
-            // if (( position - _agent.destination).sqrMagnitude <= _stopDistanceSqr)
-            if (_agent.remainingDistance <= _agent.stoppingDistance)
+            Vector3 position = _transform.position;
+            Vector3 destination = _agent.destination;
+            position.y = destination.y;
+            if (( position - destination).sqrMagnitude <= _stopDistanceSqr)
             {
                 _setState(DefenderState.Idle);
             }

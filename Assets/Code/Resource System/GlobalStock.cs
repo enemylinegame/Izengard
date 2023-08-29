@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Code.UI;
 using ResourceSystem.SupportClases;
 using UnityEngine;
 
@@ -11,11 +12,11 @@ namespace ResourceSystem
 
         public event Action<ResourceType, int> ResourceValueChanged;
         
-        public GlobalStock(GlobalResourceData resourcesConfig, TopResUiVew topResUiVew)
+        public GlobalStock(GlobalResourceData resourcesConfig, ResourcesPanelController resourcesPanelView)
         {
             _resourceHolders = new List<ResourceHolder>();
             
-            ResourceValueChanged += topResUiVew.UpdateResursesCount;
+            ResourceValueChanged += resourcesPanelView.UpdateResursesCount;
 
             InitHolders(resourcesConfig.ResourcesData);
             SetupInitalValues(resourcesConfig.InitialResourceData);

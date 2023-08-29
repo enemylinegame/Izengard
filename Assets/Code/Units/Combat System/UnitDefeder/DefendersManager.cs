@@ -32,12 +32,12 @@ namespace CombatSystem
         
 
         public DefendersManager(TileController tileController, IDefendersControll defendersController, 
-            UIController uiController, HireUnitView hireUnitView, DefendersSet defendersSet, 
+            WarsView warsView, HireUnitView hireUnitView, DefendersSet defendersSet, 
             PaymentDefendersSystem paymentSystem, HireDefenderProgressManager hireProgressManager)
         {
             _tileController = tileController;
             _defendersController = defendersController;
-            _warsView = uiController.WarsView;
+            _warsView = warsView;
             _warsView.SetDefendersManager(this);
             _defendersSet = defendersSet;
             _hireUnitView = hireUnitView;
@@ -197,12 +197,6 @@ namespace CombatSystem
             _warsView.SetMexDefenders(tile.TileModel.MaxWarriors);
             _warsView.SetDefenders(tile.TileModel.DefenderUnits);
         }
-        private void TypeChange(TileView tile)
-        {
-            _warsView.SetMexDefenders(tile.TileModel.MaxWarriors);
-            _warsView.SetDefenders(tile.TileModel.DefenderUnits);
-            _tileController.TileTypeChange -= TypeChange;
-        }
 
         public void Cancel()
         {
@@ -211,6 +205,12 @@ namespace CombatSystem
         }
 
         #endregion
+        private void TypeChange(TileView tile)
+        {
+            _warsView.SetMexDefenders(tile.TileModel.MaxWarriors);
+            _warsView.SetDefenders(tile.TileModel.DefenderUnits);
+            _tileController.TileTypeChange -= TypeChange;
+        }
 
         private void DefenderDead(DefenderUnit defender)
         {

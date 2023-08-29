@@ -1,6 +1,7 @@
 ﻿using ResourceSystem;
 using System.Collections.Generic;
 using Code.BuildingSystem;
+using Code.Game;
 using Code.UI;
 using UnityEngine;
 
@@ -9,20 +10,19 @@ namespace Code.TileSystem
     public class TileResouceUIFactory
     {
         private RectTransform _layoutTransform;
-        private ResourcesLayoutUIView _resourcesLayoutUIView;
         private TileResourceUIController _tileResourceController;
         private TileController _tileController;
         private List<ICollectable> _buildings;
-        private GameConfig _gameConfig;
+        private PrefabsHolder _prefabsHolder;
 
-        public TileResouceUIFactory(UIController uiController, TileResourceUIController tileResourceController
-            , TileController tileController, GameConfig gameConfig)
+        private List<ResourceView> Resources => _tileResourceController.Resources;
+        public TileResouceUIFactory(TilePanelController tilePanel, TileResourceUIController tileResourceController
+            , TileController tileController, PrefabsHolder prefabsHolder)
         {
-            _layoutTransform = uiController.BottomUI.ResourcesLayoutUIView.LayoutRectTransform;
-            _resourcesLayoutUIView = uiController.BottomUI.ResourcesLayoutUIView;
+            _layoutTransform = tilePanel.TileResourcesPanel.GetLayoutTransform();
             _tileResourceController = tileResourceController;
             _tileController = tileController;
-            _gameConfig = gameConfig;
+            _prefabsHolder = prefabsHolder;
         }
         
         public void LoadInfoToTheUI(TileView tile)
@@ -42,7 +42,7 @@ namespace Code.TileSystem
             var minerals = _buildings.FindAll(x => x.MineralConfig != null);
             foreach (var mineral in minerals)
             {
-                RemoveLayoutElement(mineral.MineralConfig);
+                RemoveLayoutElement();
             }
         }
 
@@ -54,20 +54,20 @@ namespace Code.TileSystem
             resourceUIObjectView.InitViewData(mineralConfig.ResourceType.ToString(),
                 mineralConfig.WorkersCount, mineralConfig);
 
-            _resourcesLayoutUIView.Resources.Add(resourceUIObjectView);
+            Resources.Add(resourceUIObjectView);
             _tileResourceController.AddNewLayoutElement(resourceUIObjectView);
         }
 
         private void AddNewLayoutElement(ICollectable mineralConfig)
         {
-            CreateResourceUIOnLayout(_gameConfig.Res, mineralConfig);
+            CreateResourceUIOnLayout(_prefabsHolder.Res, mineralConfig);
         }
-        private void RemoveLayoutElement(MineralConfig mineralConfig)
+        private void RemoveLayoutElement()
         {
-            foreach (var res in _resourcesLayoutUIView.Resources)
+            foreach (var res in Resources)
             {
                 Object.Destroy(res.gameObject);
-                _resourcesLayoutUIView.Resources.Remove(res);
+                Resources.Remove(res);
                 break;
             }
         }

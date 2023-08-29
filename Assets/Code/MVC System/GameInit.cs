@@ -1,14 +1,12 @@
 using Code.BuildingSystem;
 using Code.Game;
 using Code.Player;
-using Code.QuickOutline.Scripts;
 using Code.TileSystem;
 using Code.TowerShot;
 using Code.UI;
 using Code.Units.HireDefendersSystem;
 using CombatSystem;
 using Controllers.BaseUnit;
-using EquipmentSystem;
 using ResourceMarket;
 using ResourceSystem;
 using UnityEngine;
@@ -16,73 +14,61 @@ using Wave;
 
 public class GameInit
 {
-    public GameInit(Controller controller, GameConfig gameConfig, WorkersTeamConfig workersTeamConfig,
-        RightUI rightUI, Transform btnParents, CenterUI centerUI, BottomUI bottomUI, TopResUiVew topResUiVew,
-        EndGameScreen endGameScreen, TowerShotConfig towerShotConfig, BuyItemScreenView buyItemScreenView, 
-        HireSystemView hireSystemView, EquipScreenView equipScreenView, Camera camera, GlobalTileSettings globalTileSettings,
-        GlobalResourceData globalResourceList, OutLineSettings outLineSettings, MarketDataConfig marketData, 
-        MarketView marketView, 
-        InGameMenuUI inGameMenuUI, AudioSource clickAudioSource)
+    public GameInit(Controller controller, ConfigsHolder configs, AudioSource clickAudioSource, Canvas canvas)
     {
         //TODO Do not change the structure of the script
-        var tiles = GetTileList.GetTiles(gameConfig);
+        var tiles = GetTileList.GetTiles(configs.GameConfig);
 
-        var outlineController = new OutlineController(outLineSettings);
-        var globalResStock = new GlobalStock(globalResourceList, topResUiVew);
-        var btnConroller = new BtnUIController(rightUI, gameConfig);
-        var gameStateManager = new GameStateManager();
+        var outlineController = new OutlineController(configs.OutLineSettings);
         var inputController = new InputController(outlineController);
         var keyInputController = new KeyInputController();
+        var uiPanelInitialization = new UIPanelsInitialization(configs.UIElementsConfig, canvas, inputController);
+        
+        var globalStock = new GlobalStock(configs.GlobalResourceData, uiPanelInitialization.ResourcesPanelController);
+        var gameStateManager = new GameStateManager();
         var soundPlayer = new SoundPlayer(clickAudioSource);
-        var uiController = new UIController(rightUI, bottomUI, centerUI, inputController, marketView);
-
-        var levelGenerator = new GeneratorLevelController(tiles, gameConfig, btnConroller, btnParents, uiController, globalTileSettings);
-        // var buildController = new BuildGenerator(gameConfig);
-        var buildingController = new BuildingFactory(uiController, globalResStock, gameConfig, levelGenerator, globalTileSettings);
+        var levelGenerator = new GeneratorLevelController(tiles, configs, uiPanelInitialization.RightPanelController);
+        var buildingFactory = new BuildingFactory(uiPanelInitialization.NotificationPanel, globalStock, configs, levelGenerator);
 
         /* Market */
-        var marketController = new MarketController(uiController, globalResStock, buildingController, marketData);
+        var marketController = new MarketController(uiPanelInitialization, globalStock, buildingFactory, configs.MarketDataConfig);
 
-        var enemyDestroyObserver = new EnemyDestroyObserver(globalResStock);
+        var enemyDestroyObserver = new EnemyDestroyObserver(globalStock);
         var unitController = new UnitController();
         var timeRemaining = new TimeRemainingController();
-        var towershotcontroller = new TowerShotController(towerShotConfig, buildingController, gameConfig.Bullet);
-        var eqScreenController = new EquipScreenController(equipScreenView, camera);
-        var hireSystemController = new HireSystemController(globalResStock, buyItemScreenView, eqScreenController, hireSystemView, levelGenerator);
+        var towerShotController = new TowerShotController(configs, buildingFactory);
         var bulletsController = new BulletsController();
-        var waveController = new WaveController(levelGenerator, uiController, btnParents, gameConfig, bulletsController, enemyDestroyObserver, buildingController);
-        var endGameController = new EndGameController(gameStateManager, endGameScreen, buildingController);
-        var renovationOfTheCentralBuilding = new LevelOfLifeButtonsCustomizer(uiController.CenterUI.BaseNotificationUI, globalResStock, uiController.BottomUI.TileUIView, levelGenerator, buildingController, globalTileSettings);
+        var waveController = new WaveController(levelGenerator, uiPanelInitialization, configs, bulletsController, enemyDestroyObserver, buildingFactory);
+        var endGameController = new EndGameController(gameStateManager, uiPanelInitialization.EndGameScreenPanel, buildingFactory);
+        var renovationOfTheCentralBuilding = new LevelOfLifeButtonsCustomizer(uiPanelInitialization.NotificationPanel, globalStock, levelGenerator, buildingFactory, configs.GlobalTileSettings);
 
-        var workersTeamComtroller = new WorkersTeamController(workersTeamConfig);
-        var productionManager = new ProductionManager(globalResStock, workersTeamComtroller, workersTeamConfig, gameConfig.PrescriptionsStorage, uiController.CenterUI.BaseNotificationUI);
+        var workersTeamController = new WorkersTeamController(configs.WorkersTeamConfig);
+        var productionManager = new ProductionManager(globalStock, workersTeamController, configs.WorkersTeamConfig, configs.PrescriptionsStorage, uiPanelInitialization.NotificationPanel);
         
-        var tileController = new TileController(uiController, buildingController, inputController, productionManager, renovationOfTheCentralBuilding, globalResStock, globalTileSettings);
+        var tileController = new TileController(uiPanelInitialization, buildingFactory, inputController, productionManager, renovationOfTheCentralBuilding, globalStock, configs.GlobalTileSettings);
         var defenderController = new DefendersController(bulletsController);
-        var tileResourceUIController = new TileResourceUIController(uiController, inputController, tileController, gameConfig);
-        var hireUnitView = new HireUnitView(rightUI.HireUnits);
-        var paymentDefendersSystem = new PaymentDefendersSystem(globalResStock);
+        var tileResourceUIController = new TileResourceUIController(uiPanelInitialization.TilePanelController, inputController, tileController, configs.PrefabsHolder);
+        var hireUnitView = new HireUnitView(uiPanelInitialization.RightPanelController.HireUnitView);
+        var paymentDefendersSystem = new PaymentDefendersSystem(globalStock);
         var hireDefendersManager = new HireDefenderProgressManager();
-        var defendersAssignController = new DefendersManager(tileController, defenderController, uiController, hireUnitView, gameConfig.DefendersSets, paymentDefendersSystem, hireDefendersManager);
+        var defendersAssignController = new DefendersManager(tileController, defenderController, uiPanelInitialization.WarsView, hireUnitView, configs.DefendersSet, paymentDefendersSystem, hireDefendersManager);
         inputController.Add(defendersAssignController);
-        var inGameMenuController = new InGameMenuController(inGameMenuUI, gameStateManager, keyInputController, soundPlayer);
-
-        if (!gameConfig.ChangeVariant) new ResourceGenerator(/*buildController.Buildings, */gameConfig, levelGenerator, buildingController);
-        else new ResourceGenerator(/*.Buildings, */gameConfig, levelGenerator, buildingController, 2);
+        var inGameMenuController = new InGameMenuController(uiPanelInitialization.InGameMenuPanel, gameStateManager, keyInputController, soundPlayer);
+        
+        new ResourceGenerator(configs,levelGenerator, buildingFactory);
+        // if (!gameConfig.ChangeVariant) new ResourceGenerator(gameConfig, configs.GlobalMineralsList,levelGenerator, buildingController);
+        // else new ResourceGenerator(gameConfig, levelGenerator, buildingController, 2);
 
         inputController.Add(defendersAssignController);
         controller.Add(timeRemaining);
-        controller.Add(uiController);
-        controller.Add(workersTeamComtroller);
-        controller.Add(btnConroller);
+        controller.Add(workersTeamController);
         controller.Add(levelGenerator);
-        controller.Add(buildingController);
+        controller.Add(buildingFactory);
         controller.Add(unitController);
         controller.Add(inputController);
         controller.Add(waveController);
         controller.Add(endGameController);
-        controller.Add(towershotcontroller);
-        controller.Add(hireSystemController);
+        controller.Add(towerShotController);
         controller.Add(tileController);
         controller.Add(defenderController);
         controller.Add(bulletsController);
@@ -91,8 +77,5 @@ public class GameInit
         controller.Add(keyInputController);
 
         gameStateManager.OnDisable += controller.OnDisable;
-
-        // var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
-        // controller.Add(testDummyTargetController);
     }
 }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Code.BuildingSystem;
+using Code.Game;
+using Code.Scriptable;
 using Code.TileSystem;
 using ResourceSystem;
 using UnityEngine;
@@ -23,16 +25,15 @@ public class ResourceGenerator : IDisposable
     private List<MineralConfig> _resourcesTierOne;
     private List<MineralConfig> _resourcesTierTwo;
     private List<MineralConfig> _resourcesTierThree;
-    public ResourceGenerator(/*GameObject[,] installedBuildings,*/
-        GameConfig gameConfig, GeneratorLevelController generatorLevelController, BuildingFactory buildingController)
+    public ResourceGenerator(ConfigsHolder configs,GeneratorLevelController generatorLevelController, BuildingFactory buildingController)
     {
         _buildingController = buildingController;
         // _installedBuildings = installedBuildings;
-        _gameConfig = gameConfig;
+        _gameConfig = configs.GameConfig;
         _generatorLevelController = generatorLevelController;
-        _resourcesTierOne = gameConfig.MineralConfigs.Minerals.FindAll(x => x.Tier == TierNumber.One);
-        _resourcesTierTwo = gameConfig.MineralConfigs.Minerals.FindAll(x => x.Tier == TierNumber.Two);
-        _resourcesTierThree = gameConfig.MineralConfigs.Minerals.FindAll(x => x.Tier == TierNumber.Three);
+        _resourcesTierOne = configs.GlobalMineralsList.Minerals.FindAll(x => x.Tier == TierNumber.One);
+        _resourcesTierTwo = configs.GlobalMineralsList.Minerals.FindAll(x => x.Tier == TierNumber.Two);
+        _resourcesTierThree = configs.GlobalMineralsList.Minerals.FindAll(x => x.Tier == TierNumber.Three);
 
         _generatorLevelController.SpawnResources += PlaceResources;
     }

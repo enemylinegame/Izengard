@@ -1,7 +1,7 @@
 using CombatSystem;
 using System;
-using Code;
 using Code.BuildingSystem;
+using Code.Game;
 using Code.UI;
 using UnityEngine;
 using Wave;
@@ -11,7 +11,7 @@ using Wave.Interfaces;
 public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpdate, IDowntimeChecker
 {
     private readonly GeneratorLevelController _levelGenerator;
-    private readonly Transform _btnParents;
+    private readonly RightPanelController _rightPanel;
     
     private readonly IWaveGathering _waveGathering;
     private readonly ISendingEnemys _sendingEnemys;
@@ -29,25 +29,25 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
     public bool IsDowntime { get; private set; }
 
 
-    public WaveController(GeneratorLevelController levelGenerator, UIController controller, Transform btnParents, 
-        GameConfig gameConfig, BulletsController bulletsController, EnemyDestroyObserver destroyObserver, BuildingFactory buildingFactory)
+    public WaveController(GeneratorLevelController levelGenerator, UIPanelsInitialization controller, 
+    ConfigsHolder configsHolder, BulletsController bulletsController, EnemyDestroyObserver destroyObserver, BuildingFactory buildingFactory)
     {
         _levelGenerator = levelGenerator;
-        _btnParents = btnParents;
+        _rightPanel = controller.RightPanelController;
         
         _enemyAIController = new EnemyAIController();
         _bulletsController = bulletsController;
         
-        _waveGathering = new WaveGatheringController(buildingFactory, _enemyAIController, _bulletsController, gameConfig);
+        _waveGathering = new WaveGatheringController(buildingFactory, _enemyAIController, _bulletsController, configsHolder);
         _sendingEnemys = new SendingEnemies(_enemyAIController, _levelGenerator, 
-            gameConfig.BattlePhaseConfig.EnemySpawnSettings, destroyObserver);
+            configsHolder.BattlePhaseConfig.EnemySpawnSettings, destroyObserver);
         _combatPhaseWaiting = new CombatPhaseWaiting(_sendingEnemys);
         _combatPhaseWaiting.PhaseEnded += OnCombatPhaseEnding;
 
-        var timeCountShower = new TimerCountUI(controller.RightUI.Timer);
-        _peacefulPhaseWaiting = new PeacefulPhaseWaiting(gameConfig.PhasesSettings.PeacefulPhaseDuration, timeCountShower.TimeCountShow, controller.CenterUI.BaseNotificationUI);
+        //var timeCountShower = new TimerCountUI(controller.RightPanel.Timer);
+        _peacefulPhaseWaiting = new PeacefulPhaseWaiting(configsHolder.PhasesSettings.PeacefulPhaseDuration, controller.RightPanelController.TimeCountShow, controller.NotificationPanel);
         _peacefulPhaseWaiting.PhaseEnded += OnPeacefulPhaseEnding;
-        _preparatoryPhaseWaiting = new PreparatoryPhaseWaiting(gameConfig.PhasesSettings.PreparatoryPhaseDuration, timeCountShower.TimeCountShow, this, controller.CenterUI.BaseNotificationUI);
+        _preparatoryPhaseWaiting = new PreparatoryPhaseWaiting(configsHolder.PhasesSettings.PreparatoryPhaseDuration, controller.RightPanelController.TimeCountShow, this, controller.NotificationPanel);
         _preparatoryPhaseWaiting.PhaseEnded += OnPreparatoryPhaseEnding;
 
         _posibleSpawnPointsFinder = new PosibleSpawnPointsFinder(levelGenerator.SpawnedTiles);
@@ -101,7 +101,7 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
 
         _preparatoryPhaseWaiting.StartPhase();
         IsDowntime = true;
-        _btnParents.gameObject.SetActive(true);
+        _rightPanel.ActivateButtonParents();
     }
 
     private void StartCombatPhase()
@@ -112,7 +112,7 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
         var enemys = _waveGathering.GetEnemysList(_waveNumber, IsDowntime);
         _sendingEnemys.SendEnemys(enemys, _posibleSpawnPointsFinder.GetPosibleSpawnPoints());
         _combatPhaseWaiting.StartPhase();
-        _btnParents.gameObject.SetActive(false);
+        _rightPanel.DeactivateButtonParents();
     }
 
     private void FreeSideForWave(VoxelTile voxelTile)
