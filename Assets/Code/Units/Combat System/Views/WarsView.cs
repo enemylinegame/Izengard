@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
 using Code.Player;
 using Interfaces;
@@ -8,7 +9,7 @@ using Code.UI;
 
 namespace CombatSystem.Views
 {
-    public sealed class WarsView : ITileSelector, IOnDisable
+    public sealed class WarsView : ITileSelector, IDisposable
     {
         private enum BarrackButtonsStatus
         {
@@ -478,7 +479,7 @@ namespace CombatSystem.Views
             }
         }
 
-        public void OnDisableItself()
+        public void Dispose()
         {
             ClearDefenders();
         }

@@ -5419,6 +5419,7 @@ MonoBehaviour:
   _musicVolumeSlider: {fileID: 848958660989220868}
   _voiceVolumeSlider: {fileID: 848958660525516482}
   _effectsVolumeSlider: {fileID: 848958660446563354}
+  _clickSound: {fileID: 11400000, guid: c326690be6a74c24394b732c51456ffd, type: 2}
 --- !u!1 &6921477157882889895
 GameObject:
   m_ObjectHideFlags: 0

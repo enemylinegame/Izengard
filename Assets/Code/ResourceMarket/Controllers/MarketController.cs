@@ -176,12 +176,12 @@ namespace ResourceMarket
 
         public void OnStart()
         {
-            TimeRemainingExtensions.AddTimeRemaining(_resetTimer);
+            TimersHolder.AddTimer(_resetTimer);
         }
   
         public void OnUpdate(float deltaTime)
         {
-            RestoreTimer = _resetTimer.CurrentTime;
+            RestoreTimer = _resetTimer.TimeLeft;
         }
   
         public void Dispose()
@@ -192,7 +192,7 @@ namespace ResourceMarket
 
             _uiPanels.RightPanelController.Dispose();
 
-            TimeRemainingExtensions.RemoveTimeRemaining(_resetTimer);
+            TimersHolder.RemoveTimer(_resetTimer);
 
             _marketPanel.Deinit();
         }  
