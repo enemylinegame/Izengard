@@ -12,7 +12,6 @@ namespace Wave
         private List<Vector3> _posibleSpawnPoints;
         public IReadOnlyDictionary<Vector2Int, VoxelTile> _spawnedTiles;
 
-
         public PosibleSpawnPointsFinder(IReadOnlyDictionary<Vector2Int, VoxelTile> spawnedTiles)
         {
             _spawnedTiles = spawnedTiles;
@@ -53,7 +52,9 @@ namespace Wave
         {
             var Vector2IntWay = way.GetVector2IntWay();
             var spawnPoint = instantiatedTile.Value.transform.position +
-                new Vector3(Vector2IntWay.x * SPAWN_OFFSET, instantiatedTile.Value.SizeTileY, Vector2IntWay.y * SPAWN_OFFSET);
+                new Vector3(Vector2IntWay.x * SPAWN_OFFSET, 
+                instantiatedTile.Value.SizeTileY, Vector2IntWay.y * SPAWN_OFFSET);
+
             _posibleSpawnPoints.Add(spawnPoint);
         }
     }

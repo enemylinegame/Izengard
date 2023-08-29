@@ -21,7 +21,6 @@ namespace LevelGenerator
 
         private NavMeshSurface _navMeshSurface;
 
-
         public TileSetter(List<VoxelTile> availableTiles, 
             Dictionary<Vector2Int, VoxelTile> spawnedTiles, 
             VoxelTile firstTile, GlobalTileSettings tileSettings)
@@ -29,6 +28,7 @@ namespace LevelGenerator
             _availableTiles = availableTiles;
             _spawnedTiles = spawnedTiles;
             _tilesParent = new GameObject("Tiles").transform;
+
             _navMeshSurface = _tilesParent.gameObject.AddComponent<NavMeshSurface>();//Object.FindObjectOfType<NavMeshSurface>();
             _navMeshSurface.useGeometry = NavMeshCollectGeometry.RenderMeshes;
             _navMeshSurface.overrideTileSize = true;
@@ -37,24 +37,29 @@ namespace LevelGenerator
             _navMeshSurface.voxelSize = 0.01f;
 
             PlaceFirstTile(firstTile, tileSettings);
+
+            _navMeshSurface.BuildNavMesh();//_navMeshSurface.UpdateNavMesh(_navMeshSurface.navMeshData);
         }
 
         private void PlaceFirstTile(VoxelTile firstTile, GlobalTileSettings tileSettings)
         {
-            _spawnedTiles.Add(FirstTileGridPosition, InstantiateTile(firstTile, _firstTilePosition, tileSettings));
-            _navMeshSurface.BuildNavMesh();//_navMeshSurface.UpdateNavMesh(_navMeshSurface.navMeshData);
+            _spawnedTiles.Add(FirstTileGridPosition, 
+                InstantiateTile(firstTile, _firstTilePosition, tileSettings));
         }
 
         public async void SetTile(TileSpawnInfo spawnInfo, GlobalTileSettings tileSettings)
         {
             var side = (spawnInfo.GridSpawnPosition - spawnInfo.GridBasePosition);
-            _spawnedTiles.Add(spawnInfo.GridSpawnPosition, GetTile(side, spawnInfo.GridBasePosition, tileSettings));
+            _spawnedTiles.Add(spawnInfo.GridSpawnPosition, 
+                GetTile(side, spawnInfo.GridBasePosition, tileSettings));
+
             _spawnedTiles[spawnInfo.GridSpawnPosition].IsDefendTile = spawnInfo.IsDefendTile;
             await Task.Delay(200);
             _navMeshSurface.UpdateNavMesh(_navMeshSurface.navMeshData);
         }
 
-        private VoxelTile GetTile(Vector2Int side, Vector2Int baseTileGridPosition, GlobalTileSettings tileSettings)
+        private VoxelTile GetTile(Vector2Int side, Vector2Int baseTileGridPosition, 
+            GlobalTileSettings tileSettings)
         {
             var tilesCanBeSet = Extensions.TilesCanBeSet(side.GetSide(), _availableTiles);
             byte[] test = { 0, 1, 0, 1 };
@@ -85,7 +90,8 @@ namespace LevelGenerator
             return InstantiateTile(voxelTile, pos, tileSettings);
         }
 
-        private VoxelTile InstantiateTile(VoxelTile voxelTile, Vector3 pos, GlobalTileSettings tileSettings)
+        private VoxelTile InstantiateTile(VoxelTile voxelTile, 
+            Vector3 pos, GlobalTileSettings tileSettings)
         {
             var tile = Object.Instantiate(voxelTile, pos, Quaternion.identity, _tilesParent);
             tile.TileView.TileModel.TileConfig = tileSettings.Levels[0];
@@ -93,14 +99,14 @@ namespace LevelGenerator
             
             //расчет веса тайла для генерации ресурсов по Николаю
             tile.NumZone = voxelTile.NumZone + 1;
-            if (tile.NumZone == 2)
-            {
-                tile.WeightTile = 5;
-            }
-            else
-            {
-                tile.WeightTile = 5 * (tile.NumZone - 1);
-            }
+            //if (tile.NumZone == 2)
+            //{
+            //    tile.WeightTile = 5;
+            //}
+            //else
+            //{
+            //    tile.WeightTile = 5 * (tile.NumZone - 1);
+            //}
 
             //установка склада при создании тайла
             //CreateWarehouse(tile);
