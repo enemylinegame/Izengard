@@ -40,7 +40,7 @@ MonoBehaviour:
     PriceUpgrade: []
   - IconTile: {fileID: 0}
     TileLvl: 3
-    MaxWorkers: 5
+    MaxWorkers: 15
     BuildingTirs: []
     PriceRepair: []
     PriceRecovery: []
