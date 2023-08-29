@@ -1,18 +1,47 @@
 using System;
+using Code.Player;
+using Code.TileSystem;
 using Code.Units.HireDefendersSystem;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Code.UI
 {
-    public class RightPanelController
+    public class RightPanelController : IOnTile, ITileLoadInfo
     {
         private RightPanel _view;
         public HireUnitUIView HireUnitView => _view.HireUnits;
         public event Action<int> TileSelected;
-        public RightPanelController(RightPanelFactory factory)
+        public RightPanelController(RightPanelFactory factory, InputController inputController)
         {
             _view = factory.GetView(factory.UIElementsConfig.RightPanel);
-            _view.OpenMarketButton.onClick.AddListener((() => _view.gameObject.SetActive(true)));
+            DeactivateOpenMarketButton();
+            inputController.Add(this);
+        }
+        
+        public void LoadInfoToTheUI(TileView tile)
+        {
+            ActivateOpenMarketButton();
+        }
+
+        public void Cancel()
+        {
+            DeactivateOpenMarketButton();
+        }
+
+        public void SubscribeOpenMarketButton(UnityAction action)
+        {
+            _view.OpenMarketButton.onClick.AddListener(action);
+        }
+
+        public void ActivateOpenMarketButton()
+        {
+            _view.OpenMarketButton.gameObject.SetActive(true);
+        }
+
+        public void DeactivateOpenMarketButton()
+        {
+            _view.OpenMarketButton.gameObject.SetActive(false);
         }
         
         public void TimeCountShow(float time)

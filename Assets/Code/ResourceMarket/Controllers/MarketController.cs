@@ -82,6 +82,7 @@ namespace ResourceMarket
             _marketPanel.InitViewAction(OnBuyItem, OnSellItem, OnIncreaseTradeValue, OnDecreaseTradeValue, ResetTradeValue);
             _marketPanel.UpdateGold(_stock.GetAvailableResourceAccount(ResourceType.Gold));
             _marketPanel.UpdateMarketAmount(_marketDataProvider.MarketAmount);
+            _uiPanels.RightPanelController.SubscribeOpenMarketButton((() => _marketPanel.SetActive(true)));
 
             _resetTimer = new TimeRemaining(RestoreValues, marketData.MarketRestoreValueDelay, true);
         }

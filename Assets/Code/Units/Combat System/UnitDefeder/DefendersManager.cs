@@ -197,12 +197,6 @@ namespace CombatSystem
             _warsView.SetMexDefenders(tile.TileModel.MaxWarriors);
             _warsView.SetDefenders(tile.TileModel.DefenderUnits);
         }
-        private void TypeChange(TileView tile)
-        {
-            _warsView.SetMexDefenders(tile.TileModel.MaxWarriors);
-            _warsView.SetDefenders(tile.TileModel.DefenderUnits);
-            _tileController.TileTypeChange -= TypeChange;
-        }
 
         public void Cancel()
         {
@@ -211,6 +205,12 @@ namespace CombatSystem
         }
 
         #endregion
+        private void TypeChange(TileView tile)
+        {
+            _warsView.SetMexDefenders(tile.TileModel.MaxWarriors);
+            _warsView.SetDefenders(tile.TileModel.DefenderUnits);
+            _tileController.TileTypeChange -= TypeChange;
+        }
 
         private void DefenderDead(DefenderUnit defender)
         {

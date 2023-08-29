@@ -33,7 +33,7 @@ namespace Code.UI
             ResourcesPanelController = new ResourcesPanelController(topPanelFactory);
             CenterPanelController = new CenterPanelController(centerPanelFactory);
             TilePanelController = new TilePanelController(bottomUIFactory, inputController, CenterPanelController);
-            RightPanelController = new RightPanelController(RightPanelFactory);
+            RightPanelController = new RightPanelController(RightPanelFactory, inputController);
             MarketPanelController = new MarketPanelController(marketPanelFactory);
             EndGameScreenPanel = new EndGameScreenPanelController(endGameScreenPanelFactory);
             InGameMenuPanel = new InGameMenuPanelController(inGameMenuPanelFactory);

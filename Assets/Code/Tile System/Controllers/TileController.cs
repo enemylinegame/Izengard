@@ -289,7 +289,8 @@ namespace Code.TileSystem
         {
             if(view.TileModel.TileType != TileType.None && view.TileModel.TileType == TileType.All) return;
             
-            _centerPanelController.ActivateTileTypeSelection(SetTileType, view);
+            _centerPanelController.ActivateTileTypeSelection((() => SetTileType(TileType.Eco, view)),
+                () => SetTileType(TileType.war, view));
         }
         private void SetTileType(TileType type, TileView tile)
         {

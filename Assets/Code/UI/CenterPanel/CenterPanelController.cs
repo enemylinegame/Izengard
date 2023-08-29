@@ -39,11 +39,11 @@ namespace Code.UI
         }
         
 
-        public void ActivateTileTypeSelection(UnityAction<TileType, TileView> action, TileView view)
+        public void ActivateTileTypeSelection(UnityAction actionEco, UnityAction actionWar)
         {
             _tileSelection.gameObject.SetActive(true);
-            _tileSelection.TileEco.onClick.AddListener((() => action(TileType.Eco, view)));
-            _tileSelection.TileWar.onClick.AddListener((() => action(TileType.war, view)));
+            _tileSelection.TileEco.onClick.AddListener(actionEco);
+            _tileSelection.TileWar.onClick.AddListener(actionWar);
             _tileSelection.Back.onClick.AddListener(DeactivateTileTypeSelection);
             
         }

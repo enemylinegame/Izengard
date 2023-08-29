@@ -14,17 +14,18 @@ namespace Code.Player
         private OutlineController _outlineController;
         private CenterPanel _centerPanel;
         private ITileSelector _tileSelector;
-        private List<ITileLoadInfo> _loadInfoToTheUis = new List<ITileLoadInfo>();
+        private List<ITileLoadInfo> _loadInfoToTheUis;
         private TileView _tile;
 
         private bool _isSpecialMode;
 
-        public bool LockLeftClick = false;
-        public bool LockRightClick = true;
+        private bool LockLeftClick = false;
+        private bool LockRightClick = true;
 
         public InputController(OutlineController outlineController)
         {
             _outlineController = outlineController;
+            _loadInfoToTheUis = new List<ITileLoadInfo>();
         }
 
 
