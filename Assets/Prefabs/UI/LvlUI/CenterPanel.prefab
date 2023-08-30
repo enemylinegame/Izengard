@@ -217,7 +217,7 @@ MonoBehaviour:
   <CloseBuildingsBuy>k__BackingField: {fileID: 5897152562496117077}
   <TileByButtons>k__BackingField: {fileID: 413897959172328709}
   <TIleSelection>k__BackingField: {fileID: 5386987751847403910}
-  <BaseNotificationUI>k__BackingField: {fileID: 3100495485330306519}
+  <NotificationPanel>k__BackingField: {fileID: 3100495485330306519}
 --- !u!1 &1328100348351602020
 GameObject:
   m_ObjectHideFlags: 0

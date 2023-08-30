@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using Code.BuildingSystem;
 using Code.UI;
 using Code.Player;
 using ResourceSystem;
 using ResourceSystem.SupportClases;
-using UnityEngine;
-using UnityEngine.UI;
 using Views.BuildBuildingsUI;
 using Debug = UnityEngine.Debug;
-using Object = UnityEngine.Object;
 
 namespace Code.TileSystem
 {
@@ -21,19 +16,19 @@ namespace Code.TileSystem
         public event Action<TileView> TileTypeChange;
         
         private TileView _tileView;
-        private BuildingFactory _buildingFactory;
-        private ProductionManager _productionManager;
-        private List<BuildingConfig> _buildingConfigs;
-        private ButtonsControllerOnTile _buttonsController;
-        private LevelOfLifeButtonsCustomizer _level;
-        private readonly GlobalStock _stock;
+        private readonly ButtonsControllerOnTile _buttonsController;
+        private readonly ProductionManager _productionManager;
+        private readonly LevelOfLifeButtonsCustomizer _level;
+        private readonly buildingsPanelController _buildingsPanel;
+        private readonly BuildingFactory _buildingFactory;
         private readonly GlobalTileSettings _tileSettings;
+        private readonly GlobalStock _stock;
         private int _currentLVL;
         
-        private CenterPanelController _centerPanelController;
-        private TilePanelController _tilePanelController;
-        private TileMainBoardController _tileMainBoard;
-        private NotificationPanelController _notificationPanel;
+        private readonly CenterPanelController _centerPanelController;
+        private readonly TilePanelController _tilePanelController;
+        private readonly TileMainBoardController _tileMainBoard;
+        private readonly NotificationPanelController _notificationPanel;
         public ProductionManager WorkerMenager => _productionManager;
         public TileModel TileModel => _tileView.TileModel;
         public TileView View => _tileView;
@@ -44,6 +39,7 @@ namespace Code.TileSystem
             LevelOfLifeButtonsCustomizer level, GlobalStock stock, GlobalTileSettings tileSettings)
         {
             _buttonsController = new ButtonsControllerOnTile(uiPanelsInitialization.TileMainBoard, inputController);
+            _buildingsPanel = new buildingsPanelController(buildingController, productionManager, uiPanelsInitialization);
             
             _productionManager = productionManager;
             _centerPanelController = uiPanelsInitialization.CenterPanelController;
@@ -68,11 +64,11 @@ namespace Code.TileSystem
             } 
             _tileView = tile;
 
-            LoadBuildings(tile.TileModel, tile.TileModel.TileType);
+            _buildingsPanel.LoadBuildings(tile.TileModel, WorkerHiring, WorkerDismissal, LevelCheck, ResetWorkersAccount);
             _buttonsController.ButtonAddListener(tile.TileModel, _level);
             _tileMainBoard.HolderButton(ButtonTypes.Upgrade).onClick.AddListener(LVLUp);
             _tileMainBoard.LoadAllTextsFieldsAndImaged(tile.TileModel.TileConfig, TileModel, out _currentLVL);
-            LoadFloodedBuildings();
+            _buildingsPanel.LoadFloodedBuildings(tile.TileModel,WorkerHiring, WorkerDismissal, LevelCheck, ResetWorkersAccount);
             LevelCheck();
 
         }
@@ -83,134 +79,6 @@ namespace Code.TileSystem
         }
         #endregion
         #region BuildingBuy
-
-        private void LoadBuildings(TileModel model, TileType type)
-        {
-            List<BuildingConfig> buildingConfigs = null;
-            _tilePanelController.Deinit();
-            _buildingConfigs = model.CurrBuildingConfigs;
-
-            switch (type)
-            {
-                case TileType.All:
-                    buildingConfigs = _buildingConfigs;
-                    break;
-                case TileType.war:
-                    buildingConfigs = _buildingConfigs.FindAll(building => building.TileType.Exists(x => x == TileType.war));
-                    break;
-                case TileType.Eco:
-                    buildingConfigs = _buildingConfigs.FindAll(building => building.TileType.Exists(x => x == TileType.Eco));
-                    break;
-            }
-
-            buildingConfigs.ForEach(building =>
-            {
-                var button = Object.Instantiate(_tilePanelController.TileMenu.GetBuyPrefabButton(), 
-                    _centerPanelController.TransformBuildButtonsHolder());
-                _tilePanelController.ButtonsInMenu.Add(building, button);
-                
-                CreateButtonUI(building, button);
-            });
-            
-            foreach (var kvp in _tilePanelController.ButtonsInMenu)
-            {
-                kvp.Value.onClick.AddListener(() =>
-                {
-                    ICollectable building = _buildingFactory.BuildBuilding(kvp.Key, model);
-                    if (building == null)
-                    {
-                        _centerPanelController.DeactivateBuildingBuyUI();
-                        return; 
-                    }
-                    BuildingHUD info = CreateBuildingInfo(kvp.Key, building);
-                    LoadBuildingHUD(info, building, kvp.Key);
-                    model.FloodedBuildings.Add(building);
-                    building.InitBuilding();
-                    LevelCheck();
-                });
-            }
-        }
-        private void CreateButtonUI(BuildingConfig buildingConfig, Button button)
-        {
-            if (!button.TryGetComponent(out BuildButtonView view))
-            {
-                Debug.LogError("Button field is empty");
-                return;
-            }
-
-            view.BuildingName.text = buildingConfig.BuildingType.ToString();
-
-            string costText = "";
-            foreach (var cost in buildingConfig.BuildingCost)
-            {
-                costText += $"{cost.ResourceType}:{cost.Cost} ";
-            }
-            view.CostForBuildingsUI.text = costText;
-
-            view.Description.text = buildingConfig.Description;
-            view.Icon.sprite = buildingConfig.Icon;
-        }
-
-        #endregion
-        #region BuildingInfoAndHiring
-        public BuildingHUD CreateBuildingInfo(BuildingConfig config, ICollectable building)
-        {
-            var buildingHud = Object.Instantiate(_tilePanelController.TileMenu.GetPrefabBuildingInfo().GetComponent<BuildingHUD>(), 
-                _tilePanelController.TileMenu.GetByBuildButtonsHolder());
-
-            buildingHud.Icon.sprite = config.Icon;
-            buildingHud.Type.text = config.BuildingType.ToString();
-            buildingHud.BuildingType = config.BuildingType;
-
-            buildingHud.MaxWorkers = TileModel.MaxWorkers;
-            buildingHud.WorkersСount = building.WorkersCount;
-
-
-            _tilePanelController.DestroyBuildingInfo.Add(buildingHud.gameObject, buildingHud);
-
-            buildingHud.DestroyBuildingInfo.onClick.AddListener(() => DestroyBuilding(buildingHud, building));
-
-            buildingHud.PlusUnitButton.onClick.AddListener(() => WorkerHiring(buildingHud, building));
-            buildingHud.MinusUnitButton.onClick.AddListener(() => WorkerDismissal(buildingHud, building));
-
-            _centerPanelController.DeactivateBuildingBuyUI();
-            LevelCheck();
-            return buildingHud;
-        }
-        private void LoadBuildingInfo(ICollectable building)
-        {
-            var button = Object.Instantiate(_tilePanelController.TileMenu.GetPrefabBuildingInfo(), 
-                _tilePanelController.TileMenu.GetByBuildButtonsHolder());
-            var buildingHud = button.GetComponent<BuildingHUD>();
-
-            buildingHud.Icon.sprite = building.Icon;
-            buildingHud.Type.text = building.BuildingTypes.ToString();
-            buildingHud.BuildingType = building.BuildingTypes;
-            buildingHud.BuildingID = building.BuildingID;
-
-            buildingHud.MaxWorkers = building.MaxWorkers;
-            buildingHud.WorkersСount = building.WorkersCount;
-
-            var destroyButton = buildingHud.DestroyBuildingInfo;
-            _tilePanelController.DestroyBuildingInfo.Add(button, buildingHud);
-            destroyButton.onClick.AddListener(() => DestroyBuilding(buildingHud, building));
-
-            buildingHud.PlusUnitButton.onClick.AddListener(() => WorkerHiring(buildingHud, building));
-
-            buildingHud.MinusUnitButton.onClick.AddListener(() => WorkerDismissal(buildingHud, building));
-
-            LevelCheck();
-        }
-
-        private void DestroyBuilding(BuildingHUD buildingHud, ICollectable building)
-        {
-            _productionManager.StopAllProductions(building);
-            UnLoadBuildingHUD(buildingHud);
-            _buildingFactory.DestroyBuilding(building, buildingHud, TileModel);
-            WorkerMenager.StopAllProductions(building);
-            ResetWorkersAccount(building);
-            LevelCheck();
-        }
         public bool IsThereFreeWorkers(ICollectable building)
         {
             if (building.WorkersCount >= building.MaxWorkers ||
@@ -272,17 +140,6 @@ namespace Code.TileSystem
             building.WorkersCount = 0;
             _tileMainBoard.ChangeWorkersCount(TileModel.WorkersCount);
         }
-
-         private void LoadFloodedBuildings()
-         {
-             var buildings = TileModel.FloodedBuildings.FindAll(x => x.MineralConfig == null);
-
-             foreach (var building in buildings)
-             {
-                 LoadBuildingInfo(building);
-             }
-         }
-
         #endregion
         #region TileTypeChange
         private void TileTypeCheck(TileView view)
@@ -343,7 +200,8 @@ namespace Code.TileSystem
             TileModel.CurrBuildingConfigs.AddRange(TileModel.SaveTileConfig.BuildingTirs);
                 
             
-            LoadBuildings(TileModel, TileModel.TileType);
+            _buildingsPanel.LoadBuildings(TileModel, WorkerHiring, WorkerDismissal, LevelCheck, ResetWorkersAccount);
+            LoadInfoToTheUI(_tileView);
             LevelCheck();
         }
         
@@ -362,20 +220,7 @@ namespace Code.TileSystem
             return true;
         }
 
-        private void LoadBuildingHUD(BuildingHUD info, ICollectable building, BuildingConfig buildingConfig)
-        {
-            building.Icon = info.Icon.sprite;
-            building.BuildingTypes = info.BuildingType;
-            info.BuildingID = building.BuildingID;
-            info.MaxWorkers = building.MaxWorkers;
-        }
-
-        private void UnLoadBuildingHUD(BuildingHUD info)
-        {
-            info.DestroyBuildingInfo.onClick.RemoveAllListeners();
-            info.PlusUnitButton.onClick.RemoveAllListeners();
-            info.MinusUnitButton.onClick.RemoveAllListeners();
-        }
+        
         #endregion
 
         public void OnUpdate(float deltaTime)

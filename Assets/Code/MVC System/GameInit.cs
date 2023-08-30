@@ -40,7 +40,7 @@ public class GameInit
         var bulletsController = new BulletsController();
         var waveController = new WaveController(levelGenerator, uiPanelInitialization, configs, bulletsController, enemyDestroyObserver, buildingFactory);
         var endGameController = new EndGameController(gameStateManager, uiPanelInitialization.EndGameScreenPanel, buildingFactory);
-        var renovationOfTheCentralBuilding = new LevelOfLifeButtonsCustomizer(uiPanelInitialization.NotificationPanel, globalStock, levelGenerator, buildingFactory, configs.GlobalTileSettings);
+        var renovationOfTheCentralBuilding = new LevelOfLifeButtonsCustomizer(uiPanelInitialization.NotificationPanel, globalStock, buildingFactory, configs.GlobalTileSettings);
 
         var workersTeamController = new WorkersTeamController(configs.WorkersTeamConfig);
         var productionManager = new ProductionManager(globalStock, workersTeamController, configs.WorkersTeamConfig, configs.PrescriptionsStorage, uiPanelInitialization.NotificationPanel);

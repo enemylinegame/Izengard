@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using System.Linq;
 using Code.BuildingSystem;
 using Code.Player;
 using Code.UI;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Code.TileSystem
 {

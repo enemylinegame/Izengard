@@ -25,7 +25,7 @@ namespace Code.UI
             var topPanelFactory = new ResourcesPanelFactory(config, canvas);
             var bottomUIFactory = new TilePanelFactory(config, canvas);
             var centerPanelFactory = new CenterPanelFactory(config, canvas);
-            var RightPanelFactory = new RightPanelFactory(config, canvas);
+            var rightPanelFactory = new RightPanelFactory(config, canvas);
             var marketPanelFactory = new MarketPanelFactory(config, canvas);
             var endGameScreenPanelFactory = new EndGameScreenPanelFactory(config, canvas);
             var inGameMenuPanelFactory = new InGameMenuPanelFactory(config, canvas);
@@ -33,7 +33,7 @@ namespace Code.UI
             ResourcesPanelController = new ResourcesPanelController(topPanelFactory);
             CenterPanelController = new CenterPanelController(centerPanelFactory);
             TilePanelController = new TilePanelController(bottomUIFactory, inputController, CenterPanelController);
-            RightPanelController = new RightPanelController(RightPanelFactory, inputController);
+            RightPanelController = new RightPanelController(rightPanelFactory, inputController);
             MarketPanelController = new MarketPanelController(marketPanelFactory);
             EndGameScreenPanel = new EndGameScreenPanelController(endGameScreenPanelFactory);
             InGameMenuPanel = new InGameMenuPanelController(inGameMenuPanelFactory);
