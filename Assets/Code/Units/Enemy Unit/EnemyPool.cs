@@ -32,16 +32,16 @@ namespace EnemyUnit
             }
         }
 
-        private IEnemyController InstantiateEnemy(EnemyData data, bool isActive = false)
+       /* private IEnemyController InstantiateEnemy(EnemyData data, bool isActive = false)
         {
             var enemyObj = Object.Instantiate(data.Prefab, _poolHolder);
 
             enemyObj.SetActive(isActive);
 
             return null;
-        }
+        }*/
 
-        public IEnemyController GetFromPool()
+        public IEnemyController GetFromPool(EnemyType type)
         {
             if (_pool.Count > 0)
             {

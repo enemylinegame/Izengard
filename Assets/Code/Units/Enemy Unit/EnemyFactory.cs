@@ -14,22 +14,20 @@ namespace EnemyUnit
             _target = target;
         }
 
-
         public IEnemyController CreateEnemy(EnemyData enemyData)
         {
-            switch (enemyData.Type)
+            var enemy = enemyData.Type switch
             {
-                default:
-                    return null;
-                case EnemyType.Tank:
-                    {
-                        var enemy = CreateTank(enemyData);
-                        return enemy;
-                    }
-            }
+                EnemyType.Tank => CreateTank(enemyData),
+                EnemyType.Archer => CreateArcher(enemyData),
+                EnemyType.Hound => CreateHound(enemyData),
+                EnemyType.Boss => CreateBoss(enemyData),
+                _ => null,
+            };
+            return enemy;
         }
 
-        public IEnemyController CreateTank(EnemyData enemyData) 
+        public IEnemyController CreateTank(EnemyData enemyData)
         {
             var enemyObj = Object.Instantiate(enemyData.Prefab);
 
@@ -37,6 +35,21 @@ namespace EnemyUnit
             var model = new EnemyModel(enemyData, _target);
 
             return new EnemyController(model, view, _target, _animationController);
+        }
+
+        public IEnemyController CreateArcher(EnemyData enemyData)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEnemyController CreateHound(EnemyData enemyData)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEnemyController CreateBoss(EnemyData enemyData)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
