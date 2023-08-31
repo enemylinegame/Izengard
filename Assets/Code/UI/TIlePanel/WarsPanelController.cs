@@ -1,3 +1,4 @@
+using System;
 using CombatSystem.Views;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,10 +8,15 @@ namespace Code.UI
     public class WarsPanelController
     {
         private readonly WarsPanel _view;
-
+        
+        public event Action DismissButton;
+        public event Action ToOtherTileButton;
         public WarsPanelController(WarsPanel view)
         {
             _view = view; 
+            
+            _view.DismissButton.onClick.AddListener((() => DismissButton?.Invoke()));
+            _view.ToOtherTileButton.onClick.AddListener((() => ToOtherTileButton?.Invoke()));
         }
         
         public GameObject SubscribeEnterToBarracks(UnityAction action)
@@ -23,16 +29,6 @@ namespace Code.UI
         {
             _view.ExitFromBarracks.onClick.AddListener(action);
             return _view.ExitFromBarracks.gameObject;
-        }
-        
-        public void SubscribeDismissButton(UnityAction action)
-        {
-            _view.DismissButton.onClick.AddListener(action);
-        }
-        
-        public void SubscribeToOtherTileButton(UnityAction action)
-        {
-            _view.ToOtherTileButton.onClick.AddListener(action);
         }
 
         public DefenderSlotUI[] GetDefenderSlotUI()

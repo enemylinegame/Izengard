@@ -12,11 +12,15 @@ namespace Code.UI
         private RightPanel _view;
         public HireUnitUIView HireUnitView => _view.HireUnits;
         public event Action<int> TileSelected;
+        
+        public event Action OpenMarketButton;
         public RightPanelController(RightPanelFactory factory, InputController inputController)
         {
             _view = factory.GetView(factory.UIElementsConfig.RightPanel);
             DeactivateOpenMarketButton();
             inputController.Add(this);
+            
+            _view.OpenMarketButton.onClick.AddListener((() => OpenMarketButton?.Invoke()));
         }
         
         public void LoadInfoToTheUI(TileView tile)
@@ -29,17 +33,12 @@ namespace Code.UI
             DeactivateOpenMarketButton();
         }
 
-        public void SubscribeOpenMarketButton(UnityAction action)
-        {
-            _view.OpenMarketButton.onClick.AddListener(action);
-        }
-
-        public void ActivateOpenMarketButton()
+        private void ActivateOpenMarketButton()
         {
             _view.OpenMarketButton.gameObject.SetActive(true);
         }
 
-        public void DeactivateOpenMarketButton()
+        private void DeactivateOpenMarketButton()
         {
             _view.OpenMarketButton.gameObject.SetActive(false);
         }

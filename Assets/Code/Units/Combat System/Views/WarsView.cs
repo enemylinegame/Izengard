@@ -45,8 +45,8 @@ namespace CombatSystem.Views
 
             var EnterToBarracks = _warsPanel.SubscribeEnterToBarracks(InBarrackButtonClick);
             var ExitFromBarracks = _warsPanel.SubscribeExitFromBarracks(InBarrackButtonClick);
-            _warsPanel.SubscribeDismissButton(GlobalDismissButtonClick);
-            _warsPanel.SubscribeToOtherTileButton(ToOtherTileButtonClick);
+            _warsPanel.DismissButton += GlobalDismissButtonClick;
+            _warsPanel.ToOtherTileButton += ToOtherTileButtonClick;
 
             _enterBarrackButton = EnterToBarracks;
             _exitBarrackButton = ExitFromBarracks;
@@ -482,6 +482,9 @@ namespace CombatSystem.Views
         public void Dispose()
         {
             ClearDefenders();
+            _warsPanel.DismissButton -= GlobalDismissButtonClick;
+            _warsPanel.ToOtherTileButton -= ToOtherTileButtonClick;
+            _warsPanel.DisposeButtons();
         }
     }
 }

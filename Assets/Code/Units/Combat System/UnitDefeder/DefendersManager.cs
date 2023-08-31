@@ -46,7 +46,7 @@ namespace CombatSystem
             _paymentSystem = paymentSystem;
             _hireProgressManager = hireProgressManager;
             _hireProgressManager.AddFinishProgressListener(FinishHireDefenderProcess);
-            tileController.TileTypeChange += TypeChange;
+            tileController.TileTypeChange += TileTypeChange;
         }
 
 
@@ -205,11 +205,10 @@ namespace CombatSystem
         }
 
         #endregion
-        private void TypeChange(TileView tile)
+        private void TileTypeChange(TileView tile)
         {
             _warsView.SetMexDefenders(tile.TileModel.MaxWarriors);
             _warsView.SetDefenders(tile.TileModel.DefenderUnits);
-            _tileController.TileTypeChange -= TypeChange;
         }
 
         private void DefenderDead(DefenderUnit defender)
@@ -277,6 +276,11 @@ namespace CombatSystem
             DefenderUnit unit = defender.Unit;
             unit.DefenderUnitDead -= DefenderDead;
             _defendersController.DismissDefender(unit);
+        }
+
+        public void Dispose()
+        {
+            _tileController.TileTypeChange -= TileTypeChange;
         }
         
     }

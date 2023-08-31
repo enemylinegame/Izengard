@@ -166,8 +166,8 @@ namespace Code.TileSystem
 
             _centerPanelController.DeactivateTileTypeSelection();
             _tilePanelController.LoadInfoToTheUI(tile);
-            LoadInfoToTheUI(tile);
             TileTypeChange?.Invoke(tile);
+            LoadInfoToTheUI(tile);
         }
 
         #endregion

@@ -22,10 +22,10 @@ namespace Code.UI
             _gameStateManager = gameStateManager;
             _keyInputController = keyInputController;
             _keyInputController.OnCancelAxisClick += OnCancelButtonClick;
-            _inGameMenuPanel.SubscribeContinueButton(OnContinueButtonClick);
-            _inGameMenuPanel.SubscribeRestartButton(OnRestartButtonClick);
-            _inGameMenuPanel.SubscribeQuitButton(OnQuitButtonClick);
-            _inGameMenuPanel.SubscribeSettingsButton(OnSettingsButtonClick);
+            _inGameMenuPanel.ContinueButton += OnContinueButtonClick;
+            _inGameMenuPanel.RestartButton += OnRestartButtonClick;
+            _inGameMenuPanel.QuitButton += OnQuitButtonClick;
+            _inGameMenuPanel.SettingsButton += OnSettingsButtonClick;
             _soundPlayer = soundPlayer;
         }
 
@@ -97,6 +97,10 @@ namespace Code.UI
         public void Dispose()
         {
             _keyInputController.OnCancelAxisClick -= OnCancelButtonClick;
+            _inGameMenuPanel.ContinueButton -= OnContinueButtonClick;
+            _inGameMenuPanel.RestartButton -= OnRestartButtonClick;
+            _inGameMenuPanel.QuitButton -= OnQuitButtonClick;
+            _inGameMenuPanel.SettingsButton -= OnSettingsButtonClick;
             _inGameMenuPanel.DisposeButtons();
         }
 

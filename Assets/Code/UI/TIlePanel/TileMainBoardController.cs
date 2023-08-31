@@ -32,7 +32,7 @@ namespace Code.UI
             _view.WorkersCount = value;
         }
 
-        public void UnSubscribeButtons()
+        public void DisposeButtons()
         {
             _view.ButtonsHolder.ForEach(x => x.Button.onClick.RemoveAllListeners());
         }

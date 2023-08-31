@@ -13,8 +13,9 @@ namespace Code.UI
 {
     public class TilePanelController : IOnTile, ITileLoadInfo, IDisposable
     {
-        private readonly CenterPanelController _centerPanel;
         private readonly TilePanel _view;
+        private readonly CenterPanelController _centerPanel;
+        
         public readonly TileBuildingBoardController TileMenu;
         public readonly TileMainBoardController TileMainBoard;
         public readonly TileResourcesPanelController TileResourcesPanel;
@@ -32,8 +33,8 @@ namespace Code.UI
             TileResourcesPanel = new TileResourcesPanelController(_view.TileResourcesPanel);
             TileMainBoard = new TileMainBoardController(_view.TileUIMainBoard);
             WarsPanel = new WarsPanelController(_view.WarsPanel);
-            
-            TileMenu.SubscribeStartButton(centerPanel.ActivateBuildingBuyUI);
+
+            TileMenu.StartButton += centerPanel.ActivateBuildingBuyUI;
             centerPanel.CloseBuildingsBuy += TileMenu.EnabledStartButton;
             
             inputController.Add(this);
@@ -51,7 +52,7 @@ namespace Code.UI
         {
             ClearButtonsUIBuy();
             _view.gameObject.SetActive(false);
-            TileMainBoard.UnSubscribeButtons();
+            TileMainBoard.DisposeButtons();
         }
         /// <summary>
         /// Удаление блока информации построенного здания для загрузки другого тайла
@@ -78,6 +79,7 @@ namespace Code.UI
         public void Dispose()
         {
             _centerPanel.CloseBuildingsBuy -= TileMenu.EnabledStartButton;
+            TileMenu.StartButton -= _centerPanel.ActivateBuildingBuyUI;
         }
     }
 }

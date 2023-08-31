@@ -1,3 +1,4 @@
+using System;
 using Code.BuildingSystem;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,32 +10,20 @@ namespace Code.UI
     {
         private readonly TileUIBuildingBoard _view;
 
+        public event Action StartButton;
+
         public TileBuildingBoardController(TileUIBuildingBoard view)
         {
             _view = view;
+            _view.StartButton.onClick.AddListener((() => StartButton?.Invoke()));
+            _view.StartButton.onClick.AddListener((() => _view.StartButton.gameObject.SetActive(false)));
         }
 
         public void EnabledStartButton(bool isActive)
         {
             _view.StartButton.gameObject.SetActive(isActive);
         }
-
-        public void SubscribeCloseMenuButton(UnityAction action)
-        {
-            _view.CloseMenuButton.onClick.AddListener(action);
-        }
-        
-        public void UnSubscribeCloseMenuButton()
-        {
-            _view.CloseMenuButton.onClick.RemoveAllListeners();
-        }
-
-        public void SubscribeStartButton(UnityAction action)
-        {
-            _view.StartButton.onClick.AddListener(action);
-            _view.StartButton.onClick.AddListener((() => _view.StartButton.gameObject.SetActive(false)));
-        }
-        public void UnSubscribeStartButton()
+        public void Dispose()
         {
             _view.StartButton.onClick.RemoveAllListeners();               
         }

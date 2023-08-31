@@ -1,3 +1,4 @@
+using System;
 using UnityEngine.Events;
 
 namespace Code.UI
@@ -6,10 +7,20 @@ namespace Code.UI
     {
         private InGameMenuPanel _view;
 
+        public event Action ContinueButton;
+        public event Action RestartButton;
+        public event Action QuitButton;
+        public event Action SettingsButton;
+
         public InGameMenuPanelController(InGameMenuPanelFactory factory)
         {
             _view = factory.GetView(factory.UIElementsConfig.InGameMenu);
             DeactivateMenu();
+            
+            _view.ContinueButton.onClick.AddListener((() => ContinueButton?.Invoke()));
+            _view.RestartButton.onClick.AddListener((() => RestartButton?.Invoke()));
+            _view.QuitButton.onClick.AddListener((() => QuitButton?.Invoke()));
+            _view.SettingsButton.onClick.AddListener((() => SettingsButton?.Invoke()));
         }
 
         public void ActivateMenu()
@@ -20,26 +31,6 @@ namespace Code.UI
         public void DeactivateMenu()
         {
             _view.RootGameObject.SetActive(false);
-        }
-
-        public void SubscribeContinueButton(UnityAction action)
-        {
-            _view.ContinueButton.onClick.AddListener(action);
-        }
-        
-        public void SubscribeRestartButton(UnityAction action)
-        {
-            _view.RestartButton.onClick.AddListener(action);
-        }
-        
-        public void SubscribeQuitButton(UnityAction action)
-        {
-            _view.QuitButton.onClick.AddListener(action);
-        }
-        
-        public void SubscribeSettingsButton(UnityAction action)
-        {
-            _view.SettingsButton.onClick.AddListener(action);
         }
 
         public void DisposeButtons()

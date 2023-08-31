@@ -1,3 +1,4 @@
+using System;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
@@ -7,19 +8,15 @@ namespace Code.UI
     {
         private EndGameScreenPanel _view;
         
+        public event Action RestartButton;
+        public event Action BackToMenuButton;
+        
         public EndGameScreenPanelController(EndGameScreenPanelFactory factory)
         {
             _view = factory.GetView(factory.UIElementsConfig.EndGameScreenPanel);
-        }
-
-        public void SubscribeRestartButton(UnityAction action)
-        {
-            _view.RestartBtn.onClick.AddListener(action);
-        }
-        
-        public void SubscribeBackToMenuButton(UnityAction action)
-        {
-            _view.BackToMenuBtn.onClick.AddListener(action);
+            
+            _view.RestartButton.onClick.AddListener((() => RestartButton?.Invoke()));
+            _view.BackToMenuButton.onClick.AddListener((() => BackToMenuButton?.Invoke()));
         }
 
         public Image GetBackGroundGameOverScreen()
@@ -27,9 +24,9 @@ namespace Code.UI
             return _view.BackGroundGameOverScreen;
         }
         
-        public void UnsubscribeRestartButton()
+        public void DisposeButtons()
         {
-            _view.RestartBtn.onClick.RemoveAllListeners();
+            _view.RestartButton.onClick.RemoveAllListeners();
         }
     }
 }

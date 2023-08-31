@@ -25,8 +25,8 @@ public class EndGameController : IOnController, IOnStart, IOnUpdate, IDisposable
 
     public void OnStart()
     {
-        _endGameScreenPanel.SubscribeRestartButton(RestartGame);
-        _endGameScreenPanel.SubscribeBackToMenuButton(BackToMenu);
+        _endGameScreenPanel.RestartButton += RestartGame;
+        _endGameScreenPanel.BackToMenuButton += BackToMenu;
     }
     
     public void OnUpdate(float deltaTime)
@@ -55,6 +55,8 @@ public class EndGameController : IOnController, IOnStart, IOnUpdate, IDisposable
 
     public void Dispose()
     {
-        _endGameScreenPanel.UnsubscribeRestartButton();
+        _endGameScreenPanel.DisposeButtons();
+        _endGameScreenPanel.RestartButton -= RestartGame;
+        _endGameScreenPanel.BackToMenuButton -= BackToMenu;
     }
 }
