@@ -7,39 +7,40 @@ namespace EnemyUnit
     public class EnemyPool
     {
         private readonly Queue<IEnemyController> _pool;
-        private readonly Transform _poolHolder;
+        private readonly Transform _poolGO;
 
         private readonly EnemyData _data;
         private readonly EnemyFactory _enemyFactory;
 
         public EnemyPool(
-            int poolCapacity,
-            Transform poolHolder,
-            EnemyData data,
-            EnemyFactory enemyFactory)
+            Transform poolHolder, 
+            EnemyFactory enemyFactory, 
+            List<EnemyData> enemyDataList)
         {
             _pool = new Queue<IEnemyController>();
-            _poolHolder = new GameObject("Pool_" + _data.Type.ToString()).transform;
-            _poolHolder.parent = poolHolder;
+            _poolGO = new GameObject("Enemy_Pool").transform;
+            _poolGO.parent = poolHolder;
 
-            _data = data;
             _enemyFactory = enemyFactory;
 
-            for (int i = 0; i < poolCapacity; i++)
+            foreach (var enemydata in enemyDataList)
             {
-                var enemy = enemyFactory.CreateEnemy(_data);
-                _pool.Enqueue(enemy);
+                for (int i = 0; i < enemydata.MaxUnitsInPool; i++)
+                {
+                    var enemy = enemyFactory.CreateEnemy(enemydata);
+                    _pool.Enqueue(enemy);
+                }
             }
         }
 
-       /* private IEnemyController InstantiateEnemy(EnemyData data, bool isActive = false)
-        {
-            var enemyObj = Object.Instantiate(data.Prefab, _poolHolder);
+        /* private IEnemyController InstantiateEnemy(EnemyData data, bool isActive = false)
+         {
+             var enemyObj = Object.Instantiate(data.Prefab, _poolHolder);
 
-            enemyObj.SetActive(isActive);
+             enemyObj.SetActive(isActive);
 
-            return null;
-        }*/
+             return null;
+         }*/
 
         public IEnemyController GetFromPool(EnemyType type)
         {
