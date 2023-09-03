@@ -18,7 +18,7 @@ namespace ResourceSystem
             
             ResourceValueChanged += resourcesPanelView.UpdateResursesCount;
 
-            InitHolders(resourcesData);
+            InitHolders(resourcesConfig.ResourcesData);
         }
 
 

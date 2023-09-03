@@ -78,10 +78,10 @@ public class GameInit
 
         gameStateManager.OnDisable += controller.OnDisable;
 
-        var initialResources = gameConfig.GameResourceData.InitialResourceData.InitialResources;
+        var initialResources = configs.GlobalResourceData.InitialResourceData.InitialResources;
         foreach (var initResData in initialResources)
         {
-            globalResStock.AddResourceToStock(initResData.ResourceType, initResData.Amount);
+            globalStock.AddResourceToStock(initResData.ResourceType, initResData.Amount);
         }
 
         // var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
