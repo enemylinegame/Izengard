@@ -31,7 +31,7 @@
                     {
                         timer.TimeLeft = timer.Duration;
                     }
-                    timer.Method?.Invoke();
+                    timer.Invoke();
                 }
             }
         }
