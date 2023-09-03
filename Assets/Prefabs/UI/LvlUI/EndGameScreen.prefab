@@ -306,10 +306,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26cced58cbdcd404c98fce5da6b8e3f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _restartBtn: {fileID: 4323420177062832571}
-  _backToMenuBtn: {fileID: 6639499877507879273}
-  _gameOverText: {fileID: 3794030719869033103}
-  _backGroundGameOverScreen: {fileID: 3794030719732621186}
+  RestartBtn: {fileID: 4323420177062832571}
+  BackToMenuBtn: {fileID: 6639499877507879273}
+  GameOverText: {fileID: 3794030719869033103}
+  BackGroundGameOverScreen: {fileID: 3794030719732621186}
 --- !u!1 &3794030719869033089
 GameObject:
   m_ObjectHideFlags: 0

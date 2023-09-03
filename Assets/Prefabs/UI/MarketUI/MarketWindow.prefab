@@ -1593,20 +1593,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07f3f62bdfeeced4b9da130bec6e2df7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _exchangeAmountText: {fileID: 535509944455004990}
-  _statusText: {fileID: 535509945536612590}
-  _marketAmountText: {fileID: 535509944474986924}
-  _timerText: {fileID: 535509945412050440}
-  _marketItemPrefab: {fileID: 4530489761130350541, guid: 5dfe41e7f3bc14c4898c815bb3e974b0, type: 3}
-  _byItemButton: {fileID: 535509945406612546}
-  _sellItemButton: {fileID: 535509946218602736}
-  _increaseExchangeButton: {fileID: 535509945800542309}
-  _decreaseExchangeButton: {fileID: 535509944933999575}
-  _closeMarketButton: {fileID: 535509946320621278}
-  _tierOneItems: {fileID: 535509946231257885}
-  _tierTwoItems: {fileID: 535509944690775481}
-  _tierThreeItems: {fileID: 535509944373209152}
-  _marketTradeInfo: {fileID: 535509945454794473}
+  ExchangeAmountText: {fileID: 535509944455004990}
+  StatusText: {fileID: 535509945536612590}
+  MarketAmountText: {fileID: 535509944474986924}
+  TimerText: {fileID: 535509945412050440}
+  MarketItemPrefab: {fileID: 4530489761130350541, guid: 5dfe41e7f3bc14c4898c815bb3e974b0, type: 3}
+  ByItemButton: {fileID: 535509945406612546}
+  SellItemButton: {fileID: 535509946218602736}
+  IncreaseExchangeButton: {fileID: 535509945800542309}
+  DecreaseExchangeButton: {fileID: 535509944933999575}
+  CloseMarketButton: {fileID: 535509946320621278}
+  TierOneItems: {fileID: 535509946231257885}
+  TierTwoItems: {fileID: 535509944690775481}
+  TierThreeItems: {fileID: 535509944373209152}
+  MarketTradeInfo: {fileID: 535509945454794473}
 --- !u!1 &535509944842954131
 GameObject:
   m_ObjectHideFlags: 0

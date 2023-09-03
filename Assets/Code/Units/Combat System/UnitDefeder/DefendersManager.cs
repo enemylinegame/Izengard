@@ -32,12 +32,12 @@ namespace CombatSystem
         
 
         public DefendersManager(TileController tileController, IDefendersControll defendersController, 
-            UIController uiController, HireUnitView hireUnitView, DefendersSet defendersSet, 
+            WarsView warsView, HireUnitView hireUnitView, DefendersSet defendersSet, 
             PaymentDefendersSystem paymentSystem, HireDefenderProgressManager hireProgressManager)
         {
             _tileController = tileController;
             _defendersController = defendersController;
-            _warsView = uiController.WarsView;
+            _warsView = warsView;
             _warsView.SetDefendersManager(this);
             _defendersSet = defendersSet;
             _hireUnitView = hireUnitView;
@@ -46,7 +46,7 @@ namespace CombatSystem
             _paymentSystem = paymentSystem;
             _hireProgressManager = hireProgressManager;
             _hireProgressManager.AddFinishProgressListener(FinishHireDefenderProcess);
-            tileController.TileTypeChange += TypeChange;
+            tileController.TileTypeChange += TileTypeChange;
         }
 
 
@@ -197,12 +197,6 @@ namespace CombatSystem
             _warsView.SetMexDefenders(tile.TileModel.MaxWarriors);
             _warsView.SetDefenders(tile.TileModel.DefenderUnits);
         }
-        private void TypeChange(TileView tile)
-        {
-            _warsView.SetMexDefenders(tile.TileModel.MaxWarriors);
-            _warsView.SetDefenders(tile.TileModel.DefenderUnits);
-            _tileController.TileTypeChange -= TypeChange;
-        }
 
         public void Cancel()
         {
@@ -211,6 +205,11 @@ namespace CombatSystem
         }
 
         #endregion
+        private void TileTypeChange(TileView tile)
+        {
+            _warsView.SetMexDefenders(tile.TileModel.MaxWarriors);
+            _warsView.SetDefenders(tile.TileModel.DefenderUnits);
+        }
 
         private void DefenderDead(DefenderUnit defender)
         {
@@ -277,6 +276,11 @@ namespace CombatSystem
             DefenderUnit unit = defender.Unit;
             unit.DefenderUnitDead -= DefenderDead;
             _defendersController.DismissDefender(unit);
+        }
+
+        public void Dispose()
+        {
+            _tileController.TileTypeChange -= TileTypeChange;
         }
         
     }

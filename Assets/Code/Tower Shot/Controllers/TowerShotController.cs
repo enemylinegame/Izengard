@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Code.BuildingSystem;
+using Code.Game;
 using Controllers.Pool;
 using Models.BaseUnit;
 using UnityEngine;
@@ -27,12 +28,12 @@ namespace Code.TowerShot
 
 	#endregion
 	#region Unity Methods
-	public TowerShotController(TowerShotConfig config, BuildingFactory buildingFactory, GameObject Prefab)
+	public TowerShotController(ConfigsHolder configs, BuildingFactory buildingFactory)
 	{
-		_config = config;
-		_prefab = Prefab;
+		_config = configs.TowerShotConfig;
+		_prefab = configs.PrefabsHolder.Bullet;
 		_buildingFactory = buildingFactory;
-		_curFireRate = config.FireRate;
+		_curFireRate = configs.TowerShotConfig.FireRate;
 		
 	}
 	public void OnUpdate(float deltaTime)

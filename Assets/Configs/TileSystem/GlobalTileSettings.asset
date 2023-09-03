@@ -15,7 +15,7 @@ MonoBehaviour:
   MaxWorkersWar: 8
   MaxWarriorsEco: 3
   MaxHealthMainTower: 3000
-  MaxHealthCenterBuilding: 1000
+  MaxHealthCenterBuilding: 100
   Levels:
   - IconTile: {fileID: 0}
     TileLvl: 1
@@ -40,7 +40,7 @@ MonoBehaviour:
     PriceUpgrade: []
   - IconTile: {fileID: 0}
     TileLvl: 3
-    MaxWorkers: 5
+    MaxWorkers: 15
     BuildingTirs: []
     PriceRepair: []
     PriceRecovery: []

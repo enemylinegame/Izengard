@@ -9,18 +9,14 @@ namespace Code.TileSystem
     {
         private ITextVisualizationOnUI _notificationUI;
         private GlobalStock _stock;
-        private TileUIView _uiView;
-        private readonly GeneratorLevelController _levelController;
         private readonly BuildingFactory _buildingFactory;
         private readonly GlobalTileSettings _tileSettings;
 
-        public LevelOfLifeButtonsCustomizer(ITextVisualizationOnUI notificationUI, GlobalStock stock, TileUIView uiView,
-            GeneratorLevelController levelController, BuildingFactory buildingFactory, GlobalTileSettings tileSettings)
+        public LevelOfLifeButtonsCustomizer(ITextVisualizationOnUI notificationUI, GlobalStock stock,
+            BuildingFactory buildingFactory, GlobalTileSettings tileSettings)
         {
             _notificationUI = notificationUI;
             _stock = stock;
-            _uiView = uiView;
-            _levelController = levelController;
             _buildingFactory = buildingFactory;
             _tileSettings = tileSettings;
         }

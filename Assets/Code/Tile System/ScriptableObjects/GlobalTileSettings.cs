@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using Code.BuildingSystem;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Code.TileSystem
 {
@@ -9,6 +7,7 @@ namespace Code.TileSystem
     public class GlobalTileSettings : ScriptableObject
     {
         [Header("Юниты")]
+        // ReSharper disable once InconsistentNaming
         public int MaxWorkersWar;
         public int MaxWarriorsEco;
         [Space, Header("Уровень Здоровья Башен")]

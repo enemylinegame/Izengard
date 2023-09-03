@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Code.Player;
 using Interfaces;
 using Code.TileSystem;
+using Code.UI;
 
 
 namespace CombatSystem.Views
@@ -20,7 +21,7 @@ namespace CombatSystem.Views
 
         private const int FIRST_SLOT_NUMBER = 1;
 
-        private WarsUIView _warsUIView;
+        private WarsPanelController _warsPanel;
         private DefenderSlotView[] _slots;
         private GameObject _enterBarrackButton;
         private GameObject _exitBarrackButton;
@@ -37,18 +38,18 @@ namespace CombatSystem.Views
 
         private bool _isSendDefendersMode;
         
-        public WarsView(WarsUIView warsUIView, InputController inputController)
+        public WarsView(WarsPanelController warsPanel, InputController inputController)
         {
-            _warsUIView = warsUIView;
+            _warsPanel = warsPanel;
             _inputController = inputController;
-            
-            _warsUIView.EnterToBarracks.onClick.AddListener(InBarrackButtonClick);
-            _warsUIView.ExitFromBarracks.onClick.AddListener(InBarrackButtonClick);
-            _warsUIView.DismissButton.onClick.AddListener(GlobalDismissButtonClick);
-            _warsUIView.ToOtherTileButton.onClick.AddListener(ToOtherTileButtonClick);
 
-            _enterBarrackButton = _warsUIView.EnterToBarracks.gameObject;
-            _exitBarrackButton = _warsUIView.ExitFromBarracks.gameObject;
+            var EnterToBarracks = _warsPanel.SubscribeEnterToBarracks(InBarrackButtonClick);
+            var ExitFromBarracks = _warsPanel.SubscribeExitFromBarracks(InBarrackButtonClick);
+            _warsPanel.DismissButton += GlobalDismissButtonClick;
+            _warsPanel.ToOtherTileButton += ToOtherTileButtonClick;
+
+            _enterBarrackButton = EnterToBarracks;
+            _exitBarrackButton = ExitFromBarracks;
             _exitBarrackButton.SetActive(false);
             _barrackButtonsStatus = BarrackButtonsStatus.Enter;
 
@@ -66,7 +67,7 @@ namespace CombatSystem.Views
 
         private void CreateSlots()
         {
-            DefenderSlotUI[] slots = _warsUIView.Slots;
+            DefenderSlotUI[] slots = _warsPanel.GetDefenderSlotUI();
 
             _slots = new DefenderSlotView[slots.Length];
 
@@ -481,6 +482,9 @@ namespace CombatSystem.Views
         public void Dispose()
         {
             ClearDefenders();
+            _warsPanel.DismissButton -= GlobalDismissButtonClick;
+            _warsPanel.ToOtherTileButton -= ToOtherTileButtonClick;
+            _warsPanel.DisposeButtons();
         }
     }
 }
