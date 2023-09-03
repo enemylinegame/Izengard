@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.75, y: 0, z: -0.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4729717541368032505}
   m_RootOrder: 9
@@ -44,7 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Building: {fileID: 0}
 --- !u!1 &1738660080380180518
 GameObject:
   m_ObjectHideFlags: 0
@@ -72,6 +72,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.75, y: 0, z: 0.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4729717541368032505}
   m_RootOrder: 7
@@ -89,7 +90,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Building: {fileID: 0}
 --- !u!1 &1870148307890582694
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,6 +117,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1.25, y: 0, z: 1.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4729717541368032505}
   m_RootOrder: 1
@@ -134,7 +135,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Building: {fileID: 0}
 --- !u!1 &4246090675931123590
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,6 +162,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -1.25, y: 0, z: 1.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4729717541368032505}
   m_RootOrder: 2
@@ -179,7 +180,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Building: {fileID: 0}
 --- !u!1 &4729717541368032506
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,6 +209,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2230092132115677232}
   - {fileID: 5568471426994783927}
@@ -250,8 +251,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11e8fb32f42e4bba8642b8d3a0bd483a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tileConfig: {fileID: 11400000, guid: 9565a228ea7f390448b26a5a1b3ef329, type: 2}
-  _dotSpawns:
+  _id: 
+  DotSpawns:
   - {fileID: 1454725268499054388}
   - {fileID: 4885431349910620679}
   - {fileID: 3177415484535286308}
@@ -303,6 +304,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1.25, y: 0, z: -1.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4729717541368032505}
   m_RootOrder: 3
@@ -320,7 +322,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Building: {fileID: 0}
 --- !u!1 &5510971663805851801
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,6 +349,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4729717541368032505}
   m_RootOrder: 5
@@ -365,7 +367,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Building: {fileID: 0}
 --- !u!1 &7100149020163381186
 GameObject:
   m_ObjectHideFlags: 0
@@ -393,6 +394,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4729717541368032505}
   m_RootOrder: 6
@@ -410,7 +412,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Building: {fileID: 0}
 --- !u!1 &7285345084297341416
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,6 +439,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.75, y: 0, z: -0.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4729717541368032505}
   m_RootOrder: 10
@@ -455,7 +457,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Building: {fileID: 0}
 --- !u!1 &7661443265471129649
 GameObject:
   m_ObjectHideFlags: 0
@@ -483,6 +484,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -1.25, y: 0, z: -1.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4729717541368032505}
   m_RootOrder: 4
@@ -500,7 +502,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Building: {fileID: 0}
 --- !u!1 &7926908459221032756
 GameObject:
   m_ObjectHideFlags: 0
@@ -528,6 +529,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.75, y: 0, z: 0.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4729717541368032505}
   m_RootOrder: 8
@@ -545,7 +547,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsActive: 1
-  Building: {fileID: 0}
 --- !u!1001 &6946274702871968451
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -615,13 +616,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9ea5006d00aa472499ba0ca360b48c70, type: 3}
---- !u!23 &3500826532419651327 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 5833092961865694268, guid: 9ea5006d00aa472499ba0ca360b48c70, type: 3}
-  m_PrefabInstance: {fileID: 6946274702871968451}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2230092132115677232 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9121127284903852787, guid: 9ea5006d00aa472499ba0ca360b48c70, type: 3}
+  m_PrefabInstance: {fileID: 6946274702871968451}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &3500826532419651327 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5833092961865694268, guid: 9ea5006d00aa472499ba0ca360b48c70, type: 3}
   m_PrefabInstance: {fileID: 6946274702871968451}
   m_PrefabAsset: {fileID: 0}

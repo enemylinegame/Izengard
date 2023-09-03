@@ -1,19 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
+using TMPro;
 using UnityEngine;
 
 namespace Code.TileSystem
 {
     public class TileView : MonoBehaviour
     {
-        //[SerializeField] private TileConfig _tileConfig;
-        [SerializeField] private List<Dot> _dotSpawns; 
+        [SerializeField]private string _id;
+        public List<Dot> DotSpawns; 
         public Renderer Renderer;
-        public TileModel TileModel;
+        //public TileModel TileModel;
+        public string ID => _id;
+
+        public void Start()
+        {
+            
+        }
+
         private void Awake()
         {
-            TileModel = new TileModel();
-            TileModel.DotSpawns = _dotSpawns;
-            TileModel.TilePosition = transform.position;
+            _id = Guid.NewGuid().ToString();
+            //TileModel = new TileModel();
+            //TileModel.DotSpawns = _dotSpawns;
+            //TileModel.TilePosition = transform.position;
         }
 
     }

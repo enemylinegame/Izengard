@@ -13,10 +13,10 @@ namespace EquipmentSystem
     private BaseELFUnitFactory _factory;
     public GlobalStock _globalResStock;
     private Transform _whereToSpawn;
-    private GeneratorLevelController _levelController;
+    private TileGenerator _levelController;
 
     public HireSystemController(GlobalStock glStock, BuyItemScreenView buyView,
-        EquipScreenController eqScreenController, HireSystemView view, GeneratorLevelController levelController)
+        EquipScreenController eqScreenController, HireSystemView view, TileGenerator levelController)
     {
         view.BuyItemScreen = buyView;
         view.EquipController = eqScreenController;

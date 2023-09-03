@@ -11,7 +11,7 @@ namespace CombatSystem
         void DismissDefender(List<DefenderPreview> units);
         void SendToBarrack(List<DefenderPreview> units);
         void KickoutFromBarrack(List<DefenderPreview> units);
-        void SendToOtherTile(List<DefenderPreview> units, TileView tile);
+        void SendToOtherTile(List<DefenderPreview> units, TileView tile, TileModel model);
         void BarrackButtonClick();
     }
 }

@@ -8,7 +8,7 @@ namespace CombatSystem
 {
     public class TestDummyTargetController : IDisposable, IOnController, IOnUpdate
     {
-        private readonly GeneratorLevelController _levelGenerator;
+        private readonly TileGenerator _levelTileGenerator;
         private readonly GameObject _dummyPrefab;
         private readonly HashSet<DummyController> _instantiatedDummys = new HashSet<DummyController>();
 
@@ -17,14 +17,14 @@ namespace CombatSystem
         private TileView _tileView;
 
 
-        public TestDummyTargetController(GeneratorLevelController levelGenerator, GameObject testBuilding)
+        public TestDummyTargetController(TileGenerator levelTileGenerator, GameObject testBuilding)
         {
-            _levelGenerator = levelGenerator;
+            _levelTileGenerator = levelTileGenerator;
 
             _dummyPrefab = testBuilding;//Resources.Load<GameObject>("DummyTarget");
 
             // _levelGenerator.SpawnResources += OnNewTile;
-            _levelGenerator.OnCombatPhaseStart += RespawnDummies;
+            _levelTileGenerator.OnCombatPhaseStart += RespawnDummies;
         }
 
         private void RespawnDummies()

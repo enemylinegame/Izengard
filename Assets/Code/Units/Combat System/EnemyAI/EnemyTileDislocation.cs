@@ -33,13 +33,13 @@ namespace CombatSystem
             TileView tileView = tileGameObject.GetComponent<TileView>();
             if (tileView)
             {
-                TileModel tile = tileView.TileModel;
-                _contactedTiles.Add(tile);
-                if (_currentTile == null)
-                {
-                    _currentTile = tile;
-                    _currentTile.EnemiesInTile.Add(_damageable);
-                }
+                // TileModel tile = tileView.TileModel;
+                // _contactedTiles.Add(tile);
+                // if (_currentTile == null)
+                // {
+                //     _currentTile = tile;
+                //     _currentTile.EnemiesInTile.Add(_damageable);
+                // }
             }
         }
 
@@ -49,7 +49,7 @@ namespace CombatSystem
             TileView tileView = tileGameObject.GetComponent<TileView>();
             if (tileView)
             {
-                TileModel tile = tileGameObject.GetComponent<TileView>().TileModel;
+                /*TileModel tile = tileGameObject.GetComponent<TileView>().TileModel;
                 _contactedTiles.Remove(tile);
                 if (_currentTile == tile)
                 {
@@ -60,7 +60,7 @@ namespace CombatSystem
                         _currentTile = _contactedTiles[0];
                         _currentTile.EnemiesInTile.Add(_damageable);
                     }
-                }
+                }*/
             }
         }
 

@@ -8,7 +8,7 @@
         /// <summary>
         /// Uploading tile information to the UI
         /// </summary>
-        void LoadInfoToTheUI(TileView tile);
+        void LoadInfoToTheUI(TileView tile, TileModel model);
         /// <summary>
         /// unloading all data from the UI
         /// </summary>

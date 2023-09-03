@@ -9,7 +9,8 @@ namespace Code.TileSystem
     public class TileModel
     {
         private const int MAX_WARRIORS = 8;
-        
+
+        public string ID;
         public Damageable CenterBuilding { get; set; }
         public TileType TileType { get; set; }
         public TileConfig TileConfig { get; set; }
@@ -24,9 +25,10 @@ namespace Code.TileSystem
         public int WorkersCount { get; set; }
         public Vector3 TilePosition { get; set; } // TODO: after merging, redo this ...
         
-        public void Init()
+        public void Init(GlobalTileSettings tileSettings)
         {
             SaveTileConfig = new TileConfig();
+            TileConfig = tileSettings.Levels[0];
             if(TileConfig != null) CurrBuildingConfigs = new List<BuildingConfig>(TileConfig.BuildingTirs);
             FloodedBuildings = new List<ICollectable>();
             DefenderUnits = new List<DefenderPreview>();

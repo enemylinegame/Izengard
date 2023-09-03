@@ -14,16 +14,15 @@ namespace Code.UI
         public event Action<int> TileSelected;
         
         public event Action OpenMarketButton;
-        public RightPanelController(RightPanelFactory factory, InputController inputController)
+        public RightPanelController(RightPanelFactory factory)
         {
             _view = factory.GetView(factory.UIElementsConfig.RightPanel);
             DeactivateOpenMarketButton();
-            inputController.Add(this);
             
             _view.OpenMarketButton.onClick.AddListener((() => OpenMarketButton?.Invoke()));
         }
         
-        public void LoadInfoToTheUI(TileView tile)
+        public void LoadInfoToTheUI(TileView tile, TileModel model)
         {
             ActivateOpenMarketButton();
         }

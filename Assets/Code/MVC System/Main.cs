@@ -1,13 +1,5 @@
 using Code.Game;
 using UnityEngine;
-using ResourceSystem;
-using Code.QuickOutline.Scripts;
-using Code.TileSystem;
-using Code.TowerShot;
-using Code.UI;
-using EquipmentSystem;
-using ResourceMarket;
-using UnityEngine.Serialization;
 
 public class Main : MonoBehaviour
 {

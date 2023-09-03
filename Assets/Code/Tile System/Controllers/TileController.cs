@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Code.BuildingSystem;
 using Code.UI;
 using Code.Player;
@@ -13,7 +14,7 @@ namespace Code.TileSystem
     {
         #region Fields
 
-        public event Action<TileView> TileTypeChange;
+        public event Action<TileView, TileModel> TileTypeChange;
         
         private TileView _tileView;
         private readonly ButtonsControllerOnTile _buttonsController;
@@ -22,6 +23,7 @@ namespace Code.TileSystem
         private readonly buildingsPanelController _buildingsPanel;
         private readonly BuildingFactory _buildingFactory;
         private readonly GlobalTileSettings _tileSettings;
+        private readonly TileGenerator _tileGenerator;
         private readonly GlobalStock _stock;
         private int _currentLVL;
         
@@ -30,16 +32,17 @@ namespace Code.TileSystem
         private readonly TileMainBoardController _tileMainBoard;
         private readonly NotificationPanelController _notificationPanel;
         public ProductionManager WorkerMenager => _productionManager;
-        public TileModel TileModel => _tileView.TileModel;
+        public TileModel TileModel;
         public TileView View => _tileView;
 
         #endregion
         public TileController(UIPanelsInitialization uiPanelsInitialization, BuildingFactory buildingController, 
             InputController inputController, ProductionManager productionManager, 
-            LevelOfLifeButtonsCustomizer level, GlobalStock stock, GlobalTileSettings tileSettings)
+            LevelOfLifeButtonsCustomizer level, GlobalStock stock, GlobalTileSettings tileSettings, TileGenerator tileGenerator)
         {
             _buttonsController = new ButtonsControllerOnTile(uiPanelsInitialization.TileMainBoard, inputController);
             _buildingsPanel = new buildingsPanelController(buildingController, productionManager, uiPanelsInitialization);
+            
             
             _productionManager = productionManager;
             _centerPanelController = uiPanelsInitialization.CenterPanelController;
@@ -50,25 +53,27 @@ namespace Code.TileSystem
             _level = level;
             _stock = stock;
             _tileSettings = tileSettings;
+            _tileGenerator = tileGenerator;
 
             inputController.Add(this);
         }
 
         #region LoadAndUnloadTile
-        public void LoadInfoToTheUI(TileView tile)
+        public void LoadInfoToTheUI(TileView tile, TileModel model)
         {
-            if (tile.TileModel.TileType == TileType.None)
+            if (model.TileType == TileType.None)
             {
-                TileTypeCheck(tile);
+                TileTypeCheck(model, tile);
                 return;
             } 
             _tileView = tile;
-
-            _buildingsPanel.LoadBuildings(tile.TileModel, WorkerHiring, WorkerDismissal, LevelCheck, ResetWorkersAccount);
-            _buttonsController.ButtonAddListener(tile.TileModel, _level);
+            TileModel = model;
+            //TODO: 
+            _buildingsPanel.LoadBuildings(model, WorkerHiring, WorkerDismissal, LevelCheck, ResetWorkersAccount);
+            _buttonsController.ButtonAddListener(model, _level);
             _tileMainBoard.HolderButton(ButtonTypes.Upgrade).onClick.AddListener(LVLUp);
-            _tileMainBoard.LoadAllTextsFieldsAndImaged(tile.TileModel.TileConfig, TileModel, out _currentLVL);
-            _buildingsPanel.LoadFloodedBuildings(tile.TileModel,WorkerHiring, WorkerDismissal, LevelCheck, ResetWorkersAccount);
+            _tileMainBoard.LoadAllTextsFieldsAndImaged(model.TileConfig, TileModel, out _currentLVL);
+            _buildingsPanel.LoadFloodedBuildings(model, WorkerHiring, WorkerDismissal, LevelCheck, ResetWorkersAccount);
             LevelCheck();
 
         }
@@ -142,38 +147,40 @@ namespace Code.TileSystem
         }
         #endregion
         #region TileTypeChange
-        private void TileTypeCheck(TileView view)
+        
+        private void TileTypeCheck(TileModel model, TileView view)
         {
-            if(view.TileModel.TileType != TileType.None && view.TileModel.TileType == TileType.All) return;
+            if(model.TileType != TileType.None && model.TileType == TileType.All) return;
             
-            _centerPanelController.ActivateTileTypeSelection((() => SetTileType(TileType.Eco, view)),
-                () => SetTileType(TileType.war, view));
+            _centerPanelController.ActivateTileTypeSelection((() => SetTileType(TileType.Eco, model, view)),
+                () => SetTileType(TileType.war, model, view));
         }
-        private void SetTileType(TileType type, TileView tile)
+        private void SetTileType(TileType type, TileModel model, TileView tile)
         {
             switch (type)
             {
                 case TileType.Eco:
-                    tile.TileModel.MaxWarriors = _tileSettings.MaxWarriorsEco;
+                    model.MaxWarriors = _tileSettings.MaxWarriorsEco;
                     break;
                 case TileType.war:
-                    tile.TileModel.MaxWarriors = _tileSettings.MaxWorkersWar;
+                    model.MaxWarriors = _tileSettings.MaxWorkersWar;
                     break;
             }
             
-            tile.TileModel.TileType = type;
-            _buildingFactory.PlaceCenterBuilding(tile);
+            model.TileType = type;
+            _buildingFactory.PlaceCenterBuilding(tile, model);
 
             _centerPanelController.DeactivateTileTypeSelection();
-            _tilePanelController.LoadInfoToTheUI(tile);
-            TileTypeChange?.Invoke(tile);
-            LoadInfoToTheUI(tile);
+            _tilePanelController.LoadInfoToTheUI(tile, model);
+            TileTypeChange?.Invoke(tile, model);
+            LoadInfoToTheUI(tile, model);
         }
 
         #endregion
         #region Other
         public void Dispose() { }
-        public void LevelCheck()
+
+        private void LevelCheck()
         {
             bool levelExceedDestroyBuildingInfo = _currentLVL > _tilePanelController.DestroyBuildingInfo.Count;
 
@@ -201,7 +208,7 @@ namespace Code.TileSystem
                 
             
             _buildingsPanel.LoadBuildings(TileModel, WorkerHiring, WorkerDismissal, LevelCheck, ResetWorkersAccount);
-            LoadInfoToTheUI(_tileView);
+            LoadInfoToTheUI(_tileView, TileModel);
             LevelCheck();
         }
         

@@ -67,6 +67,8 @@ namespace Code.TileSystem
                         _centerPanelController.DeactivateBuildingBuyUI();
                         return; 
                     }
+                    
+                    //TODO: данные мектоды перенести, в другой класс
                     BuildingHUD info = CreateBuildingInfo(kvp.Key, model,building,workerHiring, workerDismissal, levelCheck, resetWorkers);
                     LoadBuildingHUD(info, building, kvp.Key);
                     model.FloodedBuildings.Add(building);

@@ -12,6 +12,7 @@ namespace Code.Player
     public class InputController : IOnController, IOnUpdate
     {
         private OutlineController _outlineController;
+        private readonly TileGenerator _tileGenerator;
         private CenterPanel _centerPanel;
         private ITileSelector _tileSelector;
         private List<ITileLoadInfo> _loadInfoToTheUis;
@@ -22,9 +23,10 @@ namespace Code.Player
         private bool LockLeftClick = false;
         private bool LockRightClick = true;
 
-        public InputController(OutlineController outlineController)
+        public InputController(OutlineController outlineController, TileGenerator tileGenerator)
         {
             _outlineController = outlineController;
+            _tileGenerator = tileGenerator;
             _loadInfoToTheUis = new List<ITileLoadInfo>();
         }
 
@@ -48,7 +50,8 @@ namespace Code.Player
 
             if (_isSpecialMode)
             {
-                _tileSelector.SelectTile(tile);
+                var model = _tileGenerator.LoadTile(tile);
+                _tileSelector.SelectTile(tile, model);
             }
             
             if (_tile != null)
@@ -67,7 +70,8 @@ namespace Code.Player
             
             _loadInfoToTheUis.ForEach(selector =>
             {
-                selector.LoadInfoToTheUI(tile);
+                var model = _tileGenerator.LoadTile(tile);
+                selector.LoadInfoToTheUI(tile, model);
                 _outlineController.EnableOutLine(tile.Renderer);
                 LockLeftClick = true;
                 LockRightClick = false;

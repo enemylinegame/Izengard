@@ -16,7 +16,7 @@ public class ResourceGenerator : IDisposable
     // private List<Vector2Int> _spawnedResources = new List<Vector2Int>();
     private GameConfig _gameConfig;
     private Mineral _mineral;
-    private GeneratorLevelController _generatorLevelController;
+    private TileGenerator _tileGenerator;
     private BuildingFactory _buildingController;
     private TileController _tileController;
     private int _numOfVariant = 0;
@@ -25,26 +25,26 @@ public class ResourceGenerator : IDisposable
     private List<MineralConfig> _resourcesTierOne;
     private List<MineralConfig> _resourcesTierTwo;
     private List<MineralConfig> _resourcesTierThree;
-    public ResourceGenerator(ConfigsHolder configs,GeneratorLevelController generatorLevelController, BuildingFactory buildingController)
+    public ResourceGenerator(ConfigsHolder configs,TileGenerator tileGenerator, BuildingFactory buildingController)
     {
         _buildingController = buildingController;
         // _installedBuildings = installedBuildings;
         _gameConfig = configs.GameConfig;
-        _generatorLevelController = generatorLevelController;
+        _tileGenerator = tileGenerator;
         _resourcesTierOne = configs.GlobalMineralsList.Minerals.FindAll(x => x.Tier == TierNumber.One);
         _resourcesTierTwo = configs.GlobalMineralsList.Minerals.FindAll(x => x.Tier == TierNumber.Two);
         _resourcesTierThree = configs.GlobalMineralsList.Minerals.FindAll(x => x.Tier == TierNumber.Three);
 
-        _generatorLevelController.SpawnResources += PlaceResources;
+        _tileGenerator.SpawnResources += PlaceResources;
     }
     
     public ResourceGenerator(/*GameObject[,] installedBuildings,*/
-        GameConfig gameConfig, GeneratorLevelController generatorLevelController, BuildingFactory buildingController, int i)
+        GameConfig gameConfig, TileGenerator tileGenerator, BuildingFactory buildingController, int i)
     {
         // _installedBuildings = installedBuildings;
         _gameConfig = gameConfig;
-        _generatorLevelController = generatorLevelController;
-        _generatorLevelController.SpawnResources += PlaceResources;
+        _tileGenerator = tileGenerator;
+        _tileGenerator.SpawnResources += PlaceResources;
         _numOfVariant = i;
     }
     
@@ -120,7 +120,7 @@ public class ResourceGenerator : IDisposable
     //     
     // }
 
-    private void PlaceResources(VoxelTile tile)
+    private void PlaceResources(VoxelTile tile, TileModel model)
     {
         int numberOfMineralsToSpawn;
         int random;
@@ -184,16 +184,16 @@ public class ResourceGenerator : IDisposable
                     randomChance = Random.Range(0, 101);
                     if ((int)Math.Round(weightT1 * 100) >= randomChance)
                     {
-                        CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], tile.TileView.TileModel);
+                        CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], model);
                     }
                     else if ((int)Math.Round(weightT2 * 100) >= 100 - randomChance && 
                              (int)Math.Round(weightT3 * 100) < 100 - randomChance)
                     {
-                        CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)], tile.TileView.TileModel);
+                        CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)], model);
                     }
                     else if ((int)Math.Round(weightT3 * 100) >= 100 - randomChance)
                     {
-                        CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)], tile.TileView.TileModel);
+                        CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)], model);
                     }
                     break;
                 case 2:
@@ -204,32 +204,32 @@ public class ResourceGenerator : IDisposable
                         {
                             if ((int)Math.Round(weightT1 * 2f / (weightT1 * 2f + weightT2 * 0.5f + weightT3 * 0.5f) * 100) >= randomChance)
                             {
-                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], tile.TileView.TileModel);
+                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], model);
                             }
                             else if ((int)Math.Round(weightT2/2f/(weightT1*2f+weightT2*0.5f+weightT3*0.5f) * 100) >= 100 - randomChance &&
                                       (int)Math.Round((weightT3 / (weightT1 * 2f + weightT2 * 0.5f + weightT3 * 0.5f) / 2f) * 100) < 100 - randomChance)
                             {
-                                CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)], tile.TileView.TileModel);
+                                CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)], model);
                             }
                             else if ((int)Math.Round((weightT3 / (weightT1 * 2f + weightT2 * 0.5f + weightT3 * 0.5f) / 2f) * 100) >= 100 - randomChance)
                             {
-                                CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)], tile.TileView.TileModel);
+                                CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)], model);
                             }
                         }
                         else if (i == 2)
                         {
                             if ((int)Math.Round(weightT1 / sumAllWeight * 100) >= randomChance)
                             {
-                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], tile.TileView.TileModel);
+                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], model);
                             }
                             else if ((int)Math.Round(weightT2 / sumAllWeight * 100) >= 100 - randomChance && 
                                      (int)Math.Round(weightT3 / sumAllWeight * 100) < 100 - randomChance)
                             {
-                                CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)], tile.TileView.TileModel);
+                                CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)], model);
                             }
                             else if ((int)Math.Round(weightT3 / sumAllWeight * 100) >= 100 - randomChance)
                             {
-                                CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)], tile.TileView.TileModel);
+                                CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)], model);
                             }
                         }
                     }
@@ -242,39 +242,39 @@ public class ResourceGenerator : IDisposable
                         {
                             if (50f >= randomChance)
                             {
-                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], tile.TileView.TileModel);
+                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], model);
                             }
                         }
                         else if (i == 2)
                         {
                             if ((int)Math.Round(weightT1 / sumAllWeight / 2f * 100) >= randomChance)
                             {
-                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], tile.TileView.TileModel);
+                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], model);
                             }
                             else if ((int)Math.Round(weightT2 / sumAllWeight / 2f * 100) >= 100 - randomChance && 
                                      (int)Math.Round(weightT3/sumAllWeight * 100) < 100 - randomChance)
                             {
-                                CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)], tile.TileView.TileModel);
+                                CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)], model);
                             }
                             else if ((int)Math.Round(weightT3/sumAllWeight * 100) >= 100 - randomChance)
                             {
-                                CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)], tile.TileView.TileModel);
+                                CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)], model);
                             }
                         }
                         else if (i == 3)
                         {
                             if ((int)Math.Round(weightT1 / sumAllWeight / 2f * 100) >= randomChance)
                             {
-                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], tile.TileView.TileModel);
+                                CreateResources(_resourcesTierOne[Random.Range(0,_resourcesTierOne.Count)], model);
                             }
                             else if ((int)Math.Round(weightT2 / sumAllWeight / 2f * 100) >= 100 - randomChance &&
                                      (int)Math.Round(weightT3/sumAllWeight * 100) < 100 - randomChance)
                             {
-                                CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)], tile.TileView.TileModel);
+                                CreateResources(_resourcesTierTwo[Random.Range(0,_resourcesTierTwo.Count)], model);
                             }
                             else if ((int)Math.Round(weightT3/sumAllWeight * 100) >= randomChance)
                             {
-                                CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)], tile.TileView.TileModel);
+                                CreateResources(_resourcesTierThree[Random.Range(0,_resourcesTierThree.Count)], model);
                             }
                         }
                     }
@@ -330,13 +330,11 @@ public class ResourceGenerator : IDisposable
         var _tempMineral = _gameObject.AddComponent<Building>();
         
         _tempMineral.InitMineral(mineralConfig);
-        //_tempMineral.SetModelOfMine(mineralConfig);
-        // BoxCollider _boxCollider = _gameObject.AddComponent<BoxCollider>();
         return _tempMineral;
     }
 
     public void Dispose()
     {
-        _generatorLevelController.SpawnResources -= PlaceResources;
+        _tileGenerator.SpawnResources -= PlaceResources;
     }
 }

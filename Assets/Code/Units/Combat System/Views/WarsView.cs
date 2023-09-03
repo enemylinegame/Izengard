@@ -439,7 +439,7 @@ namespace CombatSystem.Views
             SendDefendersModeOff();
         }
 
-        public void SelectTile(TileView tile)
+        public void SelectTile(TileView tile, TileModel model)
         {
             SendDefendersModeOff();
             
@@ -455,7 +455,7 @@ namespace CombatSystem.Views
                     }
                 }
                 
-                _defendersManager.SendToOtherTile(units, tile);
+                _defendersManager.SendToOtherTile(units, tile, model);
             }
         }
         

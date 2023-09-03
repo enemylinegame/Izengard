@@ -21,10 +21,10 @@ namespace Code.TileSystem
             inputController.Add(this);
             
         }
-        public void LoadInfoToTheUI(TileView tile)
+        public void LoadInfoToTheUI(TileView tile, TileModel model)
         {
             Resources.ForEach(res => AddNewLayoutElement(res));
-            _resourceFactory.LoadInfoToTheUI(tile);
+            _resourceFactory.LoadInfoToTheUI(tile, model);
         }
 
         public void Cancel()

@@ -2,6 +2,7 @@ using CombatSystem;
 using System;
 using Code.BuildingSystem;
 using Code.Game;
+using Code.TileSystem;
 using Code.UI;
 using UnityEngine;
 using Wave;
@@ -10,7 +11,7 @@ using Wave.Interfaces;
 
 public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpdate, IDowntimeChecker
 {
-    private readonly GeneratorLevelController _levelGenerator;
+    private readonly TileGenerator _levelTileGenerator;
     private readonly RightPanelController _rightPanel;
     
     private readonly IWaveGathering _waveGathering;
@@ -29,17 +30,17 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
     public bool IsDowntime { get; private set; }
 
 
-    public WaveController(GeneratorLevelController levelGenerator, UIPanelsInitialization controller, 
+    public WaveController(TileGenerator levelTileGenerator, UIPanelsInitialization controller, 
     ConfigsHolder configsHolder, BulletsController bulletsController, EnemyDestroyObserver destroyObserver, BuildingFactory buildingFactory)
     {
-        _levelGenerator = levelGenerator;
+        _levelTileGenerator = levelTileGenerator;
         _rightPanel = controller.RightPanelController;
         
         _enemyAIController = new EnemyAIController();
         _bulletsController = bulletsController;
         
         _waveGathering = new WaveGatheringController(buildingFactory, _enemyAIController, _bulletsController, configsHolder);
-        _sendingEnemys = new SendingEnemies(_enemyAIController, _levelGenerator, 
+        _sendingEnemys = new SendingEnemies(_enemyAIController, _levelTileGenerator, 
             configsHolder.BattlePhaseConfig.EnemySpawnSettings, destroyObserver);
         _combatPhaseWaiting = new CombatPhaseWaiting(_sendingEnemys);
         _combatPhaseWaiting.PhaseEnded += OnCombatPhaseEnding;
@@ -50,10 +51,10 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
         _preparatoryPhaseWaiting = new PreparatoryPhaseWaiting(configsHolder.PhasesSettings.PreparatoryPhaseDuration, controller.RightPanelController.TimeCountShow, this, controller.NotificationPanel);
         _preparatoryPhaseWaiting.PhaseEnded += OnPreparatoryPhaseEnding;
 
-        _posibleSpawnPointsFinder = new PosibleSpawnPointsFinder(levelGenerator.SpawnedTiles);
-        _levelGenerator.SpawnResources += _posibleSpawnPointsFinder.OnNewTileInstantiated;
+        _posibleSpawnPointsFinder = new PosibleSpawnPointsFinder(levelTileGenerator.SpawnedTiles);
+        _levelTileGenerator.SpawnResources += _posibleSpawnPointsFinder.OnNewTileInstantiated;
 
-        _levelGenerator.SpawnResources += FreeSideForWave;
+        _levelTileGenerator.SpawnResources += FreeSideForWave;
 
     }
 
@@ -84,7 +85,7 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
     private void OnPreparatoryPhaseEnding()
     {
         // Debug.Log("подготовительная фаза закончилась");
-        _levelGenerator.OnCombatPhaseStart?.Invoke();
+        _levelTileGenerator.OnCombatPhaseStart?.Invoke();
         StartCombatPhase();
     }
 
@@ -115,7 +116,7 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
         _rightPanel.DeactivateButtonParents();
     }
 
-    private void FreeSideForWave(VoxelTile voxelTile)
+    private void FreeSideForWave(VoxelTile voxelTile, TileModel model)
     {
         if (voxelTile.NumZone <= 1) return;
 
@@ -125,13 +126,13 @@ public class WaveController : IOnController, IDisposable, IOnUpdate, IOnFixedUpd
 
     public void Dispose()
     {
-        _levelGenerator.SpawnResources -= FreeSideForWave;
+        _levelTileGenerator.SpawnResources -= FreeSideForWave;
         
         _waveGathering.Dispose();
         _combatPhaseWaiting.PhaseEnded -= OnCombatPhaseEnding;
         _peacefulPhaseWaiting.PhaseEnded -= OnPeacefulPhaseEnding;
         _preparatoryPhaseWaiting.PhaseEnded -= OnPreparatoryPhaseEnding;
 
-        _levelGenerator.SpawnResources -= _posibleSpawnPointsFinder.OnNewTileInstantiated;
+        _levelTileGenerator.SpawnResources -= _posibleSpawnPointsFinder.OnNewTileInstantiated;
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Code.TileSystem;
 using UnityEngine;
 using Wave.Interfaces;
 
@@ -23,7 +24,7 @@ namespace Wave
             return _posibleSpawnPoints;
         }
 
-        public void OnNewTileInstantiated(VoxelTile tile)
+        public void OnNewTileInstantiated(VoxelTile tile, TileModel model)
         {
             SetPosibleSpawnPoints();
         }

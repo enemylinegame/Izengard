@@ -22,14 +22,14 @@ namespace Code.BuildingSystem
         private GlobalStock _stock;
         private PrefabsHolder _prefabsHolder;
         private readonly ConfigsHolder _configsHolder;
-        private GeneratorLevelController _levelController;
+        private TileGenerator _levelController;
         private readonly GlobalTileSettings _tileSettings;
         public TowerShotBehavior TowerShot;
         public Damageable MainBuilding { get; private set; }
         public DummyController DummyController;
         private TileView _tileView;
 
-        public BuildingFactory(NotificationPanelController notificationPanel, GlobalStock stock, ConfigsHolder configsHolder, GeneratorLevelController levelController)
+        public BuildingFactory(NotificationPanelController notificationPanel, GlobalStock stock, ConfigsHolder configsHolder, TileGenerator levelController)
         {
             _notificationUI = notificationPanel;
             _stock = stock;
@@ -121,20 +121,20 @@ namespace Code.BuildingSystem
             return true;
         }
 
-        public void PlaceCenterBuilding(TileView view)
+        public void PlaceCenterBuilding(TileView view, TileModel model)
         {
             var instaniatedDummy = Object.Instantiate(_prefabsHolder.TestBuilding, view.transform.position, Quaternion.identity);
             var dummyController = new DummyController(instaniatedDummy);
             
             _tileView = view;
-            view.TileModel.CenterBuilding = dummyController.Dummy;
+            model.CenterBuilding = dummyController.Dummy;
             DummyController = dummyController;
             
             dummyController.Dummy.OnHealthChanged += HealthChanged;
             dummyController.Spawn(_tileSettings.MaxHealthCenterBuilding);
         }
 
-        private void PlaceMainTower(Dictionary<Vector2Int, VoxelTile> spawnedTiles, ITileSetter tileSetter, Transform pointSpawnUnits)
+        private void PlaceMainTower(Dictionary<Vector2Int, VoxelTile> spawnedTiles, ITileSetter tileSetter, Transform pointSpawnUnits, TileModel model)
         {
             var config = _configsHolder.MainTowerConfig as BuildingConfig;
             var firstTile = spawnedTiles[tileSetter.FirstTileGridPosition];
@@ -147,9 +147,9 @@ namespace Code.BuildingSystem
             MainBuilding = mainBuilding.GetComponent<Damageable>();
             TowerShot = mainBuilding.GetComponentInChildren<TowerShotBehavior>();
             
-            _tileView.TileModel.CenterBuilding = MainBuilding;
-            firstTile.TileView.TileModel.TileType = TileType.All;
-            firstTile.TileView.TileModel.MaxWarriors = _tileSettings.MaxWorkersWar;
+            model.CenterBuilding = MainBuilding;
+            model.TileType = TileType.All;
+            model.MaxWarriors = _tileSettings.MaxWorkersWar;
        
             MainBuilding.Init(_tileSettings.MaxHealthMainTower);
             

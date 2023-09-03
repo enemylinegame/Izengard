@@ -133,16 +133,16 @@ namespace CombatSystem
             _warsView.UpdateDefenders();
         }
 
-        public void SendToOtherTile(List<DefenderPreview> defenders, TileView tile)
+        public void SendToOtherTile(List<DefenderPreview> defenders, TileView tile, TileModel model)
         {
             TileModel current = SelectedTileModel;
-            TileModel other = tile.TileModel;
+            TileModel other = model;
             if (current != other)
             {
                 for (int i = 0; i < defenders.Count; i++)
                 {
                     DefenderPreview unit = defenders[i];
-                    if (!SendDefenderToTile(unit, tile))
+                    if (!SendDefenderToTile(unit, tile, other))
                     {
                         break;
                     }
@@ -192,10 +192,10 @@ namespace CombatSystem
 
         #region ITileLoadInfo
         
-        public void LoadInfoToTheUI(TileView tile)
+        public void LoadInfoToTheUI(TileView tile, TileModel model)
         {
-            _warsView.SetMexDefenders(tile.TileModel.MaxWarriors);
-            _warsView.SetDefenders(tile.TileModel.DefenderUnits);
+            _warsView.SetMexDefenders(model.MaxWarriors);
+            _warsView.SetDefenders(model.DefenderUnits);
         }
 
         public void Cancel()
@@ -205,10 +205,10 @@ namespace CombatSystem
         }
 
         #endregion
-        private void TileTypeChange(TileView tile)
+        private void TileTypeChange(TileView tile, TileModel model)
         {
-            _warsView.SetMexDefenders(tile.TileModel.MaxWarriors);
-            _warsView.SetDefenders(tile.TileModel.DefenderUnits);
+            _warsView.SetMexDefenders(model.MaxWarriors);
+            _warsView.SetDefenders(model.DefenderUnits);
         }
 
         private void DefenderDead(DefenderUnit defender)
@@ -224,11 +224,11 @@ namespace CombatSystem
             }
         }
 
-        private bool SendDefenderToTile(DefenderPreview defenderPreview, TileView tile)
+        private bool SendDefenderToTile(DefenderPreview defenderPreview, TileView tile, TileModel model)
         {
             bool hasSent = false;
 
-            TileModel destinationTile = tile.TileModel;
+            TileModel destinationTile = model;
             if (destinationTile.DefenderUnits.Count < destinationTile.MaxWarriors)
             {
                 DefenderUnit defenderUnit = defenderPreview.Unit;
@@ -239,7 +239,7 @@ namespace CombatSystem
                 defenderUnit.Tile.DefenderUnits.Remove(defenderPreview);
                 destinationTile.DefenderUnits.Add(defenderPreview);
                 defenderUnit.Tile = destinationTile;
-                _defendersController.SendDefenderToTile(defenderUnit, tile.TileModel);
+                _defendersController.SendDefenderToTile(defenderUnit, model);
                 hasSent = true;
             }
             else

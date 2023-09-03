@@ -22,18 +22,18 @@ namespace Wave
         private List<IPoolController<IEnemyController>> _enemys;
 
         private readonly IEnemyAIController _enemyAIController;
-        private readonly GeneratorLevelController _levelGenerator;
+        private readonly TileGenerator _levelTileGenerator;
         private readonly EnemyDestroyObserver _enemyDestroyObserver;
 
 
-        public SendingEnemies(IEnemyAIController enemyAIController, GeneratorLevelController levelGenerator, 
+        public SendingEnemies(IEnemyAIController enemyAIController, TileGenerator levelTileGenerator, 
             EnemySpawnSettings enemySpawnSettings, EnemyDestroyObserver enemyDestroyObserver)
         {
             _enemySpawnSettings = enemySpawnSettings;//Resources.Load<EnemySpawnSettings>(nameof(EnemySpawnSettings));
             LifeEnemys = new HashSet<IEnemyController>();
 
             _enemyAIController = enemyAIController;
-            _levelGenerator = levelGenerator;
+            _levelTileGenerator = levelTileGenerator;
             _enemyDestroyObserver = enemyDestroyObserver;
         }
 

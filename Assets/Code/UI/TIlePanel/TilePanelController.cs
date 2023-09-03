@@ -23,7 +23,7 @@ namespace Code.UI
         public readonly Dictionary<BuildingConfig, Button> ButtonsInMenu;
         public readonly Dictionary<GameObject, BuildingHUD> DestroyBuildingInfo;
         
-        public TilePanelController(TilePanelFactory factory, InputController inputController, CenterPanelController centerPanel)
+        public TilePanelController(TilePanelFactory factory, CenterPanelController centerPanel)
         {
             _view = factory.GetView(factory.UIElementsConfig.BottonPanel);
 
@@ -37,14 +37,13 @@ namespace Code.UI
             TileMenu.StartButton += centerPanel.ActivateBuildingBuyUI;
             centerPanel.CloseBuildingsBuy += TileMenu.EnabledStartButton;
             
-            inputController.Add(this);
             
             _view.gameObject.SetActive(false);
             _centerPanel = centerPanel;
         }
-        public void LoadInfoToTheUI(TileView tile)
+        public void LoadInfoToTheUI(TileView tile, TileModel model)
         {
-            if(tile.TileModel.TileType == TileType.None) return;
+            if(model.TileType == TileType.None) return;
             _view.gameObject.SetActive(true);
         }
 

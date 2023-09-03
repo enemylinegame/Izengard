@@ -25,10 +25,10 @@ namespace Code.TileSystem
             _prefabsHolder = prefabsHolder;
         }
         
-        public void LoadInfoToTheUI(TileView tile)
+        public void LoadInfoToTheUI(TileView tile, TileModel model)
         {
-            _buildings = tile.TileModel.FloodedBuildings;
-            var minerals = tile.TileModel.FloodedBuildings.FindAll(x => x.MineralConfig != null);
+            _buildings = model.FloodedBuildings;
+            var minerals = model.FloodedBuildings.FindAll(x => x.MineralConfig != null);
             foreach (var mineral in minerals)
             {
                 AddNewLayoutElement(mineral);

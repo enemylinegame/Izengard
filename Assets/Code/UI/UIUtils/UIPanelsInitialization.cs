@@ -18,9 +18,8 @@ namespace Code.UI
         public readonly NotificationPanelController NotificationPanel;
         public readonly EndGameScreenPanelController EndGameScreenPanel;
         public readonly InGameMenuPanelController InGameMenuPanel;
-        public readonly WarsView WarsView;
         
-        public UIPanelsInitialization(UIElementsConfig config, Canvas canvas, InputController inputController)
+        public UIPanelsInitialization(UIElementsConfig config, Canvas canvas)
         {
             var topPanelFactory = new ResourcesPanelFactory(config, canvas);
             var bottomUIFactory = new TilePanelFactory(config, canvas);
@@ -32,12 +31,11 @@ namespace Code.UI
 
             ResourcesPanelController = new ResourcesPanelController(topPanelFactory);
             CenterPanelController = new CenterPanelController(centerPanelFactory);
-            TilePanelController = new TilePanelController(bottomUIFactory, inputController, CenterPanelController);
-            RightPanelController = new RightPanelController(rightPanelFactory, inputController);
+            TilePanelController = new TilePanelController(bottomUIFactory, CenterPanelController);
+            RightPanelController = new RightPanelController(rightPanelFactory);
             MarketPanelController = new MarketPanelController(marketPanelFactory);
             EndGameScreenPanel = new EndGameScreenPanelController(endGameScreenPanelFactory);
             InGameMenuPanel = new InGameMenuPanelController(inGameMenuPanelFactory);
-            WarsView = new WarsView(TilePanelController.WarsPanel, inputController);
 
             TileMenu = TilePanelController.TileMenu;
             TileMainBoard = TilePanelController.TileMainBoard;
