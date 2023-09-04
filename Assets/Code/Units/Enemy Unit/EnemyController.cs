@@ -4,7 +4,7 @@ using EnemyUnit.Interfaces;
 
 namespace EnemyUnit
 {
-    public class EnemyController : IEnemyController, IOnUpdate
+    public class EnemyController : IEnemyController
     {
         private readonly EnemyModel _model;
         private readonly EnemyView _view;
@@ -20,12 +20,12 @@ namespace EnemyUnit
             _model = model;
             _view = view;
 
-            _core = new EnemyCore(model, _view, target);
+            _core = new EnemyCore(_model, _view, target);
 
             _core.PlanRoute.OnComplete += OnPlaneRouteComplete;
 
             _statesHolder 
-                = new EnemyStatesHolder(model, animationController, _core);
+                = new EnemyStatesHolder(_model, animationController, _core);
         }
 
         private void OnPlaneRouteComplete(Damageable target)
@@ -48,6 +48,11 @@ namespace EnemyUnit
         public void OnUpdate(float deltaTime)
         {
             _statesHolder.OnUpdate(deltaTime);
+        }
+
+        public void OnFixedUpdate(float fixedDeltaTime)
+        {
+            
         }
     }
 }

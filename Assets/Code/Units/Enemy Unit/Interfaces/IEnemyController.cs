@@ -3,7 +3,7 @@ using System;
 
 namespace EnemyUnit.Interfaces
 {
-    public interface IEnemyController : IOnController, IDisposable
+    public interface IEnemyController : IOnController, IOnUpdate, IOnFixedUpdate, IDisposable
     {
 
     }
