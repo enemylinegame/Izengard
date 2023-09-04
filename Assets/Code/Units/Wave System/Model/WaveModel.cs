@@ -9,7 +9,7 @@ namespace WaveSystem.Model
         private readonly Queue<EnemyType> _waveUnits;
         public Queue<EnemyType> WaveUnits => _waveUnits;
 
-        public WaveModel() 
+        public WaveModel(WaveSettings settings) 
         {
 
         }

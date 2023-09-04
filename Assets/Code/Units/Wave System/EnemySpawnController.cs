@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using EnemyUnit;
 using EnemyUnit.Interfaces;
+using UnityEngine;
 using WaveSystem.View;
+using Object = UnityEngine.Object;
 
 namespace WaveSystem
 {
     public class EnemySpawnController : IOnUpdate, IOnFixedUpdate, IDisposable
     {
+        private readonly EnemySpawnView _spawnView;
         private readonly EnemyFactory _enemyFactory;
         private readonly EnemyPool _enemyPool;
 
@@ -15,11 +18,14 @@ namespace WaveSystem
 
         public EnemySpawnController(
             Damageable primaryTarget,
-            EnemySpawnView view, 
+            Transform spawnerPlacement,
+            EnemySpawnerSettings settings, 
             List<EnemyData> enemyDataList)
         {
+            _spawnView = Object.Instantiate(settings.SpawnerGO, spawnerPlacement, false);
+
             _enemyFactory = new EnemyFactory(primaryTarget);
-            _enemyPool = new EnemyPool(view.PoolHolder, _enemyFactory, enemyDataList);
+            _enemyPool = new EnemyPool(_spawnView.PoolHolder, _enemyFactory, enemyDataList);
         }
 
         public void SpawnEnemy(EnemyType enemyType)
@@ -53,6 +59,8 @@ namespace WaveSystem
             }
 
             _enemies.Clear();
+
+            Object.Destroy(_spawnView);
         }
     }
 }

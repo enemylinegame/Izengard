@@ -1,4 +1,5 @@
 ﻿using CombatSystem;
+using EnemyUnit.Core;
 using EnemyUnit.Interfaces;
 using UnityEngine;
 
@@ -33,23 +34,50 @@ namespace EnemyUnit
 
             var view = enemyObj.GetComponent<EnemyView>();
             var model = new EnemyModel(enemyData, _target);
+            var core = new EnemyCore(model, view, _target);
 
-            return new EnemyController(model, view, _target, _animationController);
+            var statesholder = new EnemyStatesHolder(model, _animationController, core);
+
+            return new EnemyController(model, view, core, statesholder);
         }
 
         public IEnemyController CreateArcher(EnemyData enemyData)
         {
-            throw new System.NotImplementedException();
+            var enemyObj = Object.Instantiate(enemyData.Prefab);
+
+            var view = enemyObj.GetComponent<EnemyView>();
+            var model = new EnemyModel(enemyData, _target);
+            //Доработать отдельно для Archer Enemy
+            var core = new EnemyCore(model, view, _target);
+            var statesholder = new EnemyStatesHolder(model, _animationController, core);
+
+            return new EnemyController(model, view, core, statesholder);
         }
 
         public IEnemyController CreateHound(EnemyData enemyData)
         {
-            throw new System.NotImplementedException();
+            var enemyObj = Object.Instantiate(enemyData.Prefab);
+
+            var view = enemyObj.GetComponent<EnemyView>();
+            var model = new EnemyModel(enemyData, _target);
+            //Доработать отдельно для Hound Enemy
+            var core = new EnemyCore(model, view, _target);
+            var statesholder = new EnemyStatesHolder(model, _animationController, core);
+
+            return new EnemyController(model, view, core, statesholder);
         }
 
         public IEnemyController CreateBoss(EnemyData enemyData)
         {
-            throw new System.NotImplementedException();
+            var enemyObj = Object.Instantiate(enemyData.Prefab);
+
+            var view = enemyObj.GetComponent<EnemyView>();
+            var model = new EnemyModel(enemyData, _target);
+            //Доработать отдельно для Boss Enemy
+            var core = new EnemyCore(model, view, _target);
+            var statesholder = new EnemyStatesHolder(model, _animationController, core);
+
+            return new EnemyController(model, view, core, statesholder);
         }
     }
 }

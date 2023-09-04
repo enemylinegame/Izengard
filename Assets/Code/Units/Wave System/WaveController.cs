@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using WaveSystem.Interfaces;
+using WaveSystem.Model;
 
 namespace WaveSystem
 {
@@ -10,14 +11,22 @@ namespace WaveSystem
             = new Dictionary<int, IWave>();
 
        // private readonly IWaveGathering _waveGathering;
-        private readonly EnemySpawnController _enemySpawnController;
+        private readonly EnemySpawnController _spawnController;
 
         private IWave _currentWave;
         public IWave CurrentWave => _currentWave;
 
-        public WaveController()
+        public WaveController(
+            List<WaveSettings> waveSettings, 
+            EnemySpawnController spawnController)
         {
-           
+            foreach(var waveData in waveSettings)
+            {
+                var waveModel = new WaveModel(waveData);
+                _wavesCollection[waveData.WaveIndex] = waveModel;
+            }
+
+            _spawnController = spawnController;
         }
 
         public void StartWave(int index)
@@ -26,7 +35,7 @@ namespace WaveSystem
 
             for(int i =0; i < wave.WaveUnits.Count; i++)
             {
-                _enemySpawnController.SpawnEnemy(wave.WaveUnits.Peek());
+                _spawnController.SpawnEnemy(wave.WaveUnits.Peek());
             }
 
             _currentWave = wave;
@@ -34,17 +43,17 @@ namespace WaveSystem
 
         public void OnUpdate(float deltaTime)
         {
-            _enemySpawnController.OnUpdate(deltaTime);
+            _spawnController.OnUpdate(deltaTime);
         }
 
         public void OnFixedUpdate(float fixedDeltaTime)
         {
-            _enemySpawnController.OnFixedUpdate(fixedDeltaTime);
+            _spawnController.OnFixedUpdate(fixedDeltaTime);
         }
 
         public void Dispose()
         {
-            _enemySpawnController?.Dispose();
+            _spawnController?.Dispose();
         }
     }
 }

@@ -7,5 +7,11 @@ namespace WaveSystem.View
         [SerializeField] private Transform _poolHolder;
 
         public Transform PoolHolder => _poolHolder;
+
+        private void Awake()
+        {
+            _poolHolder = transform;
+        }
+
     }
 }

@@ -14,18 +14,17 @@ namespace EnemyUnit
         public EnemyController(
             EnemyModel model, 
             EnemyView view,
-            Damageable target, 
-            IEnemyAnimationController animationController)
+            EnemyCore core,
+            EnemyStatesHolder statesHolder)
         {
             _model = model;
             _view = view;
 
-            _core = new EnemyCore(_model, _view, target);
+            _core = core;
 
             _core.PlanRoute.OnComplete += OnPlaneRouteComplete;
 
-            _statesHolder 
-                = new EnemyStatesHolder(_model, animationController, _core);
+            _statesHolder = statesHolder;
         }
 
         private void OnPlaneRouteComplete(Damageable target)
