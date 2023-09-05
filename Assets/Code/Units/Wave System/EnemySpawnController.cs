@@ -14,7 +14,7 @@ namespace WaveSystem
         private readonly EnemyFactory _enemyFactory;
         private readonly EnemyPool _enemyPool;
 
-        private List<IEnemyController> _enemies;
+        private Dictionary<int, IEnemyController> _enemies;
 
         public EnemySpawnController(
             Damageable primaryTarget,
@@ -32,14 +32,22 @@ namespace WaveSystem
         {
             var enemy = _enemyPool.GetFromPool(enemyType);
 
-            _enemies.Add(enemy);
+            _enemies[enemy.Index] = enemy;
+        }
+
+        public void OnEnemyDestroy(int enemyId) 
+        {
+            var enemy = _enemies[enemyId];
+
+            _enemyPool.ReturnToPool(enemy);
+            _enemies.Remove(enemyId);
         }
 
         public void OnUpdate(float deltaTime)
         {
             foreach(var enemy in _enemies)
             {
-                enemy.OnUpdate(deltaTime);
+                enemy.Value.OnUpdate(deltaTime);
             }
         }
 
@@ -47,7 +55,7 @@ namespace WaveSystem
         {
             foreach (var enemy in _enemies)
             {
-                enemy.OnFixedUpdate(fixedDeltaTime);
+                enemy.Value.OnFixedUpdate(fixedDeltaTime);
             }
         }
 
@@ -55,10 +63,12 @@ namespace WaveSystem
         {
             foreach (var enemy in _enemies)
             {
-                enemy?.Dispose();
+                enemy.Value?.Dispose();
             }
 
             _enemies.Clear();
+
+            _enemyPool?.Dispose();
 
             Object.Destroy(_spawnView);
         }

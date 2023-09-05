@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EnemyUnit.Interfaces;
 using UnityEngine;
 
 namespace EnemyUnit
 {
-    public class EnemyPool
+    public class EnemyPool : IDisposable
     {
         private readonly Queue<IEnemyController> _pool;
         private readonly Transform _poolGO;
@@ -59,6 +60,11 @@ namespace EnemyUnit
         public void ReturnToPool(IEnemyController enemy)
         {
             _pool.Enqueue(enemy);
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }

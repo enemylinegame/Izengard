@@ -10,6 +10,8 @@ namespace EnemyUnit
         private readonly Damageable _target;
         private readonly IEnemyAnimationController _animationController;
 
+        private int _enemyIndex = 0;
+
         public EnemyFactory(Damageable target)
         {
             _target = target;
@@ -25,6 +27,8 @@ namespace EnemyUnit
                 EnemyType.Boss => CreateBoss(enemyData),
                 _ => null,
             };
+
+            enemy.SetIndex(_enemyIndex++);
             return enemy;
         }
 

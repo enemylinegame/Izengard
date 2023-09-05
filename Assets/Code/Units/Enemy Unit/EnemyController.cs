@@ -1,4 +1,4 @@
-﻿using CombatSystem;
+﻿using System;
 using EnemyUnit.Core;
 using EnemyUnit.Interfaces;
 
@@ -10,7 +10,9 @@ namespace EnemyUnit
         private readonly EnemyView _view;
         private readonly EnemyCore _core;
         private readonly EnemyStatesHolder _statesHolder;
-    
+
+        public int Index { get; private set; }
+
         public EnemyController(
             EnemyModel model, 
             EnemyView view,
@@ -22,27 +24,34 @@ namespace EnemyUnit
 
             _core = core;
 
-            _core.PlanRoute.OnComplete += OnPlaneRouteComplete;
-
             _statesHolder = statesHolder;
+
+            _statesHolder.CurrentState.OnStateComplete += ChangeToNewState;
         }
 
-        private void OnPlaneRouteComplete(Damageable target)
+        private void ChangeToNewState(EnemyStateType state)
         {
-            if (target == null || target.IsDead)
+            _statesHolder.CurrentState.OnStateComplete -= ChangeToNewState;
+
+            switch (state)
             {
-                _statesHolder.ChangeState(EnemyStateType.SearchForTarget);
+                default:
+                    break;
+                case EnemyStateType.Idle:
+                    {
+                        _statesHolder.ChangeState(EnemyStateType.Move);
+                        break;
+                    }
+                case EnemyStateType.Move:
+                    {
+                        _statesHolder.ChangeState(EnemyStateType.SearchForTarget);
+                        break;
+                    }
             }
-            else
-            {
-                _statesHolder.ChangeState(EnemyStateType.Idle);
-            }
+
+            _statesHolder.CurrentState.OnStateComplete += ChangeToNewState;
         }
 
-        public void Dispose()
-        {
-            _statesHolder?.Dispose();
-        }
 
         public void OnUpdate(float deltaTime)
         {
@@ -51,7 +60,17 @@ namespace EnemyUnit
 
         public void OnFixedUpdate(float fixedDeltaTime)
         {
-            
+            _statesHolder.OnFixedUpdate(fixedDeltaTime);
+        }
+
+        public void SetIndex(int index) 
+            => Index = index;
+
+
+        public void Dispose()
+        {
+            _statesHolder.CurrentState.OnStateComplete -= ChangeToNewState;
+            _statesHolder?.Dispose();
         }
     }
 }

@@ -6,7 +6,7 @@ using EnemyUnit.EnemyStates;
 
 namespace EnemyUnit
 {
-    public class EnemyStatesHolder : IDisposable, IOnUpdate
+    public class EnemyStatesHolder : IDisposable, IOnUpdate, IOnFixedUpdate
     {
         private readonly Dictionary<EnemyStateType, EnemyBaseState> _enemyStates 
             = new Dictionary<EnemyStateType, EnemyBaseState>();
@@ -58,7 +58,12 @@ namespace EnemyUnit
 
         public void OnUpdate(float deltaTime)
         {
-            CurrentState.OnUpdate();
+            CurrentState.OnUpdate(deltaTime);
+        }
+
+        public void OnFixedUpdate(float fixedDeltaTime)
+        {
+            CurrentState.OnFixedUpdate(fixedDeltaTime);
         }
     }
 }

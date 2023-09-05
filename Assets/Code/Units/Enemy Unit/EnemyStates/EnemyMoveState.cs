@@ -30,16 +30,14 @@ namespace EnemyUnit.EnemyStates
             _planRoute.ClearTarget();
         }
 
-        public override void OnUpdate()
+        public override void OnUpdate(float deltaTime)
         {
 
         }
 
-        public override void OnFixedUpdate()
+        public override void OnFixedUpdate(float fixedDeltaTime)
         {
 
         }
-
-
     }
 }
