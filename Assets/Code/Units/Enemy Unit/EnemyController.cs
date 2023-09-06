@@ -11,6 +11,8 @@ namespace EnemyUnit
         private readonly EnemyCore _core;
         private readonly EnemyStatesHolder _statesHolder;
 
+        public event Action<int> OnDeath;
+
         public int Index { get; private set; }
 
         public EnemyController(
@@ -21,12 +23,21 @@ namespace EnemyUnit
         {
             _model = model;
             _view = view;
-
             _core = core;
-
             _statesHolder = statesHolder;
 
+            _view.OnTakeDamage += TakeDamage;
             _statesHolder.CurrentState.OnStateComplete += ChangeToNewState;
+        }
+
+        private void TakeDamage(int damageAmount)
+        {
+            _model.DecreaseHealth(damageAmount);
+            if (_model.CurrentHealth == 0)
+            {
+                ChangeToNewState(EnemyStateType.Dying);
+                OnDeath?.Invoke(Index);
+            }
         }
 
         private void ChangeToNewState(EnemyStateType state)

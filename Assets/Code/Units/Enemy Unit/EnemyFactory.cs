@@ -25,7 +25,7 @@ namespace EnemyUnit
                 EnemyType.Archer => CreateArcher(enemyData),
                 EnemyType.Hound => CreateHound(enemyData),
                 EnemyType.Boss => CreateBoss(enemyData),
-                _ => null,
+                _ => new StubEnemyController(),
             };
 
             enemy.SetIndex(_enemyIndex++);
@@ -37,7 +37,7 @@ namespace EnemyUnit
             var enemyObj = Object.Instantiate(enemyData.Prefab);
 
             var view = enemyObj.GetComponent<EnemyView>();
-            var model = new EnemyModel(enemyData, _target);
+            var model = new EnemyModel(enemyData);
             var core = new EnemyCore(model, view, _target);
 
             var statesholder = new EnemyStatesHolder(model, _animationController, core);
@@ -50,7 +50,7 @@ namespace EnemyUnit
             var enemyObj = Object.Instantiate(enemyData.Prefab);
 
             var view = enemyObj.GetComponent<EnemyView>();
-            var model = new EnemyModel(enemyData, _target);
+            var model = new EnemyModel(enemyData);
             //Доработать отдельно для Archer Enemy
             var core = new EnemyCore(model, view, _target);
             var statesholder = new EnemyStatesHolder(model, _animationController, core);
@@ -63,7 +63,7 @@ namespace EnemyUnit
             var enemyObj = Object.Instantiate(enemyData.Prefab);
 
             var view = enemyObj.GetComponent<EnemyView>();
-            var model = new EnemyModel(enemyData, _target);
+            var model = new EnemyModel(enemyData);
             //Доработать отдельно для Hound Enemy
             var core = new EnemyCore(model, view, _target);
             var statesholder = new EnemyStatesHolder(model, _animationController, core);
@@ -76,7 +76,7 @@ namespace EnemyUnit
             var enemyObj = Object.Instantiate(enemyData.Prefab);
 
             var view = enemyObj.GetComponent<EnemyView>();
-            var model = new EnemyModel(enemyData, _target);
+            var model = new EnemyModel(enemyData);
             //Доработать отдельно для Boss Enemy
             var core = new EnemyCore(model, view, _target);
             var statesholder = new EnemyStatesHolder(model, _animationController, core);

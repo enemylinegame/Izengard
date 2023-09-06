@@ -10,7 +10,6 @@ namespace WaveSystem
         private readonly Dictionary<int, IWave> _wavesCollection 
             = new Dictionary<int, IWave>();
 
-       // private readonly IWaveGathering _waveGathering;
         private readonly EnemySpawnController _spawnController;
 
         private IWave _currentWave;

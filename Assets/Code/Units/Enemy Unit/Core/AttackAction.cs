@@ -10,12 +10,17 @@ namespace EnemyUnit.Core
 
         private readonly IEnemyAnimationController _animation;
         private readonly EnemyModel _model;
+        private readonly EnemyView _view;
         private Damageable _currentTarget;
 
-        public AttackAction(EnemyModel model, IEnemyAnimationController animation)
+        public AttackAction(
+            EnemyModel model,
+            EnemyView view,
+            IEnemyAnimationController animation)
         {
-            _animation = animation;
             _model = model;
+            _view = view;
+            _animation = animation;
         }
 
         public void StartAction(Damageable target)
@@ -37,7 +42,7 @@ namespace EnemyUnit.Core
         {
             if (_currentTarget != null)
             {
-                _currentTarget.MakeDamage(_model.Stats.Attack, _model.MyDamagable);
+                _currentTarget.MakeDamage(_model.Stats.Attack, _view);
             }
             _animation.ActionMoment -= OnActionMoment;
         }

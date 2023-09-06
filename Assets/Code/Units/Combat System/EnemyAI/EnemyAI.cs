@@ -27,7 +27,10 @@ namespace CombatSystem
         public bool IsActionComplete { get; private set; }
 
 
-        public EnemyAI(Enemy unit, Damageable primaryTarget, IEnemyAnimationController animationController,
+        public EnemyAI(
+            Enemy unit, 
+            Damageable primaryTarget, 
+            IEnemyAnimationController animationController,
             IBulletsController bulletsController)
         {
             

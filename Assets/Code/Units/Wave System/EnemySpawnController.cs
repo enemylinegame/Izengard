@@ -31,14 +31,18 @@ namespace WaveSystem
         public void SpawnEnemy(EnemyType enemyType)
         {
             var enemy = _enemyPool.GetFromPool(enemyType);
-
+            
+            enemy.OnDeath += OnEnemyDestroy;
+            
             _enemies[enemy.Index] = enemy;
         }
 
         public void OnEnemyDestroy(int enemyId) 
         {
             var enemy = _enemies[enemyId];
-
+            
+            enemy.OnDeath -= OnEnemyDestroy;
+            
             _enemyPool.ReturnToPool(enemy);
             _enemies.Remove(enemyId);
         }

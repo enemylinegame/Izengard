@@ -72,7 +72,7 @@ namespace EnemyUnit.Core
             bullet.BulletFlightIsOver -= BulletFlightOver;
             if (_target != null)
             {
-                _target.MakeDamage(_model.Stats.Attack, _model.MyDamagable);
+                _target.MakeDamage(_model.Stats.Attack, _view);
             }
         }
     }
