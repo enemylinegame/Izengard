@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SpawnSystem;
 using WaveSystem.Interfaces;
 using WaveSystem.Model;
 
@@ -52,7 +53,9 @@ namespace WaveSystem
 
         public void Dispose()
         {
-            _spawnController?.Dispose();
+            _wavesCollection.Clear();
+
+           // _spawnController?.Dispose();
         }
     }
 }

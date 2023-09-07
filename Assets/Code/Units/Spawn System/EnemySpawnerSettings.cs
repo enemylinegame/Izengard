@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using WaveSystem.View;
 
-namespace WaveSystem
+namespace SpawnSystem
 {
     public class EnemySpawnerSettings : ScriptableObject
     {

@@ -6,7 +6,7 @@ using UnityEngine;
 using WaveSystem.View;
 using Object = UnityEngine.Object;
 
-namespace WaveSystem
+namespace SpawnSystem
 {
     public class EnemySpawnController : IOnUpdate, IOnFixedUpdate, IDisposable
     {
@@ -14,18 +14,23 @@ namespace WaveSystem
         private readonly EnemyFactory _enemyFactory;
         private readonly EnemyPool _enemyPool;
 
+        private readonly PosibleSpawnPointsFinder _pointsFinder;
+
         private Dictionary<int, IEnemyController> _enemies;
 
         public EnemySpawnController(
             Damageable primaryTarget,
             Transform spawnerPlacement,
             EnemySpawnerSettings settings, 
-            List<EnemyData> enemyDataList)
+            List<EnemyData> enemyDataList,
+            PosibleSpawnPointsFinder pointsFinder)
         {
             _spawnView = Object.Instantiate(settings.SpawnerGO, spawnerPlacement, false);
 
             _enemyFactory = new EnemyFactory(primaryTarget);
             _enemyPool = new EnemyPool(_spawnView.PoolHolder, _enemyFactory, enemyDataList);
+
+            _pointsFinder = pointsFinder;
         }
 
         public void SpawnEnemy(EnemyType enemyType)
@@ -33,6 +38,7 @@ namespace WaveSystem
             var enemy = _enemyPool.GetFromPool(enemyType);
             
             enemy.OnDeath += OnEnemyDestroy;
+
             
             _enemies[enemy.Index] = enemy;
         }

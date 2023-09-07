@@ -21,5 +21,8 @@ namespace EnemyUnit
 
         public void OnUpdate(float deltaTime) { }
         public void SetIndex(int index) { }
+
+        public void Init() { }
+        public void Disable() { }
     }
 }

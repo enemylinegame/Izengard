@@ -15,6 +15,11 @@ namespace EnemyUnit
 
         public event Action<int> OnTakeDamage;
 
+        public void SetActive(bool state) 
+        {
+            gameObject.SetActive(state);
+        }
+
         #region IDamageable
 
         public Vector3 Position => transform.position;

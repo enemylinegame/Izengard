@@ -10,5 +10,8 @@ namespace EnemyUnit.Interfaces
         event Action<int> OnDeath;
 
         void SetIndex(int index);
+
+        void Init();
+        void Disable();
     }
 }

@@ -83,5 +83,15 @@ namespace EnemyUnit
             _statesHolder.CurrentState.OnStateComplete -= ChangeToNewState;
             _statesHolder?.Dispose();
         }
+
+        public void Init()
+        {
+            _view.SetActive(true);
+        }
+
+        public void Disable()
+        {
+            _view.SetActive(false);
+        }
     }
 }
