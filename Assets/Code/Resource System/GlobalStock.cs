@@ -12,13 +12,13 @@ namespace ResourceSystem
 
         public event Action<ResourceType, int> ResourceValueChanged;
         
-        public GlobalStock(GlobalResourceData resourcesConfig, ResourcesPanelController resourcesPanelView)
+        public GlobalStock(ResourceList resourcesData, ResourcesPanelController resourcesPanelView)
         {
             _resourceHolders = new List<ResourceHolder>();
             
             ResourceValueChanged += resourcesPanelView.UpdateResursesCount;
 
-            InitHolders(resourcesConfig.ResourcesData);
+            InitHolders(resourcesData);
         }
 
 

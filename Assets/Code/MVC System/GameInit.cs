@@ -24,7 +24,7 @@ public class GameInit
         var keyInputController = new KeyInputController();
         var uiPanelInitialization = new UIPanelsInitialization(configs.UIElementsConfig, canvas, inputController);
         
-        var globalStock = new GlobalStock(configs.GlobalResourceData, uiPanelInitialization.ResourcesPanelController);
+        var globalStock = new GlobalStock(configs.GlobalResourceData.ResourcesData, uiPanelInitialization.ResourcesPanelController);
         var gameStateManager = new GameStateManager();
         var soundPlayer = new SoundPlayer(clickAudioSource);
         var levelGenerator = new GeneratorLevelController(tiles, configs, uiPanelInitialization.RightPanelController);
