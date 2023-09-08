@@ -24,7 +24,7 @@ public class GameInit
         var keyInputController = new KeyInputController();
         var uiPanelInitialization = new UIPanelsInitialization(configs.UIElementsConfig, canvas, inputController);
         
-        var globalStock = new GlobalStock(configs.GlobalResourceData, uiPanelInitialization.ResourcesPanelController);
+        var globalStock = new GlobalStock(configs.GlobalResourceData.ResourcesData, uiPanelInitialization.ResourcesPanelController);
         var gameStateManager = new GameStateManager();
         var soundPlayer = new SoundPlayer(clickAudioSource);
         var levelGenerator = new GeneratorLevelController(tiles, configs, uiPanelInitialization.RightPanelController);
@@ -77,5 +77,14 @@ public class GameInit
         controller.Add(keyInputController);
 
         gameStateManager.OnDisable += controller.OnDisable;
+
+        var initialResources = configs.GlobalResourceData.InitialResourceData.InitialResources;
+        foreach (var initResData in initialResources)
+        {
+            globalStock.AddResourceToStock(initResData.ResourceType, initResData.Amount);
+        }
+
+        // var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
+        // controller.Add(testDummyTargetController);
     }
 }

@@ -21,8 +21,12 @@ namespace Wave
         private readonly Damageable _damageable;
         private readonly EnemyTileDislocation _tileDislocation;
 
-        public EnemyController(EnemySettings enemySettings, GameObject enemyRootGo, BuildingFactory buildingFactory,
-            IEnemyAIController enemyAIController, IBulletsController bulletsController)
+        public EnemyController(
+            EnemySettings enemySettings, 
+            GameObject enemyRootGo, 
+            BuildingFactory buildingFactory,
+            IEnemyAIController enemyAIController, 
+            IBulletsController bulletsController)
         {
             _damageable = enemyRootGo.GetComponent<Damageable>();
             _damageable.OnDeath += KillEnemy;

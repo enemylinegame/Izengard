@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Code.UI;
 using ResourceSystem.SupportClases;
@@ -12,14 +12,13 @@ namespace ResourceSystem
 
         public event Action<ResourceType, int> ResourceValueChanged;
         
-        public GlobalStock(GlobalResourceData resourcesConfig, ResourcesPanelController resourcesPanelView)
+        public GlobalStock(ResourceList resourcesData, ResourcesPanelController resourcesPanelView)
         {
             _resourceHolders = new List<ResourceHolder>();
             
             ResourceValueChanged += resourcesPanelView.UpdateResursesCount;
 
-            InitHolders(resourcesConfig.ResourcesData);
-            SetupInitalValues(resourcesConfig.InitialResourceData);
+            InitHolders(resourcesData);
         }
 
 
@@ -34,15 +33,6 @@ namespace ResourceSystem
                 }
                 ResourceHolder resourceHolder  = new ResourceHolder(resourceConfig.ResourceType,resourceConfig.MaxHoldedAmount);
                 _resourceHolders.Add(resourceHolder);
-            }
-        }
-
-
-        private void SetupInitalValues(InitialResourcesList initialResourceData)
-        {
-            foreach (var resData in initialResourceData.InitialResources) 
-            {
-                AddResourceToStock(resData.ResourceType, resData.Amount);
             }
         }
 

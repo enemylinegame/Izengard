@@ -3,6 +3,10 @@ namespace CombatSystem
     public enum AnimationType
     {
         None,
-        Attack
+        Idle,
+        Move,
+        Attack,
+        AttackRange,
+        Dying
     }
 }

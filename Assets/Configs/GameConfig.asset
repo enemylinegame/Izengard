@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 249e43f2dda143a695f75c287a87e61c, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: 
+  _mapSizeX: 400
+  _mapSizeY: 400
+  _tilePrefabs:
+  - {fileID: 2005405932157645919, guid: 48de6ae8042425a48833fd2dd558f6c8, type: 3}
+  - {fileID: -6104903246962966021, guid: ee29be7304bc0dc499261176c0615f8e, type: 3}
+  - {fileID: 5422724862020434414, guid: 3ab4f4b1ac8d769459501f42fe40ef79, type: 3}
+  - {fileID: 2721923189129941066, guid: e3b1ee9e8283fec4f8bac985fa5bef5e, type: 3}
+  - {fileID: 3199305888566885066, guid: 0814f5f2d4853ff4eb09835848737599, type: 3}
+  - {fileID: 6941335300236840142, guid: 83b8c3d40a2879841a2e013763ff8a8a, type: 3}
+  - {fileID: 880350099617488053, guid: 06d7e02786bf9114b91f5d9da0270dc5, type: 3}
+  - {fileID: 6107794650344137409, guid: 74f847636c52c0f4c92704a0d1948623, type: 3}
+  - {fileID: 6579931382245792856, guid: 5bfff929440313d4db5b0b7dc1eee4a7, type: 3}
+  - {fileID: 2207685555743648068, guid: 27cd86a72d95ed842aebfe8be9103e23, type: 3}
+  - {fileID: -6135819058454172838, guid: 8c5f872f0957c03419aaa20dcfa83e9f, type: 3}
+  _mainTowerConfig: {fileID: 11400000, guid: 460132edf173fd6408ce3b2ddd92e1f2, type: 2}
+  _baseUnit: {fileID: 4278957194176336866, guid: 327741d9696b557489e748f8da1d9f0e, type: 3}
+  _enemy: {fileID: 4278957194176336866, guid: 197f399d8a7e9a84b8e0484ec8604a32, type: 3}
+  _Res: {fileID: 3316622248634499761, guid: 0684f1b41578b3e48bc45237074efaf4, type: 3}
+  _resTopUI: {fileID: 8521839903881444847, guid: 35c7e10c98ef5b748a4f39e94b7c4cff, type: 3}
+  _buildFirst: {fileID: 1173469307, guid: 17bebd10d20903d4e9afe753a32c4787, type: 3}
+  _buildSecond: {fileID: 1173469307, guid: 83d904b6bf3982e4392967f84e8eb5f5, type: 3}
+  _firstTile: {fileID: 2005405932157645919, guid: 48de6ae8042425a48833fd2dd558f6c8, type: 3}
+  _secondTile: {fileID: -6104903246962966021, guid: ee29be7304bc0dc499261176c0615f8e, type: 3}
+  _thirdTile: {fileID: 5422724862020434414, guid: 3ab4f4b1ac8d769459501f42fe40ef79, type: 3}
+  _prefabWarehouse: {fileID: 7792856555819872173, guid: b6337cf5402de7640a955740aa72a575, type: 3}
+  _buttonSpawn: {fileID: 1890798190433461583, guid: afe3a8195de216545bd67505a19d8e36, type: 3}
+  _buttonSetterView: {fileID: 2079979781873304754, guid: 5f4f2f018a163fd44ba9f72ebb68e2b4, type: 3}
+  _bullet: {fileID: 1295366321784566, guid: 13aec0437ee03504aba6ded25ea4d73b, type: 3}
+  _battlePhaseConfig: {fileID: 11400000, guid: e521de4186ce38d4296627abbc4789f9, type: 2}
+  _mineralConfigs: {fileID: 11400000, guid: aee47a174ae38e4429f5f8dd82872994, type: 2}
+  _phasesSettings: {fileID: 11400000, guid: d613a0173244f7b4a867ac750cbc234f, type: 2}
+  _defendersSet: {fileID: 11400000, guid: b8cf27d0ec028a547b4e5f2e94882386, type: 2}
+  _gameResourceData: {fileID: 11400000, guid: dd801d0d2bc2cab40a6492c4aba5cd12, type: 2}
+  _tearOneWeightVariantNik: 0.75
+  _tearTwoWeightVariantNik: 0.23
+  _tearThirdWeightVariantNik: 0.02
+  _changeVariant: 0
+  _tearOneWeightSecondVariant: 0.75
+  _tearTwoWeightSecondVariant: 0.49
+  _tearThirdWeightSecondVariant: 0.02
+  _annotation: "\u0415\u0441\u043B\u0438 \u0432s\u043A\u043B\u044E\u0447\u0435\u043D\u043E,
+    \u0442\u043E \u0432\u0430\u0440\u0438\u0430\u043D\u0442 \u041D\u0438\u043A\u043E\u043B\u0430\u044F
+    \u0438 \u0441\u0443\u043C\u043C\u0430 \u0432\u0435\u0441\u043E\u0432 \u0434\u043E\u043B\u0436\u043D\u0430
+    \u0440\u0430\u0432\u043D\u044F\u0442\u044C\u0441\u044F 1, \u0435\u0441\u043B\u0438
+    \u0432\u043A\u043B\u044E\u0447\u0435\u043D\u043E, \u0442\u043E \u0432\u0430\u0440\u0438\u0430\u043D\u0442
+    \u0418\u043E\u0430\u043D\u043D\u0430,  1 - \u0441\u0443\u043C\u043C\u0430 \u0432\u0441\u0435\u0445
+    \u0432\u0435\u0441\u043E\u0432 = \u0432\u0435\u0440\u043E\u044F\u0442\u043D\u043E\u0441\u0442\u0438
+    \u0441\u043F\u0430\u0432\u043D\u0430 \u043F\u0443\u0441\u0442\u043E\u0442\u044B"
+  _prescriptionsStorage: {fileID: 11400000, guid: 7c39cd56705294040bc557f1f63c6470, type: 2}
+  TestBuilding: {fileID: 8048208380929675822, guid: 3d12417f0311adc4a8dc6decc7d50a6a, type: 3}
