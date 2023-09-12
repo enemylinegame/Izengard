@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c510f78d3e1014e8c06b52fcea9775, type: 3}
   m_Name: UIElementsConfig
   m_EditorClassIdentifier: 
-  <RightPanel>k__BackingField: {fileID: 889132803011412061, guid: 9b8418457783bd944b73b4510f5449b6, type: 3}
-  <TopPanel>k__BackingField: {fileID: 1024144746860032916, guid: 1963c7758963acc43a662956f8d9ca27, type: 3}
-  <LeftPanel>k__BackingField: {fileID: 7326298312310819474, guid: 4cfdc78d0eb5bea4c90a86db0fa7bd2d, type: 3}
-  <BottonPanel>k__BackingField: {fileID: 1647890524003939111, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
-  <CenterPanel>k__BackingField: {fileID: 1142824412881604353, guid: 51228ba2fec261c41a7326bc9e86653e, type: 3}
+  <RightPanel>k__BackingField: {fileID: 1933180708247635372, guid: 9b8418457783bd944b73b4510f5449b6, type: 3}
+  <TopPanel>k__BackingField: {fileID: 9129501528145861951, guid: 1963c7758963acc43a662956f8d9ca27, type: 3}
+  <LeftPanel>k__BackingField: {fileID: 3714778555259536714, guid: 4cfdc78d0eb5bea4c90a86db0fa7bd2d, type: 3}
+  <BottonPanel>k__BackingField: {fileID: 3569349974757524581, guid: e4f2b7ca4e771b046892d1e251e2aa0b, type: 3}
+  <CenterPanel>k__BackingField: {fileID: 1855493623134295293, guid: 51228ba2fec261c41a7326bc9e86653e, type: 3}
   <MarketPanel>k__BackingField: {fileID: 535509944781465265, guid: a6d68d52de0e79e458d078e05dcd7405, type: 3}
-  <EndGameScreenPanel>k__BackingField: {fileID: 3794030719732621188, guid: 86e4b7730a371ee45947cdf994918285, type: 3}
-  <InGameMenu>k__BackingField: {fileID: 1551367843627212298, guid: 106481dcccaf3a747a512ffb8ee2beba, type: 3}
+  <EndGameScreenPanel>k__BackingField: {fileID: 3773342578803163552, guid: 86e4b7730a371ee45947cdf994918285, type: 3}
+  <InGameMenu>k__BackingField: {fileID: 2241909659742790527, guid: 106481dcccaf3a747a512ffb8ee2beba, type: 3}
