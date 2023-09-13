@@ -1,21 +1,26 @@
 using System;
+using CombatSystem;
 using UnityEngine;
-using Wave;
 
-namespace CombatSystem
+namespace EnemyUnit.Core
 {
     public class AttackAction : MonoBehaviour, IAction<Damageable>
     {
         public event Action<Damageable> OnComplete;
 
         private readonly IEnemyAnimationController _animation;
-        private readonly Enemy _unit;
+        private readonly EnemyModel _model;
+        private readonly EnemyView _view;
         private Damageable _currentTarget;
 
-        public AttackAction(IEnemyAnimationController animation, Enemy unit)
+        public AttackAction(
+            EnemyModel model,
+            EnemyView view,
+            IEnemyAnimationController animation)
         {
+            _model = model;
+            _view = view;
             _animation = animation;
-            _unit = unit;
         }
 
         public void StartAction(Damageable target)
@@ -37,7 +42,7 @@ namespace CombatSystem
         {
             if (_currentTarget != null)
             {
-                _currentTarget.MakeDamage(_unit.Stats.Attack, _unit.MyDamagable);
+                _currentTarget.MakeDamage(_model.Stats.Attack, _view);
             }
             _animation.ActionMoment -= OnActionMoment;
         }

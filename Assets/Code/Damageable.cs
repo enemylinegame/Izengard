@@ -33,9 +33,6 @@ public class Damageable : MonoBehaviour, IHealthHolder, IDamageable
     
     public Animator animator;
 
-
-  
-
     public void Init(int maxHealth, int maxAttackers = 1)
     {
         CurrentHealth = maxHealth;
