@@ -3,7 +3,7 @@
 public sealed class TimeRemaining: ITimeRemaining
 {
 
-    private Action _method;
+    private readonly Action _method;
     
     
     #region ITimeRemaining
@@ -32,6 +32,7 @@ public sealed class TimeRemaining: ITimeRemaining
 
     public void ChangeDuration(float newDuration)
     {
+        TimeLeft += (newDuration - Duration);
         Duration = newDuration;
     }
 
@@ -72,6 +73,7 @@ public sealed class TimeRemaining<T>: ITimeRemaining
 
     public void ChangeDuration(float newDuration)
     {
+        TimeLeft += (newDuration - Duration);
         Duration = newDuration;
     }
 
