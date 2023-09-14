@@ -1,14 +1,21 @@
+using Izengard.Damage;
 using Izengard.Units.Data;
 
 namespace Izengard.Units 
 {
     public class UnitModel : IUnit
     {
+        private const int ARMOR_REDUCE_ÑOEF = 2;
+
         private readonly IUnitData _data;
         private readonly UnitDefenceModel _defenceModel;
+        private readonly UnitOffenceModel _offenceModel;
 
+        private UnitFactionType _faction;
         private int _currentHealth;
         private int _currentArmor;
+
+        public UnitFactionType Faction => _faction;
 
         public int CurrentHealth
         {
@@ -56,6 +63,7 @@ namespace Izengard.Units
             _currentArmor = data.ArmorPoints;
 
             _defenceModel = new UnitDefenceModel(data.DefenceData);
+            _offenceModel = new UnitOffenceModel(data.OffenceData);
         }
 
 
@@ -74,18 +82,23 @@ namespace Izengard.Units
             CurrentArmor -= amount;
         }
 
-        public void TakeDamage(IUnitDamageData damageValue)
+        public void TakeDamage(IUnitDamage damageValue)
         {
             var damageAmount
                 = _defenceModel.GetAfterDefDamage(damageValue);
 
             if (CurrentArmor != 0)
             {
-                damageAmount /= 2;
+                damageAmount /= ARMOR_REDUCE_ÑOEF;
                 CurrentArmor--;
             }
 
             DecreaseHealth(damageAmount);
+        }
+
+        public IUnitDamage GetAttackDamage()
+        {
+            return _offenceModel.GetDamage();
         }
     }
 }

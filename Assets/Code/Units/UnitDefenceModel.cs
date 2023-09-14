@@ -1,4 +1,5 @@
-﻿using Izengard.Units.Data;
+﻿using Izengard.Damage;
+using Izengard.Units.Data;
 using UnityEngine;
 
 namespace Izengard.Units
@@ -16,7 +17,7 @@ namespace Izengard.Units
             _data = data;
         }
 
-        public int GetAfterDefDamage(IUnitDamageData damageData)
+        public int GetAfterDefDamage(IUnitDamage damageData)
         {
             var resultDamage = 0;
 
@@ -36,7 +37,7 @@ namespace Izengard.Units
             return result;
         }
 
-        private int ApplyDefence(IUnitDamageData damageData)
+        private int ApplyDefence(IUnitDamage damageData)
         {
             int result = 0;
 

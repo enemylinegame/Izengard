@@ -1,4 +1,4 @@
-﻿namespace Izengard
+﻿namespace Izengard.Damage
 {
     public interface IDamageable<T>
     {

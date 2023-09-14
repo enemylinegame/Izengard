@@ -1,9 +1,11 @@
-﻿using Izengard.Units.Data;
+﻿using Izengard.Damage;
+using Izengard.Units.Data;
 
 namespace Izengard.Units
 {
-    public interface IUnit : IDamageable<IUnitDamageData>
+    public interface IUnit : IDamageable<IUnitDamage>, IDamageDealer<IUnitDamage>
     {
+        UnitFactionType Faction { get; }
         int CurrentHealth { get; }
         int CurrentArmor { get; }
 
