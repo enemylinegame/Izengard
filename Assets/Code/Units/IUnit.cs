@@ -1,6 +1,8 @@
-﻿namespace Units
+﻿using Izengard.Units.Data;
+
+namespace Izengard.Units
 {
-    public interface IUnit
+    public interface IUnit : IDamageable<IUnitDamageData>
     {
         int CurrentHealth { get; }
         int CurrentArmor { get; }

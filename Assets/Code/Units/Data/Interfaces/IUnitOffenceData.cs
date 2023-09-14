@@ -1,4 +1,4 @@
-﻿namespace Units.Data
+﻿namespace Izengard.Units.Data
 {
     public interface IUnitOffenceData
     {

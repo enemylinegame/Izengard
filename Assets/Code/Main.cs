@@ -1,9 +1,12 @@
 using UnityEngine;
 
-public class Main : MonoBehaviour
+namespace Izengard 
 {
-    private void Start()
+    public class Main : MonoBehaviour
     {
-        
+        private void Start()
+        {
+
+        }
     }
 }

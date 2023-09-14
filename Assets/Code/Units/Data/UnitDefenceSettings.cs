@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Units.Data
+namespace Izengard.Units.Data
 {
     [CreateAssetMenu(fileName = nameof(UnitDefenceSettings), menuName = "UnitsData/" + nameof(UnitDefenceSettings))]
     public class UnitDefenceSettings : ScriptableObject, IUnitDefenceData

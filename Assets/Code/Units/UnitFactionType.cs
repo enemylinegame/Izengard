@@ -1,4 +1,4 @@
-﻿namespace Units
+﻿namespace Izengard.Units
 {
     public enum UnitFactionType
     {

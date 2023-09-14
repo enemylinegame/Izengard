@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Units.Data
+namespace Izengard.Units.Data
 {
     [Serializable]
     public class ShieldData : IUnitShieldData

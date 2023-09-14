@@ -1,6 +1,6 @@
-using Units.Data;
+using Izengard.Units.Data;
 
-namespace Units 
+namespace Izengard.Units 
 {
     public class UnitModel : IUnit
     {
@@ -28,6 +28,7 @@ namespace Units
                 }
             }
         }       
+
         public int CurrentArmor
         {
             get => _currentArmor;
@@ -65,22 +66,26 @@ namespace Units
 
         public void DecreaseHealth(int amount)
         {
-            var resultAmount = amount;
-
-            resultAmount 
-                = _defenceModel.GetCutDefenceDamage(resultAmount);
-
-            if (CurrentArmor != 0)
-            {
-                resultAmount /= 2;
-            }
-
-            CurrentHealth -= resultAmount;
+            CurrentHealth -= amount;
         }
 
         public void DecreaseArmor(int amount)
         {
             CurrentArmor -= amount;
+        }
+
+        public void TakeDamage(IUnitDamageData damageValue)
+        {
+            var damageAmount
+                = _defenceModel.GetAfterDefDamage(damageValue);
+
+            if (CurrentArmor != 0)
+            {
+                damageAmount /= 2;
+                CurrentArmor--;
+            }
+
+            DecreaseHealth(damageAmount);
         }
     }
 }
