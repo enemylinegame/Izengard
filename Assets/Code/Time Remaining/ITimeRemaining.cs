@@ -2,7 +2,8 @@
     {
         bool IsRepeating { get; } 
         float Duration { get; }
-        float TimeLeft { get; set; }
+        float TimeLeft { get; }
         void Invoke();
+        void ChangeRemainingTime(float time);
     }
     

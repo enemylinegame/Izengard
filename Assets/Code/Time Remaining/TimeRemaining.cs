@@ -1,6 +1,6 @@
 ﻿using System;
 
-public sealed class TimeRemaining: ITimeRemaining
+public class TimeRemaining: ITimeRemaining
 {
 
     private readonly Action _method;
@@ -12,11 +12,16 @@ public sealed class TimeRemaining: ITimeRemaining
 
     public float Duration { get; private set; }
     
-    public float TimeLeft { get; set; }
+    public float TimeLeft { get; private set; }
 
-    public void Invoke()
+    public virtual void Invoke()
     {
         _method?.Invoke();
+    }
+
+    public void ChangeRemainingTime(float time)
+    {
+        TimeLeft = time;
     }
     
     #endregion
@@ -38,43 +43,23 @@ public sealed class TimeRemaining: ITimeRemaining
 
 }
 
-public sealed class TimeRemaining<T>: ITimeRemaining
+public sealed class TimeRemaining<T>: TimeRemaining
 {
 
     private readonly Action<T> _method;
 
-    private T _data;
+    private readonly T _data;
     
-
-    #region ITimeRemaining
-
-    public bool IsRepeating { get; }
-
-    public float Duration { get; private set; }
-    
-    public float TimeLeft { get; set; }
-
-    public void Invoke()
+    public override void Invoke()
     {
         _method?.Invoke(_data);
     }
 
-    #endregion
-
-
-    public TimeRemaining(Action<T> method, T data, float duration, bool isRepeating = false)
+    public TimeRemaining(Action<T> method, T data, float duration, bool isRepeating = false) 
+    : base(null, duration, isRepeating)
     {
         _method = method;
         _data = data;
-        Duration = duration;
-        TimeLeft = duration;
-        IsRepeating = isRepeating;
-    }
-
-    public void ChangeDuration(float newDuration)
-    {
-        TimeLeft += (newDuration - Duration);
-        Duration = newDuration;
     }
 
 }
