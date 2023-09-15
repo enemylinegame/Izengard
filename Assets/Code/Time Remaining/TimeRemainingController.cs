@@ -6,11 +6,7 @@
         
         public void Dispose()
         {
-            for (int i = TimersHolder.Timers.Count - 1; i >= 0; i--)
-            {
-                ITimeRemaining timer = TimersHolder.Timers[i];
-                TimersHolder.RemoveTimer(timer);
-            }
+            TimersHolder.Clear();
         }
         
         #region IExecute
