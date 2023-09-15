@@ -14,6 +14,7 @@ public static class TimersHolder
         {
             if (!_timers.Contains(timer) && !_pausedTimers.Contains(timer) )
             {
+                timer.ChangeRemainingTime(timer.Duration);
                 _timers.Add(timer);
             }
         }
