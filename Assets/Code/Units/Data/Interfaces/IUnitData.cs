@@ -3,6 +3,7 @@
     public interface IUnitData
     {
         UnitFactionType Faction { get; }
+        UnitType Type { get; }
 
         int HealthPoints { get; }
         int ArmorPoints { get; }
