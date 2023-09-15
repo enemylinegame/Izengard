@@ -9,22 +9,39 @@ namespace Izengard.Units
         private const float CRIT_BASE_SCALE = 1f;
         private const float DAMAGE_SCALE_COEF = 2f;
 
-        private readonly IUnitOffenceData _data;
+        private float _attackSpeed;
+        private float _meleeAttackReach;
+        private float _rangedAttackMinRange;
+        private float _rangedAttackMaxRange;
+       
+        private float _criticalChance;
+        private IUnitDamageData _damageData;
+
+        public float AttackSpeed => _attackSpeed;
+        public float MeleeAttackReach => _meleeAttackReach;
+        public float RangedAttackMinRange => _rangedAttackMinRange;
+        public float RangedAttackMaxRange => _rangedAttackMaxRange;
 
         public UnitOffenceModel(IUnitOffenceData data)
         {
-            _data = data;
+            _attackSpeed = data.AttackSpeed;
+            _meleeAttackReach = data.MeleeAttackReach;
+            _rangedAttackMinRange = data.RangedAttackMinRange;
+            _rangedAttackMaxRange = data.RangedAttackMaxRange;
+            
+            _criticalChance = data.CriticalChance;
+            _damageData = data.DamageData;
         }
 
         public IUnitDamage GetDamage()
         {
-            var critScale = GetCritScacle(_data.CriticalChance);
+            var critScale = GetCritScacle(_criticalChance);
 
             var result = new UnitDamageModel
             {
-                BaseDamage = _data.DamageData.BaseDamage * critScale,
-                FireDamage = _data.DamageData.FireDamage * critScale,
-                ColdDamage = _data.DamageData.ColdDamage * critScale
+                BaseDamage = _damageData.BaseDamage * critScale,
+                FireDamage = _damageData.FireDamage * critScale,
+                ColdDamage = _damageData.ColdDamage * critScale
             };
 
             return result;

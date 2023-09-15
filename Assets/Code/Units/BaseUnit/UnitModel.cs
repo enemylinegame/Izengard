@@ -6,8 +6,14 @@ namespace Izengard.Units
 {
     public class UnitModel : IUnit
     {
+        #region Consts
+
         private const int ARMOR_REDUCE_ÑOEF = 2;
         private const int ARMOR_LOSE_POINT  = 1;
+
+        #endregion
+
+        #region Private Field
 
         private readonly ObjectTransformModel _transformModel;
         
@@ -23,6 +29,10 @@ namespace Izengard.Units
         private UnitDefenceModel _defenceModel;
         private UnitOffenceModel _offenceModel;
 
+        #endregion
+
+        #region Public Property
+
         public ObjectTransformModel TransformModel => _transformModel;
         
         public UnitFactionType Faction => _faction;
@@ -37,6 +47,8 @@ namespace Izengard.Units
         public ParametrModel<float> Speed => _speed;
 
         public ParametrModel<float> DetectionRange => _detectionRange;
+
+        #endregion
 
         public UnitModel(ObjectTransformModel transformModel, IUnitData data) 
         {
