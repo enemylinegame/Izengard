@@ -1,30 +1,58 @@
 ﻿using System;
-using Izengard.Abstraction.Interfaces;
 using Izengard.UnitSystem.View;
 using UnityEngine;
 
 namespace Izengard.UnitSystem
 {
-    public class UnitHandler : 
-        IDamageable<UnitDamage>, 
-        IDamageDealer<UnitDamage>, 
-        IPositioned<Vector3>, 
-        IRotated<Vector3>,
-        IDisposable
+    public class UnitHandler : IUnit, IDisposable
     {
         private readonly BaseUnitView _view;
-        private readonly IUnit _untiModel;
+        private readonly UnitModel _untiModel;
 
-        public UnitHandler(BaseUnitView view, IUnit unitModel)
+        private int _index;
+        public int Index => _index;
+
+        public UnitHandler(
+            int index,
+            BaseUnitView view, 
+            UnitModel unitModel)
         {
+            _index = index;
+
             _view = 
                 view ?? throw new ArgumentNullException(nameof(view));
 
             _untiModel = 
                 unitModel ?? throw new ArgumentNullException(nameof(unitModel));
+        }
 
+        public void Enable()
+        {
             Subscribe();
         }
+
+        private void Subscribe()
+        {
+            _untiModel.Health.OnValueChange += _view.ChangeHealth;
+            _untiModel.Size.OnValueChange += _view.ChangeSize;
+
+            _untiModel.Defence.ArmorPoints.OnValueChange += _view.ChangeArmor;
+        }
+
+        public void Disable()
+        {
+            Unsubscribe();
+        }
+
+        private void Unsubscribe()
+        {
+            _untiModel.Health.OnValueChange -= _view.ChangeHealth;
+            _untiModel.Size.OnValueChange -= _view.ChangeSize;
+
+            _untiModel.Defence.ArmorPoints.OnValueChange -= _view.ChangeArmor;
+        }
+
+        #region IDamageable
 
         public void TakeDamage(UnitDamage damageValue)
         {
@@ -35,10 +63,18 @@ namespace Izengard.UnitSystem
             _untiModel.Health.SetValue(hpLost);
         }
 
+        #endregion
+
+        #region IDamageDealer
+
         public UnitDamage GetAttackDamage()
         {
             return _untiModel.Offence.GetDamage();
         }
+
+        #endregion
+
+        #region IPositioned
 
         public Vector3 GetPosition()
         {
@@ -49,6 +85,10 @@ namespace Izengard.UnitSystem
         {
             _view.SelfTransform.position = pos;
         }
+
+        #endregion
+
+        #region IRotated
 
         public Vector3 GetRatation()
         {
@@ -62,25 +102,22 @@ namespace Izengard.UnitSystem
             _view.SelfTransform.rotation = newRotation;
         }
 
+        #endregion
+
+        #region IDisposable
+
+        private bool _disposed = false;
+
         public void Dispose()
         {
-            Unsubscribe();
+            if (_disposed)
+                return;
+
+            Disable();
+
+            _disposed = true;
         }
 
-        private void Subscribe()
-        {
-            _untiModel.Health.OnValueChange += _view.ChangeHealth;
-            _untiModel.Size.OnValueChange += _view.ChangeSize;
-
-            _untiModel.Defence.ArmorPoints.OnValueChange += _view.ChangeArmor;
-        }
-
-        private void Unsubscribe() 
-        {
-            _untiModel.Health.OnValueChange -= _view.ChangeHealth;
-            _untiModel.Size.OnValueChange -= _view.ChangeSize;
-
-            _untiModel.Defence.ArmorPoints.OnValueChange -= _view.ChangeArmor;
-        }
+        #endregion
     }
 }

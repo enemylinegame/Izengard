@@ -1,20 +1,18 @@
 ﻿using Izengard.Abstraction.Interfaces;
-using Izengard.UnitSystem.Enum;
+using UnityEngine;
 
 namespace Izengard.UnitSystem
 {
-    public interface IUnit
+    public interface IUnit : 
+        IDamageable<UnitDamage>, 
+        IDamageDealer<UnitDamage>, 
+        IPositioned<Vector3>, 
+        IRotated<Vector3>
     {
-        UnitFactionType Faction { get; }
-        UnitType Type { get; }
+        int Index { get; }
 
-        IParametr<int> Health { get; }
-        IParametr<float> Size { get; }
-        IParametr<float> Speed { get; }
-        IParametr<float> DetectionRange { get; }
+        void Enable();
 
-        IUnitDefence Defence { get; }
-        IUnitOffence Offence { get; }
-
+        void Disable();
     }
 }

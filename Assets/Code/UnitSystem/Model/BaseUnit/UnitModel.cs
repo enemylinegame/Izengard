@@ -4,7 +4,7 @@ using Izengard.UnitSystem.Enum;
 
 namespace Izengard.UnitSystem 
 {
-    public class UnitModel : IUnit
+    public class UnitModel 
     {
         #region Private Field
         
