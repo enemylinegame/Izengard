@@ -27,7 +27,10 @@ namespace CombatSystem
         public bool IsActionComplete { get; private set; }
 
 
-        public EnemyAI(Enemy unit, Damageable primaryTarget, IEnemyAnimationController animationController,
+        public EnemyAI(
+            Enemy unit, 
+            Damageable primaryTarget, 
+            IEnemyAnimationController animationController,
             IBulletsController bulletsController)
         {
             
@@ -43,11 +46,8 @@ namespace CombatSystem
             animator = unit.MyDamagable.GetComponent<Animator>(); //аниматор
 
             if (unit.Type == EnemyType.Archer)
-            {
-                
+            {                
                 _attack = new RangedAttackAction(bulletsController, unit);
-               
-
             }
             else
             {
@@ -186,7 +186,6 @@ namespace CombatSystem
         {
             _currentTarget = _primaryTarget;
             _actionList.ForEach(action => action.ClearTarget());
-            
         }
 
         private void DrawLineToTarget()
