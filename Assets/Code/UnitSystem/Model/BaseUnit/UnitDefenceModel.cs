@@ -1,18 +1,29 @@
 ﻿using Izengard.Abstraction.Interfaces;
 using Izengard.Tools;
-using Izengard.UnitSystem.Data;
 using UnityEngine;
 
 namespace Izengard.UnitSystem
 {
     public class UnitDefenceModel : IUnitDefence
     {
+        #region Consts
+
+        private const int ARMOR_REDUCE_COEF = 2;
+        private const int ARMOR_LOSE_POINT = 1;
+
+        #endregion
+
         private readonly IUnitDefenceData _defenceData;
+
+        private readonly IParametr<int> _armorPoints;
 
         private readonly IParametr<int> _baseShieldPoints;
         private readonly IParametr<int> _fireShieldPoints;
         private readonly IParametr<int> _coldShieldPoints;
-        
+
+        private readonly float _evadeChance;
+        private readonly IUnitResistanceData _unitResistance;
+
         public IUnitDefenceData DefenceData => _defenceData;
 
         public IParametr<int> BaseShieldPoints => _baseShieldPoints;
@@ -21,16 +32,24 @@ namespace Izengard.UnitSystem
 
         public IParametr<int> ColdShieldPoints => _coldShieldPoints;
 
+        public IParametr<int> ArmorPoints => _armorPoints;
+
         public UnitDefenceModel(IUnitDefenceData defenceData)
         {
             _defenceData = defenceData;
 
+            _evadeChance = _defenceData.EvadeChance;
+
+            _armorPoints = 
+                new ParametrModel<int>(_defenceData.ArmorPoints, 0, int.MaxValue);
             _baseShieldPoints = 
                 new ParametrModel<int>(_defenceData.ShieldData.BaseShieldPoints, 0, int.MaxValue);
             _fireShieldPoints =
                   new ParametrModel<int>(_defenceData.ShieldData.FireShieldPoints, 0, int.MaxValue);
             _coldShieldPoints =
                 new ParametrModel<int>(_defenceData.ShieldData.ColdShieldPoints, 0, int.MaxValue);
+
+            _unitResistance = _defenceData.ResistData;
         }
 
         public int GetAfterDefDamage(UnitDamage damageData)
@@ -49,33 +68,35 @@ namespace Izengard.UnitSystem
 
         private bool IsEvaded()
         {
-            var result = Random.Range(0, 101) >= _defenceData.EvadeChance;
+            var result = Random.Range(0, 101) >= _evadeChance;
             return result;
         }
 
         private int ApplyDefence(UnitDamage damageData)
         {
-            int result = 0;
+            int resultDamage = 0;
 
             if (CheckShield(_baseShieldPoints) == false)
             {
-                result +=
-                    (int)(damageData.BaseDamage * (1 / _defenceData.ResistData.BaseDamageResist));
+                resultDamage +=
+                    (int)(damageData.BaseDamage * (1 / _unitResistance.BaseDamageResist));
             }
 
             if (CheckShield(_fireShieldPoints) == false)
             {
-                result +=
-                    (int)(damageData.FireDamage * (1 / _defenceData.ResistData.FireDamageResist));
+                resultDamage +=
+                    (int)(damageData.FireDamage * (1 / _unitResistance.FireDamageResist));
             }
 
             if (CheckShield(_coldShieldPoints) == false)
             {
-                result +=
-                  (int)(damageData.ColdDamage * (1 / _defenceData.ResistData.ColdDamageResist));
+                resultDamage +=
+                  (int)(damageData.ColdDamage * (1 / _unitResistance.ColdDamageResist));
             }
 
-            return result;
+            resultDamage = UseArmor(resultDamage);
+
+            return resultDamage;
         }
 
         private bool CheckShield(IParametr<int> shield)
@@ -87,6 +108,20 @@ namespace Izengard.UnitSystem
                 return true;
             }
             return false;
+        }
+
+        private int UseArmor(int innerDamage)
+        {
+            int resultDamage = innerDamage;
+            var armorPoints = _armorPoints.GetValue();
+            if (armorPoints != 0)
+            {
+                resultDamage /= ARMOR_REDUCE_COEF;
+                var armoLost = armorPoints - ARMOR_LOSE_POINT;
+                _armorPoints.SetValue(armoLost);
+            }
+
+            return resultDamage;
         }
     }
 }
