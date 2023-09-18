@@ -7,7 +7,7 @@ namespace Izengard.Units
     {
         #region Consts
 
-        private const int ARMOR_REDUCE_ÑOEF = 2;
+        private const int ARMOR_REDUCE_COEF = 2;
         private const int ARMOR_LOSE_POINT  = 1;
 
         #endregion
@@ -83,7 +83,7 @@ namespace Izengard.Units
             var armorPoints = _armor.GetValue();
             if (armorPoints != 0)
             {
-                resultDamageAmount /= ARMOR_REDUCE_ÑOEF;
+                resultDamageAmount /= ARMOR_REDUCE_COEF;
                 var armoLost = armorPoints - ARMOR_LOSE_POINT;
                 _armor.SetValue(armoLost);
             }
