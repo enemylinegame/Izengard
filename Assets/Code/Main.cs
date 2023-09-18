@@ -1,8 +1,8 @@
-using Izengard.Units;
-using Izengard.Units.Data;
+using Izengard.UnitSystem;
+using Izengard.UnitSystem.Data;
 using UnityEngine;
 
-namespace Izengard 
+namespace Izengard
 {
     public class Main : MonoBehaviour
     {
