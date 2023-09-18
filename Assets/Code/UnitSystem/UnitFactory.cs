@@ -13,7 +13,7 @@ namespace Izengard.UnitSystem
             {
                 UnitFactionType.Enemy => CreateEnemy(unitData),
                 UnitFactionType.Defender => CreateDefender(unitData),
-                _ => new StubUnitModel(unitData, "StubUnitModel was created!. Check Unit Configs")
+                _ => new StubUnit("StubUnitModel was created!. Check Unit Configs")
             };
 
             return unit;
@@ -22,13 +22,13 @@ namespace Izengard.UnitSystem
         private IUnit CreateEnemy(IUnitData unitData)
         {
             Debug.Log("Create Enemy");
-            return new StubUnitModel(unitData, "StubUnitModel was created!. Check UnitFactory");
+            return new StubUnit("StubUnitModel was created!. Check UnitFactory");
         }
 
         private IUnit CreateDefender(IUnitData unitData)
         {
             Debug.Log("Create Defender");
-            return new StubUnitModel(unitData, "StubUnitModel was created!. Check UnitFactory");
+            return new StubUnit("StubUnitModel was created!. Check UnitFactory");
         }
     }
 }
