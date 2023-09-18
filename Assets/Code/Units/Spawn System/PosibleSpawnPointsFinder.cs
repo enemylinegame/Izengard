@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Code.TileSystem;
 using SpawnSystem.Interfaces;
 using UnityEngine;
 
@@ -8,14 +9,14 @@ namespace SpawnSystem
     public class PosibleSpawnPointsFinder : IPosibleSpawnPointsFinder, IDisposable
     {
         private const float SPAWN_OFFSET = 1.2f;
-        private readonly GeneratorLevelController _levelGenerator;
+        private readonly TileGenerator _levelGenerator;
 
 
         private List<Vector3> _posibleSpawnPoints;
         public IReadOnlyDictionary<Vector2Int, VoxelTile> _spawnedTiles;
 
 
-        public PosibleSpawnPointsFinder(GeneratorLevelController levelGenerator)
+        public PosibleSpawnPointsFinder(TileGenerator levelGenerator)
         {
             _levelGenerator = levelGenerator;
             _spawnedTiles = _levelGenerator.SpawnedTiles;
@@ -28,7 +29,7 @@ namespace SpawnSystem
             return _posibleSpawnPoints;
         }
 
-        public void OnNewTileInstantiated(VoxelTile tile)
+        public void OnNewTileInstantiated(VoxelTile tile, TileModel model)
         {
             SetPosibleSpawnPoints();
         }
