@@ -16,9 +16,8 @@ MonoBehaviour:
   _mainStats:
     _type: 0
     _healthPoints: 100
-    _armorPoints: 20
-    _size: 1
-    _speed: 1
+    _size: 0.8
+    _speed: 3
     _detectionRange: 5
   _defenceData: {fileID: 11400000, guid: 5d4809701c671e24c82af218f7824f6b, type: 2}
   _offenceData: {fileID: 11400000, guid: 82ea6ca7a735bbf449c4d18037484498, type: 2}
