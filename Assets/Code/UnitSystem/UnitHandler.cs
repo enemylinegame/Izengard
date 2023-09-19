@@ -1,20 +1,23 @@
 ﻿using System;
-using Izengard.UnitSystem.View;
 using UnityEngine;
 
 namespace Izengard.UnitSystem
 {
     public class UnitHandler : IUnit, IDisposable
     {
-        private readonly BaseUnitView _view;
+        private readonly IUnitView _view;
         private readonly UnitModel _untiModel;
 
         private int _index;
         public int Index => _index;
 
+        public IUnitView View => _view;
+
+        public UnitModel Model => _untiModel;
+
         public UnitHandler(
             int index,
-            BaseUnitView view, 
+            IUnitView view, 
             UnitModel unitModel)
         {
             _index = index;
@@ -29,26 +32,35 @@ namespace Izengard.UnitSystem
         public void Enable()
         {
             Subscribe();
+
+            _view.Show();
+
+            _view.ChangeHealth(_untiModel.Health.GetValue());
+            _view.ChangeSize(_untiModel.Size.GetValue());
+            _view.ChangeSpeed(_untiModel.Speed.GetValue());
+            _view.ChangeArmor(_untiModel.Defence.ArmorPoints.GetValue());
         }
 
         private void Subscribe()
         {
             _untiModel.Health.OnValueChange += _view.ChangeHealth;
             _untiModel.Size.OnValueChange += _view.ChangeSize;
-
+            _untiModel.Speed.OnValueChange += _view.ChangeSpeed;
             _untiModel.Defence.ArmorPoints.OnValueChange += _view.ChangeArmor;
         }
 
         public void Disable()
         {
             Unsubscribe();
+
+            _view.Hide();
         }
 
         private void Unsubscribe()
         {
             _untiModel.Health.OnValueChange -= _view.ChangeHealth;
             _untiModel.Size.OnValueChange -= _view.ChangeSize;
-
+            _untiModel.Speed.OnValueChange -= _view.ChangeSpeed;
             _untiModel.Defence.ArmorPoints.OnValueChange -= _view.ChangeArmor;
         }
 

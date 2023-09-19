@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Izengard.UnitSystem.View;
+using UnityEngine;
 
 namespace Izengard.UnitSystem
 {
@@ -6,8 +7,13 @@ namespace Izengard.UnitSystem
     {
         public int Index => -1;
 
+        public IUnitView View { get; private set; }
+
+        public UnitModel Model { get; private set; }
+
         public StubUnit(string logMessage)
         {
+            View = new StubUnitView();
             Debug.LogWarning(logMessage);
         }
 
