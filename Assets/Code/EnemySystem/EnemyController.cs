@@ -24,6 +24,18 @@ namespace Izengard.EnemySystem
 
             _unit.Enable();
 
+            var navigationState = SetupNavigation();
+            if(navigationState == true)
+            {
+                MoveToTarget(_primaryTarget);
+            }
+        }
+
+        private bool SetupNavigation()
+        {
+            if (_unit.View.UnitNavigation == null)
+                return false;
+
             _unit.View.UnitNavigation.enabled = true;
 
             if (_unit.View.UnitNavigation.isOnNavMesh)
@@ -33,9 +45,8 @@ namespace Izengard.EnemySystem
 
             _unit.View.UnitNavigation.Warp(unitPos);
 
-            MoveToTarget(_primaryTarget);
+            return true;
         }
-
 
         private void MoveToTarget(Vector3 target)
         {

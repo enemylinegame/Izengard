@@ -1,5 +1,4 @@
 ﻿using Izengard.UnitSystem.View;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -30,7 +29,11 @@ namespace Izengard.EnemySystem
         public override void ChangeSpeed(float speedValue)
         {
             Debug.Log($"{_name}[Speed] = {speedValue}");
-            UnitNavigation.speed = speedValue;
+
+            if (UnitNavigation)
+            {
+                UnitNavigation.speed = speedValue;
+            }
         }
 
         protected override void OnSetTransform()
