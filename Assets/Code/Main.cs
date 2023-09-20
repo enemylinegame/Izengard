@@ -1,4 +1,5 @@
 using Izengard.EnemySystem;
+using Izengard.Tools.Navigation;
 using Izengard.UnitSystem;
 using Izengard.UnitSystem.Data;
 using Izengard.UnitSystem.View;
@@ -11,13 +12,18 @@ namespace Izengard
         [SerializeField] private UnitSettings _unitSettings;
         [SerializeField] private BaseUnitView _unitView;
         [SerializeField] private Transform _mainTower;
+        [SerializeField] private NavigationSurfaceView _groundSurface;
 
         private UnitFactory _unitFactory;
 
+        private NavigationUpdater _navigationUpdater;
         private EnemyController _enemyController;
 
         private void Start()
         {
+            _navigationUpdater = new NavigationUpdater();
+            _navigationUpdater.AddNavigationSurface(_groundSurface);
+
             var unitDefence = new UnitDefenceModel(_unitSettings.DefenceData);
             var unitOffence = new UnitOffenceModel(_unitSettings.OffenceData);
             
