@@ -1,3 +1,4 @@
+using Code.UI;
 using UnityEngine;
 
 namespace Configs
@@ -6,5 +7,6 @@ namespace Configs
     public class ConfigsHolder : ScriptableObject
     {
         [field: SerializeField] public PrefabsHolder PrefabsHolder { get; set; }
+        [field: SerializeField] public UIElementsConfig UIElementsConfig { get; set; }
     }
 }
