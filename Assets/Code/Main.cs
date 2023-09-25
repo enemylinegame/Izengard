@@ -14,7 +14,7 @@ namespace Izengard
         [SerializeField] private NavigationSurfaceView _groundSurface;
 
         private NavigationUpdater _navigationUpdater;
-        private SpawnController _enemySpawnController;
+        private EnemySpawnController _enemySpawnController;
 
         private List<IOnUpdate> _onUpdates = new List<IOnUpdate>();
         private List<IOnFixedUpdate> _onFixedUpdates = new List<IOnFixedUpdate>();
@@ -24,7 +24,7 @@ namespace Izengard
             _navigationUpdater = new NavigationUpdater();
             _navigationUpdater.AddNavigationSurface(_groundSurface);
 
-            _enemySpawnController = new SpawnController(_enemySpawnPoints, _enemySpawnSettings);
+            _enemySpawnController = new EnemySpawnController(_enemySpawnPoints, _enemySpawnSettings);
             
             foreach(var unit in _enemySpawnController.SpawnedUnits)
             {

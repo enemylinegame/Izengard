@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using Izengard.EnemySystem;
 using Izengard.UnitSystem;
 using UnityEngine;
 
 namespace Izengard.SpawnSystem
 {
-    public class SpawnController : IOnController, IOnUpdate
+    public class EnemySpawnController : IOnController, IOnUpdate
     {
         private readonly List<Transform> _spawnPoints = new List<Transform>();
 
@@ -14,7 +15,7 @@ namespace Izengard.SpawnSystem
 
         public List<IUnit> SpawnedUnits => _spawnedUnits;
 
-        public SpawnController(List<Transform> spawnPoints, SpawnSettings spawnSettings)
+        public EnemySpawnController(List<Transform> spawnPoints, SpawnSettings spawnSettings)
         {
             foreach(var spawnPoint in spawnPoints)
             {
@@ -56,7 +57,9 @@ namespace Izengard.SpawnSystem
                 unitDefence,
                 unitOffence);
 
-            var unitHandler = new UnitHandler(_spawnIndex++, view, model);
+            var navigation = new EnemyNavigationModel(view.UnitNavigation, view.SelfTransform.position);
+
+            var unitHandler = new UnitHandler(_spawnIndex++, view, model, navigation);
 
             return unitHandler;
         }

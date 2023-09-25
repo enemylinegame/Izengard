@@ -1,4 +1,5 @@
-﻿using Izengard.UnitSystem.View;
+﻿using Izengard.Abstraction.Interfaces;
+using Izengard.UnitSystem.View;
 using UnityEngine;
 
 namespace Izengard.UnitSystem
@@ -10,6 +11,8 @@ namespace Izengard.UnitSystem
         public IUnitView View { get; private set; }
 
         public UnitModel Model { get; private set; }
+
+        public INavigation<Vector3> Navigation { get; }
 
         public StubUnit(string logMessage)
         {

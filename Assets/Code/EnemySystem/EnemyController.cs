@@ -33,37 +33,14 @@ namespace Izengard.EnemySystem
 
             _currentTarget = _primaryTarget;
 
-            var navigationState = SetupNavigation();
-            if(navigationState == true)
-            {
-                MoveToTarget(_currentTarget);
-            }
-        }
-
-        private bool SetupNavigation()
-        {
-            if (_unit.View.UnitNavigation == null)
-                return false;
-
-            _unit.View.UnitNavigation.enabled = true;
-
-            if (_unit.View.UnitNavigation.isOnNavMesh)
-                _unit.View.UnitNavigation.ResetPath();
-
-            var unitPos = _unit.GetPosition();
-
-            _unit.View.UnitNavigation.Warp(unitPos);
-
-            return true;
+            _unit.Navigation.Enable();
+            MoveToTarget(_currentTarget);
         }
 
         private void MoveToTarget(Vector3 target)
         {
-            if (_unit.View.UnitNavigation.isOnNavMesh)
-            {
-                _unit.View.UnitNavigation.SetDestination(target);
-                _isMove = true;
-            }
+            _unit.Navigation.MoveTo(_currentTarget);
+            _isMove = true;
         }
 
         public void OnUpdate(float deltaTime)
@@ -81,11 +58,8 @@ namespace Izengard.EnemySystem
             {
                 if (CheckStopDistance(_currentTarget) == true)
                 {
-                    if (_unit.View.UnitNavigation.isOnNavMesh)
-                    {
-                        _unit.View.UnitNavigation.ResetPath();
-                        _isMove = false;
-                    }
+                    _unit.Navigation.Stop();
+                    _isMove = false;
                 }
             }
         }

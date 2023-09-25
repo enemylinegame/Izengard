@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Izengard.Abstraction.Interfaces;
+using System;
 using UnityEngine;
 
 namespace Izengard.UnitSystem
@@ -7,6 +8,7 @@ namespace Izengard.UnitSystem
     {
         private readonly IUnitView _view;
         private readonly UnitModel _model;
+        private readonly INavigation<Vector3> _navigation;
 
         private int _id;
         public int Id => _id;
@@ -15,10 +17,13 @@ namespace Izengard.UnitSystem
 
         public UnitModel Model => _model;
 
+        public INavigation<Vector3> Navigation => _navigation;
+
         public UnitHandler(
             int index,
             IUnitView view, 
-            UnitModel unitModel)
+            UnitModel unitModel,
+            INavigation<Vector3> navigation)
         {
             _id = index;
 
@@ -27,6 +32,10 @@ namespace Izengard.UnitSystem
 
             _model = 
                 unitModel ?? throw new ArgumentNullException(nameof(unitModel));
+
+            _navigation = 
+                navigation ?? throw new ArgumentNullException(nameof(navigation));
+
         }
 
         public void Enable()
@@ -52,6 +61,8 @@ namespace Izengard.UnitSystem
             Unsubscribe();
 
             _view.Hide();
+
+            _navigation.Disable();
         }
 
         private void Unsubscribe()

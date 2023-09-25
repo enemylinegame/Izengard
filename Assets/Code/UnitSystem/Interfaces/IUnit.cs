@@ -13,6 +13,8 @@ namespace Izengard.UnitSystem
 
         UnitModel Model { get; }
 
+        INavigation<Vector3> Navigation { get; }
+
         int Id { get; }
 
         void Enable();

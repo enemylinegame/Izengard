@@ -24,20 +24,15 @@ namespace Izengard.UnitSystem.View
 
         private void Awake()
         {
-            Hide();
-        }
-
-        private void OnEnable()
-        {
             OnSetTransform();
             OnSetUnitNavigation();
             OnSetUnitAnimator();
+
+            Hide();
         }
 
         protected abstract void OnSetTransform();
         protected abstract void OnSetUnitNavigation();
         protected abstract void OnSetUnitAnimator();
-
-    
     }
 }
