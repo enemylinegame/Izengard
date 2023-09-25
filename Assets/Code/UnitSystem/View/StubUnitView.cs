@@ -2,8 +2,6 @@
 {
     public class StubUnitView : BaseUnitView
     {
-        public override void ChangeArmor(int armorValue) { }
-
         public override void ChangeHealth(int hpValue) { }
 
         public override void ChangeSize(float sizeValue) { }

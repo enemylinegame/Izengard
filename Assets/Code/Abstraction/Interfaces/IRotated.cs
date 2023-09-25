@@ -2,7 +2,7 @@
 {
     public interface IRotated<TValue>
     {
-        TValue GetRatation();
+        TValue GetRotation();
         void SetRotation(TValue rot);
     }
 }

@@ -5,7 +5,7 @@ namespace Izengard.UnitSystem
 {
     public class StubUnit : IUnit
     {
-        public int Index => -1;
+        public int Id => -1;
 
         public IUnitView View { get; private set; }
 
@@ -38,7 +38,7 @@ namespace Izengard.UnitSystem
         }
         public void SetPosition(Vector3 pos) { }
 
-        public Vector3 GetRatation()
+        public Vector3 GetRotation()
         {
             return Vector3.zero;
         }

@@ -14,7 +14,6 @@ namespace Izengard.UnitSystem
         void Hide();
         void ChangeHealth(int hpValue);
         void ChangeSize(float sizeValue);
-        void ChangeArmor(int armorValue);
         void ChangeSpeed(float speedValue);
     }
 }

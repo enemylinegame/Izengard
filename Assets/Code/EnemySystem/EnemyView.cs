@@ -10,11 +10,6 @@ namespace Izengard.EnemySystem
         [SerializeField] private NavMeshAgent _enemyNavMesh;
         [SerializeField] private Animator _enemyAnimtor;
 
-        public override void ChangeArmor(int armorValue)
-        {
-            Debug.Log($"{_name}[Armor] = {armorValue}");
-        }
-
         public override void ChangeHealth(int hpValue)
         {
             Debug.Log($"{_name}[Helth] = {hpValue}");
@@ -43,12 +38,12 @@ namespace Izengard.EnemySystem
 
         protected override void OnSetUnitAnimator()
         {
-            _unitNavigation ??= _enemyNavMesh;
+            _unitAnimator ??= _enemyAnimtor;
         }
 
         protected override void OnSetUnitNavigation()
         {
-            _unitAnimator ??= _enemyAnimtor;
+            _unitNavigation ??= _enemyNavMesh;
         }
     }
 }

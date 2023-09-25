@@ -20,7 +20,6 @@ namespace Izengard.UnitSystem.View
 
         public abstract void ChangeHealth(int hpValue);
         public abstract void ChangeSize(float sizeValue);
-        public abstract void ChangeArmor(int armorValue);
         public abstract void ChangeSpeed(float speedValue);
 
         private void Awake()

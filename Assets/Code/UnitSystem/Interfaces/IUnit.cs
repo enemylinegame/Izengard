@@ -1,5 +1,4 @@
 ﻿using Izengard.Abstraction.Interfaces;
-using Izengard.UnitSystem.View;
 using UnityEngine;
 
 namespace Izengard.UnitSystem
@@ -14,7 +13,7 @@ namespace Izengard.UnitSystem
 
         UnitModel Model { get; }
 
-        int Index { get; }
+        int Id { get; }
 
         void Enable();
 

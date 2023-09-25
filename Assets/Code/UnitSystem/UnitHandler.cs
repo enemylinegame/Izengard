@@ -6,26 +6,26 @@ namespace Izengard.UnitSystem
     public class UnitHandler : IUnit, IDisposable
     {
         private readonly IUnitView _view;
-        private readonly UnitModel _untiModel;
+        private readonly UnitModel _model;
 
-        private int _index;
-        public int Index => _index;
+        private int _id;
+        public int Id => _id;
 
         public IUnitView View => _view;
 
-        public UnitModel Model => _untiModel;
+        public UnitModel Model => _model;
 
         public UnitHandler(
             int index,
             IUnitView view, 
             UnitModel unitModel)
         {
-            _index = index;
+            _id = index;
 
             _view = 
                 view ?? throw new ArgumentNullException(nameof(view));
 
-            _untiModel = 
+            _model = 
                 unitModel ?? throw new ArgumentNullException(nameof(unitModel));
         }
 
@@ -35,18 +35,16 @@ namespace Izengard.UnitSystem
 
             _view.Show();
 
-            _view.ChangeHealth(_untiModel.Health.GetValue());
-            _view.ChangeSize(_untiModel.Size.GetValue());
-            _view.ChangeSpeed(_untiModel.Speed.GetValue());
-            _view.ChangeArmor(_untiModel.Defence.ArmorPoints.GetValue());
+            _view.ChangeHealth(_model.Health.GetValue());
+            _view.ChangeSize(_model.Size.GetValue());
+            _view.ChangeSpeed(_model.Speed.GetValue());
         }
 
         private void Subscribe()
         {
-            _untiModel.Health.OnValueChange += _view.ChangeHealth;
-            _untiModel.Size.OnValueChange += _view.ChangeSize;
-            _untiModel.Speed.OnValueChange += _view.ChangeSpeed;
-            _untiModel.Defence.ArmorPoints.OnValueChange += _view.ChangeArmor;
+            _model.Health.OnValueChange += _view.ChangeHealth;
+            _model.Size.OnValueChange += _view.ChangeSize;
+            _model.Speed.OnValueChange += _view.ChangeSpeed;
         }
 
         public void Disable()
@@ -58,10 +56,9 @@ namespace Izengard.UnitSystem
 
         private void Unsubscribe()
         {
-            _untiModel.Health.OnValueChange -= _view.ChangeHealth;
-            _untiModel.Size.OnValueChange -= _view.ChangeSize;
-            _untiModel.Speed.OnValueChange -= _view.ChangeSpeed;
-            _untiModel.Defence.ArmorPoints.OnValueChange -= _view.ChangeArmor;
+            _model.Health.OnValueChange -= _view.ChangeHealth;
+            _model.Size.OnValueChange -= _view.ChangeSize;
+            _model.Speed.OnValueChange -= _view.ChangeSpeed;
         }
 
         #region IDamageable
@@ -69,10 +66,10 @@ namespace Izengard.UnitSystem
         public void TakeDamage(UnitDamage damageValue)
         {
             var resultDamageAmount
-                = _untiModel.Defence.GetAfterDefDamage(damageValue);
+                = _model.Defence.GetAfterDefDamage(damageValue);
 
-            var hpLost = _untiModel.Health.GetValue() - resultDamageAmount;
-            _untiModel.Health.SetValue(hpLost);
+            var hpLost = _model.Health.GetValue() - resultDamageAmount;
+            _model.Health.SetValue(hpLost);
         }
 
         #endregion
@@ -81,7 +78,7 @@ namespace Izengard.UnitSystem
 
         public UnitDamage GetAttackDamage()
         {
-            return _untiModel.Offence.GetDamage();
+            return _model.Offence.GetDamage();
         }
 
         #endregion
@@ -102,7 +99,7 @@ namespace Izengard.UnitSystem
 
         #region IRotated
 
-        public Vector3 GetRatation()
+        public Vector3 GetRotation()
         {
             var angleVector = _view.SelfTransform.rotation.eulerAngles;
             return angleVector;
