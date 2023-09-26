@@ -15,8 +15,8 @@ GameObject:
   - component: {fileID: 168241047001392406}
   - component: {fileID: 168241047001392405}
   - component: {fileID: 168241047001392404}
-  m_Layer: 0
-  m_Name: EnemyPrefab
+  m_Layer: 8
+  m_Name: EnemyMeleePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

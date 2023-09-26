@@ -1,34 +1,38 @@
 ﻿using UnityEngine;
 using Izengard.UnitSystem.Enum;
+using Izengard.UnitSystem.Data;
+using System.Collections.Generic;
 
 namespace Izengard.UnitSystem
 {
-    public class UnitFactory
+    public abstract class UnitFactory
     {
-        public UnitFactory() { }
+        protected readonly Dictionary<UnitType, GameObject> unitObjectsData;
 
-        public IUnit CreateUnit(IUnitData unitData)
+        public UnitFactory(List<UnitCreationData> unitCreationDatas) 
         {
-            var unit = unitData.Faction switch
+            unitObjectsData = new Dictionary<UnitType, GameObject>();
+
+            for (int i = 0; i < unitCreationDatas.Count; i++) 
             {
-                UnitFactionType.Enemy => CreateEnemy(unitData),
-                UnitFactionType.Defender => CreateDefender(unitData),
+                var unitType = unitCreationDatas[i].UnitSettings.StatsData.Type;
+                unitObjectsData[unitType] = unitCreationDatas[i].UnitPrefab;
+            }
+        }
+
+        public IUnit CreateUnit(IUnitData unitData) 
+        {
+            var unit = unitData.StatsData.Type switch
+            {
+                UnitType.Melee => CreateMeleeUnit(unitData),
+                UnitType.Range => CreateRangeUnit(unitData),
                 _ => new StubUnit("StubUnitModel was created!. Check Unit Configs")
             };
 
             return unit;
         }
 
-        private IUnit CreateEnemy(IUnitData unitData)
-        {
-            Debug.Log("Create Enemy");
-            return new StubUnit("StubUnitModel was created!. Check UnitFactory");
-        }
-
-        private IUnit CreateDefender(IUnitData unitData)
-        {
-            Debug.Log("Create Defender");
-            return new StubUnit("StubUnitModel was created!. Check UnitFactory");
-        }
+        public abstract IUnit CreateMeleeUnit(IUnitData unitData);
+        public abstract IUnit CreateRangeUnit(IUnitData unitData);
     }
 }

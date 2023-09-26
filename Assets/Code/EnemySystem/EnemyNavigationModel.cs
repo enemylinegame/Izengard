@@ -24,7 +24,7 @@ namespace Izengard.EnemySystem
             if (_navMesh.isOnNavMesh)
                 _navMesh.ResetPath();
 
-            _navMesh.Warp(_initPos);
+            //_navMesh.Warp(_initPos);
         }
 
         public void Disable()

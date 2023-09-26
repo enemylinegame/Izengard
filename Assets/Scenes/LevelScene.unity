@@ -18868,7 +18868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mainTower: {fileID: 1859384420}
-  _enemySpawnSettings: {fileID: 11400000, guid: ef87ceaa6f504ad48ba93be6a8498779, type: 2}
+  _enemySpawnSettings: {fileID: 11400000, guid: b526b66d7bbebbb4ca21a33cd981d162, type: 2}
   _enemySpawnPoints:
   - {fileID: 1956836826}
   - {fileID: 1388228243}
