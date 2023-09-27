@@ -1,55 +1,57 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Izengard.EnemySystem;
 using Izengard.UnitSystem;
+using Izengard.UnitSystem.Enum;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Izengard.SpawnSystem
 {
     public class EnemySpawnController : IOnController, IOnUpdate
     {
+        private readonly Dictionary<UnitType, IUnitData> _unitSpawnDataCollection = new();
+
         private readonly UnitFactory _factory;
         private readonly List<Transform> _spawnPoints = new List<Transform>();
-        private readonly List<IUnit> _spawnedUnits;
 
-        public List<IUnit> SpawnedUnits => _spawnedUnits;
+        public event Action<IUnit> OnUnitSpawned;
 
         public EnemySpawnController(
-            List<Transform> spawnPoints, 
+            List<Transform> spawnPoints,
             SpawnSettings spawnSettings)
         {
+
+            _factory = new EnemyUnitFactory(spawnSettings.UnitsCreationData);
+
+            foreach (var creationData in spawnSettings.UnitsCreationData)
+            {
+                var unitData = creationData.UnitSettings;
+                _unitSpawnDataCollection[unitData.StatsData.Type] = unitData;
+            }
+
             foreach (var spawnPoint in spawnPoints)
             {
                 _spawnPoints.Add(spawnPoint);
             }
+        }
 
-            _factory = new EnemyUnitFactory(spawnSettings.UnitsCreationData);
+        public void SpawnUnit(UnitType unitType)
+        {
+            var unit = _factory.CreateUnit(_unitSpawnDataCollection[unitType]);
 
-            _spawnedUnits = new List<IUnit>();
+            var spawnIndex = Random.Range(0, _spawnPoints.Count);
+            var spwanPosition = _spawnPoints[spawnIndex].position;
 
-            foreach (var creationData in spawnSettings.UnitsCreationData)
-            {
-                var spawnIndex = Random.Range(0, _spawnPoints.Count);
-                var spwanPosition = _spawnPoints[spawnIndex].position;
-                var unit = SpawnUnit(creationData.UnitSettings, spwanPosition);
+            unit.SetPosition(spwanPosition);
 
-                _spawnedUnits.Add(unit);
-            }
+            OnUnitSpawned?.Invoke(unit);
         }
 
 
         public void OnUpdate(float deltaTime)
         {
-            
-        }
 
-        public IUnit SpawnUnit(IUnitData unitData, Vector3 spawnPos)
-        {
-            var unit = _factory.CreateUnit(unitData);
-
-            unit.SetPosition(spawnPos);
-           // unit.SetRotation(Vector3.forward);
-
-            return unit;
         }
     }
 }

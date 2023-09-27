@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using Izengard.EnemySystem;
 using Izengard.SpawnSystem;
 using Izengard.Tools.Navigation;
+using Izengard.UnitSystem;
+using Izengard.UnitSystem.Enum;
 using UnityEngine;
 
 namespace Izengard
@@ -25,15 +27,21 @@ namespace Izengard
             _navigationUpdater.AddNavigationSurface(_groundSurface);
 
             _enemySpawnController = new EnemySpawnController(_enemySpawnPoints, _enemySpawnSettings);
-            
-            foreach(var unit in _enemySpawnController.SpawnedUnits)
-            {
-                var enemyController = new EnemyController(unit, _mainTower.position);
-                enemyController.Enable();
+            _enemySpawnController.OnUnitSpawned += OnUnitCreated;
 
-                _onUpdates.Add(enemyController);
-                _onFixedUpdates.Add(enemyController);
-            }
+            _enemySpawnController.SpawnUnit(UnitType.Melee);
+            _enemySpawnController.SpawnUnit(UnitType.Range);
+            _enemySpawnController.SpawnUnit(UnitType.Range);
+            _enemySpawnController.SpawnUnit(UnitType.Range);
+        }
+
+        private void OnUnitCreated(IUnit unit) 
+        {
+            var enemyController = new EnemyController(unit, _mainTower.position);
+            enemyController.Enable();
+
+            _onUpdates.Add(enemyController);
+            _onFixedUpdates.Add(enemyController);
         }
 
         private void Update()
