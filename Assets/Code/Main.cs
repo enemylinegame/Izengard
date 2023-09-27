@@ -30,8 +30,7 @@ namespace Izengard
             _enemySpawnController.OnUnitSpawned += OnUnitCreated;
 
             _enemySpawnController.SpawnUnit(UnitType.Melee);
-            _enemySpawnController.SpawnUnit(UnitType.Range);
-            _enemySpawnController.SpawnUnit(UnitType.Range);
+            _enemySpawnController.SpawnUnit(UnitType.Melee);
             _enemySpawnController.SpawnUnit(UnitType.Range);
         }
 

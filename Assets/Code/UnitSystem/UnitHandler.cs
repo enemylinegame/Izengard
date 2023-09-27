@@ -1,7 +1,6 @@
 ﻿using Izengard.Abstraction.Interfaces;
 using System;
 using UnityEngine;
-
 namespace Izengard.UnitSystem
 {
     public class UnitHandler : IUnit, IDisposable
@@ -36,6 +35,7 @@ namespace Izengard.UnitSystem
             _navigation = 
                 navigation ?? throw new ArgumentNullException(nameof(navigation));
 
+            _view.Hide();
         }
 
         public void Enable()

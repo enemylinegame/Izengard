@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace Izengard.UnitSystem.View
@@ -27,12 +28,33 @@ namespace Izengard.UnitSystem.View
             OnSetTransform();
             OnSetUnitNavigation();
             OnSetUnitAnimator();
-
-            Hide();
         }
 
         protected abstract void OnSetTransform();
         protected abstract void OnSetUnitNavigation();
         protected abstract void OnSetUnitAnimator();
+
+        #region IFightingObject
+
+        public bool IsFighting { get; protected set; }
+
+        public event Action OnPulledInFight;
+        public event Action OnReleasedFromFight;
+
+        public void PullIntoFight()
+        {
+            OnPulledInFight?.Invoke();
+            IsFighting = true;
+            Debug.Log($"{gameObject.name} pulled into fight");
+        }
+
+        public void ReleaseFromFight()
+        {
+            OnReleasedFromFight?.Invoke();
+            IsFighting = false;
+            Debug.Log($"{gameObject.name} Released from fight");
+        }
+
+        #endregion
     }
 }
