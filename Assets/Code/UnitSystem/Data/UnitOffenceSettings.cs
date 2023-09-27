@@ -11,7 +11,7 @@ namespace Izengard.UnitSystem.Data
         [SerializeField] private float _rangedAttackMaxRange = 10f;
         [Range(0, 100)]
         [SerializeField] private float _criticalChance = 10f;
-        [SerializeField] private DamageData _damageData;
+        [SerializeField] private UnitDamageData _damageData;
 
         #region IUnitOffenceData
 

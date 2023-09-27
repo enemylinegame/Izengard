@@ -4,8 +4,8 @@ using UnityEngine;
 namespace Izengard.UnitSystem
 {
     public interface IUnit : 
-        IDamageable<UnitDamage>, 
-        IDamageDealer<UnitDamage>, 
+        IDamageable, 
+        IDamageDealer, 
         IPositioned<Vector3>, 
         IRotated<Vector3>
     {

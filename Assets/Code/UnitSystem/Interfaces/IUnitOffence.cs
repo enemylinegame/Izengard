@@ -2,7 +2,7 @@
 
 namespace Izengard.UnitSystem
 {
-    public interface IUnitOffence : IOffence<IUnitOffenceData, UnitDamage>
+    public interface IUnitOffence : IOffence<IUnitOffenceData, IDamage>
     {
     }
 }

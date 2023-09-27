@@ -74,7 +74,7 @@ namespace Izengard.UnitSystem
 
         #region IDamageable
 
-        public void TakeDamage(UnitDamage damageValue)
+        public void TakeDamage(IDamage damageValue)
         {
             var resultDamageAmount
                 = _model.Defence.GetAfterDefDamage(damageValue);
@@ -87,7 +87,7 @@ namespace Izengard.UnitSystem
 
         #region IDamageDealer
 
-        public UnitDamage GetAttackDamage()
+        public IDamage GetAttackDamage()
         {
             return _model.Offence.GetDamage();
         }

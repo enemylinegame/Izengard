@@ -2,7 +2,7 @@
 
 namespace Izengard.UnitSystem
 {
-    public interface IUnitDefence : IDefence<IUnitDefenceData, UnitDamage>
+    public interface IUnitDefence : IDefence<IUnitDefenceData, IDamage>
     {
         IParametr<int> ArmorPoints { get; }
 

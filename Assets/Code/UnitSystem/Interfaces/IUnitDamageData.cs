@@ -1,10 +1,9 @@
-﻿namespace Izengard.UnitSystem
+﻿using Izengard.Abstraction.Interfaces;
+
+namespace Izengard.UnitSystem
 {
-    public interface IUnitDamageData
+    public interface IUnitDamageData : IDamage
     {
-        float BaseDamage { get; }
-        float FireDamage { get; }
-        float ColdDamage { get; }
 
     }
 }

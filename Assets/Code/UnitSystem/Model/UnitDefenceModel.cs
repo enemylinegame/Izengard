@@ -52,7 +52,7 @@ namespace Izengard.UnitSystem
             _unitResistance = _defenceData.ResistData;
         }
 
-        public int GetAfterDefDamage(UnitDamage damageData)
+        public int GetAfterDefDamage(IDamage damageData)
         {
             var resultDamage = 0;
 
@@ -72,7 +72,7 @@ namespace Izengard.UnitSystem
             return result;
         }
 
-        private int ApplyDefence(UnitDamage damageData)
+        private int ApplyDefence(IDamage damageData)
         {
             int resultDamage = 0;
 

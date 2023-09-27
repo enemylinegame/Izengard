@@ -1,6 +1,8 @@
-﻿namespace Izengard.UnitSystem
+﻿using Izengard.Abstraction.Interfaces;
+
+namespace Izengard.UnitSystem
 {
-    public class UnitDamage 
+    public class DamageStructure : IDamage
     {
         private float _baseDamage;
         private float _fireDamage;
@@ -22,6 +24,6 @@
             set => _coldDamage = value;
         }
 
-        public UnitDamage() { }
+        public DamageStructure() { }
     }
 }

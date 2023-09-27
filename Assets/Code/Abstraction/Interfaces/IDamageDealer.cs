@@ -1,7 +1,9 @@
-﻿namespace Izengard.Abstraction.Interfaces
+﻿using Izengard.UnitSystem;
+
+namespace Izengard.Abstraction.Interfaces
 {
-    public interface IDamageDealer<T>
+    public interface IDamageDealer
     {
-        T GetAttackDamage();
+        IDamage GetAttackDamage();
     }
 }

@@ -23,11 +23,11 @@ namespace Izengard.UnitSystem
         public void Disable() { }
 
         public void Enable() { }
-        public void TakeDamage(UnitDamage damageValue) { }
+        public void TakeDamage(IDamage damageValue) { }
 
-        public UnitDamage GetAttackDamage()
+        public IDamage GetAttackDamage()
         {
-            return new UnitDamage
+            return new DamageStructure
             {
                 BaseDamage = 0,
                 FireDamage = 0,
