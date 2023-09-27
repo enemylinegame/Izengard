@@ -1,6 +1,7 @@
 ﻿using Izengard.UnitSystem;
 using Izengard.UnitSystem.Enum;
 using UnityEngine;
+
 namespace Izengard.EnemySystem
 {
     public class EnemyController : IOnController, IOnUpdate, IOnFixedUpdate
@@ -38,13 +39,6 @@ namespace Izengard.EnemySystem
             _isReachTarget = false;
         }
 
-        private void OnPullInFight()
-        {
-            Debug.Log($"Enemy[{_unit.Model.Type}] - {_unit.Id} is in fight!");
-
-            _isEnable = false;
-        }
-
         public void Enable()
         {
             _isEnable = true;
@@ -55,14 +49,6 @@ namespace Izengard.EnemySystem
 
             _unit.Navigation.Enable();
             MoveToTarget(_currentTarget);
-        }
-
-        private void MoveToTarget(Vector3 target)
-        {
-            _unit.Navigation.Stop();
-
-            _unit.Navigation.MoveTo(target);
-            _isMove = true;
         }
 
         public void OnUpdate(float deltaTime)
@@ -124,6 +110,21 @@ namespace Izengard.EnemySystem
                 }
             }
         }
+       
+        private void MoveToTarget(Vector3 target)
+        {
+            _unit.Navigation.Stop();
+
+            _unit.Navigation.MoveTo(target);
+            _isMove = true;
+        }
+      
+        private void OnPullInFight()
+        {
+            Debug.Log($"Enemy[{_unit.Model.Type}] - {_unit.Id} is in fight!");
+
+            _isEnable = false;
+        }
 
         private bool IsGetIntoFight()
         {
@@ -175,7 +176,7 @@ namespace Izengard.EnemySystem
             return distance < _enemyStopDistance;
         }
 
-        public float GetDistanceTo(Vector3 targetPos)
+        private float GetDistanceTo(Vector3 targetPos)
         {
             var unitPosition = _unit.GetPosition();
             var targetPosition = targetPos;
