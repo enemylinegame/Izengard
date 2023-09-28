@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Izengard.UnitSystem.View
+namespace UnitSystem.View
 {
     public abstract class BaseUnitView : MonoBehaviour, IUnitView
     {

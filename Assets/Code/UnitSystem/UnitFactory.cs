@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
-using Izengard.UnitSystem.Enum;
-using Izengard.UnitSystem.Data;
+using UnitSystem.Enum;
+using UnitSystem.Data;
 using System.Collections.Generic;
 
-namespace Izengard.UnitSystem
+namespace UnitSystem
 {
     public abstract class UnitFactory
     {

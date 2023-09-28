@@ -1,7 +1,7 @@
-﻿using Izengard.Abstraction.Interfaces;
+﻿using Abstraction;
 using System;
 using UnityEngine;
-namespace Izengard.UnitSystem
+namespace UnitSystem
 {
     public class UnitHandler : IUnit, IDisposable
     {

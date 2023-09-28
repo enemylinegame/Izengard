@@ -1,8 +1,8 @@
-﻿using Izengard.Abstraction.Interfaces;
-using Izengard.UnitSystem.View;
+﻿using Abstraction;
+using UnitSystem.View;
 using UnityEngine;
 
-namespace Izengard.UnitSystem
+namespace UnitSystem
 {
     public class StubUnit : IUnit
     {

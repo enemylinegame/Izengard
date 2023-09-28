@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Izengard.UnitSystem.Data
+namespace UnitSystem.Data
 {
     [Serializable]
     public class UnitCreationData

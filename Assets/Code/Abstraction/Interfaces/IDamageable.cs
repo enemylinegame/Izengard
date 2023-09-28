@@ -1,6 +1,4 @@
-﻿using Izengard.UnitSystem;
-
-namespace Izengard.Abstraction.Interfaces
+﻿namespace Abstraction
 {
     public interface IDamageable
     {

@@ -1,6 +1,6 @@
-﻿using Izengard.UnitSystem;
+﻿using UnitSystem;
 
-namespace Izengard.Abstraction.Interfaces
+namespace Abstraction
 {
     public interface IDamageDealer
     {

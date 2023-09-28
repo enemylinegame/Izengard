@@ -1,8 +1,8 @@
-﻿using Izengard.UnitSystem;
-using Izengard.UnitSystem.Enum;
+﻿using UnitSystem;
+using UnitSystem.Enum;
 using UnityEngine;
 
-namespace Izengard.EnemySystem
+namespace EnemySystem
 {
     public class EnemyController : IOnController, IOnUpdate, IOnFixedUpdate
     {

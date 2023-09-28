@@ -1,8 +1,8 @@
-﻿using Izengard.UnitSystem.View;
+﻿using UnitSystem.View;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Izengard.EnemySystem
+namespace EnemySystem
 {
     public class EnemyView : BaseUnitView
     {

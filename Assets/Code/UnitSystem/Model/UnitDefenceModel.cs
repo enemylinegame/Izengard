@@ -1,8 +1,8 @@
-﻿using Izengard.Abstraction.Interfaces;
-using Izengard.Tools;
+﻿using Abstraction;
+using Tools;
 using UnityEngine;
 
-namespace Izengard.UnitSystem
+namespace UnitSystem
 {
     public class UnitDefenceModel : IUnitDefence
     {

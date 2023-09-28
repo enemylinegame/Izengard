@@ -1,7 +1,7 @@
 ﻿using System;
-using Izengard.Abstraction.Interfaces;
+using Abstraction;
 
-namespace Izengard.Tools
+namespace Tools
 {
     public class ParametrModel<TParam> : IParametr<TParam>
         where TParam : IComparable<TParam>

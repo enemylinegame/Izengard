@@ -1,8 +1,8 @@
-﻿using Izengard.Abstraction.Interfaces;
+﻿using Abstraction;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Izengard.EnemySystem
+namespace EnemySystem
 {
     public class EnemyNavigationModel : INavigation<Vector3>
     {

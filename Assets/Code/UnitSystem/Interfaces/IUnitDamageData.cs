@@ -1,6 +1,6 @@
-﻿using Izengard.Abstraction.Interfaces;
+﻿using Abstraction;
 
-namespace Izengard.UnitSystem
+namespace UnitSystem
 {
     public interface IUnitDamageData : IDamage
     {

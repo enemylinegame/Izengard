@@ -1,8 +1,8 @@
-using Izengard.Abstraction.Interfaces;
-using Izengard.Tools;
-using Izengard.UnitSystem.Enum;
+using Abstraction;
+using Tools;
+using UnitSystem.Enum;
 
-namespace Izengard.UnitSystem 
+namespace UnitSystem 
 {
     public class UnitModel 
     {

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Izengard.EnemySystem;
-using Izengard.UnitSystem;
-using Izengard.UnitSystem.Enum;
+using EnemySystem;
+using UnitSystem;
+using UnitSystem.Enum;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Izengard.SpawnSystem
+namespace SpawnSystem
 {
     public class EnemySpawnController : IOnController, IOnUpdate
     {

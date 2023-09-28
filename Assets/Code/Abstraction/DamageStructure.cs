@@ -1,6 +1,4 @@
-﻿using Izengard.Abstraction.Interfaces;
-
-namespace Izengard.UnitSystem
+﻿namespace Abstraction
 {
     public class DamageStructure : IDamage
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.AI;
 
-namespace Izengard.Tools.Navigation
+namespace Tools.Navigation
 {
     public class NavigationUpdater : IDisposable
     {

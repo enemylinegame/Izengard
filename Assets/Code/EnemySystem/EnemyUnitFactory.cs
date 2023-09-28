@@ -1,9 +1,9 @@
-﻿using Izengard.UnitSystem;
-using Izengard.UnitSystem.Data;
+﻿using UnitSystem;
+using UnitSystem.Data;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Izengard.EnemySystem
+namespace EnemySystem
 {
     public class EnemyUnitFactory : UnitFactory
     {

@@ -1,9 +1,9 @@
-﻿using Izengard.UnitSystem.Data;
-using Izengard.UnitSystem.Enum;
+﻿using UnitSystem.Data;
+using UnitSystem.Enum;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Izengard.SpawnSystem
+namespace SpawnSystem
 {
     [CreateAssetMenu(fileName = nameof(SpawnSettings), menuName = "Spawn/" + nameof(SpawnSettings))]
     public class SpawnSettings : ScriptableObject

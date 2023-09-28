@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
-namespace Izengard.Tools.Navigation
+namespace Tools.Navigation
 {
     public class NavigationSurfaceView : MonoBehaviour
     {
