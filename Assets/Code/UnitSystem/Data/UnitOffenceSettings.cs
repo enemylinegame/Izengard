@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Izengard.UnitSystem.Data
+namespace UnitSystem.Data
 {
     [CreateAssetMenu(fileName = nameof(UnitOffenceSettings), menuName = "UnitsData/" + nameof(UnitOffenceSettings))]
     public class UnitOffenceSettings : ScriptableObject, IUnitOffenceData
@@ -11,7 +11,7 @@ namespace Izengard.UnitSystem.Data
         [SerializeField] private float _rangedAttackMaxRange = 10f;
         [Range(0, 100)]
         [SerializeField] private float _criticalChance = 10f;
-        [SerializeField] private DamageData _damageData;
+        [SerializeField] private UnitDamageData _damageData;
 
         #region IUnitOffenceData
 

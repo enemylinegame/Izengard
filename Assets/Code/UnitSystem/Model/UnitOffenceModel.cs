@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Abstraction;
+using UnityEngine;
 
-namespace Izengard.UnitSystem
+namespace UnitSystem
 {
     public class UnitOffenceModel : IUnitOffence
     {
@@ -16,11 +17,11 @@ namespace Izengard.UnitSystem
             _offenceData = offenceData;
         }
 
-        public UnitDamage GetDamage()
+        public IDamage GetDamage()
         {
             var critScale = GetCritScacle(_offenceData.CriticalChance);
 
-            var result = new UnitDamage
+            var result = new DamageStructure
             {
                 BaseDamage = _offenceData.DamageData.BaseDamage * critScale,
                 FireDamage = _offenceData.DamageData.FireDamage * critScale,

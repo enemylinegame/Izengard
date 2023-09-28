@@ -1,8 +1,8 @@
-﻿using Izengard.Abstraction.Interfaces;
+﻿using Abstraction;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Izengard.EnemySystem
+namespace EnemySystem
 {
     public class EnemyNavigationModel : INavigation<Vector3>
     {
@@ -24,7 +24,7 @@ namespace Izengard.EnemySystem
             if (_navMesh.isOnNavMesh)
                 _navMesh.ResetPath();
 
-            _navMesh.Warp(_initPos);
+            //_navMesh.Warp(_initPos);
         }
 
         public void Disable()

@@ -1,6 +1,6 @@
-﻿namespace Izengard.UnitSystem
+﻿namespace Abstraction
 {
-    public class UnitDamage 
+    public class DamageStructure : IDamage
     {
         private float _baseDamage;
         private float _fireDamage;
@@ -22,6 +22,6 @@
             set => _coldDamage = value;
         }
 
-        public UnitDamage() { }
+        public DamageStructure() { }
     }
 }

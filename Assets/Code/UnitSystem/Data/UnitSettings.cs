@@ -1,7 +1,7 @@
-﻿using Izengard.UnitSystem.Enum;
+﻿using UnitSystem.Enum;
 using UnityEngine;
 
-namespace Izengard.UnitSystem.Data
+namespace UnitSystem.Data
 {
     [CreateAssetMenu(fileName = nameof(UnitSettings), menuName = "UnitsData/" + nameof(UnitSettings))]
     public class UnitSettings : ScriptableObject, IUnitData

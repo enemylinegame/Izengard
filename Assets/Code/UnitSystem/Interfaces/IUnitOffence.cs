@@ -1,8 +1,8 @@
-﻿using Izengard.Abstraction.Interfaces;
+﻿using Abstraction;
 
-namespace Izengard.UnitSystem
+namespace UnitSystem
 {
-    public interface IUnitOffence : IOffence<IUnitOffenceData, UnitDamage>
+    public interface IUnitOffence : IOffence<IUnitOffenceData, IDamage>
     {
     }
 }

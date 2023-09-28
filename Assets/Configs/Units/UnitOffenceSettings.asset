@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: UnitOffenceSettings
   m_EditorClassIdentifier: 
   _attackSpeed: 1
-  _meleeAttackReach: 1.5
-  _rangedAttackMinRange: 5
-  _rangedAttackMaxRange: 10
+  _meleeAttackReach: 1
+  _rangedAttackMinRange: 2
+  _rangedAttackMaxRange: 5
   _criticalChance: 10
   _damageData:
     _baseDamage: 10

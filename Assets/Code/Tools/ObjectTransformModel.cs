@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Izengard.Tools
+namespace Tools
 {
     public class ObjectTransformModel
     {

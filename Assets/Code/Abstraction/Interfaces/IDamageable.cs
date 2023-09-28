@@ -1,7 +1,7 @@
-﻿namespace Izengard.Abstraction.Interfaces
+﻿namespace Abstraction
 {
-    public interface IDamageable<T>
+    public interface IDamageable
     {
-        void TakeDamage(T damageValue);
+        void TakeDamage(IDamage damage);
     }
 }

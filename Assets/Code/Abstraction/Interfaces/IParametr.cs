@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Izengard.Abstraction.Interfaces
+namespace Abstraction
 {
     public interface IParametr<TParam>
     {

@@ -1,8 +1,7 @@
-﻿using Izengard.Abstraction.Interfaces;
+﻿using Abstraction;
 using System;
 using UnityEngine;
-
-namespace Izengard.UnitSystem
+namespace UnitSystem
 {
     public class UnitHandler : IUnit, IDisposable
     {
@@ -36,6 +35,7 @@ namespace Izengard.UnitSystem
             _navigation = 
                 navigation ?? throw new ArgumentNullException(nameof(navigation));
 
+            _view.Hide();
         }
 
         public void Enable()
@@ -74,7 +74,7 @@ namespace Izengard.UnitSystem
 
         #region IDamageable
 
-        public void TakeDamage(UnitDamage damageValue)
+        public void TakeDamage(IDamage damageValue)
         {
             var resultDamageAmount
                 = _model.Defence.GetAfterDefDamage(damageValue);
@@ -87,7 +87,7 @@ namespace Izengard.UnitSystem
 
         #region IDamageDealer
 
-        public UnitDamage GetAttackDamage()
+        public IDamage GetAttackDamage()
         {
             return _model.Offence.GetDamage();
         }

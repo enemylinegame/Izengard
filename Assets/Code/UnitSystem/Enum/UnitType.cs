@@ -1,4 +1,4 @@
-﻿namespace Izengard.UnitSystem.Enum
+﻿namespace UnitSystem.Enum
 {
     public enum UnitType
     {

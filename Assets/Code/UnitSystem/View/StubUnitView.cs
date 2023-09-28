@@ -1,4 +1,4 @@
-﻿namespace Izengard.UnitSystem.View
+﻿namespace UnitSystem.View
 {
     public class StubUnitView : BaseUnitView
     {

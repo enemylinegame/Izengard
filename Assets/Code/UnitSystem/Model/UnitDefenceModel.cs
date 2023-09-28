@@ -1,8 +1,8 @@
-﻿using Izengard.Abstraction.Interfaces;
-using Izengard.Tools;
+﻿using Abstraction;
+using Tools;
 using UnityEngine;
 
-namespace Izengard.UnitSystem
+namespace UnitSystem
 {
     public class UnitDefenceModel : IUnitDefence
     {
@@ -52,7 +52,7 @@ namespace Izengard.UnitSystem
             _unitResistance = _defenceData.ResistData;
         }
 
-        public int GetAfterDefDamage(UnitDamage damageData)
+        public int GetAfterDefDamage(IDamage damageData)
         {
             var resultDamage = 0;
 
@@ -72,7 +72,7 @@ namespace Izengard.UnitSystem
             return result;
         }
 
-        private int ApplyDefence(UnitDamage damageData)
+        private int ApplyDefence(IDamage damageData)
         {
             int resultDamage = 0;
 

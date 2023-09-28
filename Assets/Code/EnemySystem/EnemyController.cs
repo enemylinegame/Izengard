@@ -1,10 +1,13 @@
-﻿using Izengard.UnitSystem;
+﻿using UnitSystem;
+using UnitSystem.Enum;
 using UnityEngine;
 
-namespace Izengard.EnemySystem
+namespace EnemySystem
 {
     public class EnemyController : IOnController, IOnUpdate, IOnFixedUpdate
     {
+        private const int ENEMY_LAYER = 8;
+
         private readonly Vector3 _primaryTarget;
         private readonly IUnit _unit;
 
@@ -13,16 +16,27 @@ namespace Izengard.EnemySystem
 
         private bool _isEnable;
         private bool _isMove;
+        private bool _isReachTarget;
 
         public EnemyController(IUnit unit, Vector3 primaryTarget)
         {
             _unit = unit;
             _primaryTarget = primaryTarget;
 
-            _enemyStopDistance = _unit.Model.Offence.OffenceData.MeleeAttackReach;
+            if (_unit.Model.Type == UnitType.Melee)
+            {
+                _enemyStopDistance = _unit.Model.Offence.OffenceData.MeleeAttackReach;
+            }
+            else if (_unit.Model.Type == UnitType.Range) 
+            {
+                _enemyStopDistance = _unit.Model.Offence.OffenceData.RangedAttackMaxRange;
+            }
+
+            _unit.View.OnPulledInFight += OnPullInFight;
 
             _isEnable = false;
             _isMove = false;
+            _isReachTarget = false;
         }
 
         public void Enable()
@@ -37,16 +51,48 @@ namespace Izengard.EnemySystem
             MoveToTarget(_currentTarget);
         }
 
-        private void MoveToTarget(Vector3 target)
-        {
-            _unit.Navigation.MoveTo(_currentTarget);
-            _isMove = true;
-        }
-
         public void OnUpdate(float deltaTime)
         {
             if (_isEnable == false)
                 return;
+
+            if (_isReachTarget)
+            {
+                _isMove = false;
+
+                if (IsGetIntoFight() == false)
+                {
+                    _currentTarget = _primaryTarget;
+
+                    if (CheckStopDistance(_currentTarget) == true)
+                    {
+                        Debug.Log("Reached primary trget");
+                        _isEnable = false;
+                    }
+                    else
+                    {
+                        MoveToTarget(_currentTarget);
+                    }
+                }
+                else
+                {
+                    OnPullInFight();
+                }
+
+                var direction = (_currentTarget - _unit.GetPosition()).normalized;
+                var lookRotation = Quaternion.LookRotation(direction);
+                _unit.SetRotation(lookRotation.eulerAngles);
+
+                _isReachTarget = false;
+                return;
+            }
+
+            var target = CheckForUnitsInRange();
+            if(target != _currentTarget)
+            {
+                _currentTarget = target;
+                MoveToTarget(_currentTarget);
+            }
         }
 
         public void OnFixedUpdate(float fixedDeltaTime)
@@ -60,8 +106,68 @@ namespace Izengard.EnemySystem
                 {
                     _unit.Navigation.Stop();
                     _isMove = false;
+                    _isReachTarget = true;
                 }
             }
+        }
+       
+        private void MoveToTarget(Vector3 target)
+        {
+            _unit.Navigation.Stop();
+
+            _unit.Navigation.MoveTo(target);
+            _isMove = true;
+        }
+      
+        private void OnPullInFight()
+        {
+            Debug.Log($"Enemy[{_unit.Model.Type}] - {_unit.Id} is in fight!");
+
+            _isEnable = false;
+        }
+
+        private bool IsGetIntoFight()
+        {
+            var selfPos = _unit.GetPosition();
+            var colliders = Physics.OverlapSphere(selfPos, _enemyStopDistance);
+            if (colliders.Length != 0)
+            {
+                foreach (var collider in colliders)
+                {
+                    var go = collider.gameObject;
+                    if (go.layer != ENEMY_LAYER && go.TryGetComponent<IUnitView>(out var unit))
+                    {
+                        if (unit.IsFighting == false) 
+                        {
+                            unit.PullIntoFight();
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private Vector3 CheckForUnitsInRange()
+        {
+            var selfPos = _unit.GetPosition();
+            var range = Mathf.Max(_unit.Model.DetectionRange.GetValue(), _enemyStopDistance);
+            var colliders = Physics.OverlapSphere(selfPos, range);
+            if (colliders.Length != 0)
+            {
+                foreach (var collider in colliders)
+                {
+                    var go = collider.gameObject;
+                    if (go.layer != ENEMY_LAYER && go.TryGetComponent<IUnitView>(out var unit))
+                    {
+                        if (unit.IsFighting == false)
+                            return unit.SelfTransform.position;
+                    }
+                }
+            }
+
+            return _primaryTarget;
         }
 
         private bool CheckStopDistance(Vector3 position)
@@ -70,13 +176,12 @@ namespace Izengard.EnemySystem
             return distance < _enemyStopDistance;
         }
 
-        public float GetDistanceTo(Vector3 targetPos)
+        private float GetDistanceTo(Vector3 targetPos)
         {
             var unitPosition = _unit.GetPosition();
             var targetPosition = targetPos;
 
             return Vector3.Distance(targetPosition, unitPosition);
         }
-
     }
 }

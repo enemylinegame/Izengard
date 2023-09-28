@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd6193985c4196d408402124d7f096c6, type: 3}
-  m_Name: UnitSettings
+  m_Name: UnitRangeSettings
   m_EditorClassIdentifier: 
   _faction: 2
   _mainStats:
-    _type: 0
-    _healthPoints: 100
+    _type: 2
+    _healthPoints: 60
     _size: 0.5
     _speed: 3
     _detectionRange: 5

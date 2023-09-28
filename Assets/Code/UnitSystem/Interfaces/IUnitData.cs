@@ -1,6 +1,6 @@
-﻿using Izengard.UnitSystem.Enum;
+﻿using UnitSystem.Enum;
 
-namespace Izengard.UnitSystem
+namespace UnitSystem
 {
     public interface IUnitData
     {

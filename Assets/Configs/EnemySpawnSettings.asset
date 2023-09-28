@@ -10,16 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2bd08b763f86518479e34dbbfa04d95a, type: 3}
-  m_Name: SpawnSettings
+  m_Name: EnemySpawnSettings
   m_EditorClassIdentifier: 
+  <SpawnFaction>k__BackingField: 2
+  <UnitPoolCopacity>k__BackingField: 5
   <SpawnDelayTime>k__BackingField: 1.5
-  <SpawnUnits>k__BackingField:
-  - _inPoolCopacity: 1
+  <UnitsCreationData>k__BackingField:
+  - _inPoolCopacity: 2
     _unitSettings: {fileID: 11400000, guid: a3fed99cd7f792c45a80be94dc801c4c, type: 2}
     _unitPrefab: {fileID: 168241047001392403, guid: 33d2a0c215583e24e958575744863440, type: 3}
-  - _inPoolCopacity: 1
+  - _inPoolCopacity: 2
     _unitSettings: {fileID: 11400000, guid: ea6d9bfaa12ac22488ffd4a873ca3a74, type: 2}
-    _unitPrefab: {fileID: 168241047001392403, guid: 33d2a0c215583e24e958575744863440, type: 3}
-  - _inPoolCopacity: 1
-    _unitSettings: {fileID: 11400000, guid: a3fed99cd7f792c45a80be94dc801c4c, type: 2}
-    _unitPrefab: {fileID: 168241047001392403, guid: 33d2a0c215583e24e958575744863440, type: 3}
+    _unitPrefab: {fileID: 168241047001392403, guid: d77446080fc1a5e4c8cdaab7291cfb11, type: 3}

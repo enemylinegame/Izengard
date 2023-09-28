@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using Abstraction;
+using UnityEngine;
 using UnityEngine.AI;
 
-namespace Izengard.UnitSystem
+namespace UnitSystem
 {
-    public interface IUnitView
+    public interface IUnitView : IFightingObject
     {
         Transform SelfTransform { get; }
         NavMeshAgent UnitNavigation { get; }
@@ -15,5 +16,6 @@ namespace Izengard.UnitSystem
         void ChangeHealth(int hpValue);
         void ChangeSize(float sizeValue);
         void ChangeSpeed(float speedValue);
+ 
     }
 }
