@@ -10,7 +10,7 @@ namespace SpawnSystem
 {
     public class EnemySpawnController : IOnController, IOnUpdate
     {
-        private readonly Dictionary<UnitType, IUnitData> _unitSpawnDataCollection = new();
+        private readonly Dictionary<UnitRoleType, IUnitData> _unitSpawnDataCollection = new();
 
         private readonly UnitFactory _factory;
         private readonly List<Transform> _spawnPoints = new List<Transform>();
@@ -27,7 +27,7 @@ namespace SpawnSystem
             foreach (var creationData in spawnSettings.UnitsCreationData)
             {
                 var unitData = creationData.UnitSettings;
-                _unitSpawnDataCollection[unitData.StatsData.Type] = unitData;
+                _unitSpawnDataCollection[unitData.StatsData.Role] = unitData;
             }
 
             foreach (var spawnPoint in spawnPoints)
@@ -36,7 +36,7 @@ namespace SpawnSystem
             }
         }
 
-        public void SpawnUnit(UnitType unitType)
+        public void SpawnUnit(UnitRoleType unitType)
         {
             var unit = _factory.CreateUnit(_unitSpawnDataCollection[unitType]);
 

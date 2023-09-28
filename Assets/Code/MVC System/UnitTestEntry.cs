@@ -27,9 +27,9 @@ public class UnitTestEntry : MonoBehaviour
         _enemySpawnController = new EnemySpawnController(_enemySpawnPoints, _enemySpawnSettings);
         _enemySpawnController.OnUnitSpawned += OnUnitCreated;
 
-        _enemySpawnController.SpawnUnit(UnitType.Melee);
-        _enemySpawnController.SpawnUnit(UnitType.Melee);
-        _enemySpawnController.SpawnUnit(UnitType.Range);
+        _enemySpawnController.SpawnUnit(UnitRoleType.Militiaman);
+        _enemySpawnController.SpawnUnit(UnitRoleType.Militiaman);
+        _enemySpawnController.SpawnUnit(UnitRoleType.Hunter);
     }
 
     private void OnUnitCreated(IUnit unit)

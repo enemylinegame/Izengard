@@ -4,7 +4,8 @@ namespace UnitSystem
 {
     public interface IUnitStatsData
     {
-        UnitType Type { get; }
+        UnitFactionType Faction { get; }
+        UnitRoleType Role { get; }
 
         int HealthPoints { get; }
         float Size { get; }

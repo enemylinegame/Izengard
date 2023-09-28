@@ -14,19 +14,19 @@ namespace EnemySystem
             _enemyId = 0;
         }
 
-        public override IUnit CreateMeleeUnit(IUnitData unitData)
+        public override IUnit CreateMilitiaman(IUnitData unitData)
         {
             return CreateEnemy(unitData);
         }
 
-        public override IUnit CreateRangeUnit(IUnitData unitData)
+        public override IUnit CreateHunter(IUnitData unitData)
         {
             return CreateEnemy(unitData);
         }
 
         private IUnit CreateEnemy(IUnitData unitData)
         {
-            var unitPrefab = unitObjectsData[unitData.StatsData.Type];
+            var unitPrefab = unitObjectsData[unitData.StatsData.Role];
 
             var unitGO = Object.Instantiate(unitPrefab);
 
@@ -36,7 +36,6 @@ namespace EnemySystem
             var unitOffence = new UnitOffenceModel(unitData.OffenceData);
 
             var model = new UnitModel(
-                unitData.Faction,
                 unitData.StatsData,
                 unitDefence,
                 unitOffence);

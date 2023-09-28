@@ -7,32 +7,32 @@ namespace UnitSystem
 {
     public abstract class UnitFactory
     {
-        protected readonly Dictionary<UnitType, GameObject> unitObjectsData;
+        protected readonly Dictionary<UnitRoleType, GameObject> unitObjectsData;
 
         public UnitFactory(List<UnitCreationData> unitCreationDatas) 
         {
-            unitObjectsData = new Dictionary<UnitType, GameObject>();
+            unitObjectsData = new Dictionary<UnitRoleType, GameObject>();
 
             for (int i = 0; i < unitCreationDatas.Count; i++) 
             {
-                var unitType = unitCreationDatas[i].UnitSettings.StatsData.Type;
+                var unitType = unitCreationDatas[i].UnitSettings.StatsData.Role;
                 unitObjectsData[unitType] = unitCreationDatas[i].UnitPrefab;
             }
         }
 
         public IUnit CreateUnit(IUnitData unitData) 
         {
-            var unit = unitData.StatsData.Type switch
+            var unit = unitData.StatsData.Role switch
             {
-                UnitType.Melee => CreateMeleeUnit(unitData),
-                UnitType.Range => CreateRangeUnit(unitData),
+                UnitRoleType.Militiaman => CreateMilitiaman(unitData),
+                UnitRoleType.Hunter => CreateHunter(unitData),
                 _ => new StubUnit("StubUnitModel was created!. Check Unit Configs")
             };
 
             return unit;
         }
 
-        public abstract IUnit CreateMeleeUnit(IUnitData unitData);
-        public abstract IUnit CreateRangeUnit(IUnitData unitData);
+        public abstract IUnit CreateMilitiaman(IUnitData unitData);
+        public abstract IUnit CreateHunter(IUnitData unitData);
     }
 }

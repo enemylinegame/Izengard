@@ -1,24 +1,27 @@
-﻿using UnitSystem.Enum;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace UnitSystem.Data
 {
-    [CreateAssetMenu(fileName = nameof(UnitSettings), menuName = "UnitsData/" + nameof(UnitSettings))]
+    [CreateAssetMenu(
+        fileName = nameof(UnitSettings), 
+        menuName = "UnitsData/" + nameof(UnitSettings))]
     public class UnitSettings : ScriptableObject, IUnitData
     {
-        [SerializeField] private UnitFactionType _faction;
         [SerializeField] private UnitMainStatsData _mainStats;
-        [SerializeField] private UnitDefenceSettings _defenceData;
-        [SerializeField] private UnitOffenceSettings _offenceData;
+        [SerializeField] private List<UnitPriorityData> _unitPriorities;
+        [SerializeField] private UnitDefenceData _defenceData;
+        [SerializeField] private UnitOffenceData _offenceData;
         
         #region IUnitData
 
-        public UnitFactionType Faction => _faction;
         public IUnitStatsData StatsData => _mainStats;
-        public IUnitDefenceData DefenceData => _defenceData;
 
+        public IReadOnlyList<UnitPriorityData> UnitPriorities => _unitPriorities;
+
+        public IUnitDefenceData DefenceData => _defenceData; 
         public IUnitOffenceData OffenceData => _offenceData;
-      
+
         #endregion
     }
 }

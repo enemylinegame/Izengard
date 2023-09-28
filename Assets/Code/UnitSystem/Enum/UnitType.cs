@@ -1,6 +1,6 @@
 ﻿namespace UnitSystem.Enum
 {
-    public enum UnitType
+    public enum UnitAttackType
     {
         None = 0,
         Melee = 1,

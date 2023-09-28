@@ -23,13 +23,13 @@ namespace EnemySystem
             _unit = unit;
             _primaryTarget = primaryTarget;
 
-            if (_unit.Model.Type == UnitType.Melee)
+            if (_unit.Model.Offence.OffenceData.AttackType == UnitAttackType.Melee)
             {
-                _enemyStopDistance = _unit.Model.Offence.OffenceData.MeleeAttackReach;
+                _enemyStopDistance = _unit.Model.Offence.OffenceData.MinRange;
             }
-            else if (_unit.Model.Type == UnitType.Range) 
+            else if (_unit.Model.Offence.OffenceData.AttackType == UnitAttackType.Range) 
             {
-                _enemyStopDistance = _unit.Model.Offence.OffenceData.RangedAttackMaxRange;
+                _enemyStopDistance = _unit.Model.Offence.OffenceData.MaxRange;
             }
 
             _unit.View.OnPulledInFight += OnPullInFight;
@@ -121,7 +121,7 @@ namespace EnemySystem
       
         private void OnPullInFight()
         {
-            Debug.Log($"Enemy[{_unit.Model.Type}] - {_unit.Id} is in fight!");
+            Debug.Log($"Enemy[{_unit.Model.Role}] - {_unit.Id} is in fight!");
 
             _isEnable = false;
         }
