@@ -1,14 +1,15 @@
-﻿    using System;
+﻿using System;
 
-
-    public sealed class TimeRemainingController: IOnController, IOnUpdate, IDisposable
+namespace Tools 
+{
+    public sealed class TimeRemainingController : IOnController, IOnUpdate, IDisposable
     {
-        
+
         public void Dispose()
         {
             TimersHolder.Clear();
         }
-        
+
         #region IExecute
 
         public void OnUpdate(float deltatime)
@@ -31,6 +32,7 @@
                 }
             }
         }
-        
+
         #endregion
     }
+}
