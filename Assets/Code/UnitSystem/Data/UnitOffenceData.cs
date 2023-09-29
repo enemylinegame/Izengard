@@ -9,9 +9,19 @@ namespace UnitSystem.Data
         [SerializeField] private UnitAttackType _attackType;
         [SerializeField] private float _minRange = 0f;
         [SerializeField] private float _maxRange = 5f;
+        [SerializeField] private float _castingSpeed = 1f;
         [SerializeField] private float _attackSpeed = 1f;
+        
+        [Space(5)]
+        [Header("Chances Settings")]  
         [Range(0, 100)]
         [SerializeField] private float _criticalChance = 10f;
+        [SerializeField] private float _critScale = 2f;
+        [Range(0, 100)]
+        [SerializeField] private float _failChance = 25f;
+        [SerializeField] private float _onFailDamage = 1f;
+        
+        [Space(5)]
         [SerializeField] private UnitDamageData _damageData;
 
         #region IUnitOffenceData
@@ -22,12 +32,20 @@ namespace UnitSystem.Data
 
         public float MaxRange => _maxRange;
 
+        public float CastingSpeed => _castingSpeed;
+
         public float AttackSpeed => _attackSpeed;
 
         public float CriticalChance => _criticalChance;
 
+        public float CritScale => _critScale;
+
+        public float FailChance => _failChance;
+
+        public float OnFailDamage => _onFailDamage;
+
         public IUnitDamageData DamageData => _damageData;
-     
+
         #endregion
     }
 }

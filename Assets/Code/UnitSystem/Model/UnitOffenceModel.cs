@@ -1,16 +1,19 @@
 ﻿using Abstraction;
+using UnitSystem.Enum;
 using UnityEngine;
 
 namespace UnitSystem
 {
     public class UnitOffenceModel : IUnitOffence
     {
-        private const float CRIT_BASE_SCALE = 1f;
-        private const float DAMAGE_SCALE_COEF = 2f;
-
         private readonly IUnitOffenceData _offenceData;
+        
+        public UnitAttackType AttackType => _offenceData.AttackType;
+        public float MinRange => _offenceData.MinRange;
+        public float MaxRange => _offenceData.MaxRange;
 
-        public IUnitOffenceData OffenceData => _offenceData;
+        public float CastingSpeed => _offenceData.CastingSpeed;
+        public float AttackSpeed => _offenceData.AttackSpeed;
 
         public UnitOffenceModel(IUnitOffenceData offenceData)
         {
@@ -19,26 +22,40 @@ namespace UnitSystem
 
         public IDamage GetDamage()
         {
-            var critScale = GetCritScacle(_offenceData.CriticalChance);
-
-            var result = new DamageStructure
+            if (CheckChance(_offenceData.FailChance))
             {
-                BaseDamage = _offenceData.DamageData.BaseDamage * critScale,
-                FireDamage = _offenceData.DamageData.FireDamage * critScale,
-                ColdDamage = _offenceData.DamageData.ColdDamage * critScale
-            };
+                return new DamageStructure
+                {
+                    BaseDamage = _offenceData.OnFailDamage,
+                    FireDamage = _offenceData.OnFailDamage,
+                    ColdDamage = _offenceData.OnFailDamage
+                };
 
-            return result;
+            }
+
+            var unitDamage = _offenceData.DamageData;
+
+            if (CheckChance(_offenceData.CriticalChance))
+            {
+                return new DamageStructure
+                {
+                    BaseDamage = unitDamage.BaseDamage * _offenceData.CritScale,
+                    FireDamage = unitDamage.FireDamage * _offenceData.CritScale,
+                    ColdDamage = unitDamage.ColdDamage * _offenceData.CritScale
+                };
+            }
+
+            return new DamageStructure
+            {
+                BaseDamage = unitDamage.BaseDamage,
+                FireDamage = unitDamage.FireDamage,
+                ColdDamage = unitDamage.ColdDamage
+            };
         } 
 
-        private float GetCritScacle(float critChance)
+        private bool CheckChance(float chanceValue)
         {
-            var result = CRIT_BASE_SCALE;
-
-            if (Random.Range(0, 101) >= critChance)
-                result = DAMAGE_SCALE_COEF;
-
-            return result;
+            return Random.Range(0, 101) >= chanceValue;
         }
     }
 }

@@ -23,13 +23,13 @@ namespace EnemySystem
             _unit = unit;
             _primaryTarget = primaryTarget;
 
-            if (_unit.Model.Offence.OffenceData.AttackType == UnitAttackType.Melee)
+            if (_unit.Model.Offence.AttackType == UnitAttackType.Melee)
             {
-                _enemyStopDistance = _unit.Model.Offence.OffenceData.MinRange;
+                _enemyStopDistance = _unit.Model.Offence.MinRange;
             }
-            else if (_unit.Model.Offence.OffenceData.AttackType == UnitAttackType.Range) 
+            else if (_unit.Model.Offence.AttackType == UnitAttackType.Range) 
             {
-                _enemyStopDistance = _unit.Model.Offence.OffenceData.MaxRange;
+                _enemyStopDistance = _unit.Model.Offence.MaxRange;
             }
 
             _unit.View.OnPulledInFight += OnPullInFight;
