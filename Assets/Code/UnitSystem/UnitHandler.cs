@@ -7,6 +7,7 @@ namespace UnitSystem
     {
         private readonly IUnitView _view;
         private readonly UnitModel _model;
+        private readonly UnitPriorityModel _unitPriority;
         private readonly INavigation<Vector3> _navigation;
 
         private int _id;
@@ -16,12 +17,15 @@ namespace UnitSystem
 
         public UnitModel Model => _model;
 
+        public UnitPriorityModel UnitPriority => _unitPriority;
+
         public INavigation<Vector3> Navigation => _navigation;
 
         public UnitHandler(
             int index,
             IUnitView view, 
             UnitModel unitModel,
+            UnitPriorityModel unitPriority,
             INavigation<Vector3> navigation)
         {
             _id = index;
@@ -31,6 +35,9 @@ namespace UnitSystem
 
             _model = 
                 unitModel ?? throw new ArgumentNullException(nameof(unitModel));
+
+            _unitPriority  =
+                unitPriority ?? throw new ArgumentNullException(nameof(unitPriority));
 
             _navigation = 
                 navigation ?? throw new ArgumentNullException(nameof(navigation));

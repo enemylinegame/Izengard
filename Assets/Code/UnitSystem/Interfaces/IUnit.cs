@@ -13,6 +13,7 @@ namespace UnitSystem
 
         UnitModel Model { get; }
 
+        UnitPriorityModel UnitPriority { get; }
         INavigation<Vector3> Navigation { get; }
 
         int Id { get; }

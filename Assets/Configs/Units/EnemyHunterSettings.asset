@@ -19,7 +19,9 @@ MonoBehaviour:
     _size: 0.5
     _speed: 3
     _detectionRange: 5
-  _unitPriorities: []
+  _unitPriorities:
+  - _unitPriority: 1
+    _priorityRole: 0
   _defenceData:
     _evadeChance: 0
     _armorPoints: 20
@@ -35,8 +37,12 @@ MonoBehaviour:
     _attackType: 2
     _minRange: 1.5
     _maxRange: 3
+    _castingSpeed: 1
     _attackSpeed: 1
     _criticalChance: 10
+    _critScale: 2
+    _failChance: 25
+    _onFailDamage: 1
     _damageData:
       _baseDamage: 10
       _fireDamage: 10

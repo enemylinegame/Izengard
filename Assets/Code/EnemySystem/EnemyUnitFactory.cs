@@ -40,9 +40,14 @@ namespace EnemySystem
                 unitDefence,
                 unitOffence);
 
-            var navigation = new EnemyNavigationModel(view.UnitNavigation, view.SelfTransform.position);
+            var unitPriority = 
+                new UnitPriorityModel(view.SelfTransform, unitData.UnitPriorities);
 
-            var unitHandler = new UnitHandler(_enemyId++, view, model, navigation);
+            var navigation = 
+                new EnemyNavigationModel(view.UnitNavigation, view.SelfTransform.position);
+
+            var unitHandler = 
+                new UnitHandler(_enemyId++, view, model, unitPriority, navigation);
 
             return unitHandler;
         }

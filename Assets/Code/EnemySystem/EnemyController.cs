@@ -8,7 +8,6 @@ namespace EnemySystem
     {
         private const int ENEMY_LAYER = 8;
 
-        private readonly Vector3 _primaryTarget;
         private readonly IUnit _unit;
 
         private Vector3 _currentTarget;
@@ -18,10 +17,9 @@ namespace EnemySystem
         private bool _isMove;
         private bool _isReachTarget;
 
-        public EnemyController(IUnit unit, Vector3 primaryTarget)
+        public EnemyController(IUnit unit)
         {
             _unit = unit;
-            _primaryTarget = primaryTarget;
 
             if (_unit.Model.Offence.AttackType == UnitAttackType.Melee)
             {
@@ -45,7 +43,9 @@ namespace EnemySystem
 
             _unit.Enable();
 
-            _currentTarget = _primaryTarget;
+            _unit.UnitPriority.SetNextTarget();
+
+            _currentTarget = _unit.UnitPriority.CurrentTargetPosition;
 
             _unit.Navigation.Enable();
             MoveToTarget(_currentTarget);
@@ -62,7 +62,7 @@ namespace EnemySystem
 
                 if (IsGetIntoFight() == false)
                 {
-                    _currentTarget = _primaryTarget;
+                    _currentTarget = _unit.UnitPriority.CurrentTargetPosition;
 
                     if (CheckStopDistance(_currentTarget) == true)
                     {
@@ -167,7 +167,7 @@ namespace EnemySystem
                 }
             }
 
-            return _primaryTarget;
+            return _unit.UnitPriority.CurrentTargetPosition;
         }
 
         private bool CheckStopDistance(Vector3 position)

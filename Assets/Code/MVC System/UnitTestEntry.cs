@@ -34,7 +34,7 @@ public class UnitTestEntry : MonoBehaviour
 
     private void OnUnitCreated(IUnit unit)
     {
-        var enemyController = new EnemyController(unit, _mainTower.position);
+        var enemyController = new EnemyController(unit);
         enemyController.Enable();
 
         _onUpdates.Add(enemyController);

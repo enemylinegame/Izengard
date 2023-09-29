@@ -14,6 +14,8 @@ namespace UnitSystem
 
         public INavigation<Vector3> Navigation { get; }
 
+        public UnitPriorityModel UnitPriority { get; }
+
         public StubUnit(string logMessage)
         {
             View = new StubUnitView();
