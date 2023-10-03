@@ -13,6 +13,8 @@ namespace EnemySystem.Controllers
 
         private bool _isEnable;
 
+        public event System.Action<IUnit> OnUnitDone;
+
         public EnemyMilitiamanController()
         {
             _unitCollection = new List<IUnit>();
@@ -53,9 +55,6 @@ namespace EnemySystem.Controllers
 
         public void AddUnit(IUnit unit)
         {
-            if (unit.Model.Role != UnitRoleType.Militiaman)
-                return;
-
             InitUnitLogic(unit);
             _unitCollection.Add(unit);
         }
@@ -63,7 +62,6 @@ namespace EnemySystem.Controllers
         public void RemoveUnit(int unitId)
         {
             var unit = _unitCollection.Find(u => u.Id == unitId);
-           // unit.Disable();
             _unitCollection.Remove(unit);
         }
 
@@ -95,10 +93,8 @@ namespace EnemySystem.Controllers
                     if (CheckStopDistance(unit, _currentTarget) == true)
                     {
                         StopUnit(unit);
-                        Debug.Log($"EnemyMilitiaman[{unit.Id}] reached trget");
-                        RemoveUnit(unit.Id);
+                        OnUnitDone?.Invoke(unit);
                     }
-
                 }
             }
         }

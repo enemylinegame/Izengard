@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using EnemySystem;
 using EnemySystem.Controllers;
 using SpawnSystem;
 using Tools.Navigation;
@@ -17,8 +17,8 @@ public class UnitTestEntry : MonoBehaviour
     private NavigationUpdater _navigationUpdater;
     private EnemySpawnController _enemySpawnController;
 
-    private IUnitController _enemyHunterController;
-    private IUnitController _enemyMilitiamanController;
+    private Dictionary<UnitRoleType, IUnitController> _enemyControllersCollection = new();
+    private Dictionary<UnitRoleType, IUnitController> _defenderControllersCollection = new();
 
     private List<IOnUpdate> _onUpdates = new List<IOnUpdate>();
     private List<IOnFixedUpdate> _onFixedUpdates = new List<IOnFixedUpdate>();
@@ -28,27 +28,35 @@ public class UnitTestEntry : MonoBehaviour
         _navigationUpdater = new NavigationUpdater();
         _navigationUpdater.AddNavigationSurface(_groundSurface);
 
-        _enemyHunterController = new EnemyHunterController();
-        _enemyHunterController.Enable();
-        _onUpdates.Add(_enemyHunterController);
-        _onFixedUpdates.Add(_enemyHunterController);
+        _enemyControllersCollection[UnitRoleType.Militiaman] = new EnemyMilitiamanController();
+        _enemyControllersCollection[UnitRoleType.Hunter] = new EnemyHunterController();
 
-        _enemyMilitiamanController = new EnemyMilitiamanController();
-        _enemyMilitiamanController.Enable();
-        _onUpdates.Add(_enemyMilitiamanController);
-        _onFixedUpdates.Add(_enemyMilitiamanController);
+        InitUnitCollection(_enemyControllersCollection);
+        InitUnitCollection(_defenderControllersCollection);
 
-        _enemySpawnController = new EnemySpawnController(_enemySpawnPoints, _enemySpawnSettings);
+        _enemySpawnController = new EnemySpawnController(_enemySpawnPoints, _enemySpawnSettings); 
+        _enemySpawnController.OnUnitSpawned += OnCreatedUnit;
         _onUpdates.Add(_enemySpawnController);
-
-        _enemySpawnController.OnUnitSpawned += _enemyHunterController.AddUnit;
-        _enemySpawnController.OnUnitSpawned += _enemyMilitiamanController.AddUnit;
 
         _enemySpawnController.SpawnUnit(UnitRoleType.Militiaman);
         _enemySpawnController.SpawnUnit(UnitRoleType.Militiaman);
         _enemySpawnController.SpawnUnit(UnitRoleType.Hunter);
     }
 
+
+    private void InitUnitCollection(Dictionary<UnitRoleType, IUnitController> unitCollection)
+    {
+        foreach (var entry in unitCollection)
+        {
+            var unitController = entry.Value;
+
+            unitController.OnUnitDone += OnUnitControllerDone;
+            unitController.Enable();
+
+            _onUpdates.Add(unitController);
+            _onFixedUpdates.Add(unitController);
+        }
+    }
 
     private void Update()
     {
@@ -63,6 +71,49 @@ public class UnitTestEntry : MonoBehaviour
         foreach (var ell in _onFixedUpdates)
         {
             ell.OnFixedUpdate(Time.fixedDeltaTime);
+        }
+    }
+
+
+    private void OnCreatedUnit(IUnit unit) 
+    {
+        switch (unit.Model.Faction)
+        {
+            default:
+                break;
+            case UnitFactionType.Enemy:
+                {
+                    var unitRole = unit.Model.Role;
+                    _enemyControllersCollection[unitRole].AddUnit(unit);
+
+                    break;
+                }
+            case UnitFactionType.Defender:
+                {
+                    break;
+                }
+        }
+    }
+
+    private void OnUnitControllerDone(IUnit unit)
+    {
+        switch (unit.Model.Faction)
+        {
+            default:
+                break;
+            case UnitFactionType.Enemy:
+                {
+                    var unitRole = unit.Model.Role;
+                    var unitId = unit.Id;
+                    _enemyControllersCollection[unitRole].RemoveUnit(unitId);
+
+                    Debug.Log($"Enemy[{unitId}]_{unitRole} reached trget");
+                    break;
+                }
+            case UnitFactionType.Defender:
+                {
+                    break;
+                }
         }
     }
 }

@@ -13,20 +13,11 @@ namespace EnemySystem.Controllers
 
         private bool _isEnable;
 
+        public event System.Action<IUnit> OnUnitDone;
+
         public EnemyHunterController()
         {
             _unitCollection = new List<IUnit>();
-
-            /*if (_unit.Model.Offence.AttackType == UnitAttackType.Melee)
-            {
-                _enemyStopDistance = _unit.Model.Offence.MinRange;
-            }
-            else if (_unit.Model.Offence.AttackType == UnitAttackType.Range) 
-            {
-                _enemyStopDistance = _unit.Model.Offence.MaxRange;
-            }*/
-
-            //_unit.View.OnPulledInFight += OnPullInFight;
 
             _isEnable = false;
         }
@@ -65,9 +56,6 @@ namespace EnemySystem.Controllers
         }
         public void AddUnit(IUnit unit)
         {
-            if (unit.Model.Role != UnitRoleType.Hunter)
-                return;
-
             InitUnitLogic(unit);
             _unitCollection.Add(unit);
         }
@@ -75,7 +63,6 @@ namespace EnemySystem.Controllers
         public void RemoveUnit(int unitId)
         {
             var unit = _unitCollection.Find(u => u.Id == unitId);
-           // unit.Disable();
             _unitCollection.Remove(unit);
         }
 
@@ -110,57 +97,11 @@ namespace EnemySystem.Controllers
                     if (CheckStopDistance(unit, _currentTarget) == true)
                     {
                         StopUnit(unit);
-                        Debug.Log($"EnemyHunter[{unit.Id}] reached trget");
-                        RemoveUnit(unit.Id);
+                        OnUnitDone?.Invoke(unit);
                     }
                 }
             }
         }
-
-
-      /*  private bool IsGetIntoFight()
-        {
-            var selfPos = _unit.GetPosition();
-            var colliders = Physics.OverlapSphere(selfPos, _enemyStopDistance);
-            if (colliders.Length != 0)
-            {
-                foreach (var collider in colliders)
-                {
-                    var go = collider.gameObject;
-                    if (go.layer != ENEMY_LAYER && go.TryGetComponent<IUnitView>(out var unit))
-                    {
-                        if (unit.IsFighting == false) 
-                        {
-                            unit.PullIntoFight();
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            return false;
-        }*/
-
-      /*  private Vector3 CheckForUnitsInRange()
-        {
-            var selfPos = _unit.GetPosition();
-            var range = Mathf.Max(_unit.Model.DetectionRange.GetValue(), _enemyStopDistance);
-            var colliders = Physics.OverlapSphere(selfPos, range);
-            if (colliders.Length != 0)
-            {
-                foreach (var collider in colliders)
-                {
-                    var go = collider.gameObject;
-                    if (go.layer != ENEMY_LAYER && go.TryGetComponent<IUnitView>(out var unit))
-                    {
-                        if (unit.IsFighting == false)
-                            return unit.SelfTransform.position;
-                    }
-                }
-            }
-
-            return _currentTarget;
-        }*/
 
         private bool CheckStopDistance(IUnit unit, Vector3 currentTarget)
         {
