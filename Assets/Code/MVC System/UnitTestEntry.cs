@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using EnemySystem;
+using EnemySystem.Controllers;
 using SpawnSystem;
 using Tools.Navigation;
 using UnitSystem;
@@ -16,6 +17,9 @@ public class UnitTestEntry : MonoBehaviour
     private NavigationUpdater _navigationUpdater;
     private EnemySpawnController _enemySpawnController;
 
+    private IUnitController _enemyHunterController;
+    private IUnitController _enemyMilitiamanController;
+
     private List<IOnUpdate> _onUpdates = new List<IOnUpdate>();
     private List<IOnFixedUpdate> _onFixedUpdates = new List<IOnFixedUpdate>();
 
@@ -24,22 +28,27 @@ public class UnitTestEntry : MonoBehaviour
         _navigationUpdater = new NavigationUpdater();
         _navigationUpdater.AddNavigationSurface(_groundSurface);
 
+        _enemyHunterController = new EnemyHunterController();
+        _enemyHunterController.Enable();
+        _onUpdates.Add(_enemyHunterController);
+        _onFixedUpdates.Add(_enemyHunterController);
+
+        _enemyMilitiamanController = new EnemyMilitiamanController();
+        _enemyMilitiamanController.Enable();
+        _onUpdates.Add(_enemyMilitiamanController);
+        _onFixedUpdates.Add(_enemyMilitiamanController);
+
         _enemySpawnController = new EnemySpawnController(_enemySpawnPoints, _enemySpawnSettings);
-        _enemySpawnController.OnUnitSpawned += OnUnitCreated;
+        _onUpdates.Add(_enemySpawnController);
+
+        _enemySpawnController.OnUnitSpawned += _enemyHunterController.AddUnit;
+        _enemySpawnController.OnUnitSpawned += _enemyMilitiamanController.AddUnit;
 
         _enemySpawnController.SpawnUnit(UnitRoleType.Militiaman);
         _enemySpawnController.SpawnUnit(UnitRoleType.Militiaman);
         _enemySpawnController.SpawnUnit(UnitRoleType.Hunter);
     }
 
-    private void OnUnitCreated(IUnit unit)
-    {
-        var enemyController = new EnemyController(unit);
-        enemyController.Enable();
-
-        _onUpdates.Add(enemyController);
-        _onFixedUpdates.Add(enemyController);
-    }
 
     private void Update()
     {

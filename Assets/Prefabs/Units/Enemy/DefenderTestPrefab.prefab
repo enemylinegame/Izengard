@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 168241047001392406}
   - component: {fileID: 168241047001392404}
   - component: {fileID: 8650358609562129166}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: DefenderTestPrefab
   m_TagString: Militiaman
   m_Icon: {fileID: 0}

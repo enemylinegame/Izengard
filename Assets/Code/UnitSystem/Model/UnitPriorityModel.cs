@@ -9,8 +9,11 @@ namespace UnitSystem
     {
         private const int MAX_SEARCHES = 2;
         private const int CAST_RADIUS = 100;
+
         private const int BUILDING_MASK = 1 << 7;
-        
+        private const int ENEMY_MASK = 1 << 8;
+        private const int DEFENDER_MASK = 1 << 9;
+
         private readonly List<UnitPriorityData> _unitBasePriorities = 
             new List<UnitPriorityData>();
 
@@ -21,8 +24,6 @@ namespace UnitSystem
         private int _searchIndex;
 
         private Transform _mainTowerTransform;
-        
-        public Vector3 CurrentTargetPosition { get; private set; }
 
         public UnitPriorityModel(
             Transform unitTransform,
@@ -66,7 +67,7 @@ namespace UnitSystem
 
                     case UnitPriorityType.MainTower:
                         {
-                            FindMainTower();
+                            GetMainTowerPosition();
                             break;
                         }
                     case UnitPriorityType.ClosestFoe: 
@@ -89,39 +90,64 @@ namespace UnitSystem
                 return true;
             }
 
-
-
             return false;
+        }
+
+        public Vector3 GetMainTowerPosition()
+        {
+            if (_mainTowerTransform != null)
+            {
+                return _mainTowerTransform.position;
+            }
+
+            var resultPosition = _unitTransorm.position;
+
+            var findResults = Physics.OverlapSphere(_unitTransorm.position, CAST_RADIUS, BUILDING_MASK);
+
+            for (int i = 0; i < findResults.Length; i++)
+            {
+                if (findResults[i].gameObject.tag == "Player")
+                {
+                    _mainTowerTransform = findResults[i].gameObject.transform;
+                    resultPosition = _mainTowerTransform.position;
+                }
+            }
+
+            return resultPosition;
+        }
+
+        public Vector3 GetClosestFoeLocation(UnitFactionType unitFaction)
+        {
+            var searchMask = 
+                unitFaction == UnitFactionType.Defender 
+                ? DEFENDER_MASK 
+                : ENEMY_MASK;
+
+            var resultPosition = _unitTransorm.position;
+
+            var findResults = Physics.OverlapSphere(_unitTransorm.position, CAST_RADIUS, searchMask);
+            var maxDist = float.MaxValue;
+            
+            for (int i = 0; i < findResults.Length; i++)
+            {
+                if(findResults[i].gameObject.TryGetComponent<IUnitView>(out var unitFoe))
+                {
+                    var targetPosition = unitFoe.SelfTransform.position;
+                    var distance = Vector3.Distance(targetPosition, _unitTransorm.position);
+                    if(distance < maxDist)
+                    {
+                        maxDist = distance;
+                        resultPosition = targetPosition;
+                    }
+                }
+            }
+
+            return resultPosition;
         }
 
         private void FindSpecificFoe(UnitRoleType priorityRole)
         {
             Debug.Log($"Try find SpecificFoe - {priorityRole}");
-        }
-
-        private void FindMainTower()
-        {
-            if (_mainTowerTransform != null) 
-            {
-                CurrentTargetPosition = _mainTowerTransform.position;
-                return;
-            }
-
-            var findResults = Physics.OverlapSphere(_unitTransorm.position, CAST_RADIUS, BUILDING_MASK);
-            
-            for(int i = 0; i < findResults.Length; i++)
-            {
-                if(findResults[i].gameObject.tag == "Player")
-                {
-                    _mainTowerTransform = findResults[i].gameObject.transform;
-                    CurrentTargetPosition = _mainTowerTransform.position;
-                    _searchIndex = 0;
-                    return;
-                }
-            }
-
-            _searchIndex++;
-            SetNextTarget();
         }
     }
 }
