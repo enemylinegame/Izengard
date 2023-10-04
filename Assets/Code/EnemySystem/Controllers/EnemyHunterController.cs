@@ -1,101 +1,53 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
 
 namespace EnemySystem.Controllers
 {
-    public class EnemyHunterController : IUnitController
+    public class EnemyHunterController : EnemyBaseController
     {
-        private List<IUnit> _unitCollection;
-
         private Vector3 _currentTarget;
 
-        private bool _isEnable;
+        public override event Action<IUnit> OnUnitDone;
 
-        public event Action<IUnit> OnUnitDone;
+        public EnemyHunterController() : base() { }
 
-        public EnemyHunterController()
+        protected override void InitUnitLogic(IUnit unit)
         {
-            _unitCollection = new List<IUnit>();
-
-            _isEnable = false;
-        }
-
-        public void Enable()
-        {
-            foreach (var unit in _unitCollection)
-            {
-                InitUnitLogic(unit);
-            }
-
-            _isEnable = true;
-        }
-
-        private void InitUnitLogic(IUnit unit)
-        {
-            unit.Enable();
             unit.Navigation.Enable();
 
             unit.UnitState.ChangeState(UnitState.Idle);
-            
+
             _currentTarget
                 = unit.UnitPriority.GetMainTowerPosition();
 
             MoveUnitToTarget(unit, _currentTarget);
         }
 
-        public void Disable()
+        protected override void DeinitUnitLogic(IUnit unit)
         {
-            foreach (var unit in _unitCollection)
+            unit.Navigation.Disable();
+        }
+
+        protected override void OnUnitUpdate(float deltaTime)
+        {
+            if (unitCollection.Count != 0)
             {
-                StopUnit(unit);
-
-                unit.Disable();
-            }
-
-            _isEnable = false;
-        }
-        public void AddUnit(IUnit unit)
-        {
-            InitUnitLogic(unit);
-            _unitCollection.Add(unit);
-        }
-
-        public void RemoveUnit(int unitId)
-        {
-            var unit = _unitCollection.Find(u => u.Id == unitId);
-            _unitCollection.Remove(unit);
-        }
-
-        public void OnUpdate(float deltaTime)
-        {
-            if (_isEnable == false)
-                return;
-
-            if (!_isEnable)
-                return;
-
-            if (_unitCollection.Count != 0)
-            {
-                for (int i = 0; i < _unitCollection.Count; i++)
+                for (int i = 0; i < unitCollection.Count; i++)
                 {
-                    var unit = _unitCollection[i];
+                    var unit = unitCollection[i];
                 }
             }
         }
 
-        public void OnFixedUpdate(float fixedDeltaTime)
+        protected override void OnUnitFixedUpdate(float fixedDeltaTime)
         {
-            if (!_isEnable)
-                return;
-
-            if (_unitCollection.Count != 0)
+            if (unitCollection.Count != 0)
             {
-                for (int i = 0; i < _unitCollection.Count; i++)
+                for (int i = 0; i < unitCollection.Count; i++)
                 {
-                    var unit = _unitCollection[i];
+                    var unit = unitCollection[i];
 
                     if (unit.UnitState.CurrentState == UnitState.Move)
                     {
@@ -107,16 +59,6 @@ namespace EnemySystem.Controllers
                     }
                 }
             }
-        }
-
-        private bool CheckStopDistance(IUnit unit, Vector3 currentTarget)
-        {
-            var distance = Vector3.Distance(unit.GetPosition(), currentTarget);
-            if (distance <= unit.UnitOffence.MaxRange)
-            {
-                return true;
-            }
-            return false;
         }
 
         private void MoveUnitToTarget(IUnit unit, Vector3 target)

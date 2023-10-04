@@ -9,9 +9,6 @@ namespace UnitSystem
     {
         event Action<IUnit> OnUnitDone;
 
-        void Enable();
-        void Disable();
-
         void AddUnit(IUnit unit);
 
         void RemoveUnit(int unitId);

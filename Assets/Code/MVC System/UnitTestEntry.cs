@@ -51,7 +51,6 @@ public class UnitTestEntry : MonoBehaviour
             var unitController = entry.Value;
 
             unitController.OnUnitDone += OnUnitControllerDone;
-            unitController.Enable();
 
             _onUpdates.Add(unitController);
             _onFixedUpdates.Add(unitController);
@@ -84,6 +83,7 @@ public class UnitTestEntry : MonoBehaviour
             case UnitFactionType.Enemy:
                 {
                     var unitRole = unit.UnitStats.Role;
+                    unit.Enable();
                     _enemyControllersCollection[unitRole].AddUnit(unit);
 
                     break;
