@@ -4,7 +4,7 @@ using UnitSystem.Enum;
 
 namespace UnitSystem 
 {
-    public class UnitModel 
+    public class UnitStatsModel 
     {
         #region Private Field
         
@@ -15,9 +15,6 @@ namespace UnitSystem
         
         private UnitFactionType _faction;
         private UnitRoleType _role;
-
-        private IUnitDefence _defence;
-        private IUnitOffence _offence;
 
         #endregion
 
@@ -34,16 +31,9 @@ namespace UnitSystem
 
         public IParametr<float> DetectionRange => _detectionRange;
 
-        public IUnitDefence Defence => _defence;
-        public IUnitOffence Offence => _offence;
-
-
         #endregion
 
-        public UnitModel(
-            IUnitStatsData stats,
-            IUnitDefence defence,
-            IUnitOffence offence) 
+        public UnitStatsModel(IUnitStatsData stats) 
         {       
             _faction = stats.Faction; 
             _role = stats.Role;
@@ -52,9 +42,6 @@ namespace UnitSystem
             _size = new ParametrModel<float>(stats.Size, 0, float.MaxValue);
             _speed = new ParametrModel<float>(stats.Speed, 0, float.MaxValue);
             _detectionRange = new ParametrModel<float>(stats.DetectionRange, 0, float.MaxValue);
-
-            _defence = defence;
-            _offence = offence;
         }
     }
 }

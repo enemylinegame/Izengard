@@ -77,13 +77,13 @@ public class UnitTestEntry : MonoBehaviour
 
     private void OnCreatedUnit(IUnit unit) 
     {
-        switch (unit.Model.Faction)
+        switch (unit.UnitStats.Faction)
         {
             default:
                 break;
             case UnitFactionType.Enemy:
                 {
-                    var unitRole = unit.Model.Role;
+                    var unitRole = unit.UnitStats.Role;
                     _enemyControllersCollection[unitRole].AddUnit(unit);
 
                     break;
@@ -97,13 +97,13 @@ public class UnitTestEntry : MonoBehaviour
 
     private void OnUnitControllerDone(IUnit unit)
     {
-        switch (unit.Model.Faction)
+        switch (unit.UnitStats.Faction)
         {
             default:
                 break;
             case UnitFactionType.Enemy:
                 {
-                    var unitRole = unit.Model.Role;
+                    var unitRole = unit.UnitStats.Role;
                     var unitId = unit.Id;
                     _enemyControllersCollection[unitRole].RemoveUnit(unitId);
 

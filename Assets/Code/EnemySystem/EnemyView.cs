@@ -17,14 +17,11 @@ namespace EnemySystem
 
         public override void ChangeSize(float sizeValue)
         {
-            Debug.Log($"{_name}[Size] = {sizeValue}");
             SelfTransform.localScale = Vector3.one * sizeValue;
         }
 
         public override void ChangeSpeed(float speedValue)
         {
-            Debug.Log($"{_name}[Speed] = {speedValue}");
-
             if (UnitNavigation)
             {
                 UnitNavigation.speed = speedValue;

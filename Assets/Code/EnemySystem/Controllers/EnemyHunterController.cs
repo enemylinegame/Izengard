@@ -106,7 +106,7 @@ namespace EnemySystem.Controllers
         private bool CheckStopDistance(IUnit unit, Vector3 currentTarget)
         {
             var distance = Vector3.Distance(unit.GetPosition(), currentTarget);
-            if (distance <= unit.Model.Offence.MaxRange)
+            if (distance <= unit.UnitOffence.MaxRange)
             {
                 return true;
             }

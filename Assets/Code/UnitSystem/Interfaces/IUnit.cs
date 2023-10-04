@@ -9,10 +9,10 @@ namespace UnitSystem
         IPositioned<Vector3>, 
         IRotated<Vector3>
     {
-        IUnitView View { get; }
-
-        UnitModel Model { get; }
-
+        IUnitView UnitView { get; }
+        UnitStatsModel UnitStats { get; }
+        IUnitDefence UnitDefence { get; }
+        IUnitOffence UnitOffence { get; }
         UnitPriorityModel UnitPriority { get; }
         INavigation<Vector3> Navigation { get; }
 

@@ -1,21 +1,31 @@
 ﻿using Abstraction;
 using System;
 using UnityEngine;
+
 namespace UnitSystem
 {
     public class UnitHandler : IUnit, IDisposable
     {
-        private readonly IUnitView _view;
-        private readonly UnitModel _model;
+        private readonly IUnitView _unitView;
+        
+        private readonly UnitStatsModel _unitStats;
+        
+        private readonly IUnitDefence _unitDefence;
+        private readonly IUnitOffence _unitOffence;
+
         private readonly UnitPriorityModel _unitPriority;
         private readonly INavigation<Vector3> _navigation;
 
         private int _id;
         public int Id => _id;
 
-        public IUnitView View => _view;
+        public IUnitView UnitView => _unitView;
 
-        public UnitModel Model => _model;
+        public UnitStatsModel UnitStats => _unitStats;
+
+        public IUnitDefence UnitDefence => _unitDefence;
+
+        public IUnitOffence UnitOffence => _unitOffence;
 
         public UnitPriorityModel UnitPriority => _unitPriority;
 
@@ -24,17 +34,25 @@ namespace UnitSystem
         public UnitHandler(
             int index,
             IUnitView view, 
-            UnitModel unitModel,
+            UnitStatsModel unitStats,
+            IUnitDefence unitDefence,
+            IUnitOffence unitOffence,
             UnitPriorityModel unitPriority,
             INavigation<Vector3> navigation)
         {
             _id = index;
 
-            _view = 
+            _unitView = 
                 view ?? throw new ArgumentNullException(nameof(view));
 
-            _model = 
-                unitModel ?? throw new ArgumentNullException(nameof(unitModel));
+            _unitStats = 
+                unitStats ?? throw new ArgumentNullException(nameof(unitStats));
+
+            _unitDefence = 
+                unitDefence ?? throw new ArgumentNullException(nameof(unitDefence));
+
+            _unitOffence =
+               unitOffence ?? throw new ArgumentNullException(nameof(unitOffence));
 
             _unitPriority  =
                 unitPriority ?? throw new ArgumentNullException(nameof(unitPriority));
@@ -42,41 +60,41 @@ namespace UnitSystem
             _navigation = 
                 navigation ?? throw new ArgumentNullException(nameof(navigation));
 
-            _view.Hide();
+            _unitView.Hide();
         }
 
         public void Enable()
         {
             Subscribe();
 
-            _view.Show();
+            _unitView.Show();
 
-            _view.ChangeHealth(_model.Health.GetValue());
-            _view.ChangeSize(_model.Size.GetValue());
-            _view.ChangeSpeed(_model.Speed.GetValue());
+            _unitView.ChangeHealth(_unitStats.Health.GetValue());
+            _unitView.ChangeSize(_unitStats.Size.GetValue());
+            _unitView.ChangeSpeed(_unitStats.Speed.GetValue());
         }
 
         private void Subscribe()
         {
-            _model.Health.OnValueChange += _view.ChangeHealth;
-            _model.Size.OnValueChange += _view.ChangeSize;
-            _model.Speed.OnValueChange += _view.ChangeSpeed;
+            _unitStats.Health.OnValueChange += _unitView.ChangeHealth;
+            _unitStats.Size.OnValueChange += _unitView.ChangeSize;
+            _unitStats.Speed.OnValueChange += _unitView.ChangeSpeed;
         }
 
         public void Disable()
         {
             Unsubscribe();
 
-            _view.Hide();
+            _unitView.Hide();
 
             _navigation.Disable();
         }
 
         private void Unsubscribe()
         {
-            _model.Health.OnValueChange -= _view.ChangeHealth;
-            _model.Size.OnValueChange -= _view.ChangeSize;
-            _model.Speed.OnValueChange -= _view.ChangeSpeed;
+            _unitStats.Health.OnValueChange -= _unitView.ChangeHealth;
+            _unitStats.Size.OnValueChange -= _unitView.ChangeSize;
+            _unitStats.Speed.OnValueChange -= _unitView.ChangeSpeed;
         }
 
         #region IDamageable
@@ -84,10 +102,10 @@ namespace UnitSystem
         public void TakeDamage(IDamage damageValue)
         {
             var resultDamageAmount
-                = _model.Defence.GetAfterDefDamage(damageValue);
+                = _unitDefence.GetAfterDefDamage(damageValue);
 
-            var hpLost = _model.Health.GetValue() - resultDamageAmount;
-            _model.Health.SetValue(hpLost);
+            var hpLost = _unitStats.Health.GetValue() - resultDamageAmount;
+            _unitStats.Health.SetValue(hpLost);
         }
 
         #endregion
@@ -96,7 +114,7 @@ namespace UnitSystem
 
         public IDamage GetAttackDamage()
         {
-            return _model.Offence.GetDamage();
+            return _unitOffence.GetDamage();
         }
 
         #endregion
@@ -105,12 +123,12 @@ namespace UnitSystem
 
         public Vector3 GetPosition()
         {
-            return _view.SelfTransform.position;
+            return _unitView.SelfTransform.position;
         }
 
         public void SetPosition(Vector3 pos)
         {
-            _view.SelfTransform.position = pos;
+            _unitView.SelfTransform.position = pos;
         }
 
         #endregion
@@ -119,14 +137,14 @@ namespace UnitSystem
 
         public Vector3 GetRotation()
         {
-            var angleVector = _view.SelfTransform.rotation.eulerAngles;
+            var angleVector = _unitView.SelfTransform.rotation.eulerAngles;
             return angleVector;
         }
 
         public void SetRotation(Vector3 rotation)
         {
             var newRotation = Quaternion.Euler(rotation);
-            _view.SelfTransform.rotation = newRotation;
+            _unitView.SelfTransform.rotation = newRotation;
         }
 
         #endregion

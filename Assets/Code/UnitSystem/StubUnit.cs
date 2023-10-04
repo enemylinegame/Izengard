@@ -8,17 +8,21 @@ namespace UnitSystem
     {
         public int Id => -1;
 
-        public IUnitView View { get; private set; }
+        public IUnitView UnitView { get; private set; }
 
-        public UnitModel Model { get; private set; }
+        public UnitStatsModel UnitStats { get; private set; }
 
         public INavigation<Vector3> Navigation { get; }
 
         public UnitPriorityModel UnitPriority { get; }
 
+        public IUnitDefence UnitDefence { get; }
+
+        public IUnitOffence UnitOffence { get; }
+
         public StubUnit(string logMessage)
         {
-            View = new StubUnitView();
+            UnitView = new StubUnitView();
             Debug.LogWarning(logMessage);
         }
 
