@@ -1,4 +1,6 @@
 using Code.UI;
+using Izengard;
+using NewBuildingSystem;
 using UnityEngine;
 
 namespace Configs
@@ -6,7 +8,9 @@ namespace Configs
     [CreateAssetMenu(fileName = nameof(ConfigsHolder), menuName = "GameConfigs/" + nameof(ConfigsHolder))]
     public class ConfigsHolder : ScriptableObject
     {
-        [field: SerializeField] public PrefabsHolder PrefabsHolder { get; set; }
-        [field: SerializeField] public UIElementsConfig UIElementsConfig { get; set; }
+        [field: SerializeField] public ObjectsHolder ObjectsHolder { get; private set; }
+        [field: SerializeField] public UIElementsConfig UIElementsConfig { get; private set; }
+        [field: SerializeField] public GameConfig GameConfig { get; private set; }
+        [field: SerializeField] public BuildingDataBase BuildingDataBase { get; private set; }
     }
 }

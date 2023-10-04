@@ -6,6 +6,8 @@ public class Main : MonoBehaviour
     [SerializeField] private ConfigsHolder _configsHolder;
     [SerializeField] private Canvas _canvas;
     [SerializeField] private AudioSource _clickAudioSource;
+    [SerializeField] private Grid _grid;
+    [SerializeField] private GameObject _plane;
     
     private Controller _controllers;
 
@@ -13,7 +15,7 @@ public class Main : MonoBehaviour
     {
         _controllers = new Controller();
 
-        new GameInit(_controllers, _configsHolder, _clickAudioSource, _canvas);
+        new GameInit(_controllers, _configsHolder, _clickAudioSource, _canvas, _grid, _plane);
 
         _controllers.OnStart();
     }

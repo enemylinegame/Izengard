@@ -14,12 +14,12 @@ namespace Code.UI
             var infoPanelFactory = new InfoPanelFactory(config, canvas);
             var buildingPanelFactory = new BuildingPanelFactory(config, canvas);
             var functionPanelFactory = new FunctionPanelFactory(config, canvas);
-            var resPanelFactory = new ResPanelFactory(config, canvas);
+            //var resPanelFactory = new ResPanelFactory(config, canvas);
 
             infoPanelController = new InfoPanelController(infoPanelFactory);
             BuildingPanelController = new BuildingPanelController(buildingPanelFactory);
             FunctionPanelController = new FunctionPanelController(functionPanelFactory);
-            ResPanelController = new ResPanelController(resPanelFactory);
+            //ResPanelController = new ResPanelController(resPanelFactory);
         }
     }
 }

@@ -53,6 +53,15 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Key1"",
+                    ""type"": ""Button"",
+                    ""id"": ""433912a9-0d1e-4632-8a7e-fc7d585601f0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -75,6 +84,17 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Mouse + Keyboard;Mouse + keyboard"",
                     ""action"": ""RightClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8820c9ef-3c60-45ca-89c0-3f9ae8612a8f"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Key1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -142,6 +162,7 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
         m_PlayerControl_LeftClick = m_PlayerControl.FindAction("LeftClick", throwIfNotFound: true);
         m_PlayerControl_RightClick = m_PlayerControl.FindAction("RightClick", throwIfNotFound: true);
         m_PlayerControl_Move = m_PlayerControl.FindAction("Move", throwIfNotFound: true);
+        m_PlayerControl_Key1 = m_PlayerControl.FindAction("Key1", throwIfNotFound: true);
         // PointerParameters
         m_PointerParameters = asset.FindActionMap("PointerParameters", throwIfNotFound: true);
         m_PointerParameters_PointerID = m_PointerParameters.FindAction("PointerID", throwIfNotFound: true);
@@ -208,6 +229,7 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerControl_LeftClick;
     private readonly InputAction m_PlayerControl_RightClick;
     private readonly InputAction m_PlayerControl_Move;
+    private readonly InputAction m_PlayerControl_Key1;
     public struct PlayerControlActions
     {
         private @UserInput m_Wrapper;
@@ -215,6 +237,7 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
         public InputAction @LeftClick => m_Wrapper.m_PlayerControl_LeftClick;
         public InputAction @RightClick => m_Wrapper.m_PlayerControl_RightClick;
         public InputAction @Move => m_Wrapper.m_PlayerControl_Move;
+        public InputAction @Key1 => m_Wrapper.m_PlayerControl_Key1;
         public InputActionMap Get() { return m_Wrapper.m_PlayerControl; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -233,6 +256,9 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_PlayerControlActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_PlayerControlActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_PlayerControlActionsCallbackInterface.OnMove;
+                @Key1.started -= m_Wrapper.m_PlayerControlActionsCallbackInterface.OnKey1;
+                @Key1.performed -= m_Wrapper.m_PlayerControlActionsCallbackInterface.OnKey1;
+                @Key1.canceled -= m_Wrapper.m_PlayerControlActionsCallbackInterface.OnKey1;
             }
             m_Wrapper.m_PlayerControlActionsCallbackInterface = instance;
             if (instance != null)
@@ -246,6 +272,9 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @Key1.started += instance.OnKey1;
+                @Key1.performed += instance.OnKey1;
+                @Key1.canceled += instance.OnKey1;
             }
         }
     }
@@ -305,6 +334,7 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
         void OnLeftClick(InputAction.CallbackContext context);
         void OnRightClick(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
+        void OnKey1(InputAction.CallbackContext context);
     }
     public interface IPointerParametersActions
     {

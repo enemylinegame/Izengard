@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c510f78d3e1014e8c06b52fcea9775, type: 3}
   m_Name: UIElementsConfig
   m_EditorClassIdentifier: 
-  <ResPanel>k__BackingField: {fileID: 3522359963687103410, guid: 91b9e7c2888e43c47a5bb41f5b8a6b22, type: 3}
+  <ResPanel>k__BackingField: {fileID: 0}
   <InfoPanel>k__BackingField: {fileID: 3692438763612410592, guid: a8971d1ff5e2ece4382e49bb32dfda2e, type: 3}
   <BuildingPanel>k__BackingField: {fileID: 5675874369190241431, guid: ef53a7603c73bcb4ab8d3fcb4e474b00, type: 3}
   <FunctionPanel>k__BackingField: {fileID: 4900253970531227908, guid: cb4305cb6077aaf499e4cd5c638b7d21, type: 3}

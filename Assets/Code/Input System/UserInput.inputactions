@@ -31,6 +31,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Key1",
+                    "type": "Button",
+                    "id": "433912a9-0d1e-4632-8a7e-fc7d585601f0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -53,6 +62,17 @@
                     "processors": "",
                     "groups": "Mouse + Keyboard;Mouse + keyboard",
                     "action": "RightClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8820c9ef-3c60-45ca-89c0-3f9ae8612a8f",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Key1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
