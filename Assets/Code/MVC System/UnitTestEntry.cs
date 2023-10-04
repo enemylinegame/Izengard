@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using EnemySystem.Controllers;
 using SpawnSystem;
@@ -16,6 +15,8 @@ public class UnitTestEntry : MonoBehaviour
 
     private NavigationUpdater _navigationUpdater;
     private EnemySpawnController _enemySpawnController;
+    private TargetFinder _targetFinder;
+
 
     private Dictionary<UnitRoleType, IUnitController> _enemyControllersCollection = new();
     private Dictionary<UnitRoleType, IUnitController> _defenderControllersCollection = new();
@@ -27,16 +28,18 @@ public class UnitTestEntry : MonoBehaviour
     {
         _navigationUpdater = new NavigationUpdater();
         _navigationUpdater.AddNavigationSurface(_groundSurface);
+        
+        _enemySpawnController = new EnemySpawnController(_enemySpawnPoints, _enemySpawnSettings);
+        _enemySpawnController.OnUnitSpawned += OnCreatedUnit;
+        _onUpdates.Add(_enemySpawnController);
 
-        _enemyControllersCollection[UnitRoleType.Militiaman] = new EnemyMilitiamanController();
-        _enemyControllersCollection[UnitRoleType.Hunter] = new EnemyHunterController();
+        _targetFinder = new TargetFinder(_mainTower);
+
+        _enemyControllersCollection[UnitRoleType.Militiaman] = new EnemyMilitiamanController(_targetFinder);
+        _enemyControllersCollection[UnitRoleType.Hunter] = new EnemyHunterController(_targetFinder);
 
         InitUnitCollection(_enemyControllersCollection);
         InitUnitCollection(_defenderControllersCollection);
-
-        _enemySpawnController = new EnemySpawnController(_enemySpawnPoints, _enemySpawnSettings); 
-        _enemySpawnController.OnUnitSpawned += OnCreatedUnit;
-        _onUpdates.Add(_enemySpawnController);
 
         _enemySpawnController.SpawnUnit(UnitRoleType.Militiaman);
         _enemySpawnController.SpawnUnit(UnitRoleType.Militiaman);

@@ -12,7 +12,6 @@ namespace UnitSystem
         private readonly UnitStatsModel _unitStats;       
         private readonly IUnitDefence _unitDefence;
         private readonly IUnitOffence _unitOffence;
-        private readonly UnitPriorityModel _unitPriority;
         private readonly INavigation<Vector3> _navigation;
         private readonly UnitStateModel _unitState;
 
@@ -30,8 +29,6 @@ namespace UnitSystem
 
         public IUnitOffence UnitOffence => _unitOffence;
 
-        public UnitPriorityModel UnitPriority => _unitPriority;
-
         public INavigation<Vector3> Navigation => _navigation;
 
         public UnitStateModel UnitState => _unitState;
@@ -42,7 +39,6 @@ namespace UnitSystem
             UnitStatsModel unitStats,
             IUnitDefence unitDefence,
             IUnitOffence unitOffence,
-            UnitPriorityModel unitPriority,
             INavigation<Vector3> navigation)
         {
             _id = index;
@@ -59,12 +55,8 @@ namespace UnitSystem
             _unitOffence =
                unitOffence ?? throw new ArgumentNullException(nameof(unitOffence));
 
-            _unitPriority  =
-                unitPriority ?? throw new ArgumentNullException(nameof(unitPriority));
-
             _navigation = 
                 navigation ?? throw new ArgumentNullException(nameof(navigation));
-
 
             _unitState = new UnitStateModel();
 

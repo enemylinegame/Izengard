@@ -9,9 +9,11 @@ namespace EnemySystem.Controllers
     {
         private Vector3 _currentTarget;
 
-        public override event Action<IUnit> OnUnitDone;
+        public EnemyMilitiamanController(TargetFinder targetFinder) : base(targetFinder)
+        {
+        }
 
-        public EnemyMilitiamanController() : base() { }
+        public override event Action<IUnit> OnUnitDone;
 
         protected override void InitUnitLogic(IUnit unit)
         {
@@ -20,7 +22,7 @@ namespace EnemySystem.Controllers
             unit.UnitState.ChangeState(UnitState.Idle);
 
             _currentTarget
-                = unit.UnitPriority.GetClosestFoeLocation(UnitFactionType.Defender);
+                = targetFinder.GetClosestFoeLocation(unit);
 
             MoveUnitToTarget(unit, _currentTarget);
         }

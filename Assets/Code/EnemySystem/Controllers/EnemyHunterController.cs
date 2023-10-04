@@ -9,9 +9,11 @@ namespace EnemySystem.Controllers
     {
         private Vector3 _currentTarget;
 
+        public EnemyHunterController(TargetFinder targetFinder) : base(targetFinder)
+        {
+        }
+        
         public override event Action<IUnit> OnUnitDone;
-
-        public EnemyHunterController() : base() { }
 
         protected override void InitUnitLogic(IUnit unit)
         {
@@ -20,7 +22,7 @@ namespace EnemySystem.Controllers
             unit.UnitState.ChangeState(UnitState.Idle);
 
             _currentTarget
-                = unit.UnitPriority.GetMainTowerPosition();
+                = targetFinder.GetMainTowerPosition();
 
             MoveUnitToTarget(unit, _currentTarget);
         }

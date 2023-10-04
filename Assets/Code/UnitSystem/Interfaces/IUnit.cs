@@ -14,7 +14,6 @@ namespace UnitSystem
         UnitStatsModel UnitStats { get; }
         IUnitDefence UnitDefence { get; }
         IUnitOffence UnitOffence { get; }
-        UnitPriorityModel UnitPriority { get; }
         INavigation<Vector3> Navigation { get; }
         UnitStateModel UnitState { get; }
 

@@ -7,11 +7,15 @@ namespace EnemySystem.Controllers
 {
     public abstract class EnemyBaseController : IUnitController, IDisposable
     {
+        protected readonly TargetFinder targetFinder;
+
         protected List<IUnit> unitCollection;
         protected bool isEnable;
-        
-        public EnemyBaseController()
+
+        public EnemyBaseController(TargetFinder targetFinder)
         {
+            this.targetFinder = targetFinder;
+
             unitCollection = new List<IUnit>();
             isEnable = true;
         }

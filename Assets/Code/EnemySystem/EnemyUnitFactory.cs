@@ -38,9 +38,6 @@ namespace EnemySystem
 
             var unitOffence = new UnitOffenceModel(unitData.OffenceData);
 
-            var unitPriority = 
-                new UnitPriorityModel(view.SelfTransform, unitData.UnitPriorities);
-
             var navigation = 
                 new EnemyNavigationModel(view.UnitNavigation, view.SelfTransform.position);
 
@@ -50,7 +47,6 @@ namespace EnemySystem
                 model, 
                 unitDefence, 
                 unitOffence, 
-                unitPriority, 
                 navigation);
 
             return unitHandler;
