@@ -106,7 +106,6 @@ public class UnitTestEntry : MonoBehaviour
                     var unitRole = unit.UnitStats.Role;
                     var unitId = unit.Id;
                     _enemyControllersCollection[unitRole].RemoveUnit(unitId);
-
                     Debug.Log($"Enemy[{unitId}]_{unitRole} reached trget");
                     break;
                 }

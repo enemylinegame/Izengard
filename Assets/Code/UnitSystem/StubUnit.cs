@@ -20,6 +20,8 @@ namespace UnitSystem
 
         public IUnitOffence UnitOffence { get; }
 
+        public UnitStateModel UnitState { get; }
+
         public StubUnit(string logMessage)
         {
             UnitView = new StubUnitView();

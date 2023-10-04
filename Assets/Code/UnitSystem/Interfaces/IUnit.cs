@@ -1,4 +1,5 @@
 ﻿using Abstraction;
+using UnitSystem.Enum;
 using UnityEngine;
 
 namespace UnitSystem
@@ -15,6 +16,7 @@ namespace UnitSystem
         IUnitOffence UnitOffence { get; }
         UnitPriorityModel UnitPriority { get; }
         INavigation<Vector3> Navigation { get; }
+        UnitStateModel UnitState { get; }
 
         int Id { get; }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
@@ -13,7 +14,7 @@ namespace EnemySystem.Controllers
 
         private bool _isEnable;
 
-        public event System.Action<IUnit> OnUnitDone;
+        public event Action<IUnit> OnUnitDone;
 
         public EnemyHunterController()
         {
@@ -37,6 +38,8 @@ namespace EnemySystem.Controllers
             unit.Enable();
             unit.Navigation.Enable();
 
+            unit.UnitState.ChangeState(UnitState.Idle);
+            
             _currentTarget
                 = unit.UnitPriority.GetMainTowerPosition();
 
@@ -94,10 +97,13 @@ namespace EnemySystem.Controllers
                 {
                     var unit = _unitCollection[i];
 
-                    if (CheckStopDistance(unit, _currentTarget) == true)
+                    if (unit.UnitState.CurrentState == UnitState.Move)
                     {
-                        StopUnit(unit);
-                        OnUnitDone?.Invoke(unit);
+                        if (CheckStopDistance(unit, _currentTarget) == true)
+                        {
+                            StopUnit(unit);
+                            OnUnitDone?.Invoke(unit);
+                        }
                     }
                 }
             }
@@ -116,11 +122,13 @@ namespace EnemySystem.Controllers
         private void MoveUnitToTarget(IUnit unit, Vector3 target)
         {
             unit.Navigation.MoveTo(target);
+            unit.UnitState.ChangeState(UnitState.Move);
         }
 
         private void StopUnit(IUnit unit)
         {
             unit.Navigation.Stop();
+            unit.UnitState.ChangeState(UnitState.Idle);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Abstraction;
 using System;
+using UnitSystem.Enum;
 using UnityEngine;
 
 namespace UnitSystem
@@ -8,16 +9,18 @@ namespace UnitSystem
     {
         private readonly IUnitView _unitView;
         
-        private readonly UnitStatsModel _unitStats;
-        
+        private readonly UnitStatsModel _unitStats;       
         private readonly IUnitDefence _unitDefence;
         private readonly IUnitOffence _unitOffence;
-
         private readonly UnitPriorityModel _unitPriority;
         private readonly INavigation<Vector3> _navigation;
+        private readonly UnitStateModel _unitState;
 
         private int _id;
+        private UnitState _state;
+
         public int Id => _id;
+        public UnitState State => _state;
 
         public IUnitView UnitView => _unitView;
 
@@ -30,6 +33,8 @@ namespace UnitSystem
         public UnitPriorityModel UnitPriority => _unitPriority;
 
         public INavigation<Vector3> Navigation => _navigation;
+
+        public UnitStateModel UnitState => _unitState;
 
         public UnitHandler(
             int index,
@@ -59,6 +64,9 @@ namespace UnitSystem
 
             _navigation = 
                 navigation ?? throw new ArgumentNullException(nameof(navigation));
+
+
+            _unitState = new UnitStateModel();
 
             _unitView.Hide();
         }
@@ -95,6 +103,14 @@ namespace UnitSystem
             _unitStats.Health.OnValueChange -= _unitView.ChangeHealth;
             _unitStats.Size.OnValueChange -= _unitView.ChangeSize;
             _unitStats.Speed.OnValueChange -= _unitView.ChangeSpeed;
+        }
+
+        public void ChangeState(UnitState newState)
+        {
+            if(newState != _state)
+            {
+                _state = newState;
+            }
         }
 
         #region IDamageable
