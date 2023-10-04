@@ -14,8 +14,6 @@ namespace UnitSystem
 
         public INavigation<Vector3> Navigation { get; }
 
-        public TargetFinder UnitPriority { get; }
-
         public IUnitDefence UnitDefence { get; }
 
         public IUnitOffence UnitOffence { get; }

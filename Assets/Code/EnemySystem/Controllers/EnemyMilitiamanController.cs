@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BattleSystem;
+using System;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
@@ -7,7 +8,7 @@ namespace EnemySystem.Controllers
 {
     public class EnemyMilitiamanController : EnemyBaseController
     {
-        private Vector3 _currentTarget;
+        private IUnitView _currentTarget;
 
         public EnemyMilitiamanController(TargetFinder targetFinder) : base(targetFinder)
         {
@@ -22,9 +23,9 @@ namespace EnemySystem.Controllers
             unit.UnitState.ChangeState(UnitState.Idle);
 
             _currentTarget
-                = targetFinder.GetClosestFoeLocation(unit);
+                = targetFinder.GetClosestUnit(unit);
 
-            MoveUnitToTarget(unit, _currentTarget);
+            MoveUnitToTarget(unit, _currentTarget.SelfTransform.position);
         }
 
         protected override void DeinitUnitLogic(IUnit unit)
@@ -54,7 +55,7 @@ namespace EnemySystem.Controllers
 
                     if (unit.UnitState.CurrentState == UnitState.Move)
                     {
-                        if (CheckStopDistance(unit, _currentTarget) == true)
+                        if (CheckStopDistance(unit, _currentTarget.SelfTransform.position) == true)
                         {
                             StopUnit(unit);
                             OnUnitDone?.Invoke(unit);

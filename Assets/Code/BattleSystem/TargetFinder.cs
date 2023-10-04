@@ -1,22 +1,27 @@
-﻿using UnitSystem.Enum;
+﻿using UnitSystem;
+using UnitSystem.Enum;
+using UnitSystem.View;
 using UnityEngine;
 
-namespace UnitSystem
+namespace BattleSystem
 {
     public class TargetFinder
     {
         private const int CAST_RADIUS = 100;
 
-        private const int BUILDING_MASK = 1 << 7;
-        private const int ENEMY_MASK = 1 << 8;
-        private const int DEFENDER_MASK = 1 << 9;
+        private readonly int _buildingsMask;
+        private readonly int _enemyMask;
+        private readonly int _defenderMask;
 
         private Transform _mainTowerTransform;
 
         public TargetFinder(Transform mainTowerTransform)
         {
-            _mainTowerTransform = mainTowerTransform;          
-  
+            _mainTowerTransform = mainTowerTransform;
+
+            _buildingsMask = LayerMask.GetMask("Building");
+            _enemyMask = LayerMask.GetMask("Enemy");
+            _defenderMask = LayerMask.GetMask("Defender");
         }
 
         public Vector3 GetMainTowerPosition()
@@ -24,100 +29,100 @@ namespace UnitSystem
             return _mainTowerTransform.position;
         }
 
-        public Vector3 GetClosestFoeLocation(IUnit unit)
+        public BaseUnitView GetClosestUnit(IUnit unit)
         {
             var searchMask = GetUnitMask(unit.UnitStats.Faction);
 
             var unitPositin = unit.GetPosition();
-            var resultPosition = unitPositin;
+
+            BaseUnitView findingUnit = new StubUnitView();
 
             var findResults = Physics.OverlapSphere(unitPositin, CAST_RADIUS, searchMask);
             float maxDist = float.MaxValue;
-            
-            for (int i = 0; i < findResults.Length; i++)
-            {
-                if(findResults[i].gameObject.TryGetComponent<IUnitView>(out var findedFoe))
-                {
-                    var targetPosition = findedFoe.SelfTransform.position;
-                    var distance = Vector3.Distance(targetPosition, unitPositin);
-                    if(distance < maxDist)
-                    {
-                        maxDist = distance;
-                        resultPosition = targetPosition;
-                    }
-                }
-            }
-
-            return resultPosition;
-        }
-
-        public Vector3 GetFarthestFoeLocation(IUnit unit)
-        {
-            var searchMask = GetUnitMask(unit.UnitStats.Faction);
-
-            var unitPositin = unit.GetPosition();
-            var resultPosition = unitPositin;
-
-            var findResults = Physics.OverlapSphere(unitPositin, CAST_RADIUS, searchMask);
-            float minDist = 0;
 
             for (int i = 0; i < findResults.Length; i++)
             {
-                if (findResults[i].gameObject.TryGetComponent<IUnitView>(out var findedFoe))
-                {
-                    var targetPosition = findedFoe.SelfTransform.position;
-                    var distance = Vector3.Distance(targetPosition, unitPositin);
-                    if (distance > minDist)
-                    {
-                        minDist = distance;
-                        resultPosition = targetPosition;
-                    }
-                }
-            }
-
-            return resultPosition;
-        }
-
-
-       /* public Vector3 GetSpecificFoePosition(IUnit unit, UnitRoleType findingRole)
-        {
-            var searchMask = GetUnitMask(unit.UnitStats.Faction);
-
-            var unitPositin = unit.GetPosition();
-            var resultPosition = unitPositin;
-
-            var findResults = Physics.OverlapSphere(unitPositin, CAST_RADIUS, searchMask);
-            
-            float maxDist = float.MaxValue;
-            
-            for (int i = 0; i < findResults.Length; i++)
-            {
-                if (findResults[i].gameObject.tag != findingRole.ToString())
-                    continue;
-
-                if (findResults[i].gameObject.TryGetComponent<IUnitView>(out var findedFoe))
+                if (findResults[i].gameObject.TryGetComponent<BaseUnitView>(out var findedFoe))
                 {
                     var targetPosition = findedFoe.SelfTransform.position;
                     var distance = Vector3.Distance(targetPosition, unitPositin);
                     if (distance < maxDist)
                     {
                         maxDist = distance;
-                        resultPosition = targetPosition;
+                        findingUnit = findedFoe;
                     }
                 }
             }
 
-            return resultPosition;
-        }*/
+            return findingUnit;
+        }
 
+        public BaseUnitView GetClosestUnit(IUnit unit, UnitRoleType findingRole)
+        {
+            var searchMask = GetUnitMask(unit.UnitStats.Faction);
+
+            var unitPositin = unit.GetPosition();
+            BaseUnitView findingUnit = new StubUnitView();
+
+            var findResults = Physics.OverlapSphere(unitPositin, CAST_RADIUS, searchMask);
+
+            float maxDist = float.MaxValue;
+
+            for (int i = 0; i < findResults.Length; i++)
+            {
+                if (findResults[i].gameObject.tag != findingRole.ToString())
+                    continue;
+
+                if (findResults[i].gameObject.TryGetComponent<BaseUnitView>(out var findedFoe))
+                {
+                    var targetPosition = findedFoe.SelfTransform.position;
+                    var distance = Vector3.Distance(targetPosition, unitPositin);
+                    if (distance < maxDist)
+                    {
+                        maxDist = distance;
+                        findingUnit = findedFoe;
+                    }
+                }
+            }
+
+            return findingUnit;
+        }
+
+
+        public BaseUnitView GetFarthestUnit(IUnit unit)
+        {
+            var searchMask = GetUnitMask(unit.UnitStats.Faction);
+
+            var unitPositin = unit.GetPosition();
+            BaseUnitView findingUnit = new StubUnitView();
+
+            var findResults = Physics.OverlapSphere(unitPositin, CAST_RADIUS, searchMask);
+            float minDist = 0;
+
+            for (int i = 0; i < findResults.Length; i++)
+            {
+                if (findResults[i].gameObject.TryGetComponent<BaseUnitView>(out var findedFoe))
+                {
+                    var targetPosition = findedFoe.SelfTransform.position;
+                    var distance = Vector3.Distance(targetPosition, unitPositin);
+                    if (distance > minDist)
+                    {
+                        minDist = distance;
+                        findingUnit = findedFoe;
+                    }
+                }
+            }
+
+            return findingUnit;
+        }
 
         private int GetUnitMask(UnitFactionType unitFaction)
         {
             if (unitFaction == UnitFactionType.Enemy)
-                return DEFENDER_MASK;
+                return _defenderMask;
 
             if (unitFaction == UnitFactionType.Defender)
-                return ENEMY_MASK;
+                return _enemyMask;
 
             return 0;
         }

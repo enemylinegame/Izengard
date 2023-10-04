@@ -11,7 +11,7 @@ namespace Tools
         private TParam _maxValue;
 
         public event Action<TParam> OnValueChange;
-
+        public event Action<TParam> OnMinValueSet;
         public ParametrModel(TParam initValue, TParam minValue, TParam maxValue)
         {
             _paramValue = initValue;
@@ -30,6 +30,7 @@ namespace Tools
             else if (newValue.CompareTo(_minValue) < 0)
             {
                 _paramValue = _minValue;
+                OnMinValueSet?.Invoke(_minValue);
             }
             else
             {
