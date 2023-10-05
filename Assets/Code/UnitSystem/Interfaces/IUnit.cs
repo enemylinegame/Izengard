@@ -1,5 +1,5 @@
 ﻿using Abstraction;
-using UnitSystem.Enum;
+using System;
 using UnityEngine;
 
 namespace UnitSystem
@@ -10,14 +10,18 @@ namespace UnitSystem
         IPositioned<Vector3>, 
         IRotated<Vector3>
     {
-        IUnitView UnitView { get; }
-        UnitStatsModel UnitStats { get; }
-        IUnitDefence UnitDefence { get; }
-        IUnitOffence UnitOffence { get; }
+        IUnitView View { get; }
+        UnitStatsModel Stats { get; }
+        IUnitDefence Defence { get; }
+        IUnitOffence Offence { get; }
         INavigation<Vector3> Navigation { get; }
         UnitStateModel UnitState { get; }
 
+        event Action<IUnit> OnReachedZeroHealth;
+
         int Id { get; }
+
+        Vector3 CurrentTarget { get; set; }
 
         void Enable();
 

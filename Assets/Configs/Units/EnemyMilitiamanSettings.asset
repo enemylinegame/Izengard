@@ -18,7 +18,7 @@ MonoBehaviour:
     _healthPoints: 100
     _size: 0.5
     _speed: 2
-    _detectionRange: 5
+    _detectionRange: 10
   _unitPriorities:
   - _unitPriority: 1
     _priorityRole: 0
@@ -35,8 +35,8 @@ MonoBehaviour:
       _coldDamageResist: 25
   _offenceData:
     _attackType: 1
-    _minRange: 1.5
-    _maxRange: 5
+    _minRange: 0
+    _maxRange: 2
     _castingSpeed: 1
     _attackSpeed: 1
     _criticalChance: 10

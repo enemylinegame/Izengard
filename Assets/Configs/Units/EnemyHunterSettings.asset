@@ -35,8 +35,8 @@ MonoBehaviour:
       _coldDamageResist: 25
   _offenceData:
     _attackType: 2
-    _minRange: 1.5
-    _maxRange: 3
+    _minRange: 1
+    _maxRange: 5
     _castingSpeed: 1
     _attackSpeed: 1
     _criticalChance: 10

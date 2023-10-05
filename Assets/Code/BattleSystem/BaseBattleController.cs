@@ -1,4 +1,6 @@
-﻿namespace BattleSystem
+﻿using UnitSystem;
+
+namespace BattleSystem
 {
     public abstract class BaseBattleController : IOnController, IOnUpdate, IOnFixedUpdate
     {
@@ -12,5 +14,7 @@
         public abstract void OnUpdate(float deltaTime);
 
         public abstract void OnFixedUpdate(float fixedDeltaTime);
+
+        public abstract void AddUnit(IUnit unit);
     }
 }

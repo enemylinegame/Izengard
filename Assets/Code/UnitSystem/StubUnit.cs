@@ -1,4 +1,5 @@
 ﻿using Abstraction;
+using System;
 using UnitSystem.View;
 using UnityEngine;
 
@@ -8,23 +9,26 @@ namespace UnitSystem
     {
         public int Id => -1;
 
-        public IUnitView UnitView { get; private set; }
+        public IUnitView View { get; private set; }
 
-        public UnitStatsModel UnitStats { get; private set; }
+        public UnitStatsModel Stats { get; private set; }
 
         public INavigation<Vector3> Navigation { get; }
 
-        public IUnitDefence UnitDefence { get; }
+        public IUnitDefence Defence { get; }
 
-        public IUnitOffence UnitOffence { get; }
+        public IUnitOffence Offence { get; }
 
         public UnitStateModel UnitState { get; }
+        public Vector3 CurrentTarget { get; set; } = Vector3.zero;
 
         public StubUnit(string logMessage)
         {
-            UnitView = new StubUnitView();
+            View = new StubUnitView();
             Debug.LogWarning(logMessage);
         }
+
+        public event Action<IUnit> OnReachedZeroHealth;
 
         public void Disable() { }
 

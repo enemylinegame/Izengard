@@ -23,7 +23,7 @@ namespace EnemySystem.Controllers
         protected bool CheckStopDistance(IUnit unit, Vector3 currentTarget)
         {
             var distance = Vector3.Distance(unit.GetPosition(), currentTarget);
-            if (distance <= unit.UnitOffence.MinRange)
+            if (distance <= unit.Offence.MinRange)
             {
                 return true;
             }

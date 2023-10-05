@@ -12,6 +12,7 @@ namespace BattleSystem
         private readonly int _buildingsMask;
         private readonly int _enemyMask;
         private readonly int _defenderMask;
+        private readonly StubUnitView _defaultUnitView;
 
         private Transform _mainTowerTransform;
 
@@ -22,6 +23,10 @@ namespace BattleSystem
             _buildingsMask = LayerMask.GetMask("Building");
             _enemyMask = LayerMask.GetMask("Enemy");
             _defenderMask = LayerMask.GetMask("Defender");
+
+            var go = new GameObject("StubUnit");
+            go.SetActive(false);
+            _defaultUnitView = go.AddComponent<StubUnitView>();
         }
 
         public Vector3 GetMainTowerPosition()
@@ -31,21 +36,30 @@ namespace BattleSystem
 
         public BaseUnitView GetClosestUnit(IUnit unit)
         {
-            var searchMask = GetUnitMask(unit.UnitStats.Faction);
+            var searchMask = GetUnitMask(unit.Stats.Faction);
 
-            var unitPositin = unit.GetPosition();
+            var unitPosition = unit.GetPosition();
 
-            BaseUnitView findingUnit = new StubUnitView();
+            BaseUnitView findingUnit = _defaultUnitView;
 
-            var findResults = Physics.OverlapSphere(unitPositin, CAST_RADIUS, searchMask);
+            var searchRange = unit.Stats.DetectionRange.GetValue();
+
+            var findedHits = Physics.SphereCastAll(
+                unitPosition,
+                searchRange,
+                unit.View.SelfTransform.forward,
+                searchMask);
+
             float maxDist = float.MaxValue;
 
-            for (int i = 0; i < findResults.Length; i++)
+            foreach(var hit in findedHits)
             {
-                if (findResults[i].gameObject.TryGetComponent<BaseUnitView>(out var findedFoe))
+                var findGO = hit.transform.gameObject;
+
+                if (findGO.TryGetComponent<BaseUnitView>(out var findedFoe))
                 {
-                    var targetPosition = findedFoe.SelfTransform.position;
-                    var distance = Vector3.Distance(targetPosition, unitPositin);
+                    var distance = hit.distance;
+
                     if (distance < maxDist)
                     {
                         maxDist = distance;
@@ -59,24 +73,33 @@ namespace BattleSystem
 
         public BaseUnitView GetClosestUnit(IUnit unit, UnitRoleType findingRole)
         {
-            var searchMask = GetUnitMask(unit.UnitStats.Faction);
+            var searchMask = GetUnitMask(unit.Stats.Faction);
 
-            var unitPositin = unit.GetPosition();
-            BaseUnitView findingUnit = new StubUnitView();
+            var unitPosition = unit.GetPosition();
 
-            var findResults = Physics.OverlapSphere(unitPositin, CAST_RADIUS, searchMask);
+            BaseUnitView findingUnit = _defaultUnitView;
+
+            var searchRange = unit.Stats.DetectionRange.GetValue();
+
+            var findedHits = Physics.SphereCastAll(
+                unitPosition,
+                searchRange,
+                unit.View.SelfTransform.forward,
+                searchMask);
 
             float maxDist = float.MaxValue;
 
-            for (int i = 0; i < findResults.Length; i++)
+            foreach (var hit in findedHits)
             {
-                if (findResults[i].gameObject.tag != findingRole.ToString())
+                var findGO = hit.transform.gameObject;
+
+                if (findGO.tag != findingRole.ToString())
                     continue;
 
-                if (findResults[i].gameObject.TryGetComponent<BaseUnitView>(out var findedFoe))
+                if (findGO.TryGetComponent<BaseUnitView>(out var findedFoe))
                 {
-                    var targetPosition = findedFoe.SelfTransform.position;
-                    var distance = Vector3.Distance(targetPosition, unitPositin);
+                    var distance = hit.distance;
+
                     if (distance < maxDist)
                     {
                         maxDist = distance;
@@ -91,20 +114,30 @@ namespace BattleSystem
 
         public BaseUnitView GetFarthestUnit(IUnit unit)
         {
-            var searchMask = GetUnitMask(unit.UnitStats.Faction);
+            var searchMask = GetUnitMask(unit.Stats.Faction);
 
-            var unitPositin = unit.GetPosition();
-            BaseUnitView findingUnit = new StubUnitView();
+            var unitPosition = unit.GetPosition();
 
-            var findResults = Physics.OverlapSphere(unitPositin, CAST_RADIUS, searchMask);
+            BaseUnitView findingUnit = _defaultUnitView;
+
+            var searchRange = unit.Stats.DetectionRange.GetValue();
+
+            var findedHits = Physics.SphereCastAll(
+                unitPosition,
+                searchRange,
+                unit.View.SelfTransform.forward,
+                searchMask);
+
             float minDist = 0;
 
-            for (int i = 0; i < findResults.Length; i++)
+            foreach (var hit in findedHits)
             {
-                if (findResults[i].gameObject.TryGetComponent<BaseUnitView>(out var findedFoe))
+                var findGO = hit.transform.gameObject;
+
+                if (findGO.TryGetComponent<BaseUnitView>(out var findedFoe))
                 {
-                    var targetPosition = findedFoe.SelfTransform.position;
-                    var distance = Vector3.Distance(targetPosition, unitPositin);
+                    var distance = hit.distance;
+
                     if (distance > minDist)
                     {
                         minDist = distance;

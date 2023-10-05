@@ -1,6 +1,7 @@
 ﻿using Abstraction;
 using System;
 using UnitSystem.Enum;
+using UnityEditor;
 using UnityEngine;
 
 namespace UnitSystem
@@ -8,7 +9,6 @@ namespace UnitSystem
     public class UnitHandler : IUnit, IDisposable
     {
         private readonly IUnitView _unitView;
-        
         private readonly UnitStatsModel _unitStats;       
         private readonly IUnitDefence _unitDefence;
         private readonly IUnitOffence _unitOffence;
@@ -16,22 +16,25 @@ namespace UnitSystem
         private readonly UnitStateModel _unitState;
 
         private int _id;
-        private UnitState _state;
 
-        public int Id => _id;
-        public UnitState State => _state;
+        public IUnitView View => _unitView;
 
-        public IUnitView UnitView => _unitView;
+        public UnitStatsModel Stats => _unitStats;
 
-        public UnitStatsModel UnitStats => _unitStats;
+        public IUnitDefence Defence => _unitDefence;
 
-        public IUnitDefence UnitDefence => _unitDefence;
-
-        public IUnitOffence UnitOffence => _unitOffence;
+        public IUnitOffence Offence => _unitOffence;
 
         public INavigation<Vector3> Navigation => _navigation;
 
         public UnitStateModel UnitState => _unitState;
+
+        public int Id => _id;
+
+        public Vector3 CurrentTarget { get; set; }
+
+
+        public event Action<IUnit> OnReachedZeroHealth;
 
         public UnitHandler(
             int index,
@@ -77,6 +80,8 @@ namespace UnitSystem
         private void Subscribe()
         {
             _unitStats.Health.OnValueChange += _unitView.ChangeHealth;
+            _unitStats.Health.OnMinValueSet += ReachedZeroHealth;
+
             _unitStats.Size.OnValueChange += _unitView.ChangeSize;
             _unitStats.Speed.OnValueChange += _unitView.ChangeSpeed;
         }
@@ -93,16 +98,15 @@ namespace UnitSystem
         private void Unsubscribe()
         {
             _unitStats.Health.OnValueChange -= _unitView.ChangeHealth;
+            _unitStats.Health.OnMinValueSet -= ReachedZeroHealth;
+
             _unitStats.Size.OnValueChange -= _unitView.ChangeSize;
             _unitStats.Speed.OnValueChange -= _unitView.ChangeSpeed;
         }
 
-        public void ChangeState(UnitState newState)
+        private void ReachedZeroHealth(int value)
         {
-            if(newState != _state)
-            {
-                _state = newState;
-            }
+            OnReachedZeroHealth?.Invoke(this);
         }
 
         #region IDamageable

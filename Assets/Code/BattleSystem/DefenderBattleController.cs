@@ -1,4 +1,6 @@
-﻿namespace BattleSystem
+﻿using UnitSystem;
+
+namespace BattleSystem
 {
     public class DefenderBattleController : BaseBattleController
     {
@@ -15,5 +17,7 @@
         {
             
         }
+
+        public override void AddUnit(IUnit unit) { }
     }
 }

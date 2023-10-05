@@ -17,10 +17,7 @@ public class UnitTestEntry : MonoBehaviour
     private NavigationUpdater _navigationUpdater;
     private EnemySpawnController _enemySpawnController;
     private TargetFinder _targetFinder;
-
-
-    private Dictionary<UnitRoleType, IUnitController> _enemyControllersCollection = new();
-    private Dictionary<UnitRoleType, IUnitController> _defenderControllersCollection = new();
+    private EnemyBattleController _enemyBattleController;
 
     private List<IOnUpdate> _onUpdates = new List<IOnUpdate>();
     private List<IOnFixedUpdate> _onFixedUpdates = new List<IOnFixedUpdate>();
@@ -36,30 +33,15 @@ public class UnitTestEntry : MonoBehaviour
 
         _targetFinder = new TargetFinder(_mainTower);
 
-        _enemyControllersCollection[UnitRoleType.Militiaman] = new EnemyMilitiamanController(_targetFinder);
-        _enemyControllersCollection[UnitRoleType.Hunter] = new EnemyHunterController(_targetFinder);
-
-        InitUnitCollection(_enemyControllersCollection);
-        InitUnitCollection(_defenderControllersCollection);
+        _enemyBattleController = new EnemyBattleController(_targetFinder);
+        _onUpdates.Add(_enemyBattleController);
+        _onFixedUpdates.Add(_enemyBattleController);
 
         _enemySpawnController.SpawnUnit(UnitRoleType.Militiaman);
         _enemySpawnController.SpawnUnit(UnitRoleType.Militiaman);
         _enemySpawnController.SpawnUnit(UnitRoleType.Hunter);
     }
 
-
-    private void InitUnitCollection(Dictionary<UnitRoleType, IUnitController> unitCollection)
-    {
-        foreach (var entry in unitCollection)
-        {
-            var unitController = entry.Value;
-
-            unitController.OnUnitDone += OnUnitControllerDone;
-
-            _onUpdates.Add(unitController);
-            _onFixedUpdates.Add(unitController);
-        }
-    }
 
     private void Update()
     {
@@ -77,46 +59,9 @@ public class UnitTestEntry : MonoBehaviour
         }
     }
 
-
     private void OnCreatedUnit(IUnit unit) 
     {
-        switch (unit.UnitStats.Faction)
-        {
-            default:
-                break;
-            case UnitFactionType.Enemy:
-                {
-                    var unitRole = unit.UnitStats.Role;
-                    unit.Enable();
-                    _enemyControllersCollection[unitRole].AddUnit(unit);
-
-                    break;
-                }
-            case UnitFactionType.Defender:
-                {
-                    break;
-                }
-        }
-    }
-
-    private void OnUnitControllerDone(IUnit unit)
-    {
-        switch (unit.UnitStats.Faction)
-        {
-            default:
-                break;
-            case UnitFactionType.Enemy:
-                {
-                    var unitRole = unit.UnitStats.Role;
-                    var unitId = unit.Id;
-                    _enemyControllersCollection[unitRole].RemoveUnit(unitId);
-                    Debug.Log($"Enemy[{unitId}]_{unitRole} reached trget");
-                    break;
-                }
-            case UnitFactionType.Defender:
-                {
-                    break;
-                }
-        }
+        unit.Enable();
+        _enemyBattleController.AddUnit(unit);
     }
 }
