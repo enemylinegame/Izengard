@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OverrideArea: 0
+  m_OverrideArea: 1
   m_Area: 0
   m_IgnoreFromBuild: 1
   m_AffectedAgents: ffffffff

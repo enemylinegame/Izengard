@@ -18,7 +18,7 @@ MonoBehaviour:
     _healthPoints: 100
     _size: 0.5
     _speed: 2
-    _detectionRange: 10
+    _detectionRange: 5
   _unitPriorities:
   - _unitPriority: 1
     _priorityRole: 0

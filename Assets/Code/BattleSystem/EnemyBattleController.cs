@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnitSystem;
 using UnitSystem.Enum;
+using UnitSystem.View;
 using UnityEngine;
 
 namespace BattleSystem
@@ -31,8 +32,14 @@ namespace BattleSystem
                             else if (unit.Stats.Role == UnitRoleType.Militiaman)
                             {
                                 var target = GetClosestDefender(unit);
-
-                                unit.CurrentTarget = target.SelfTransform.position;
+                                if(target is StubUnitView)
+                                {
+                                    unit.CurrentTarget = targetFinder.GetMainTowerPosition();
+                                }
+                                else
+                                {
+                                    unit.CurrentTarget = target.SelfTransform.position;
+                                }
                             }
                             
                             MoveUnitToTarget(unit, unit.CurrentTarget);

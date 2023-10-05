@@ -7,11 +7,11 @@ namespace BattleSystem
 {
     public class TargetFinder
     {
-        private const int CAST_RADIUS = 100;
+        private const int MAX_CAST_DISTANCE = 100;
 
-        private readonly int _buildingsMask;
-        private readonly int _enemyMask;
-        private readonly int _defenderMask;
+        private readonly LayerMask _buildingsMask;
+        private readonly LayerMask _enemyMask;
+        private readonly LayerMask _defenderMask;
         private readonly StubUnitView _defaultUnitView;
 
         private Transform _mainTowerTransform;
@@ -21,7 +21,7 @@ namespace BattleSystem
             _mainTowerTransform = mainTowerTransform;
 
             _buildingsMask = LayerMask.GetMask("Building");
-            _enemyMask = LayerMask.GetMask("Enemy");
+            _enemyMask =  LayerMask.GetMask("Enemy");
             _defenderMask = LayerMask.GetMask("Defender");
 
             var go = new GameObject("StubUnit");
@@ -44,11 +44,13 @@ namespace BattleSystem
 
             var searchRange = unit.Stats.DetectionRange.GetValue();
 
-            var findedHits = Physics.SphereCastAll(
-                unitPosition,
-                searchRange,
-                unit.View.SelfTransform.forward,
-                searchMask);
+            var findedHits = 
+                Physics.SphereCastAll(
+                    unitPosition,
+                    searchRange, 
+                    unit.View.SelfTransform.forward,
+                    MAX_CAST_DISTANCE, 
+                    searchMask);
 
             float maxDist = float.MaxValue;
 
@@ -80,12 +82,15 @@ namespace BattleSystem
             BaseUnitView findingUnit = _defaultUnitView;
 
             var searchRange = unit.Stats.DetectionRange.GetValue();
+            var radius = searchRange / 2;
 
-            var findedHits = Physics.SphereCastAll(
-                unitPosition,
-                searchRange,
-                unit.View.SelfTransform.forward,
-                searchMask);
+            var findedHits =
+                Physics.SphereCastAll(
+                    unitPosition,
+                    searchRange,
+                    unit.View.SelfTransform.forward,
+                    MAX_CAST_DISTANCE,
+                    searchMask);
 
             float maxDist = float.MaxValue;
 
@@ -122,11 +127,13 @@ namespace BattleSystem
 
             var searchRange = unit.Stats.DetectionRange.GetValue();
 
-            var findedHits = Physics.SphereCastAll(
-                unitPosition,
-                searchRange,
-                unit.View.SelfTransform.forward,
-                searchMask);
+            var findedHits =
+               Physics.SphereCastAll(
+                   unitPosition,
+                   searchRange,
+                   unit.View.SelfTransform.forward,
+                   MAX_CAST_DISTANCE,
+                   searchMask);
 
             float minDist = 0;
 
