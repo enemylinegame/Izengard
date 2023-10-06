@@ -1,7 +1,7 @@
 ﻿using System;
 using UnitSystem.Enum;
 
-namespace UnitSystem
+namespace UnitSystem.Model
 {
     public class UnitStateModel
     {

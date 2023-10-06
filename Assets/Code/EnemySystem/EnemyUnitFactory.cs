@@ -2,6 +2,7 @@
 using UnitSystem.Data;
 using System.Collections.Generic;
 using UnityEngine;
+using UnitSystem.Model;
 
 namespace EnemySystem
 {
@@ -16,10 +17,29 @@ namespace EnemySystem
 
         public override IUnit CreateMilitiaman(IUnitData unitData)
         {
-            return CreateEnemy(unitData);
+            throw new System.NotImplementedException();
         }
 
         public override IUnit CreateHunter(IUnitData unitData)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override IUnit CreateMage(IUnitData unitData)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override IUnit CreateImp(IUnitData unitData)
+        {
+            return CreateEnemy(unitData);
+        }
+
+        public override IUnit CreateHound(IUnitData unitData)
+        {
+            return CreateEnemy(unitData);
+        }
+        public override IUnit CreateFiend(IUnitData unitData)
         {
             return CreateEnemy(unitData);
         }

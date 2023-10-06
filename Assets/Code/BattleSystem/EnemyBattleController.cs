@@ -8,7 +8,7 @@ namespace BattleSystem
 {
     public class EnemyBattleController : BaseBattleController
     {
-        private List<IUnit> _enemyUnitCollection;       
+        private List<IUnit> _enemyUnitCollection;
         private List<IUnit> _defenderUnitCollection;
 
         public EnemyBattleController(TargetFinder targetFinder) : base(targetFinder)
@@ -19,43 +19,91 @@ namespace BattleSystem
 
         public override void OnUpdate(float deltaTime)
         {
-            foreach(var unit in _enemyUnitCollection)
+            foreach (var unit in _enemyUnitCollection)
             {
                 switch (unit.UnitState.CurrentState)
                 {
                     case UnitState.Idle:
                         {
-                            if(unit.Stats.Role == UnitRoleType.Hunter)
-                            {
-                                unit.CurrentTarget = targetFinder.GetMainTowerPosition();
-                            }
-                            else if (unit.Stats.Role == UnitRoleType.Militiaman)
-                            {
-                                var target = GetClosestDefender(unit);
-                                if(target is StubUnitView)
-                                {
-                                    unit.CurrentTarget = targetFinder.GetMainTowerPosition();
-                                }
-                                else
-                                {
-                                    unit.CurrentTarget = target.SelfTransform.position;
-                                }
-                            }
-                            
-                            MoveUnitToTarget(unit, unit.CurrentTarget);
-                            unit.UnitState.ChangeState(UnitState.Move);
-                            
+                            EnemyInIdleLogic(unit);
                             break;
                         }
                     case UnitState.Move:
                         {
-                            if (CheckStopDistance(unit, unit.CurrentTarget) == true)
-                            {
-                                StopUnit(unit);
-                            }
+                            EnemyInMoveLogic(unit);
                             break;
                         }
                 }
+            }
+        }
+
+        private void EnemyInIdleLogic(IUnit unit)
+        {
+            switch (unit.Stats.Role)
+            {
+                default:
+                    break;
+                case UnitRoleType.Imp:
+                    {
+                        var target = GetClosestDefender(unit);
+                        if (target is StubUnitView)
+                        {
+                            unit.Target.SetPositionedTarget(targetFinder.GetMainTowerPosition());
+                            MoveUnitToTarget(unit, unit.Target.PositionedTarget);
+                        }
+                        else
+                        {
+                            unit.Target.SetUnitTarget(target);
+                            MoveUnitToTarget(unit, unit.Target.UnitTarget);
+                        }
+                        break;
+                    }
+                case UnitRoleType.Hound:
+                    {
+                        var target = targetFinder.GetMainTowerPosition();
+                        unit.Target.SetPositionedTarget(target);
+
+                        MoveUnitToTarget(unit, unit.Target.PositionedTarget);
+                        break;
+                    }
+            }
+
+            unit.UnitState.ChangeState(UnitState.Move);
+        }
+
+        private void EnemyInMoveLogic(IUnit unit)
+        {
+            switch (unit.Stats.Role)
+            {
+                default:
+                    break;
+                case UnitRoleType.Imp:
+                    {
+                        Vector3 targetPos = Vector3.zero;
+
+                        if(unit.Target.UnitTarget == null)
+                        {
+                            targetPos = unit.SpawnPosition;
+                        }
+                        else
+                        {
+                            targetPos = unit.Target.UnitTarget.SelfTransform.position;
+                        }
+
+                        if (CheckStopDistance(unit, targetPos) == true)
+                        {
+                            StopUnit(unit);
+                        }
+                        break;
+                    }
+                case UnitRoleType.Hound:
+                    {
+                        if (CheckStopDistance(unit, unit.Target.PositionedTarget) == true)
+                        {
+                            StopUnit(unit);
+                        }
+                        break;
+                    }
             }
         }
 
@@ -67,8 +115,7 @@ namespace BattleSystem
             }
         }
 
-
-        public override void AddUnit(IUnit unit) 
+        public override void AddUnit(IUnit unit)
         {
             switch (unit.Stats.Faction)
             {
@@ -96,7 +143,7 @@ namespace BattleSystem
             unit.UnitState.ChangeState(UnitState.Idle);
         }
 
-        private IUnitView GetClosestDefender(IUnit unit)
+        private BaseUnitView GetClosestDefender(IUnit unit)
         {
             return targetFinder.GetClosestUnit(unit);
         }
@@ -104,6 +151,11 @@ namespace BattleSystem
         private void MoveUnitToTarget(IUnit unit, Vector3 target)
         {
             unit.Navigation.MoveTo(target);
+        }
+
+        private void MoveUnitToTarget(IUnit unit, IUnitView target)
+        {
+            unit.Navigation.MoveTo(target.SelfTransform.position);
         }
 
         private void StopUnit(IUnit unit)

@@ -1,7 +1,6 @@
 ﻿using Abstraction;
 using System;
-using UnitSystem.Enum;
-using UnityEditor;
+using UnitSystem.Model;
 using UnityEngine;
 
 namespace UnitSystem
@@ -14,8 +13,10 @@ namespace UnitSystem
         private readonly IUnitOffence _unitOffence;
         private readonly INavigation<Vector3> _navigation;
         private readonly UnitStateModel _unitState;
+        private readonly UnitTargetModel _unitTarget;
 
         private int _id;
+        private Vector3 _spawnPosition;
 
         public IUnitView View => _unitView;
 
@@ -29,10 +30,11 @@ namespace UnitSystem
 
         public UnitStateModel UnitState => _unitState;
 
+        public UnitTargetModel Target => _unitTarget;
+
         public int Id => _id;
 
-        public Vector3 CurrentTarget { get; set; }
-
+        public Vector3 SpawnPosition => _spawnPosition;
 
         public event Action<IUnit> OnReachedZeroHealth;
 
@@ -62,6 +64,8 @@ namespace UnitSystem
                 navigation ?? throw new ArgumentNullException(nameof(navigation));
 
             _unitState = new UnitStateModel();
+            
+            _unitTarget = new UnitTargetModel();
 
             _unitView.Hide();
         }
@@ -102,6 +106,12 @@ namespace UnitSystem
 
             _unitStats.Size.OnValueChange -= _unitView.ChangeSize;
             _unitStats.Speed.OnValueChange -= _unitView.ChangeSpeed;
+        }
+
+        public void SetSpawnPosition(Vector3 spawnPosition)
+        {
+            _spawnPosition = spawnPosition;
+            SetPosition(spawnPosition);
         }
 
         private void ReachedZeroHealth(int value)

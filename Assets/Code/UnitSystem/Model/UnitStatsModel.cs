@@ -2,7 +2,7 @@ using Abstraction;
 using Tools;
 using UnitSystem.Enum;
 
-namespace UnitSystem 
+namespace UnitSystem.Model
 {
     public class UnitStatsModel 
     {

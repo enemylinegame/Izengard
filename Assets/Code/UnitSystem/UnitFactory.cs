@@ -26,13 +26,20 @@ namespace UnitSystem
             {
                 UnitRoleType.Militiaman => CreateMilitiaman(unitData),
                 UnitRoleType.Hunter => CreateHunter(unitData),
+                UnitRoleType.Mage => CreateMage(unitData),
+                UnitRoleType.Imp => CreateImp(unitData),
+                UnitRoleType.Hound => CreateHound(unitData),
+                UnitRoleType.Fiend => CreateFiend(unitData),
                 _ => new StubUnit("StubUnitModel was created!. Check Unit Configs")
             };
 
             return unit;
         }
-
         public abstract IUnit CreateMilitiaman(IUnitData unitData);
         public abstract IUnit CreateHunter(IUnitData unitData);
+        public abstract IUnit CreateMage(IUnitData unitData);
+        public abstract IUnit CreateImp(IUnitData unitData);
+        public abstract IUnit CreateHound(IUnitData unitData);
+        public abstract IUnit CreateFiend(IUnitData unitData);
     }
 }

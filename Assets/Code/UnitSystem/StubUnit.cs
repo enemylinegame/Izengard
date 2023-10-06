@@ -1,5 +1,6 @@
 ﻿using Abstraction;
 using System;
+using UnitSystem.Model;
 using UnitSystem.View;
 using UnityEngine;
 
@@ -20,7 +21,10 @@ namespace UnitSystem
         public IUnitOffence Offence { get; }
 
         public UnitStateModel UnitState { get; }
-        public Vector3 CurrentTarget { get; set; } = Vector3.zero;
+
+        public UnitTargetModel Target { get; }
+
+        public Vector3 SpawnPosition => Vector3.zero;
 
         public StubUnit(string logMessage)
         {
@@ -57,5 +61,7 @@ namespace UnitSystem
         }
 
         public void SetRotation(Vector3 rot) { }
+
+        public void SetSpawnPosition(Vector3 spawnPosition) { }
     }
 }

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using BattleSystem;
-using EnemySystem.Controllers;
 using SpawnSystem;
 using Tools.Navigation;
 using UnitSystem;
@@ -37,9 +36,9 @@ public class UnitTestEntry : MonoBehaviour
         _onUpdates.Add(_enemyBattleController);
         _onFixedUpdates.Add(_enemyBattleController);
 
-        _enemySpawnController.SpawnUnit(UnitRoleType.Militiaman);
-        _enemySpawnController.SpawnUnit(UnitRoleType.Militiaman);
-        _enemySpawnController.SpawnUnit(UnitRoleType.Hunter);
+        _enemySpawnController.SpawnUnit(UnitRoleType.Imp);
+        _enemySpawnController.SpawnUnit(UnitRoleType.Imp);
+        _enemySpawnController.SpawnUnit(UnitRoleType.Hound);
     }
 
 

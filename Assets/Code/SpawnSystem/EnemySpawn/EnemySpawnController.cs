@@ -43,7 +43,7 @@ namespace SpawnSystem
             var spawnIndex = Random.Range(0, _spawnPoints.Count);
             var spwanPosition = _spawnPoints[spawnIndex].position;
 
-            unit.SetPosition(spwanPosition);
+            unit.SetSpawnPosition(spwanPosition);
 
             OnUnitSpawned?.Invoke(unit);
         }

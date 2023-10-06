@@ -2,7 +2,7 @@
 using Tools;
 using UnityEngine;
 
-namespace UnitSystem
+namespace UnitSystem.Model
 {
     public class UnitDefenceModel : IUnitDefence
     {

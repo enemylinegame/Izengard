@@ -2,7 +2,7 @@
 using UnitSystem.Enum;
 using UnityEngine;
 
-namespace UnitSystem
+namespace UnitSystem.Model
 {
     public class UnitOffenceModel : IUnitOffence
     {
