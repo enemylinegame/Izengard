@@ -1,5 +1,7 @@
 ﻿using Abstraction;
 using System;
+using System.Collections.Generic;
+using UnitSystem.Data;
 using UnitSystem.Model;
 using UnityEngine;
 
@@ -16,9 +18,10 @@ namespace UnitSystem
         IUnitDefence Defence { get; }
         IUnitOffence Offence { get; }
         INavigation<Vector3> Navigation { get; }
-        UnitStateModel UnitState { get; }
         UnitTargetModel Target { get; }
-        
+        UnitStateModel UnitState { get; }
+        Queue<UnitPriorityData> UnitPriorities { get; }
+
         event Action<IUnit> OnReachedZeroHealth;
 
         int Id { get; }

@@ -1,5 +1,7 @@
 ﻿using Abstraction;
 using System;
+using System.Collections.Generic;
+using UnitSystem.Data;
 using UnitSystem.Model;
 using UnitSystem.View;
 using UnityEngine;
@@ -25,6 +27,8 @@ namespace UnitSystem
         public UnitTargetModel Target { get; }
 
         public Vector3 SpawnPosition => Vector3.zero;
+
+        public Queue<UnitPriorityData> UnitPriorities { get; }
 
         public StubUnit(string logMessage)
         {

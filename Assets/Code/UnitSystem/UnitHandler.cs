@@ -1,5 +1,7 @@
 ﻿using Abstraction;
 using System;
+using System.Collections.Generic;
+using UnitSystem.Data;
 using UnitSystem.Model;
 using UnityEngine;
 
@@ -14,6 +16,7 @@ namespace UnitSystem
         private readonly INavigation<Vector3> _navigation;
         private readonly UnitStateModel _unitState;
         private readonly UnitTargetModel _unitTarget;
+        private readonly Queue<UnitPriorityData> _unitPriorities;
 
         private int _id;
         private Vector3 _spawnPosition;
@@ -28,13 +31,16 @@ namespace UnitSystem
 
         public INavigation<Vector3> Navigation => _navigation;
 
+        public UnitTargetModel Target => _unitTarget;
         public UnitStateModel UnitState => _unitState;
 
-        public UnitTargetModel Target => _unitTarget;
+        public Queue<UnitPriorityData> UnitPriorities => _unitPriorities;
 
         public int Id => _id;
 
         public Vector3 SpawnPosition => _spawnPosition;
+
+      
 
         public event Action<IUnit> OnReachedZeroHealth;
 
@@ -44,7 +50,8 @@ namespace UnitSystem
             UnitStatsModel unitStats,
             IUnitDefence unitDefence,
             IUnitOffence unitOffence,
-            INavigation<Vector3> navigation)
+            INavigation<Vector3> navigation,
+            IReadOnlyList<UnitPriorityData> unitPriorities)
         {
             _id = index;
 
@@ -66,6 +73,13 @@ namespace UnitSystem
             _unitState = new UnitStateModel();
             
             _unitTarget = new UnitTargetModel();
+
+            _unitPriorities = new Queue<UnitPriorityData>();
+            
+            foreach(var unitPriority in unitPriorities)
+            {
+                _unitPriorities.Enqueue(unitPriority);
+            }
 
             _unitView.Hide();
         }
