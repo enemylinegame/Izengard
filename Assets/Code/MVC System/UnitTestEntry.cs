@@ -9,12 +9,18 @@ using UnityEngine;
 public class UnitTestEntry : MonoBehaviour
 {
     [SerializeField] private Transform _mainTower;
+    [Header("Enemy Spawn Parametrs")]
     [SerializeField] private SpawnSettings _enemySpawnSettings;
     [SerializeField] private List<Transform> _enemySpawnPoints;
+    [Header("Enemy Spawn Parametrs")]
+    [SerializeField] private SpawnSettings _defenderSpawnSettings;
+    [SerializeField] private List<Transform> _defenderSpawnPoints;
+    [Space(10)]
     [SerializeField] private NavigationSurfaceView _groundSurface;
 
     private NavigationUpdater _navigationUpdater;
     private EnemySpawnController _enemySpawnController;
+    private DefenderSpawnTestController _defenderSpawnController;
     private TargetFinder _targetFinder;
     private EnemyBattleController _enemyBattleController;
 
@@ -30,6 +36,11 @@ public class UnitTestEntry : MonoBehaviour
         _enemySpawnController.OnUnitSpawned += OnCreatedUnit;
         _onUpdates.Add(_enemySpawnController);
 
+        _defenderSpawnController = new DefenderSpawnTestController(_defenderSpawnPoints, _defenderSpawnSettings);
+        _defenderSpawnController.OnUnitSpawned += OnCreatedUnit;
+        _onUpdates.Add(_defenderSpawnController);
+
+
         _targetFinder = new TargetFinder(_mainTower);
 
         _enemyBattleController = new EnemyBattleController(_targetFinder);
@@ -39,6 +50,9 @@ public class UnitTestEntry : MonoBehaviour
         _enemySpawnController.SpawnUnit(UnitRoleType.Imp);
         _enemySpawnController.SpawnUnit(UnitRoleType.Imp);
         _enemySpawnController.SpawnUnit(UnitRoleType.Hound);
+
+        _defenderSpawnController.SpawnUnit(UnitRoleType.Militiaman);
+        _defenderSpawnController.SpawnUnit(UnitRoleType.Militiaman);
     }
 
 

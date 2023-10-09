@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b46236cc90977b44e9bd344e57e97c1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _name: Enemy1
+  _name: Defender1
   _enemyNavMesh: {fileID: -7313549247477688246}
   _enemyAnimtor: {fileID: 168241047001392404}
 --- !u!65 &168241047001392407
