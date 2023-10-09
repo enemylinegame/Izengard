@@ -45,25 +45,16 @@ namespace BattleSystem
                     break;
                 case UnitRoleType.Imp:
                     {
-                        var target = GetClosestDefender(unit);
-                        if (target is StubUnitView)
-                        {
-                            unit.Target.SetPositionedTarget(targetFinder.GetMainTowerPosition());
-                            MoveUnitToTarget(unit, unit.Target.PositionedTarget);
-                        }
-                        else
-                        {
-                            unit.Target.SetUnitTarget(target);
-                            MoveUnitToTarget(unit, unit.Target.UnitTarget);
-                        }
+                        var target = GetTargetPosition(unit);
+                        unit.Target.SetPositionedTarget(target);
+                        MoveUnitToTarget(unit, target);
                         break;
                     }
                 case UnitRoleType.Hound:
                     {
-                        var target = targetFinder.GetMainTowerPosition();
+                        var target = GetTargetPosition(unit);
                         unit.Target.SetPositionedTarget(target);
-
-                        MoveUnitToTarget(unit, unit.Target.PositionedTarget);
+                        MoveUnitToTarget(unit, target);
                         break;
                     }
             }
@@ -79,21 +70,11 @@ namespace BattleSystem
                     break;
                 case UnitRoleType.Imp:
                     {
-                        Vector3 targetPos = Vector3.zero;
-
-                        if(unit.Target.UnitTarget == null)
-                        {
-                            targetPos = unit.SpawnPosition;
-                        }
-                        else
-                        {
-                            targetPos = unit.Target.UnitTarget.SelfTransform.position;
-                        }
-
-                        if (CheckStopDistance(unit, targetPos) == true)
+                        if (CheckStopDistance(unit, unit.Target.PositionedTarget) == true)
                         {
                             StopUnit(unit);
                         }
+
                         break;
                     }
                 case UnitRoleType.Hound:
@@ -143,19 +124,9 @@ namespace BattleSystem
             unit.UnitState.ChangeState(UnitState.Idle);
         }
 
-        private BaseUnitView GetClosestDefender(IUnit unit)
+        private void MoveUnitToTarget(IUnit unit, Vector3 targetPos)
         {
-            return targetFinder.GetClosestUnit(unit);
-        }
-
-        private void MoveUnitToTarget(IUnit unit, Vector3 target)
-        {
-            unit.Navigation.MoveTo(target);
-        }
-
-        private void MoveUnitToTarget(IUnit unit, IUnitView target)
-        {
-            unit.Navigation.MoveTo(target.SelfTransform.position);
+            unit.Navigation.MoveTo(targetPos);
         }
 
         private void StopUnit(IUnit unit)
@@ -176,6 +147,85 @@ namespace BattleSystem
         private void UnitReachedZerohealth(IUnit unit)
         {
             Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Role} - dead");
+        }
+
+        private Vector3 GetTargetPosition(IUnit unit)
+        {
+            var result = Vector3.zero;
+
+            var nextUnitPriority = unit.Priority.GetNext();
+           
+            switch (nextUnitPriority.priorityType)
+            {
+                default:
+                    {
+                        result = unit.SpawnPosition;
+                        break;
+                    }
+                case UnitPriorityType.MainTower:
+                    {
+                        result = targetFinder.GetMainTowerPosition();
+                        break;
+                    }
+                case UnitPriorityType.ClosestFoe:
+                    {
+                        result = GetClosestDefenderPosition(unit);
+                        break;
+                    }
+                case UnitPriorityType.SpecificFoe:
+                    {
+                        result = GetClosestDefenderPosition(unit, nextUnitPriority.roleType);
+                        break;
+                    }
+            }
+
+            return result;
+        }
+
+        private Vector3 GetClosestDefenderPosition(IUnit unit)
+        {
+            Vector3 resultPos = unit.SpawnPosition;
+
+            var unitPos = unit.GetPosition();
+            var minDist = float.MaxValue;
+            
+            foreach (var defender in _defenderUnitCollection)
+            {
+                var defenderPos = defender.GetPosition();
+                var distance = Vector3.Distance(unitPos, defenderPos);
+                if(distance < minDist)
+                {
+                    minDist = distance;
+                    resultPos = defenderPos;
+                }
+            }
+
+            return resultPos;
+        }
+
+
+        private Vector3 GetClosestDefenderPosition(IUnit unit, UnitRoleType targetRole)
+        {
+            Vector3 resultPos = unit.SpawnPosition;
+
+            var unitPos = unit.GetPosition();
+            var minDist = float.MaxValue;
+
+            foreach (var defender in _defenderUnitCollection)
+            {
+                if (defender.Stats.Role != targetRole)
+                    continue;
+
+                var defenderPos = defender.GetPosition();
+                var distance = Vector3.Distance(unitPos, defenderPos);
+                if (distance < minDist)
+                {
+                    minDist = distance;
+                    resultPos = defenderPos;
+                }
+            }
+
+            return resultPos;
         }
     }
 }

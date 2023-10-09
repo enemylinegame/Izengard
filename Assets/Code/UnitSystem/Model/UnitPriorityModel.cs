@@ -28,15 +28,14 @@ namespace UnitSystem.Model
                 return (UnitPriorityType.None, UnitRoleType.None);
             }
 
-            _priorityIndex++;
-
-            if (_priorityIndex > _unitPriorities.Count)
+            if (_priorityIndex >= _unitPriorities.Count)
             {
                 IsEndPriority = true;
                 _priorityIndex = _unitPriorities.Count - 1;
             }
 
             var priorityData = _unitPriorities[_priorityIndex];
+            _priorityIndex++;
 
             return (priorityData.UnitPriority, priorityData.PriorityRole);
         }
