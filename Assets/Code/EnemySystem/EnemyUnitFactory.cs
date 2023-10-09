@@ -53,25 +53,18 @@ namespace EnemySystem
             var view = unitGO.GetComponent<IUnitView>();
 
             var unitStats = new UnitStatsModel(unitData.StatsData);
-            
+
             var unitDefence = new UnitDefenceModel(unitData.DefenceData);
 
             var unitOffence = new UnitOffenceModel(unitData.OffenceData);
 
-            var navigation = 
+            var navigation =
                 new EnemyNavigationModel(view.UnitNavigation, view.SelfTransform.position);
 
-            var unitPriorities = unitData.UnitPriorities;
+            var priorities = new UnitPriorityModel(unitData.UnitPriorities);
 
             var unitHandler = 
-                new UnitHandler(
-                    _enemyId++, 
-                    view,
-                    unitStats, 
-                    unitDefence, 
-                    unitOffence, 
-                    navigation, 
-                    unitPriorities);
+                new UnitHandler(_enemyId++, view, unitStats, unitDefence, unitOffence, navigation, priorities);
 
             return unitHandler;
         }

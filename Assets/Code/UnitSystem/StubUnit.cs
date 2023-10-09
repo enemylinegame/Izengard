@@ -23,12 +23,10 @@ namespace UnitSystem
         public IUnitOffence Offence { get; }
 
         public UnitStateModel UnitState { get; }
-
         public UnitTargetModel Target { get; }
+        public UnitPriorityModel Priority { get; }
 
         public Vector3 SpawnPosition => Vector3.zero;
-
-        public Queue<UnitPriorityData> UnitPriorities { get; }
 
         public StubUnit(string logMessage)
         {

@@ -16,7 +16,7 @@ namespace UnitSystem
         private readonly INavigation<Vector3> _navigation;
         private readonly UnitStateModel _unitState;
         private readonly UnitTargetModel _unitTarget;
-        private readonly Queue<UnitPriorityData> _unitPriorities;
+        private readonly UnitPriorityModel _priority;
 
         private int _id;
         private Vector3 _spawnPosition;
@@ -33,14 +33,11 @@ namespace UnitSystem
 
         public UnitTargetModel Target => _unitTarget;
         public UnitStateModel UnitState => _unitState;
-
-        public Queue<UnitPriorityData> UnitPriorities => _unitPriorities;
+        public UnitPriorityModel Priority => _priority;
 
         public int Id => _id;
 
         public Vector3 SpawnPosition => _spawnPosition;
-
-      
 
         public event Action<IUnit> OnReachedZeroHealth;
 
@@ -51,7 +48,7 @@ namespace UnitSystem
             IUnitDefence unitDefence,
             IUnitOffence unitOffence,
             INavigation<Vector3> navigation,
-            IReadOnlyList<UnitPriorityData> unitPriorities)
+            UnitPriorityModel priority)
         {
             _id = index;
 
@@ -70,16 +67,12 @@ namespace UnitSystem
             _navigation = 
                 navigation ?? throw new ArgumentNullException(nameof(navigation));
 
+            _priority = 
+                priority ?? throw new ArgumentNullException(nameof(priority));
+
             _unitState = new UnitStateModel();
             
             _unitTarget = new UnitTargetModel();
-
-            _unitPriorities = new Queue<UnitPriorityData>();
-            
-            foreach(var unitPriority in unitPriorities)
-            {
-                _unitPriorities.Enqueue(unitPriority);
-            }
 
             _unitView.Hide();
         }

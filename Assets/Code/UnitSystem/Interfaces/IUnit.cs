@@ -20,7 +20,7 @@ namespace UnitSystem
         INavigation<Vector3> Navigation { get; }
         UnitTargetModel Target { get; }
         UnitStateModel UnitState { get; }
-        Queue<UnitPriorityData> UnitPriorities { get; }
+        UnitPriorityModel Priority { get; }
 
         event Action<IUnit> OnReachedZeroHealth;
 
