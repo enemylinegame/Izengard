@@ -23,68 +23,70 @@ namespace BattleSystem
             {
                 switch (unit.UnitState.CurrentState)
                 {
+                    default:
+                        break;
+
                     case UnitState.Idle:
                         {
-                            EnemyInIdleLogic(unit);
+                            var distance = GetDistanceToTarget(unit.GetPosition(), unit.SpawnPosition);
+                            if (CheckStopDistance(distance, 0) == true)
+                            {
+                                StopUnit(unit);
+                            }
+                            else
+                            {
+                                ChangeUnitState(unit, UnitState.Search);
+                            }
+                            break;
+                        }
+                    case UnitState.Search:
+                        {
+                            var target = GetTargetPosition(unit);
+                            if(target == unit.SpawnPosition)
+                            {
+                                MoveUnitToTarget(unit, unit.SpawnPosition);
+                                ChangeUnitState(unit, UnitState.Idle);
+                            }
+                            else
+                            {
+                                unit.Target.SetPositionedTarget(target);
+                                MoveUnitToTarget(unit, target);
+                                ChangeUnitState(unit, UnitState.Move);
+                            }
                             break;
                         }
                     case UnitState.Move:
                         {
-                            EnemyInMoveLogic(unit);
+                            var distance = GetDistanceToTarget(unit.GetPosition(), unit.Target.PositionedTarget);
+                            if (CheckStopDistance(distance, unit.Stats.DetectionRange.GetValue()) == true)
+                            {
+                                Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Role} - startApproach");
+                                ChangeUnitState(unit, UnitState.Approach);
+                                MoveUnitToTarget(unit, unit.Target.PositionedTarget);
+                            }
+                            break;
+                        }
+                    case UnitState.Approach:
+                        {
+                            var distance = GetDistanceToTarget(unit.GetPosition(), unit.Target.PositionedTarget);
+                            if (CheckStopDistance(distance, unit.Offence.MaxRange) == true)
+                            {
+                                StopUnit(unit);
+                                ChangeUnitState(unit, UnitState.Attack);
+                            }
+                            break;
+                        }
+                    case UnitState.Attack:
+                        {
+                            Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Role} - startAttack");
+                            ChangeUnitState(unit, UnitState.None);
+                            break;
+                        }
+                    case UnitState.Die: 
+                        {
                             break;
                         }
                 }
-            }
-        }
-
-        private void EnemyInIdleLogic(IUnit unit)
-        {
-            switch (unit.Stats.Role)
-            {
-                default:
-                    break;
-                case UnitRoleType.Imp:
-                    {
-                        var target = GetTargetPosition(unit);
-                        unit.Target.SetPositionedTarget(target);
-                        MoveUnitToTarget(unit, target);
-                        break;
-                    }
-                case UnitRoleType.Hound:
-                    {
-                        var target = GetTargetPosition(unit);
-                        unit.Target.SetPositionedTarget(target);
-                        MoveUnitToTarget(unit, target);
-                        break;
-                    }
-            }
-
-            unit.UnitState.ChangeState(UnitState.Move);
-        }
-
-        private void EnemyInMoveLogic(IUnit unit)
-        {
-            switch (unit.Stats.Role)
-            {
-                default:
-                    break;
-                case UnitRoleType.Imp:
-                    {
-                        if (CheckStopDistance(unit, unit.Target.PositionedTarget) == true)
-                        {
-                            StopUnit(unit);
-                        }
-
-                        break;
-                    }
-                case UnitRoleType.Hound:
-                    {
-                        if (CheckStopDistance(unit, unit.Target.PositionedTarget) == true)
-                        {
-                            StopUnit(unit);
-                        }
-                        break;
-                    }
             }
         }
 
@@ -123,6 +125,18 @@ namespace BattleSystem
 
             unit.UnitState.ChangeState(UnitState.Idle);
         }
+      
+        private void UnitReachedZerohealth(IUnit unit)
+        {
+            Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Role} - dead");
+        }
+
+        private void ChangeUnitState(IUnit unit, UnitState state)
+        {
+            unit.UnitState.ChangeState(state);
+        }
+
+        #region Enemy moving logic
 
         private void MoveUnitToTarget(IUnit unit, Vector3 targetPos)
         {
@@ -134,20 +148,21 @@ namespace BattleSystem
             unit.Navigation.Stop();
         }
 
-        private bool CheckStopDistance(IUnit unit, Vector3 currentTarget)
+        private float GetDistanceToTarget(Vector3 unitPos, Vector3 targetPos) => 
+            Vector3.Distance(unitPos, targetPos);
+
+        private bool CheckStopDistance(float curDistance, float stopDistance)
         {
-            var distance = Vector3.Distance(unit.GetPosition(), currentTarget);
-            if (distance <= unit.Offence.MaxRange)
+            if (curDistance <= stopDistance)
             {
                 return true;
             }
             return false;
         }
 
-        private void UnitReachedZerohealth(IUnit unit)
-        {
-            Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Role} - dead");
-        }
+        #endregion
+
+        #region Enemy finding logic
 
         private Vector3 GetTargetPosition(IUnit unit)
         {
@@ -203,7 +218,6 @@ namespace BattleSystem
             return resultPos;
         }
 
-
         private Vector3 GetClosestDefenderPosition(IUnit unit, UnitRoleType targetRole)
         {
             Vector3 resultPos = unit.SpawnPosition;
@@ -227,5 +241,7 @@ namespace BattleSystem
 
             return resultPos;
         }
+
+        #endregion
     }
 }
