@@ -128,16 +128,17 @@ namespace UnitSystem
                 _reloadDelays.Add(delay);
 
                 unit.OnUnityDestroyed += RemoveUnit;
+                unit.OnTargetChanged += UnitTargetChanged;
             }
 
         }
 
         public void RemoveUnit(IAttacker unit)
         {
-            AttackTimingModel delay = _reloadDelays.Find(u => u.Unit == unit);
-            if (delay != null)
+            AttackTimingModel timingModel = _reloadDelays.Find(u => u.Unit == unit);
+            if (timingModel != null)
             {
-                RemoveDelayModel(delay);
+                RemoveDelayModel(timingModel);
             }
         }
 
@@ -146,7 +147,18 @@ namespace UnitSystem
         private void RemoveDelayModel(AttackTimingModel timingModel)
         {
             timingModel.Unit.OnUnityDestroyed -= RemoveUnit;
+            timingModel.Unit.OnTargetChanged -= UnitTargetChanged;
             _reloadDelays.Remove(timingModel);
+        }
+
+        private void UnitTargetChanged(IAttacker unit)
+        {
+            AttackTimingModel timingModel = _reloadDelays.Find(u => u.Unit == unit);
+            if (timingModel != null)
+            {
+                timingModel.TimingState = AttackTimingState.None;
+                timingModel.Progress = 0.0f;
+            }
         }
 
     }

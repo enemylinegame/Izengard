@@ -8,6 +8,7 @@ namespace Abstraction
     public interface IAttacker
     {
         event Action<IAttacker> OnUnityDestroyed;
+        event Action<IAttacker> OnTargetChanged;
         IAttackTarget GetCurrentTarget();
         IDamage GetDamagePower();
         Vector3 GetPosition();
