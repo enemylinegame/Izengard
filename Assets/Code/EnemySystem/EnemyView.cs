@@ -28,17 +28,17 @@ namespace EnemySystem
             }
         }
 
-        protected override void OnSetTransform()
+        protected override void SetTransform()
         {
             _selfTransform ??= transform;
         }
 
-        protected override void OnSetUnitAnimator()
+        protected override void SetUnitAnimator()
         {
             _unitAnimator ??= _enemyAnimtor;
         }
 
-        protected override void OnSetUnitNavigation()
+        protected override void SetUnitNavigation()
         {
             _unitNavigation ??= _enemyNavMesh;
         }

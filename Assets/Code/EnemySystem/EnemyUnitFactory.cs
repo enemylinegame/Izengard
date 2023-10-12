@@ -17,17 +17,17 @@ namespace EnemySystem
 
         public override IUnit CreateMilitiaman(IUnitData unitData)
         {
-            throw new System.NotImplementedException();
+            return CreateEnemy(unitData);
         }
 
         public override IUnit CreateHunter(IUnitData unitData)
         {
-            throw new System.NotImplementedException();
+            return CreateEnemy(unitData);
         }
 
         public override IUnit CreateMage(IUnitData unitData)
         {
-            throw new System.NotImplementedException();
+            return CreateEnemy(unitData);
         }
 
         public override IUnit CreateImp(IUnitData unitData)

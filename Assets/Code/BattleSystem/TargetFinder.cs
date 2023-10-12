@@ -1,42 +1,38 @@
-﻿using UnitSystem;
+﻿using Abstraction;
+using UnitSystem;
 using UnitSystem.Enum;
-using UnitSystem.View;
 using UnityEngine;
 
 namespace BattleSystem
 {
     public class TargetFinder
     {
-        private const int MAX_CAST_DISTANCE = 100;
-
         private readonly LayerMask _buildingsMask;
         private readonly LayerMask _enemyMask;
         private readonly LayerMask _defenderMask;
-        private readonly BaseUnitView _defaultUnitView;
+        private readonly ITarget _defaultTarget;
 
-        private Transform _mainTowerTransform;
+        private ITarget _mainTower;
 
-        public TargetFinder(Transform mainTowerTransform)
+        public TargetFinder(ITarget mainTower)
         {
-            _mainTowerTransform = mainTowerTransform;
+            _mainTower = mainTower;
 
             _buildingsMask = LayerMask.GetMask("Building");
             _enemyMask =  LayerMask.GetMask("Enemy");
             _defenderMask = LayerMask.GetMask("Defender");
 
-            var go = new GameObject("StubUnit");
-            go.SetActive(false);
-            _defaultUnitView = go.AddComponent<StubUnitView>();
+            _defaultTarget = new NoneTarget();
         }
 
-        public Vector3 GetMainTowerPosition()
+        public ITarget GetMainTower()
         {
-            return _mainTowerTransform.position;
+            return _mainTower;
         }
 
-        public BaseUnitView GetClosestUnit(IUnit unit)
+        public ITarget GetClosestUnit(IUnit unit)
         {
-            var findingUnit = _defaultUnitView;
+            var findingUnit = _defaultTarget;
 
             var searchMask = GetUnitMask(unit.Stats.Faction);
             var unitPosition = unit.GetPosition();
@@ -50,15 +46,15 @@ namespace BattleSystem
             {
                 var findGO = collider.gameObject;
 
-                if (findGO.TryGetComponent<BaseUnitView>(out var findedFoe))
+                if (findGO.TryGetComponent<ITarget>(out var findedTarget))
                 {
                     var distance
-                        = Vector3.Distance(unitPosition, findedFoe.SelfTransform.position);
+                        = Vector3.Distance(unitPosition, findedTarget.Position);
 
                     if (distance < maxDist)
                     {
                         maxDist = distance;
-                        findingUnit = findedFoe;
+                        findingUnit = findedTarget;
                     }
                 }
             }
@@ -66,9 +62,9 @@ namespace BattleSystem
             return findingUnit;
         }
 
-        public BaseUnitView GetClosestUnit(IUnit unit, UnitRoleType findingRole)
+        public ITarget GetClosestUnit(IUnit unit, UnitRoleType findingRole)
         {
-            var findingUnit = _defaultUnitView;
+            var findingUnit = _defaultTarget;
 
             var searchMask = GetUnitMask(unit.Stats.Faction);
             var unitPosition = unit.GetPosition();
@@ -85,15 +81,15 @@ namespace BattleSystem
                 if (findGO.tag != findingRole.ToString())
                     continue;
 
-                if (findGO.TryGetComponent<BaseUnitView>(out var findedFoe))
+                if (findGO.TryGetComponent<ITarget>(out var findedTarget))
                 {
                     var distance
-                        = Vector3.Distance(unitPosition, findedFoe.SelfTransform.position);
+                        = Vector3.Distance(unitPosition, findedTarget.Position);
 
                     if (distance < maxDist)
                     {
                         maxDist = distance;
-                        findingUnit = findedFoe;
+                        findingUnit = findedTarget;
                     }
                 }
             }
@@ -102,9 +98,9 @@ namespace BattleSystem
         }
 
 
-        public BaseUnitView GetFarthestUnit(IUnit unit)
+        public ITarget GetFarthestUnit(IUnit unit)
         {
-            var findingUnit = _defaultUnitView;
+            var findingUnit = _defaultTarget;
 
             var searchMask = GetUnitMask(unit.Stats.Faction);
             var unitPosition = unit.GetPosition();
@@ -118,15 +114,15 @@ namespace BattleSystem
             {
                 var findGO = collider.gameObject;
 
-                if (findGO.TryGetComponent<BaseUnitView>(out var findedFoe))
+                if (findGO.TryGetComponent<ITarget>(out var findedTarget))
                 {
                     var distance
-                        = Vector3.Distance(unitPosition, findedFoe.SelfTransform.position);
+                        = Vector3.Distance(unitPosition, findedTarget.Position);
 
                     if (distance > minDist)
                     {
                         minDist = distance;
-                        findingUnit = findedFoe;
+                        findingUnit = findedTarget;
                     }
                 }
             }

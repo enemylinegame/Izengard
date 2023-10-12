@@ -1,29 +1,21 @@
-﻿using UnitSystem.View;
-using UnityEngine;
+﻿using Abstraction;
+using System;
 
 namespace UnitSystem.Model
 {
     public class UnitTargetModel
     {
-        private Vector3 _positionedTarget = Vector3.zero;
-        private BaseUnitView _unitTarget;
+        private ITarget _currentTarget;
+        public ITarget CurrentTarget => _currentTarget;
 
-        public Vector3 PositionedTarget => _positionedTarget;
-        public BaseUnitView UnitTarget => _unitTarget;
+        public Action<ITarget> OnTargetChange;
 
-        public UnitTargetModel()
-        {
-           
-        }
+        public UnitTargetModel() { }
 
-        public void SetPositionedTarget(Vector3 target)
-        {
-            _positionedTarget = target;
-        }
-
-        public void SetUnitTarget(BaseUnitView target)
-        {
-            _unitTarget = target;
+        public void SetTarget(ITarget target)
+        { 
+            _currentTarget = target;
+            OnTargetChange?.Invoke(target);
         }
     }
 }

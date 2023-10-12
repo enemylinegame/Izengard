@@ -18,7 +18,7 @@ MonoBehaviour:
     _healthPoints: 60
     _size: 0.5
     _speed: 3
-    _detectionRange: 5
+    _detectionRange: 10
   _unitPriorities:
   - _unitPriority: 1
     _priorityRole: 0
@@ -41,7 +41,7 @@ MonoBehaviour:
     _attackSpeed: 1
     _criticalChance: 10
     _critScale: 2
-    _failChance: 25
+    _failChance: 0
     _onFailDamage: 1
     _damageData:
       _baseDamage: 10
