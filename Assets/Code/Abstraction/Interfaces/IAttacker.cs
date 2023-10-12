@@ -18,5 +18,7 @@ namespace Abstraction
         float GetMaxAttackDistance();
         void StartCast();
         void StartAutoAttack();
+        void StopCast();
+        void StopAutoAttack();
     }
 }

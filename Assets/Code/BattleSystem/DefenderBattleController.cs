@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Abstraction;
 using UnityEngine;
 using UnitSystem;
 using UnitSystem.Enum;
+using UnitSystem.Model;
 using UnitSystem.View;
 
 namespace BattleSystem
@@ -12,6 +14,7 @@ namespace BattleSystem
         
         private class UnitData
         {
+            public readonly UnitAttackerModel AttackerModel;
             public readonly IUnit Unit;
             public Vector3 DefendPosition;
             public bool HaveDefendPosition;
@@ -19,6 +22,22 @@ namespace BattleSystem
             public UnitData(IUnit unit)
             {
                 Unit = unit;
+                AttackerModel = new UnitAttackerModel(unit);
+            }
+        }
+        
+        private class TargetData : IAttackTarget
+        {
+            public IUnit Unit;
+
+            public void TakeDamage(IDamage damage)
+            {
+                Unit.TakeDamage(damage);
+            }
+
+            public Vector3 GetPosition()
+            {
+                return Unit.View.SelfTransform.position;
             }
         }
 
