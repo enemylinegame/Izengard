@@ -112,14 +112,14 @@ namespace BattleSystem
 
         private void ExecuteIdleState(UnitData unit, float deltaTime)
         {
-            BaseUnitView targetView = targetFinder.GetClosestUnit(unit.Unit);
-            if (targetView != null)
+            ITarget foundTarget = targetFinder.GetClosestUnit(unit.Unit);
+            if (foundTarget != null)
             {
-                IUnit target = GetUnitByView(targetView);
+                //IUnit target = GetUnitByView(foundTarget);
  
-                if (target != null)
+                if (foundTarget.Id > 0)
                 {
-                    unit.Unit.Target.SetUnitTarget(targetView);
+                    unit.Unit.Target.SetTarget(foundTarget);
                     ChangeState(unit, UnitState.Move);
                 }
                 
@@ -128,11 +128,11 @@ namespace BattleSystem
 
         private void ExecuteMoveState(UnitData unitData, float deltaTime)
         {
-            BaseUnitView target = unitData.Unit.Target.UnitTarget;
+            ITarget target = unitData.Unit.Target.CurrentTarget;
             IUnit defender = unitData.Unit;
             if (target != null)
             {
-                Vector3 currentTargetPosition = target.transform.position;
+                Vector3 currentTargetPosition = target.Position;
                 float maxAttackRange = defender.Offence.MaxRange;
                 
                 if ( (defender.GetPosition() - currentTargetPosition).sqrMagnitude <= maxAttackRange * maxAttackRange )
@@ -168,26 +168,26 @@ namespace BattleSystem
             
         }
 
-        private IUnit GetUnitByView(BaseUnitView baseView)
-        {
-            IUnit target = null;
-            IUnitView view = baseView;
-
-            if (view != null)
-            {
-                for (int i = 0; i < _enemies.Count; i++)
-                {
-                    IUnitView current = _enemies[i].View;
-                    if ( current == view)
-                    {
-                        target = _enemies[i];
-                        break;
-                    }
-                }
-            }
-
-            return target;
-        }
+        // private IUnit GetUnitByView(BaseUnitView targetView)
+        // {
+        //     IUnit target = null;
+        //     IUnitView view = targetView;
+        //
+        //     if (targetView != null)
+        //     {
+        //         for (int i = 0; i < _enemies.Count; i++)
+        //         {
+        //             IUnitView current = _enemies[i].View;
+        //             if ( current == view)
+        //             {
+        //                 target = _enemies[i];
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //
+        //     return target;
+        // }
 
         public void SetDefendPosition(IUnit unit, Vector3 position)
         {
@@ -205,7 +205,7 @@ namespace BattleSystem
             {
                 unit.Unit.UnitState.ChangeState(newState);
                 if (newState == UnitState.Move && 
-                    unit.Unit.Target.UnitTarget == null && 
+                    unit.Unit.Target.CurrentTarget == null && 
                     unit.HaveDefendPosition) 
                 {
                     unit.Unit.Navigation.MoveTo(unit.DefendPosition);
@@ -227,17 +227,17 @@ namespace BattleSystem
                 if (unitData != null)
                 {
                     unit.Navigation.Stop();
-                    unit.Target.SetUnitTarget(null);
+                    unit.Target.SetTarget(null);
                     _defenders.Remove(unitData);
                 }
             }
             else if (unit.Stats.Faction == UnitFactionType.Enemy)
             {
-                _defenders.ForEach(data =>
+                _defenders.ForEach(defenderUnitData =>
                 {
-                    if ((data.Unit.Target.UnitTarget as IUnitView) == unit.View)
+                    if ( defenderUnitData.Unit.Target.CurrentTarget as IUnitView == unit.View)
                     {
-                        data.Unit.Target.SetUnitTarget(null);
+                        defenderUnitData.Unit.Target.SetTarget(null);
                         _enemies.Remove(unit);
                     }
                 });
