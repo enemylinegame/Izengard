@@ -68,7 +68,7 @@ namespace UnitSystem.Model
 
         private bool IsEvaded()
         {
-            var result = Random.Range(0, 101) >= _evadeChance;
+            var result = Random.Range(0, 101) <= _evadeChance;
             return result;
         }
 
@@ -78,20 +78,20 @@ namespace UnitSystem.Model
 
             if (CheckShield(_baseShieldPoints) == false)
             {
-                resultDamage +=
-                    (int)(damageData.BaseDamage * (1 / _unitResistance.BaseDamageResist));
+                var damageAfterResist = UseResist(damageData.BaseDamage, _unitResistance.BaseDamageResist);
+                resultDamage += damageAfterResist;
             }
 
             if (CheckShield(_fireShieldPoints) == false)
             {
-                resultDamage +=
-                    (int)(damageData.FireDamage * (1 / _unitResistance.FireDamageResist));
+                var damageAfterResist = UseResist(damageData.FireDamage, _unitResistance.FireDamageResist);
+                resultDamage += damageAfterResist;
             }
 
             if (CheckShield(_coldShieldPoints) == false)
             {
-                resultDamage +=
-                  (int)(damageData.ColdDamage * (1 / _unitResistance.ColdDamageResist));
+                var damageAfterResist = UseResist(damageData.ColdDamage, _unitResistance.ColdDamageResist);
+                resultDamage += damageAfterResist;
             }
 
             resultDamage = UseArmor(resultDamage);
@@ -108,6 +108,22 @@ namespace UnitSystem.Model
                 return true;
             }
             return false;
+        }
+
+        private int UseResist(float innerDamage, float resistValue)
+        {
+            var resultDamage = 0;
+
+            if (resistValue != 0)
+            {
+                resultDamage = (int)(innerDamage * (1 / resistValue));
+            }
+            else
+            {
+                resultDamage = (int)innerDamage;
+            }
+
+            return resultDamage;
         }
 
         private int UseArmor(int innerDamage)

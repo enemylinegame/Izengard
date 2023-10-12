@@ -24,15 +24,15 @@ MonoBehaviour:
     _priorityRole: 0
   _defenceData:
     _evadeChance: 0
-    _armorPoints: 20
+    _armorPoints: 0
     _shieldData:
-      _baseShieldPoints: 10
-      _fireShieldPoints: 10
-      _coldShieldPoints: 10
+      _baseShieldPoints: 0
+      _fireShieldPoints: 0
+      _coldShieldPoints: 0
     _resistanceData:
-      _baseDamageResist: 25
-      _fireDamageResist: 25
-      _coldDamageResist: 25
+      _baseDamageResist: 0
+      _fireDamageResist: 0
+      _coldDamageResist: 0
   _offenceData:
     _attackType: 1
     _minRange: 0

@@ -1,7 +1,5 @@
 ﻿using Abstraction;
 using System;
-using System.Collections.Generic;
-using UnitSystem.Data;
 using UnitSystem.Model;
 using UnityEngine;
 
@@ -74,7 +72,7 @@ namespace UnitSystem
             
             _unitTarget = new UnitTargetModel();
 
-            _unitView.Hide();
+            _unitView.Init(_id);
         }
 
         public void Enable()
@@ -101,9 +99,9 @@ namespace UnitSystem
         {
             Unsubscribe();
 
-            _unitView.Hide();
-
             _navigation.Disable();
+            
+            _unitView.Hide();
         }
 
         private void Unsubscribe()

@@ -14,6 +14,14 @@ namespace UnitSystem.View
         public NavMeshAgent UnitNavigation => _unitNavigation;
         public Animator UnitAnimator => _unitAnimator;
 
+        private int _unitId;
+
+        public void Init(int unitId)
+        {
+            _unitId = unitId;
+            Hide();
+        }
+
         public void Show() => 
             gameObject.SetActive(true);
         public void Hide() => 
@@ -25,14 +33,24 @@ namespace UnitSystem.View
 
         private void Awake()
         {
-            OnSetTransform();
-            OnSetUnitNavigation();
-            OnSetUnitAnimator();
+            _unitId = -1;
+
+            SetTransform();
+            SetUnitNavigation();
+            SetUnitAnimator();
         }
 
-        protected abstract void OnSetTransform();
-        protected abstract void OnSetUnitNavigation();
-        protected abstract void OnSetUnitAnimator();
+        protected abstract void SetTransform();
+        protected abstract void SetUnitNavigation();
+        protected abstract void SetUnitAnimator();
+
+        #region ITarget
+
+        public int Id => _unitId;
+
+        public Vector3 Position => _selfTransform.position;
+
+        #endregion
 
         #region IFightingObject
 

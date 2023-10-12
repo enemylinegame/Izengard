@@ -41,7 +41,7 @@ MonoBehaviour:
     _attackSpeed: 1
     _criticalChance: 10
     _critScale: 2
-    _failChance: 25
+    _failChance: 0
     _onFailDamage: 1
     _damageData:
       _baseDamage: 10

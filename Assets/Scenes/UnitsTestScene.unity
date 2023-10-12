@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427194, b: 0.5645252, a: 1}
+  m_IndirectSpecularColor: {r: 0.43667555, g: 0.48427176, b: 0.56452405, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -18930,7 +18930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 544373415aa5e414fba7798c4ec59c02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mainTower: {fileID: 1859384420}
+  _mainTower: {fileID: 1859384421}
   _enemySpawnSettings: {fileID: 11400000, guid: b526b66d7bbebbb4ca21a33cd981d162, type: 2}
   _enemySpawnPoints:
   - {fileID: 1956836826}
@@ -23979,6 +23979,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1067758049}
     m_Modifications:
+    - target: {fileID: -1743502538154517619, guid: 69ec79a589802e24f971b185382ca841, type: 3}
+      propertyPath: _id
+      value: 123
+      objectReference: {fileID: 0}
+    - target: {fileID: -1743502538154517619, guid: 69ec79a589802e24f971b185382ca841, type: 3}
+      propertyPath: _position.x
+      value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: -1743502538154517619, guid: 69ec79a589802e24f971b185382ca841, type: 3}
+      propertyPath: _position.z
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1831737973244403283, guid: 69ec79a589802e24f971b185382ca841, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -24042,6 +24054,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4437343820552527172, guid: 69ec79a589802e24f971b185382ca841, type: 3}
   m_PrefabInstance: {fileID: 1859384419}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1859384421 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -1743502538154517619, guid: 69ec79a589802e24f971b185382ca841, type: 3}
+  m_PrefabInstance: {fileID: 1859384419}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 008b151ca3131a84789724f56148e324, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1868175600
 GameObject:
   m_ObjectHideFlags: 0

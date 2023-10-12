@@ -4,12 +4,14 @@ using UnityEngine.AI;
 
 namespace UnitSystem
 {
-    public interface IUnitView : IFightingObject
+    public interface IUnitView : IFightingObject, ITarget
     {
         Transform SelfTransform { get; }
         NavMeshAgent UnitNavigation { get; }
 
         Animator UnitAnimator { get; }
+
+        void Init(int unitId);
 
         void Show();
         void Hide();

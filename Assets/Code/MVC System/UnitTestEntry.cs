@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class UnitTestEntry : MonoBehaviour
 {
-    [SerializeField] private Transform _mainTower;
+    [SerializeField] private MainTowerView _mainTower;
     [Header("Enemy Spawn Parametrs")]
     [SerializeField] private SpawnSettings _enemySpawnSettings;
     [SerializeField] private List<Transform> _enemySpawnPoints;
@@ -39,7 +39,6 @@ public class UnitTestEntry : MonoBehaviour
         _defenderSpawnController = new DefenderSpawnTestController(_defenderSpawnPoints, _defenderSpawnSettings);
         _defenderSpawnController.OnUnitSpawned += OnCreatedUnit;
         _onUpdates.Add(_defenderSpawnController);
-
 
         _targetFinder = new TargetFinder(_mainTower);
 
