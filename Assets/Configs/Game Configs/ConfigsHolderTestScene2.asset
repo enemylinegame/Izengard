@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac7cef430b8741a8bc5f1de7ac70367d, type: 3}
-  m_Name: ConfigsHolder
+  m_Name: ConfigsHolderTestScene2
   m_EditorClassIdentifier: 
   <PrefabsHolder>k__BackingField: {fileID: 11400000, guid: c66c7ba4a11b5de46a0675453fa87d84, type: 2}
-  <EnemySpawnSettings>k__BackingField: {fileID: 11400000, guid: b526b66d7bbebbb4ca21a33cd981d162, type: 2}
+  <EnemySpawnSettings>k__BackingField: {fileID: 11400000, guid: e84ba9ef4e3babe40839e87c0815e680, type: 2}
