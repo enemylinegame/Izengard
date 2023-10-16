@@ -74,51 +74,62 @@ namespace BattleSystem
 
         public override void AddUnit(IUnit unit)
         {
+            unit.OnReachedZeroHealth += UnitReachedZeroHealth;
+
             switch (unit.Stats.Faction)
             {
                 default:
                     break;
                 case UnitFactionType.Enemy:
                     {
-                        InitUnitLogic(unit);
+                        unit.Navigation.Enable();
+                        unit.UnitState.ChangeState(UnitState.Idle);
+
                         _enemyUnitCollection.Add(unit);
                         break;
                     }
                 case UnitFactionType.Defender:
-                    {
-                        unit.OnReachedZeroHealth += UnitReachedZeroHealth;
+                    {    
                         _defenderUnitCollection.Add(unit);
                         break;
                     }
             }
         }
 
-        private void InitUnitLogic(IUnit unit)
+        public void RemoveUnit(IUnit unit)
         {
-            unit.Navigation.Enable();
-            unit.OnReachedZeroHealth += UnitReachedZeroHealth;
+            unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
+            
+            switch (unit.Stats.Faction)
+            {
+                default:
+                    break;
+                case UnitFactionType.Enemy:
+                    {
+                        Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Role} - dead");
+                        
+                        unit.Disable();
 
-            unit.UnitState.ChangeState(UnitState.Idle);
+                        unit.Target.SetTarget(new NoneTarget());
+                        
+                        _enemyUnitCollection.Remove(unit);
+                                           
+                        break;
+                    }
+                case UnitFactionType.Defender:
+                    {
+                        unit.Disable();
+
+                        _defenderUnitCollection.Remove(unit);
+                        break;
+                    }
+            }
         }
+
       
         private void UnitReachedZeroHealth(IUnit unit)
         {
-            if(unit.Stats.Faction == UnitFactionType.Enemy)
-            {
-                unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
-                Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Role} - dead");
-
-                return;
-            }
-            
-            if(unit.Stats.Faction == UnitFactionType.Defender)
-            {
-                unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
-                unit.Disable();
-                _defenderUnitCollection.Remove(unit);
-
-                return;
-            }
+            RemoveUnit(unit);
         }
 
         private void UpdateTarget(IUnit unit)
@@ -145,15 +156,7 @@ namespace BattleSystem
 
         private void UnitIdleState(IUnit unit, float deltaTime)
         {
-            var distance = GetDistanceToTarget(unit.GetPosition(), unit.SpawnPosition);
-            if (CheckStopDistance(distance, 0) == true)
-            {
-                StopUnit(unit);
-            }
-            else
-            {
-                ChangeUnitState(unit, UnitState.Search);
-            }
+            ChangeUnitState(unit, UnitState.Search);
         }
 
         private void UnitMoveState(IUnit unit, float deltaTime)
@@ -198,19 +201,15 @@ namespace BattleSystem
 
         private void UnitAttackState(IUnit unit, float deltaTime)
         {
-            Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Role} - startAttack");
-
             var target = unit.Target.CurrentTarget;
-            var targetUnit = _defenderUnitCollection.Find(u => u.Id == target.Id);
 
-            if (targetUnit != null)
+            var unitTarget = _defenderUnitCollection.Find(u => u.Id == target.Id);
+            if (unitTarget != null)
             {
                 var enemyDamage = unit.Offence.GetDamage();
 
-                targetUnit.TakeDamage(enemyDamage);
+                unitTarget.TakeDamage(enemyDamage);
             }
-
-            ChangeUnitState(unit, UnitState.None);
         }
 
         private void ChangeUnitState(IUnit unit, UnitState state)
