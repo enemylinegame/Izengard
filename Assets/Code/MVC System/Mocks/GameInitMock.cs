@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using BattleSystem;
+using Code.GlobalGameState;
 using Code.SceneConfigs;
 using Configs;
 using SpawnSystem;
@@ -24,15 +25,28 @@ namespace Code.MVC_System.Mocks
             var enemySpawner = new EnemySpawnController( sceneObjectsHolder.EnemySpawnPoints, configs.EnemySpawnSettings);
             var targetFinder = new TargetFinder(sceneObjectsHolder.MainTower);
             var enemyBattleController = new EnemyBattleController(targetFinder);
-            //enemySpawnController.OnUnitSpawned += OnCreatedUnit;
             var navigationUpdater = new NavigationUpdater();
             navigationUpdater.AddNavigationSurface(sceneObjectsHolder.GroundSurface);
+
+            var defendersSpawner = new DefendersSpawnController();
+            var defendersBattleController = new DefenderBattleController(targetFinder);
+            
+            var unitSpawnObserver = new UnitSpawnObserver(enemySpawner, defendersSpawner, 
+                enemyBattleController, defendersBattleController);
+
+            var enemySpawnLogic = new EnemySpawnLogicMock(enemySpawner);
+            var defendersSpawnLogic = new DefendersSpawnLogicMock(defendersSpawner);
+
+            var peaceStateManager = new PeaceStateManager();
+            var battleStateManager = new BattleStateManager(defendersSpawnLogic, enemySpawnLogic);
+            var gameStateManager = new GameStateManager(peaceStateManager, battleStateManager); 
             
             
-                
             controller.Add(timeRemainingService);
             controller.Add(enemySpawner);
             controller.Add(enemyBattleController);
+            controller.Add(defendersBattleController);
+            controller.Add(gameStateManager);
         }
     }
 }

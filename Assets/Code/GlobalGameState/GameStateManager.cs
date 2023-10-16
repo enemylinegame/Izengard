@@ -26,7 +26,7 @@
 
         public void OnStart()
         {
-            
+            _battleState.StartPhase();
         }
         
         
