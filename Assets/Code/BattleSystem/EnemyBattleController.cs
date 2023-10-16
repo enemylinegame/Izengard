@@ -1,4 +1,5 @@
 ﻿using Abstraction;
+using EnemySystem;
 using System.Collections.Generic;
 using UnitSystem;
 using UnitSystem.Enum;
@@ -11,10 +12,14 @@ namespace BattleSystem
         private List<IUnit> _enemyUnitCollection;
         private List<IUnit> _defenderUnitCollection;
 
+        private List<EnemyInBattleModel> _enemyInFightCollection;
+
         public EnemyBattleController(TargetFinder targetFinder) : base(targetFinder)
         {
             _enemyUnitCollection = new List<IUnit>();
             _defenderUnitCollection = new List<IUnit>();
+
+            _enemyInFightCollection = new List<EnemyInBattleModel>();
         }
 
         public override void OnUpdate(float deltaTime)
@@ -206,9 +211,12 @@ namespace BattleSystem
             var unitTarget = _defenderUnitCollection.Find(u => u.Id == target.Id);
             if (unitTarget != null)
             {
-                var enemyDamage = unit.Offence.GetDamage();
+                _enemyInFightCollection.Add(new EnemyInBattleModel(unit, unitTarget));
+            }
 
-                unitTarget.TakeDamage(enemyDamage);
+            foreach(var fighter in _enemyInFightCollection)
+            {
+                fighter.ExecuteFight();
             }
         }
 
