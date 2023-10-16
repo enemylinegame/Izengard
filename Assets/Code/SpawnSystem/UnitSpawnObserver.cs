@@ -29,6 +29,7 @@ namespace SpawnSystem
         private void EnemySpawned(IUnit enemyUnit)
         {
             enemyUnit.Enable();
+            _enemyBattleController.AddUnit(enemyUnit);
             _defenderBattleController.AddUnit(enemyUnit);
         }
 
