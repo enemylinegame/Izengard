@@ -9,6 +9,7 @@ namespace Configs
     {
         [field: SerializeField] public PrefabsHolder PrefabsHolder { get; set; }
         [field: SerializeField] public SpawnSettings EnemySpawnSettings { get; private set; }
+        [field: SerializeField] public SpawnSettings DefendersSpawnSettings { get; private set; }
         
     }
 }

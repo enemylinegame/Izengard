@@ -28,7 +28,8 @@ namespace Code.MVC_System.Mocks
             var navigationUpdater = new NavigationUpdater();
             navigationUpdater.AddNavigationSurface(sceneObjectsHolder.GroundSurface);
 
-            var defendersSpawner = new DefendersSpawnController();
+            var defendersSpawner = new DefendersSpawnController(configs.DefendersSpawnSettings.UnitsCreationData,
+                GetPositions(sceneObjectsHolder.DefendersSpawnPoints));
             var defendersBattleController = new DefenderBattleController(targetFinder);
             
             var unitSpawnObserver = new UnitSpawnObserver(enemySpawner, defendersSpawner, 
@@ -48,6 +49,19 @@ namespace Code.MVC_System.Mocks
             controller.Add(defendersBattleController);
             controller.Add(gameStateManager);
         }
+
+        private List<Vector3> GetPositions(List<Transform> transforms)
+        {
+            List<Vector3> positions = new();
+
+            foreach (var transform in transforms)
+            {
+                positions.Add(transform.position);
+            }
+            
+            return positions;
+        }
+
     }
 }
 
