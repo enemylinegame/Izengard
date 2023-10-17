@@ -47,7 +47,6 @@ public class UnitTestEntry : MonoBehaviour
         _onFixedUpdates.Add(_enemyBattleController);
 
         _enemySpawnController.SpawnUnit(UnitRoleType.Imp);
-        _enemySpawnController.SpawnUnit(UnitRoleType.Imp);
         _enemySpawnController.SpawnUnit(UnitRoleType.Hound);
 
         _defenderSpawnController.SpawnUnit(UnitRoleType.Militiaman);

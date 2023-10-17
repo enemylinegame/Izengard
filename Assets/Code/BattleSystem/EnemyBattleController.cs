@@ -47,12 +47,10 @@ namespace BattleSystem
                         }
                     case UnitState.Approach:
                         {
-                            UnitApproachState(unit, deltaTime);
                             break;
                         }
                     case UnitState.Search:
                         {
-                            UnitSearchState(unit, deltaTime);
                             break;
                         }
                     case UnitState.Attack:
@@ -152,7 +150,9 @@ namespace BattleSystem
                         var target = unit.Target.CurrentTarget;
                         if (_defenderUnitCollection.Exists(def => def.Id == target.Id) == false) 
                         {
-                            ChangeUnitState(unit, UnitState.Search);
+                            unit.Target.SetTarget(new NoneTarget());
+
+                            ChangeUnitState(unit, UnitState.Idle);
                         }
                         break;
                     }
@@ -161,45 +161,21 @@ namespace BattleSystem
 
         private void UnitIdleState(IUnit unit, float deltaTime)
         {
-            ChangeUnitState(unit, UnitState.Search);
+            var target = GetTarget(unit);
+
+            unit.Target.SetTarget(target);
+            MoveUnitToTarget(unit, target);
+            ChangeUnitState(unit, UnitState.Move);
         }
 
         private void UnitMoveState(IUnit unit, float deltaTime)
         {
             var turgentPos = unit.Target.CurrentTarget.Position;
             var distance = GetDistanceToTarget(unit.GetPosition(), turgentPos);
-            if (CheckStopDistance(distance, unit.Stats.DetectionRange.GetValue()) == true)
-            {
-                Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Role} - startApproach");
-                ChangeUnitState(unit, UnitState.Approach);
-                MoveUnitToTarget(unit, unit.Target.CurrentTarget);
-            }
-        }
-
-        private void UnitSearchState(IUnit unit, float deltaTime)
-        {
-            var target = GetTarget(unit);
-            if (target is NoneTarget)
-            {
-                unit.Target.SetTarget(targetFinder.GetMainTower());
-                MoveUnitToTarget(unit, unit.Target.CurrentTarget);
-                ChangeUnitState(unit, UnitState.Idle);
-            }
-            else
-            {
-                unit.Target.SetTarget(target);
-                MoveUnitToTarget(unit, target);
-                ChangeUnitState(unit, UnitState.Move);
-            }
-        }
-
-        private void UnitApproachState(IUnit unit, float deltaTime)
-        {
-            var turgentPos = unit.Target.CurrentTarget.Position;
-            var distance = GetDistanceToTarget(unit.GetPosition(), turgentPos);
             if (CheckStopDistance(distance, unit.Offence.MaxRange) == true)
             {
                 StopUnit(unit);
+
                 ChangeUnitState(unit, UnitState.Attack);
             }
         }
@@ -262,6 +238,7 @@ namespace BattleSystem
                 default:
                 case UnitPriorityType.MainTower:
                     {
+                        unit.Priority.ResetIndex();
                         return targetFinder.GetMainTower();
                     }
                 case UnitPriorityType.ClosestFoe:
@@ -271,6 +248,7 @@ namespace BattleSystem
                         {
                             return GetTarget(unit);
                         }
+                        unit.Priority.ResetIndex();
                         return target;
                     }
                 case UnitPriorityType.SpecificFoe:
@@ -280,6 +258,7 @@ namespace BattleSystem
                         {
                             return GetTarget(unit);
                         }
+                        unit.Priority.ResetIndex();
                         return target;
                     }
             }

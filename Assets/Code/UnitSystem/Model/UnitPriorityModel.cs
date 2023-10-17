@@ -43,5 +43,7 @@ namespace UnitSystem.Model
 
             return (priorityData.UnitPriority, priorityData.PriorityRole);
         }
+
+        public void ResetIndex() => _priorityIndex = 0;
     }
 }
