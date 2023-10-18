@@ -13,7 +13,8 @@ namespace SpawnSystem
     {
         private readonly Dictionary<UnitRoleType, IUnitData> _unitSpawnDataCollection = new();
 
-        private readonly UnitFactory _factory;
+        private readonly EnemyPool _pool;
+
         private readonly List<Transform> _spawnPoints = new List<Transform>();
         
         private TimeRemaining _timer;
@@ -21,10 +22,15 @@ namespace SpawnSystem
 
         public event Action<IUnit> OnUnitSpawned;
 
-        public EnemySpawnController(List<Transform> spawnPoints, SpawnSettings spawnSettings)
+        public EnemySpawnController(
+            Transform spawner, 
+            List<Transform> spawnPoints, 
+            SpawnSettings spawnSettings)
         {
 
-            _factory = new EnemyUnitFactory(spawnSettings.UnitsCreationData);
+            var factory = new EnemyUnitFactory(spawnSettings.UnitsCreationData);
+            _pool = new EnemyPool(spawner, factory, spawnSettings.UnitsCreationData);
+
 
             foreach (var creationData in spawnSettings.UnitsCreationData)
             {
@@ -40,7 +46,7 @@ namespace SpawnSystem
 
         public void SpawnUnit(UnitRoleType unitType)
         {
-            var unit = _factory.CreateUnit(_unitSpawnDataCollection[unitType]);
+            var unit = _pool.GetFromPool(unitType);
 
             var spawnIndex = Random.Range(0, _spawnPoints.Count);
             var spwanPosition = _spawnPoints[spawnIndex].position;

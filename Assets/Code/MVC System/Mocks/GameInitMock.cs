@@ -22,7 +22,7 @@ namespace Code.MVC_System.Mocks
         {
             var timeRemainingService = new TimeRemainingController();
 
-            var enemySpawner = new EnemySpawnController( sceneObjectsHolder.EnemySpawnPoints, configs.EnemySpawnSettings);
+            var enemySpawner = new EnemySpawnController(null, sceneObjectsHolder.EnemySpawnPoints, configs.EnemySpawnSettings);
             var targetFinder = new TargetFinder(sceneObjectsHolder.MainTower);
             var enemyBattleController = new EnemyBattleController(targetFinder);
             var navigationUpdater = new NavigationUpdater();
