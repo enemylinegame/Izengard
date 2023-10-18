@@ -29,7 +29,10 @@ namespace EnemySystem
 
         public void Disable()
         {
-            _navMesh.ResetPath();
+            if (_navMesh.isOnNavMesh)
+            {
+                _navMesh.ResetPath();
+            }
             _navMesh.enabled = false;
         }
 

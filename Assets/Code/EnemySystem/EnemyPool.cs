@@ -53,7 +53,7 @@ namespace EnemySystem
                     enemy.View.SelfTransform.parent = poolHolder;
                     enemy.SetPosition(poolHolder.localPosition);
                     
-                   // enemy.Disable();
+                    enemy.Disable();
 
                     _pool[enemydata.Type].Enqueue(enemy);
                 }

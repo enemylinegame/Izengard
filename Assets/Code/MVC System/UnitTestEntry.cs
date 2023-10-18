@@ -11,10 +11,8 @@ public class UnitTestEntry : MonoBehaviour
 {
     [SerializeField] private MainTowerView _mainTower;
     [Header("Enemy Spawn Parametrs")]
-    [SerializeField] private Transform _spawner;
+    [SerializeField] private SpawnerView _enemySpawner;
     [SerializeField] private WaveSettings _waveSettings;
-    [SerializeField] private SpawnSettings _enemySpawnSettings;
-    [SerializeField] private List<Transform> _enemySpawnPoints;
 
     [Header("Defender Spawn Parametrs")]
     [SerializeField] private SpawnSettings _defenderSpawnSettings;
@@ -43,7 +41,7 @@ public class UnitTestEntry : MonoBehaviour
         _navigationUpdater = new NavigationUpdater();
         _navigationUpdater.AddNavigationSurface(_groundSurface);
         
-        _enemySpawnController = new EnemySpawnController(_spawner, _enemySpawnPoints, _enemySpawnSettings);
+        _enemySpawnController = new EnemySpawnController(_enemySpawner);
         _enemySpawnController.OnUnitSpawned += OnCreatedUnit;
         _onUpdates.Add(_enemySpawnController);
 
