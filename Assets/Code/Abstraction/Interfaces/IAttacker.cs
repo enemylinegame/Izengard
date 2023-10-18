@@ -20,5 +20,6 @@ namespace Abstraction
         void StartAutoAttack();
         void StopCast();
         void StopAutoAttack();
+        string GetName();
     }
 }

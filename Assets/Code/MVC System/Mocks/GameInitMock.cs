@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using BattleSystem;
 using Code.GlobalGameState;
 using Code.SceneConfigs;
@@ -6,6 +6,7 @@ using Configs;
 using SpawnSystem;
 using Tools;
 using Tools.Navigation;
+using UnitSystem;
 using UnityEngine;
 
 namespace Code.MVC_System.Mocks
@@ -23,6 +24,8 @@ namespace Code.MVC_System.Mocks
             var timeRemainingService = new TimeRemainingController();
 
             var enemySpawner = new EnemySpawnController(sceneObjectsHolder.EnemySpawner);
+            var regularAttackController = new RegularAttackController();
+            
             var targetFinder = new TargetFinder(sceneObjectsHolder.MainTower);
             var enemyBattleController = new EnemyBattleController(targetFinder);
             var navigationUpdater = new NavigationUpdater();
@@ -30,7 +33,7 @@ namespace Code.MVC_System.Mocks
 
             var defendersSpawner = new DefendersSpawnController(configs.DefendersSpawnSettings.UnitsCreationData,
                 GetPositions(sceneObjectsHolder.DefendersSpawnPoints));
-            var defendersBattleController = new DefenderBattleController(targetFinder);
+            var defendersBattleController = new DefenderBattleController(targetFinder, regularAttackController);
             
             var unitSpawnObserver = new UnitSpawnObserver(enemySpawner, defendersSpawner, 
                 enemyBattleController, defendersBattleController);
@@ -48,6 +51,7 @@ namespace Code.MVC_System.Mocks
             controller.Add(enemyBattleController);
             controller.Add(defendersBattleController);
             controller.Add(gameStateManager);
+            controller.Add(regularAttackController);
         }
 
         private List<Vector3> GetPositions(List<Transform> transforms)

@@ -43,14 +43,14 @@ namespace UnitSystem.Model
 
         public float GetCastTime()
         {
-            throw new NotImplementedException();
-            // return  1.0f / _unit.Offence.CastingSpeed; 
+            //throw new NotImplementedException();
+            return  1.0f / _unit.Offence.CastingSpeed; 
         }
 
         public float GetAttackTime()
         {
-            throw new NotImplementedException();
-            //return 1.0f / _unit.Offence.AttackSpeed;
+            //throw new NotImplementedException();
+            return 1.0f / _unit.Offence.AttackSpeed;
         }
 
         public float GetMinAttackDistance()
@@ -65,22 +65,31 @@ namespace UnitSystem.Model
 
         public void StartCast()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            Debug.Log("UnitAttackerModel->StartCast: " + _unit.View.SelfTransform.gameObject.name);
         }
 
         public void StartAutoAttack()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            Debug.Log("UnitAttackerModel->StartAutoAttack: " + _unit.View.SelfTransform.gameObject.name);
         }
 
         public void StopCast()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            Debug.Log("UnitAttackerModel->StopCast: " + _unit.View.SelfTransform.gameObject.name);
         }
 
         public void StopAutoAttack()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            Debug.Log("UnitAttackerModel->StopAutoAttack: " + _unit.View.SelfTransform.gameObject.name);
+        }
+
+        public string GetName()
+        {
+            return _unit.View.SelfTransform.gameObject.name;
         }
         
         #endregion

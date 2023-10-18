@@ -68,6 +68,7 @@ namespace UnitSystem
 
         private void StartCast(AttackTimingModel timingModel)
         {
+            Debug.Log("RegularAttackController->StartCast: " + timingModel.Unit.GetName());
             timingModel.Progress = 0.0f;
             timingModel.TimingState = AttackTimingState.Cast;
             timingModel.Unit.StartCast();
@@ -75,6 +76,7 @@ namespace UnitSystem
 
         private void StartAttack(AttackTimingModel timingModel)
         {
+            Debug.Log("RegularAttackController->StartAttack: " + timingModel.Unit.GetName());
             timingModel.Unit.StartAutoAttack();
             timingModel.TimingState = AttackTimingState.Attack;
         }
@@ -94,6 +96,8 @@ namespace UnitSystem
 
         private void FinishAttack(AttackTimingModel timingModel)
         {
+            Debug.Log("RegularAttackController->FinishAttack: " + timingModel.Unit.GetName());
+            
             IAttackTarget target = timingModel.Unit.GetCurrentTarget();
 
             if (target != null)
