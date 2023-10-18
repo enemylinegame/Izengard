@@ -26,12 +26,12 @@ namespace UnitSystem
 
         int Id { get; }
 
-        Vector3 SpawnPosition { get; }
+        Vector3 StartPosition { get; }
 
         void Enable();
 
         void Disable();
 
-        void SetSpawnPosition(Vector3 spawnPosition);
+        void SetStartPosition(Vector3 spawnPosition);
     }
 }

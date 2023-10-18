@@ -49,7 +49,7 @@ namespace BattleSystem
             var unitHandler = 
                 new UnitHandler(_nextUnitId++, view, unitStats, unitDefence, unitOffence, navigation, priorities);
             
-            unitHandler.SetSpawnPosition(SelectSpawnPosition());
+            unitHandler.SetStartPosition(SelectSpawnPosition());
             
             OnUnitSpawned?.Invoke(unitHandler);
             /*

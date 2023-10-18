@@ -46,7 +46,7 @@ namespace SpawnSystem
     
             var spwanPosition = _spawnPoints[_spawnIndex].position;
 
-            unit.SetSpawnPosition(spwanPosition);
+            unit.SetStartPosition(spwanPosition);
 
             OnUnitSpawned?.Invoke(unit);
 

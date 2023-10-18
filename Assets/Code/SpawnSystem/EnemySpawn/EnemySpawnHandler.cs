@@ -74,7 +74,7 @@ namespace SpawnSystem
              
             _waveIndex++;
    
-            if (_waveIndex > _waves.Count)
+            if (_waveIndex >= _waves.Count)
             {
                 StopSpawn();
                 OnWavesEnd?.Invoke();

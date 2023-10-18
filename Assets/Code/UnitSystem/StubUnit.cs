@@ -26,7 +26,7 @@ namespace UnitSystem
         public UnitTargetModel Target { get; }
         public UnitPriorityModel Priority { get; }
 
-        public Vector3 SpawnPosition => Vector3.zero;
+        public Vector3 StartPosition => Vector3.zero;
 
         public StubUnit(string logMessage)
         {
@@ -64,6 +64,6 @@ namespace UnitSystem
 
         public void SetRotation(Vector3 rot) { }
 
-        public void SetSpawnPosition(Vector3 spawnPosition) { }
+        public void SetStartPosition(Vector3 spawnPosition) { }
     }
 }
