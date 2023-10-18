@@ -8,10 +8,9 @@ namespace EnemySystem
 {
     public class EnemyPool
     {
-        private readonly Dictionary<UnitRoleType, IUnitData> _spawnData;
-
-        private readonly Dictionary<UnitRoleType, Queue<IUnit>> _pool;
-
+        private readonly Dictionary<UnitRoleType, Queue<IUnit>> _pool = new();
+        private readonly Dictionary<UnitRoleType, IUnitData> _spawnData = new();
+        private readonly Dictionary<UnitRoleType, Transform> _poolHolders = new();
         private readonly EnemyUnitFactory _enemyFactory;
 
         private Transform _root;
@@ -22,11 +21,7 @@ namespace EnemySystem
             List<UnitCreationData> enemyDataList)
         {
             _root = root;
-
             _enemyFactory = enemyFactory;
-
-            _pool = new Dictionary<UnitRoleType, Queue<IUnit>>();
-            _spawnData = new Dictionary<UnitRoleType, IUnitData>();
 
             FillPool(enemyDataList);
         }
@@ -35,23 +30,23 @@ namespace EnemySystem
         {
             foreach (var enemydata in enemyDataList)
             {
-                Transform poolHolder = _root;
 
                 if (_pool.ContainsKey(enemydata.Type) == false)
                 {
                     _pool[enemydata.Type] = new Queue<IUnit>();
                     _spawnData[enemydata.Type] = enemydata.UnitSettings;
 
-                    poolHolder = new GameObject("Pool_" + enemydata.Type.ToString()).transform;
+                    var poolHolder = new GameObject("Pool_" + enemydata.Type.ToString()).transform;
                     poolHolder.parent = _root;
+                    _poolHolders[enemydata.Type] = poolHolder;
                 }
               
                 for (int i = 0; i < enemydata.PoolCopacity; i++)
                 {
                     var enemy = _enemyFactory.CreateUnit(enemydata.UnitSettings);
 
-                    enemy.View.SelfTransform.parent = poolHolder;
-                    enemy.SetPosition(poolHolder.localPosition);
+                    enemy.View.SelfTransform.parent = _poolHolders[enemydata.Type];
+                    enemy.SetPosition(_poolHolders[enemydata.Type].localPosition);
                     
                     enemy.Disable();
 
@@ -79,6 +74,8 @@ namespace EnemySystem
             var type = enemy.Stats.Role;
 
             enemy.Disable();
+            enemy.SetPosition(_poolHolders[type].localPosition);
+            
             _pool[type].Enqueue(enemy);
         }
 

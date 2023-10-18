@@ -71,10 +71,10 @@ namespace SpawnSystem
             {
                 _spawnController.SpawnUnit(_currentWave.InWaveUnits[i]);
             }
-
+             
             _waveIndex++;
-
-            if (_waveIndex > (_waves.Count - 1))
+   
+            if (_waveIndex > _waves.Count)
             {
                 StopSpawn();
                 OnWavesEnd?.Invoke();
@@ -83,8 +83,8 @@ namespace SpawnSystem
 
             var prevWaveData = _currentWave;
             _currentWave = _waves[_waveIndex];
-           
-            if(prevWaveData.WaveDuration != _currentWave.WaveDuration)
+
+            if (prevWaveData.WaveDuration != _currentWave.WaveDuration)
             {
                 _timer.ChangeDuration(_currentWave.WaveDuration);
             }

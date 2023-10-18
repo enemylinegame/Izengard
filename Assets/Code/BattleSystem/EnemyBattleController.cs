@@ -98,11 +98,17 @@ namespace BattleSystem
                     }
             }
         }
+      
+        private void UnitReachedZeroHealth(IUnit unit)
+        {
+            RemoveUnit(unit);
+        }
+
 
         public void RemoveUnit(IUnit unit)
         {
             unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
-            
+
             switch (unit.Stats.Faction)
             {
                 default:
@@ -110,13 +116,13 @@ namespace BattleSystem
                 case UnitFactionType.Enemy:
                     {
                         Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Role} - dead");
-                        
+
                         unit.Disable();
 
                         unit.Target.SetTarget(new NoneTarget());
-                        
+
                         _enemyUnitCollection.Remove(unit);
-                                           
+
                         break;
                     }
                 case UnitFactionType.Defender:
@@ -127,12 +133,6 @@ namespace BattleSystem
                         break;
                     }
             }
-        }
-
-      
-        private void UnitReachedZeroHealth(IUnit unit)
-        {
-            RemoveUnit(unit);
         }
 
         private void UpdateTarget(IUnit unit)
