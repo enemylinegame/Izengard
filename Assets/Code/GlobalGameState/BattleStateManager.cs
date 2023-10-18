@@ -13,12 +13,11 @@ namespace Code.GlobalGameState
             _defendersSpawnLogic = defendersSpawnLogic;
             _enemySpawnLogic = enemySpawnLogic;
         }
-        
-        
-        
+
         public void StartPhase()
         {
             _enemySpawnLogic.StartSpawn();
+            _defendersSpawnLogic.StartSpawn();
         }
 
         public void EndPhase()
