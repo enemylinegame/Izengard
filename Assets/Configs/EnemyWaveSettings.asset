@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a4350ccd0dd2af41a35b90f163858f7, type: 3}
+  m_Name: EnemyWaveSettings
+  m_EditorClassIdentifier: 
+  _waves:
+  - WaveName: wave0
+    WaveDuration: 5
+    InWaveUnits: 0400000004000000050000000500000004000000
+  - WaveName: wave1
+    WaveDuration: 10
+    InWaveUnits: 040000000400000004000000

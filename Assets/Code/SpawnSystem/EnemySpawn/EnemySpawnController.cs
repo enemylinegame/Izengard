@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using EnemySystem;
+using Tools;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
@@ -14,12 +15,13 @@ namespace SpawnSystem
 
         private readonly UnitFactory _factory;
         private readonly List<Transform> _spawnPoints = new List<Transform>();
+        
+        private TimeRemaining _timer;
+        private bool _isTiming;
 
         public event Action<IUnit> OnUnitSpawned;
 
-        public EnemySpawnController(
-            List<Transform> spawnPoints,
-            SpawnSettings spawnSettings)
+        public EnemySpawnController(List<Transform> spawnPoints, SpawnSettings spawnSettings)
         {
 
             _factory = new EnemyUnitFactory(spawnSettings.UnitsCreationData);
