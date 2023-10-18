@@ -36,6 +36,7 @@ namespace SpawnSystem
         private void DefenderSpawned(IUnit defenderUnit)
         {
             _enemyBattleController.AddUnit(defenderUnit);
+            _defenderBattleController.AddUnit(defenderUnit);
         }
         
         

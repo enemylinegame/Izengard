@@ -43,13 +43,16 @@ namespace BattleSystem
 
         private const float MAX_DEFEND_POSITION_ERROR_SQR = 0.1f * 0.1f;
 
-
+        private readonly IRegularAttackController _regularAttackController; 
+            
         private List<UnitData> _defenders = new();
-        private List<IUnit> _enemies = new();
+        private List<TargetData> _enemies = new();
 
 
-        public DefenderBattleController(TargetFinder targetFinder) : base(targetFinder)
+        public DefenderBattleController(TargetFinder targetFinder, IRegularAttackController regularAttackController) 
+            : base(targetFinder)
         {
+            _regularAttackController = regularAttackController;
         }
 
         public override void OnUpdate(float deltaTime)
@@ -95,14 +98,18 @@ namespace BattleSystem
                     if (!_defenders.Exists(unitData => unitData.Unit == unit))
                     {
                         _defenders.Add( new UnitData(unit));
+                        unit.Enable();
+                        unit.Navigation.Enable();
                         unit.OnReachedZeroHealth += UnitReachedZeroHealth;
+                        Debug.Log("DefenderBattleController->AddUnit: " + unit.View.SelfTransform.gameObject.name + 
+                                  " UnitState = " + unit.UnitState.CurrentState.ToString());
                     }
                 }
                 else if (unit.Stats.Faction == UnitFactionType.Enemy)
                 {
-                    if (!_enemies.Contains(unit))
+                    if (!_enemies.Exists(data => data.Unit == unit))
                     {
-                        _enemies.Add(unit);
+                        _enemies.Add( new TargetData() {Unit = unit} );
                         unit.OnReachedZeroHealth += UnitReachedZeroHealth;
                     }
                 }
@@ -120,6 +127,9 @@ namespace BattleSystem
                 if (foundTarget.Id > 0)
                 {
                     unit.Unit.Target.SetTarget(foundTarget);
+
+                    TargetData target = _enemies.Find(u => u.Unit.Id == foundTarget.Id);
+                    unit.AttackerModel.SetTarget(target);
                     ChangeState(unit, UnitState.Move);
                 }
                 
@@ -165,7 +175,7 @@ namespace BattleSystem
         
         private void ExecuteAttackState(UnitData unit, float deltaTime)
         {
-            
+            _regularAttackController.AddUnit(unit.AttackerModel);
         }
 
         // private IUnit GetUnitByView(BaseUnitView targetView)
@@ -203,6 +213,8 @@ namespace BattleSystem
         {
             if (unit.Unit.UnitState.CurrentState != newState)
             {
+                Debug.Log("DefenderBattleController->ChangeState: " + unit.Unit.View.SelfTransform.gameObject.name +  
+                    " newState = " + newState.ToString() );
                 unit.Unit.UnitState.ChangeState(newState);
                 if (newState == UnitState.Move && 
                     unit.Unit.Target.CurrentTarget == null && 
@@ -226,21 +238,26 @@ namespace BattleSystem
                 UnitData unitData = _defenders.Find(u => u.Unit == unit);
                 if (unitData != null)
                 {
-                    unit.Navigation.Stop();
+                    _regularAttackController.RemoveUnit(unitData.AttackerModel);
+                    //unit.Navigation.Stop();
                     unit.Target.SetTarget(null);
+                    unit.Disable();
                     _defenders.Remove(unitData);
+                    Debug.Log("DefenderBattleController->RemoveUnit: " + unit.View.SelfTransform.gameObject.name);
                 }
             }
             else if (unit.Stats.Faction == UnitFactionType.Enemy)
             {
                 _defenders.ForEach(defenderUnitData =>
                 {
-                    if ( defenderUnitData.Unit.Target.CurrentTarget as IUnitView == unit.View)
+                    if ( defenderUnitData.Unit.Target.CurrentTarget.Id  == unit.Id)
                     {
                         defenderUnitData.Unit.Target.SetTarget(null);
-                        _enemies.Remove(unit);
                     }
                 });
+                
+                int index = _enemies.FindIndex(data=> data.Unit == unit);
+                _enemies.RemoveAt(index);
             }
         }
         

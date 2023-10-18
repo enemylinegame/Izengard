@@ -12,7 +12,7 @@ namespace BattleSystem
     public class DefendersSpawnController
     {
 
-        private const int FIRTS_UNIT_ID = 10001;
+        private const int FIRST_UNIT_ID = 10001;
         
         private List<UnitCreationData> _unitCreationDataList;
         private List<Vector3> _spawnPositions;
@@ -27,7 +27,7 @@ namespace BattleSystem
         {
             _unitCreationDataList = unitCreationsDataList;
             _spawnPositions = spawnPositions;
-            _nextUnitId = FIRTS_UNIT_ID;
+            _nextUnitId = FIRST_UNIT_ID;
             _nextSpawnPositionsIndex = 0;
         }
 
@@ -39,6 +39,7 @@ namespace BattleSystem
 
             GameObject prefab = creationData.UnitPrefab;
             GameObject instance = GameObject.Instantiate(prefab);
+            instance.name = unitType.ToString() + "_" + _nextUnitId.ToString(); 
             IUnitView view = instance.GetComponent<IUnitView>();
 
             var unitStats = new UnitStatsModel(creationData.UnitSettings.StatsData);
@@ -52,20 +53,6 @@ namespace BattleSystem
             unitHandler.SetSpawnPosition(SelectSpawnPosition());
             
             OnUnitSpawned?.Invoke(unitHandler);
-            /*
-            if (_spawnIndex >= _spawnPoints.Count)
-                return;
-
-            var unit = _factory.CreateUnit(_unitSpawnDataCollection[unitType]);
-    
-            var spwanPosition = _spawnPoints[_spawnIndex].position;
-
-            unit.SetSpawnPosition(spwanPosition);
-
-            OnUnitSpawned?.Invoke(unit);
-
-            _spawnIndex++;
-            */
         }
 
         private Vector3 SelectSpawnPosition()
@@ -79,34 +66,5 @@ namespace BattleSystem
             _nextSpawnPositionsIndex++;
             return spawnPosition;
         }
-        
-        
-        /*
-        private IUnit CreateEnemy(IUnitData unitData)
-        {
-            var unitPrefab = unitObjectsData[unitData.StatsData.Role];
-
-            var unitGO = Object.Instantiate(unitPrefab);
-
-            var view = unitGO.GetComponent<IUnitView>();
-
-            var unitStats = new UnitStatsModel(unitData.StatsData);
-
-            var unitDefence = new UnitDefenceModel(unitData.DefenceData);
-
-            var unitOffence = new UnitOffenceModel(unitData.OffenceData);
-
-            var navigation =
-                new EnemyNavigationModel(view.UnitNavigation, view.SelfTransform.position);
-
-            var priorities = new UnitPriorityModel(unitData.UnitPriorities);
-
-            var unitHandler = 
-                new UnitHandler(_enemyId++, view, unitStats, unitDefence, unitOffence, navigation, priorities);
-
-            return unitHandler;
-        }
-        */
-        
     }
 }

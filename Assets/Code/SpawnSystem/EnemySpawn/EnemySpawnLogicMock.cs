@@ -15,7 +15,7 @@ namespace BattleSystem
         public EnemySpawnLogicMock(EnemySpawnController enemySpawnController)
         {
             _spawnController = enemySpawnController;
-            _timer = new TimeRemaining(SpawnPack, 1.0f);
+            _timer = new TimeRemaining(SpawnPack, 5.0f);
         }
 
 
