@@ -27,7 +27,7 @@ namespace Tools
             {
                 _paramValue = _maxValue;
             }
-            else if (newValue.CompareTo(_minValue) < 0)
+            else if (newValue.CompareTo(_minValue) <= 0)
             {
                 _paramValue = _minValue;
                 OnMinValueSet?.Invoke(_minValue);

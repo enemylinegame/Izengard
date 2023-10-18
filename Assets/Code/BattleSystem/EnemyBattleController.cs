@@ -127,8 +127,6 @@ namespace BattleSystem
                     }
                 case UnitFactionType.Defender:
                     {
-                        unit.Disable();
-
                         _defenderUnitCollection.Remove(unit);
                         break;
                     }
