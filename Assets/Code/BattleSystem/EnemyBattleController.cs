@@ -1,4 +1,5 @@
 ﻿using Abstraction;
+using EnemySystem;
 using System.Collections.Generic;
 using UnitSystem;
 using UnitSystem.Enum;
@@ -11,16 +12,24 @@ namespace BattleSystem
         private List<IUnit> _enemyUnitCollection;
         private List<IUnit> _defenderUnitCollection;
 
+        private List<EnemyInBattleModel> _enemyInFightCollection;
+
         public EnemyBattleController(TargetFinder targetFinder) : base(targetFinder)
         {
             _enemyUnitCollection = new List<IUnit>();
             _defenderUnitCollection = new List<IUnit>();
+
+            _enemyInFightCollection = new List<EnemyInBattleModel>();
         }
 
         public override void OnUpdate(float deltaTime)
         {
-            foreach (var unit in _enemyUnitCollection)
+            for(int i=0; i < _enemyUnitCollection.Count; i++)
             {
+                var unit = _enemyUnitCollection[i];
+               
+                UpdateTarget(unit);
+
                 switch (unit.UnitState.CurrentState)
                 {
                     default:
@@ -28,129 +37,161 @@ namespace BattleSystem
 
                     case UnitState.Idle:
                         {
-                            var distance = GetDistanceToTarget(unit.GetPosition(), unit.SpawnPosition);
-                            if (CheckStopDistance(distance, 0) == true)
-                            {
-                                StopUnit(unit);
-                            }
-                            else
-                            {
-                                ChangeUnitState(unit, UnitState.Search);
-                            }
-                            break;
-                        }
-                    case UnitState.Search:
-                        {
-                            var target = GetTarget(unit);
-                            if(target is NoneTarget)
-                            {
-                                unit.Target.SetTarget(targetFinder.GetMainTower());
-                                MoveUnitToTarget(unit, unit.Target.CurrentTarget);
-                                ChangeUnitState(unit, UnitState.Idle);
-                            }
-                            else
-                            {
-                                unit.Target.SetTarget(target);
-                                MoveUnitToTarget(unit, target);
-                                ChangeUnitState(unit, UnitState.Move);
-                            }
+                            UnitIdleState(unit, deltaTime);
                             break;
                         }
                     case UnitState.Move:
                         {
-                            var turgentPos = unit.Target.CurrentTarget.Position;
-                            var distance = GetDistanceToTarget(unit.GetPosition(), turgentPos);
-                            if (CheckStopDistance(distance, unit.Stats.DetectionRange.GetValue()) == true)
-                            {
-                                Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Role} - startApproach");
-                                ChangeUnitState(unit, UnitState.Approach);
-                                MoveUnitToTarget(unit, unit.Target.CurrentTarget);
-                            }
+                            UnitMoveState(unit, deltaTime);   
                             break;
                         }
                     case UnitState.Approach:
                         {
-                            var turgentPos = unit.Target.CurrentTarget.Position;
-                            var distance = GetDistanceToTarget(unit.GetPosition(), turgentPos);
-                            if (CheckStopDistance(distance, unit.Offence.MaxRange) == true)
-                            {
-                                StopUnit(unit);
-                                ChangeUnitState(unit, UnitState.Attack);
-                            }
+                            break;
+                        }
+                    case UnitState.Search:
+                        {
                             break;
                         }
                     case UnitState.Attack:
                         {
-                            Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Role} - startAttack");
-
-                            var target = unit.Target.CurrentTarget;
-                            var targetUnit = _defenderUnitCollection.Find(u => u.Id == target.Id);
-                          
-                            if(targetUnit != null)
-                            {
-                                var enemyDamage = unit.Offence.GetDamage();
-
-                                targetUnit.TakeDamage(enemyDamage);
-                            }
-                    
-                            ChangeUnitState(unit, UnitState.None);
+                            UnitAttackState(unit, deltaTime);
                             break;
                         }
-                    case UnitState.Die: 
+                    case UnitState.Die:
                         {
                             break;
                         }
                 }
+
             }
         }
 
         public override void OnFixedUpdate(float fixedDeltaTime)
         {
-            foreach (var unit in _enemyUnitCollection)
+            for (int i =0; i < _enemyUnitCollection.Count; i++)
             {
-
+                var unit = _enemyUnitCollection[i];
             }
         }
 
         public override void AddUnit(IUnit unit)
         {
+            unit.OnReachedZeroHealth += UnitReachedZeroHealth;
+
             switch (unit.Stats.Faction)
             {
                 default:
                     break;
                 case UnitFactionType.Enemy:
                     {
-                        InitUnitLogic(unit);
+                        unit.Navigation.Enable();
+                        unit.UnitState.ChangeState(UnitState.Idle);
+
                         _enemyUnitCollection.Add(unit);
                         break;
                     }
                 case UnitFactionType.Defender:
-                    {
-                        unit.OnReachedZeroHealth += DefenderReachedZeroHp;
+                    {    
                         _defenderUnitCollection.Add(unit);
                         break;
                     }
             }
         }
-
-        private void InitUnitLogic(IUnit unit)
-        {
-            unit.Navigation.Enable();
-            unit.OnReachedZeroHealth += UnitReachedZerohealth;
-
-            unit.UnitState.ChangeState(UnitState.Idle);
-        }
       
-        private void UnitReachedZerohealth(IUnit unit)
+        private void UnitReachedZeroHealth(IUnit unit)
         {
-            Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Role} - dead");
+            RemoveUnit(unit);
         }
 
-        private void DefenderReachedZeroHp(IUnit unit)
+
+        public void RemoveUnit(IUnit unit)
         {
-            unit.OnReachedZeroHealth -= DefenderReachedZeroHp;
-            unit.Disable();
-            _defenderUnitCollection.Remove(unit);
+            unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
+
+            switch (unit.Stats.Faction)
+            {
+                default:
+                    break;
+                case UnitFactionType.Enemy:
+                    {
+                        Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Role} - dead");
+
+                        unit.Disable();
+
+                        unit.Target.SetTarget(new NoneTarget());
+
+                        _enemyUnitCollection.Remove(unit);
+
+                        break;
+                    }
+                case UnitFactionType.Defender:
+                    {
+                        _defenderUnitCollection.Remove(unit);
+                        break;
+                    }
+            }
+        }
+
+        private void UpdateTarget(IUnit unit)
+        {
+            switch (unit.Priority.CurrentPriority)
+            {
+                case UnitPriorityType.MainTower:
+                    {
+                        break;
+                    }
+                case UnitPriorityType.ClosestFoe:
+                case UnitPriorityType.FarthestFoe:
+                case UnitPriorityType.SpecificFoe:
+                    {
+                        var target = unit.Target.CurrentTarget;
+                        if (_defenderUnitCollection.Exists(def => def.Id == target.Id) == false) 
+                        {
+                            unit.Target.SetTarget(new NoneTarget());
+
+                            ChangeUnitState(unit, UnitState.Idle);
+                        }
+                        break;
+                    }
+            }
+        }
+
+        private void UnitIdleState(IUnit unit, float deltaTime)
+        {
+            var target = GetTarget(unit);
+
+            unit.Target.SetTarget(target);
+            MoveUnitToTarget(unit, target);
+            ChangeUnitState(unit, UnitState.Move);
+        }
+
+        private void UnitMoveState(IUnit unit, float deltaTime)
+        {
+            var turgentPos = unit.Target.CurrentTarget.Position;
+            var distance = GetDistanceToTarget(unit.GetPosition(), turgentPos);
+            if (CheckStopDistance(distance, unit.Offence.MaxRange) == true)
+            {
+                StopUnit(unit);
+
+                ChangeUnitState(unit, UnitState.Attack);
+            }
+        }
+
+        private void UnitAttackState(IUnit unit, float deltaTime)
+        {
+            var target = unit.Target.CurrentTarget;
+
+            var unitTarget = _defenderUnitCollection.Find(u => u.Id == target.Id);
+            if (unitTarget != null)
+            {
+                _enemyInFightCollection.Add(new EnemyInBattleModel(unit, unitTarget));
+            }
+
+            foreach(var fighter in _enemyInFightCollection)
+            {
+                fighter.ExecuteFight();
+            }
         }
 
         private void ChangeUnitState(IUnit unit, UnitState state)
@@ -195,6 +236,7 @@ namespace BattleSystem
                 default:
                 case UnitPriorityType.MainTower:
                     {
+                        unit.Priority.ResetIndex();
                         return targetFinder.GetMainTower();
                     }
                 case UnitPriorityType.ClosestFoe:
@@ -204,6 +246,7 @@ namespace BattleSystem
                         {
                             return GetTarget(unit);
                         }
+                        unit.Priority.ResetIndex();
                         return target;
                     }
                 case UnitPriorityType.SpecificFoe:
@@ -213,6 +256,7 @@ namespace BattleSystem
                         {
                             return GetTarget(unit);
                         }
+                        unit.Priority.ResetIndex();
                         return target;
                     }
             }

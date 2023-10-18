@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using BattleSystem;
 using SpawnSystem;
+using Tools;
 using Tools.Navigation;
 using UnitSystem;
 using UnitSystem.Enum;
@@ -10,13 +11,16 @@ public class UnitTestEntry : MonoBehaviour
 {
     [SerializeField] private MainTowerView _mainTower;
     [Header("Enemy Spawn Parametrs")]
-    [SerializeField] private SpawnSettings _enemySpawnSettings;
-    [SerializeField] private List<Transform> _enemySpawnPoints;
-    [Header("Enemy Spawn Parametrs")]
+    [SerializeField] private SpawnerView _enemySpawner;
+    [SerializeField] private WaveSettings _waveSettings;
+
+    [Header("Defender Spawn Parametrs")]
     [SerializeField] private SpawnSettings _defenderSpawnSettings;
     [SerializeField] private List<Transform> _defenderSpawnPoints;
     [Space(10)]
     [SerializeField] private NavigationSurfaceView _groundSurface;
+
+    private TimeRemainingController timeRemainingController;
 
     private NavigationUpdater _navigationUpdater;
     private EnemySpawnController _enemySpawnController;
@@ -24,15 +28,20 @@ public class UnitTestEntry : MonoBehaviour
     private TargetFinder _targetFinder;
     private EnemyBattleController _enemyBattleController;
 
+    private EnemySpawnHandler _enemySpawnHandler;
+
     private List<IOnUpdate> _onUpdates = new List<IOnUpdate>();
     private List<IOnFixedUpdate> _onFixedUpdates = new List<IOnFixedUpdate>();
 
     private void Start()
     {
+        timeRemainingController = new TimeRemainingController();
+        _onUpdates.Add(timeRemainingController);
+
         _navigationUpdater = new NavigationUpdater();
         _navigationUpdater.AddNavigationSurface(_groundSurface);
         
-        _enemySpawnController = new EnemySpawnController(_enemySpawnPoints, _enemySpawnSettings);
+        _enemySpawnController = new EnemySpawnController(_enemySpawner);
         _enemySpawnController.OnUnitSpawned += OnCreatedUnit;
         _onUpdates.Add(_enemySpawnController);
 
@@ -46,9 +55,10 @@ public class UnitTestEntry : MonoBehaviour
         _onUpdates.Add(_enemyBattleController);
         _onFixedUpdates.Add(_enemyBattleController);
 
-        _enemySpawnController.SpawnUnit(UnitRoleType.Imp);
-        _enemySpawnController.SpawnUnit(UnitRoleType.Imp);
-        _enemySpawnController.SpawnUnit(UnitRoleType.Hound);
+        _enemySpawnHandler = new EnemySpawnHandler(_enemySpawnController, _waveSettings);
+        _enemySpawnHandler.OnWavesEnd += OnEnemySpawnEnd;
+
+        _enemySpawnHandler.StartSpawn();
 
         _defenderSpawnController.SpawnUnit(UnitRoleType.Militiaman);
         _defenderSpawnController.SpawnUnit(UnitRoleType.Militiaman);
@@ -75,5 +85,10 @@ public class UnitTestEntry : MonoBehaviour
     {
         unit.Enable();
         _enemyBattleController.AddUnit(unit);
+    }
+
+    private void OnEnemySpawnEnd()
+    {
+        Debug.Log("enemy spawn ends!");
     }
 }

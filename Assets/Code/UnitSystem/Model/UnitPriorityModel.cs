@@ -7,8 +7,11 @@ namespace UnitSystem.Model
     public class UnitPriorityModel
     {
         private readonly List<UnitPriorityData> _unitPriorities;
+        private UnitPriorityType _currentPriority;
+
         private int _priorityIndex;
 
+        public UnitPriorityType CurrentPriority => _currentPriority;
         public bool IsEndPriority { get; private set; }
 
         public UnitPriorityModel(IReadOnlyList<UnitPriorityData> unitPriorities)
@@ -35,9 +38,12 @@ namespace UnitSystem.Model
             }
 
             var priorityData = _unitPriorities[_priorityIndex];
+            _currentPriority = priorityData.UnitPriority;
             _priorityIndex++;
 
             return (priorityData.UnitPriority, priorityData.PriorityRole);
         }
+
+        public void ResetIndex() => _priorityIndex = 0;
     }
 }

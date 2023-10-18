@@ -17,7 +17,7 @@ namespace UnitSystem
         private readonly UnitPriorityModel _priority;
 
         private int _id;
-        private Vector3 _spawnPosition;
+        private Vector3 _startPosition;
 
         public IUnitView View => _unitView;
 
@@ -35,7 +35,7 @@ namespace UnitSystem
 
         public int Id => _id;
 
-        public Vector3 SpawnPosition => _spawnPosition;
+        public Vector3 StartPosition => _startPosition;
 
         public event Action<IUnit> OnReachedZeroHealth;
 
@@ -113,9 +113,9 @@ namespace UnitSystem
             _unitStats.Speed.OnValueChange -= _unitView.ChangeSpeed;
         }
 
-        public void SetSpawnPosition(Vector3 spawnPosition)
+        public void SetStartPosition(Vector3 spawnPosition)
         {
-            _spawnPosition = spawnPosition;
+            _startPosition = spawnPosition;
             SetPosition(spawnPosition);
         }
 

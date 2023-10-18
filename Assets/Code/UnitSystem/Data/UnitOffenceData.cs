@@ -9,8 +9,8 @@ namespace UnitSystem.Data
         [SerializeField] private UnitAttackType _attackType;
         [SerializeField] private float _minRange = 0f;
         [SerializeField] private float _maxRange = 5f;
-        [SerializeField] private float _castingSpeed = 1f;
-        [SerializeField] private float _attackSpeed = 1f;
+        [SerializeField] private float _castingTime = 1f;
+        [SerializeField] private float _attackTime = 1f;
         
         [Space(5)]
         [Header("Chances Settings")]  
@@ -32,9 +32,9 @@ namespace UnitSystem.Data
 
         public float MaxRange => _maxRange;
 
-        public float CastingSpeed => _castingSpeed;
+        public float CastingTime => _castingTime;
 
-        public float AttackSpeed => _attackSpeed;
+        public float AttackTime => _attackTime;
 
         public float CriticalChance => _criticalChance;
 

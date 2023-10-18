@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using EnemySystem;
+using Tools;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
@@ -10,40 +11,35 @@ namespace SpawnSystem
 {
     public class EnemySpawnController : IOnController, IOnUpdate
     {
-        private readonly Dictionary<UnitRoleType, IUnitData> _unitSpawnDataCollection = new();
+        private readonly SpawnerView _spawner;
+        private readonly EnemyPool _pool;
 
-        private readonly UnitFactory _factory;
         private readonly List<Transform> _spawnPoints = new List<Transform>();
+        
+        private TimeRemaining _timer;
+        private bool _isTiming;
 
         public event Action<IUnit> OnUnitSpawned;
 
-        public EnemySpawnController(
-            List<Transform> spawnPoints,
-            SpawnSettings spawnSettings)
+        public EnemySpawnController(SpawnerView spawner)
         {
+            _spawner = spawner;
 
-            _factory = new EnemyUnitFactory(spawnSettings.UnitsCreationData);
+            var unitsCreationData = _spawner.SpawnSettings.UnitsCreationData;
 
-            foreach (var creationData in spawnSettings.UnitsCreationData)
-            {
-                var unitData = creationData.UnitSettings;
-                _unitSpawnDataCollection[unitData.StatsData.Role] = unitData;
-            }
-
-            foreach (var spawnPoint in spawnPoints)
-            {
-                _spawnPoints.Add(spawnPoint);
-            }
+            var factory = new EnemyUnitFactory(unitsCreationData);
+            
+            _pool = new EnemyPool(spawner.PoolHolder, factory, unitsCreationData);
         }
 
         public void SpawnUnit(UnitRoleType unitType)
         {
-            var unit = _factory.CreateUnit(_unitSpawnDataCollection[unitType]);
+            var unit = _pool.GetFromPool(unitType);
 
             var spawnIndex = Random.Range(0, _spawnPoints.Count);
-            var spwanPosition = _spawnPoints[spawnIndex].position;
+            var spwanPosition = _spawner.SpawnPoints[spawnIndex].position;
 
-            unit.SetSpawnPosition(spwanPosition);
+            unit.SetStartPosition(spwanPosition);
 
             OnUnitSpawned?.Invoke(unit);
         }

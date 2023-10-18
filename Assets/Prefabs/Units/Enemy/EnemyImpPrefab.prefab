@@ -16,8 +16,8 @@ GameObject:
   - component: {fileID: 168241047001392405}
   - component: {fileID: 168241047001392404}
   m_Layer: 8
-  m_Name: EnemyImoPrefab
-  m_TagString: Militiaman
+  m_Name: EnemyImpPrefab
+  m_TagString: Imp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
