@@ -60,8 +60,8 @@ public class UnitTestEntry : MonoBehaviour
 
         _enemySpawnHandler.StartSpawn();
 
-        _defenderSpawnController.SpawnUnit(UnitRoleType.Militiaman);
-        _defenderSpawnController.SpawnUnit(UnitRoleType.Militiaman);
+        _defenderSpawnController.SpawnUnit(UnitType.Militiaman);
+        _defenderSpawnController.SpawnUnit(UnitType.Militiaman);
     }
 
 

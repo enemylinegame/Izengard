@@ -1,21 +1,12 @@
-﻿using System.ComponentModel;
-
-namespace UnitSystem.Enum
+﻿namespace UnitSystem.Enum
 {
     public enum UnitRoleType
     {
-        None = 0,
-        [Description("Ополченец")]
-        Militiaman = 1,
-        [Description("Охотник")]
-        Hunter = 2,
-        [Description("Маг")]
-        Mage = 3,
-        [Description("Имп")]
-        Imp = 4,
-        [Description("Гончая")]
-        Hound = 5,
-        [Description("Бес")]
-        Fiend = 6,
+        None    = 0,
+        Fodder  = 1,
+        Fighter = 2,
+        Gunner  = 3,
+        Caster  = 4,
+        Tank    = 5,
     }
 }

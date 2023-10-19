@@ -32,7 +32,7 @@ namespace SpawnSystem
             _pool = new EnemyPool(spawner.PoolHolder, factory, unitsCreationData);
         }
 
-        public void SpawnUnit(UnitRoleType unitType)
+        public void SpawnUnit(UnitType unitType)
         {
             var unit = _pool.GetFromPool(unitType);
 

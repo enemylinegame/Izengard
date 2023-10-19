@@ -40,9 +40,9 @@ namespace BattleSystem
         private void SpawnPack()
         {
             _isTiming = false;
-            _spawnController.SpawnUnit(UnitRoleType.Imp);
-            _spawnController.SpawnUnit(UnitRoleType.Imp);
-            _spawnController.SpawnUnit(UnitRoleType.Hound);
+            _spawnController.SpawnUnit(UnitType.Imp);
+            _spawnController.SpawnUnit(UnitType.Imp);
+            _spawnController.SpawnUnit(UnitType.Hound);
         }
         
     }

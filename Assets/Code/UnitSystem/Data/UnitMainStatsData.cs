@@ -8,6 +8,7 @@ namespace UnitSystem.Data
     public class UnitMainStatsData : IUnitStatsData
     {
         [SerializeField] private UnitFactionType _faction;
+        [SerializeField] private UnitType _type;
         [SerializeField] private UnitRoleType _role;
         [SerializeField] private int _healthPoints = 100;
         [SerializeField] private float _size = 1f;
@@ -16,6 +17,7 @@ namespace UnitSystem.Data
 
 
         public UnitFactionType Faction => _faction;
+        public UnitType Type => _type;
         public UnitRoleType Role => _role;
 
         public int HealthPoints => _healthPoints;

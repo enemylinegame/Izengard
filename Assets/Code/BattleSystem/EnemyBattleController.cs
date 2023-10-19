@@ -1,5 +1,4 @@
 ﻿using Abstraction;
-using EnemySystem;
 using System.Collections.Generic;
 using UnitSystem;
 using UnitSystem.Enum;
@@ -12,14 +11,10 @@ namespace BattleSystem
         private List<IUnit> _enemyUnitCollection;
         private List<IUnit> _defenderUnitCollection;
 
-        private List<EnemyInBattleModel> _enemyInFightCollection;
-
         public EnemyBattleController(TargetFinder targetFinder) : base(targetFinder)
         {
             _enemyUnitCollection = new List<IUnit>();
             _defenderUnitCollection = new List<IUnit>();
-
-            _enemyInFightCollection = new List<EnemyInBattleModel>();
         }
 
         public override void OnUpdate(float deltaTime)
@@ -115,7 +110,7 @@ namespace BattleSystem
                     break;
                 case UnitFactionType.Enemy:
                     {
-                        Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Role} - dead");
+                        Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Type} - dead");
 
                         unit.Disable();
 
@@ -185,13 +180,14 @@ namespace BattleSystem
             var unitTarget = _defenderUnitCollection.Find(u => u.Id == target.Id);
             if (unitTarget != null)
             {
-                _enemyInFightCollection.Add(new EnemyInBattleModel(unit, unitTarget));
+                ExecuteFight(unit, unitTarget);
             }
+        }
 
-            foreach(var fighter in _enemyInFightCollection)
-            {
-                fighter.ExecuteFight();
-            }
+        private void ExecuteFight(IUnit attackingUnit, IUnit attackedUnit)
+        {
+            var damage = attackingUnit.Offence.GetDamage();
+            attackedUnit.TakeDamage(damage);
         }
 
         private void ChangeUnitState(IUnit unit, UnitState state)
@@ -262,7 +258,7 @@ namespace BattleSystem
             }
         }
 
-        private ITarget GetClosestDefender(IUnit unit, UnitRoleType targetRole = UnitRoleType.None)
+        private ITarget GetClosestDefender(IUnit unit, UnitType targetRole = UnitType.None)
         {
             ITarget target = new NoneTarget();
 
@@ -273,7 +269,7 @@ namespace BattleSystem
             {
                 var defender = _defenderUnitCollection[i];
 
-                if(targetRole != UnitRoleType.None && defender.Stats.Role != targetRole)
+                if(targetRole != UnitType.None && defender.Stats.Type != targetRole)
                     continue;
 
                 var defenderPos = defender.GetPosition();

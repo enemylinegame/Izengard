@@ -24,11 +24,11 @@ namespace UnitSystem.Model
             }
         }
 
-        public (UnitPriorityType priorityType, UnitRoleType roleType) GetNext() 
+        public (UnitPriorityType priorityType, UnitType roleType) GetNext() 
         {
             if(_unitPriorities.Count == 0)
             {
-                return (UnitPriorityType.None, UnitRoleType.None);
+                return (UnitPriorityType.None, UnitType.None);
             }
 
             if (_priorityIndex >= _unitPriorities.Count)

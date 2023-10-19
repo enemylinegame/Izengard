@@ -31,10 +31,10 @@ namespace BattleSystem
             _nextSpawnPositionsIndex = 0;
         }
 
-        public void SpawnUnit(UnitRoleType unitType)
+        public void SpawnUnit(UnitType unitType)
         {
             UnitCreationData creationData =
-                _unitCreationDataList.Find(ucd => ucd.UnitSettings.StatsData.Role == unitType);
+                _unitCreationDataList.Find(ucd => ucd.UnitSettings.StatsData.Type == unitType);
             if (creationData == null) return;
 
             GameObject prefab = creationData.UnitPrefab;

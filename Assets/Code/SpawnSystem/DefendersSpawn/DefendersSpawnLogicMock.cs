@@ -43,7 +43,7 @@ namespace BattleSystem
         private void SpawnPack()
         {
             _isTiming = false;
-            _spawnController.SpawnUnit(UnitRoleType.Militiaman);
+            _spawnController.SpawnUnit(UnitType.Militiaman);
             _unitsCounter++;
             if (_unitsCounter < _unitsToSpawn)
             {

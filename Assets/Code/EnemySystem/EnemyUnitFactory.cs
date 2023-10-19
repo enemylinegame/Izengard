@@ -46,7 +46,7 @@ namespace EnemySystem
 
         private IUnit CreateEnemy(IUnitData unitData)
         {
-            var unitPrefab = unitObjectsData[unitData.StatsData.Role];
+            var unitPrefab = unitObjectsData[unitData.StatsData.Type];
 
             var unitGO = Object.Instantiate(unitPrefab);
 
