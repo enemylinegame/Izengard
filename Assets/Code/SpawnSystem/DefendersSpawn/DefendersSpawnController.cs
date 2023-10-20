@@ -57,7 +57,7 @@ namespace BattleSystem
 
         private Vector3 SelectSpawnPosition()
         {
-            if (_nextSpawnPositionsIndex > _spawnPositions.Count)
+            if (_nextSpawnPositionsIndex >= _spawnPositions.Count)
             {
                 _nextSpawnPositionsIndex = 0;
             }

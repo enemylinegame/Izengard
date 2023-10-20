@@ -37,7 +37,7 @@ namespace UnitSystem.Model
                 _priorityIndex = _unitPriorities.Count - 1;
             }
 
-            var priorityData = _unitPriorities[_priorityIndex];
+            UnitPriorityData priorityData = _unitPriorities[_priorityIndex];
             _currentPriority = priorityData.UnitPriority;
             _priorityIndex++;
 
