@@ -16,7 +16,7 @@ MonoBehaviour:
     _faction: 2
     _type: 5
     _role: 5
-    _healthPoints: 60
+    _healthPoints: 30
     _size: 0.5
     _speed: 3
     _detectionRange: 10
