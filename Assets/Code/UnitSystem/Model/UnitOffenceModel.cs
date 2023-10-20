@@ -55,8 +55,8 @@ namespace UnitSystem.Model
 
         private bool CheckChance(float chanceValue)
         {
-            var gainedChance = Random.Range(0, 101);
-            return gainedChance <= chanceValue;
+            var gainedChance = Random.value; 
+            return gainedChance < chanceValue / 100f;
         }
     }
 }

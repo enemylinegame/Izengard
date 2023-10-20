@@ -45,6 +45,6 @@ MonoBehaviour:
     _failChance: 0
     _onFailDamage: 1
     _damageData:
-      _baseDamage: 20
+      _baseDamage: 10
       _fireDamage: 0
       _coldDamage: 0

@@ -114,7 +114,7 @@ namespace BattleSystem
 
                         unit.Disable();
 
-                        unit.Target.SetTarget(new NoneTarget());
+                        unit.Target.ResetTarget();
 
                         _enemyUnitCollection.Remove(unit);
 
@@ -122,6 +122,14 @@ namespace BattleSystem
                     }
                 case UnitFactionType.Defender:
                     {
+                        var linkedEnemy = 
+                            _enemyUnitCollection.FindAll(e => e.Target.CurrentTarget == unit.View);
+
+                        foreach(var enemy in linkedEnemy)
+                        {
+                            enemy.Target.ResetTarget();
+                        }
+
                         _defenderUnitCollection.Remove(unit);
                         break;
                     }
@@ -140,13 +148,19 @@ namespace BattleSystem
                 case UnitPriorityType.FarthestFoe:
                 case UnitPriorityType.SpecificFoe:
                     {
-                        var target = unit.Target.CurrentTarget;
-                        if (_defenderUnitCollection.Exists(def => def.Id == target.Id) == false) 
+                        if(unit.Target.CurrentTarget is NoneTarget)
                         {
-                            unit.Target.SetTarget(new NoneTarget());
-
                             ChangeUnitState(unit, UnitState.Idle);
+                            return;
                         }
+
+                        if (unit.Target.IsTargetChangePosition())
+                        {
+                            MoveUnitToTarget(unit, unit.Target.CurrentTarget);
+                            ChangeUnitState(unit, UnitState.Move);
+                            return;
+                        }
+
                         break;
                     }
             }
@@ -155,9 +169,9 @@ namespace BattleSystem
         private void UnitIdleState(IUnit unit, float deltaTime)
         {
             var target = GetTarget(unit);
-
             unit.Target.SetTarget(target);
-            MoveUnitToTarget(unit, target);
+
+            MoveUnitToTarget(unit, unit.Target.CurrentTarget);
             ChangeUnitState(unit, UnitState.Move);
         }
 

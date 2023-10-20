@@ -1,7 +1,5 @@
 ﻿using Abstraction;
 using System;
-using System.Collections.Generic;
-using UnitSystem.Data;
 using UnitSystem.Model;
 using UnitSystem.View;
 using UnityEngine;

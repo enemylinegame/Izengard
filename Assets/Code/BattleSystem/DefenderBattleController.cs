@@ -5,13 +5,11 @@ using UnityEngine;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnitSystem.Model;
-using UnitSystem.View;
 
 namespace BattleSystem
 {
     public class DefenderBattleController : BaseBattleController
-    {
-        
+    {        
         private class UnitData
         {
             public readonly UnitAttackerModel AttackerModel;
@@ -120,7 +118,7 @@ namespace BattleSystem
         private void ExecuteIdleState(UnitData unit, float deltaTime)
         {
             ITarget foundTarget = targetFinder.GetClosestUnit(unit.Unit);
-            if (foundTarget != null)
+            if (foundTarget is not NoneTarget)
             {
                 //IUnit target = GetUnitByView(foundTarget);
  
@@ -140,7 +138,7 @@ namespace BattleSystem
         {
             ITarget target = unitData.Unit.Target.CurrentTarget;
             IUnit defender = unitData.Unit;
-            if (target != null)
+            if (target is not NoneTarget)
             {
                 Vector3 currentTargetPosition = target.Position;
                 float maxAttackRange = defender.Offence.MaxRange;
@@ -217,7 +215,7 @@ namespace BattleSystem
                     " newState = " + newState.ToString() );
                 unit.Unit.UnitState.ChangeState(newState);
                 if (newState == UnitState.Move && 
-                    unit.Unit.Target.CurrentTarget == null && 
+                    unit.Unit.Target.CurrentTarget is NoneTarget && 
                     unit.HaveDefendPosition) 
                 {
                     unit.Unit.Navigation.MoveTo(unit.DefendPosition);
@@ -240,7 +238,7 @@ namespace BattleSystem
                 {
                     _regularAttackController.RemoveUnit(unitData.AttackerModel);
                     //unit.Navigation.Stop();
-                    unit.Target.SetTarget(null);
+                    unit.Target.ResetTarget();
                     unit.Disable();
                     _defenders.Remove(unitData);
                     Debug.Log("DefenderBattleController->RemoveUnit: " + unit.View.SelfTransform.gameObject.name);
@@ -252,7 +250,7 @@ namespace BattleSystem
                 {
                     if ( defenderUnitData.Unit.Target.CurrentTarget.Id  == unit.Id)
                     {
-                        defenderUnitData.Unit.Target.SetTarget(null);
+                        defenderUnitData.Unit.Target.ResetTarget();
                     }
                 });
                 
