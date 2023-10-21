@@ -62,6 +62,24 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Key2"",
+                    ""type"": ""Button"",
+                    ""id"": ""59ec7301-e8fb-4c6f-bf08-e07fe8e1deec"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Delete"",
+                    ""type"": ""Button"",
+                    ""id"": ""11bc1b79-bae1-44da-8b7b-0f16fcaa21a6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -71,7 +89,7 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Mouse + Keyboard;Mouse + keyboard"",
+                    ""groups"": ""Mouse + Keyboard"",
                     ""action"": ""LeftClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -82,7 +100,7 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Mouse + Keyboard;Mouse + keyboard"",
+                    ""groups"": ""Mouse + Keyboard"",
                     ""action"": ""RightClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -95,6 +113,28 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Key1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3596014e-6f6f-433d-ab92-c0fdfefb64b0"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Key2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""48fb44e1-6ef0-4cdd-9cf4-515b45742d3a"",
+                    ""path"": ""<Keyboard>/delete"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Delete"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -163,6 +203,8 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
         m_PlayerControl_RightClick = m_PlayerControl.FindAction("RightClick", throwIfNotFound: true);
         m_PlayerControl_Move = m_PlayerControl.FindAction("Move", throwIfNotFound: true);
         m_PlayerControl_Key1 = m_PlayerControl.FindAction("Key1", throwIfNotFound: true);
+        m_PlayerControl_Key2 = m_PlayerControl.FindAction("Key2", throwIfNotFound: true);
+        m_PlayerControl_Delete = m_PlayerControl.FindAction("Delete", throwIfNotFound: true);
         // PointerParameters
         m_PointerParameters = asset.FindActionMap("PointerParameters", throwIfNotFound: true);
         m_PointerParameters_PointerID = m_PointerParameters.FindAction("PointerID", throwIfNotFound: true);
@@ -230,6 +272,8 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerControl_RightClick;
     private readonly InputAction m_PlayerControl_Move;
     private readonly InputAction m_PlayerControl_Key1;
+    private readonly InputAction m_PlayerControl_Key2;
+    private readonly InputAction m_PlayerControl_Delete;
     public struct PlayerControlActions
     {
         private @UserInput m_Wrapper;
@@ -238,6 +282,8 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
         public InputAction @RightClick => m_Wrapper.m_PlayerControl_RightClick;
         public InputAction @Move => m_Wrapper.m_PlayerControl_Move;
         public InputAction @Key1 => m_Wrapper.m_PlayerControl_Key1;
+        public InputAction @Key2 => m_Wrapper.m_PlayerControl_Key2;
+        public InputAction @Delete => m_Wrapper.m_PlayerControl_Delete;
         public InputActionMap Get() { return m_Wrapper.m_PlayerControl; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -259,6 +305,12 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
                 @Key1.started -= m_Wrapper.m_PlayerControlActionsCallbackInterface.OnKey1;
                 @Key1.performed -= m_Wrapper.m_PlayerControlActionsCallbackInterface.OnKey1;
                 @Key1.canceled -= m_Wrapper.m_PlayerControlActionsCallbackInterface.OnKey1;
+                @Key2.started -= m_Wrapper.m_PlayerControlActionsCallbackInterface.OnKey2;
+                @Key2.performed -= m_Wrapper.m_PlayerControlActionsCallbackInterface.OnKey2;
+                @Key2.canceled -= m_Wrapper.m_PlayerControlActionsCallbackInterface.OnKey2;
+                @Delete.started -= m_Wrapper.m_PlayerControlActionsCallbackInterface.OnDelete;
+                @Delete.performed -= m_Wrapper.m_PlayerControlActionsCallbackInterface.OnDelete;
+                @Delete.canceled -= m_Wrapper.m_PlayerControlActionsCallbackInterface.OnDelete;
             }
             m_Wrapper.m_PlayerControlActionsCallbackInterface = instance;
             if (instance != null)
@@ -275,6 +327,12 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
                 @Key1.started += instance.OnKey1;
                 @Key1.performed += instance.OnKey1;
                 @Key1.canceled += instance.OnKey1;
+                @Key2.started += instance.OnKey2;
+                @Key2.performed += instance.OnKey2;
+                @Key2.canceled += instance.OnKey2;
+                @Delete.started += instance.OnDelete;
+                @Delete.performed += instance.OnDelete;
+                @Delete.canceled += instance.OnDelete;
             }
         }
     }
@@ -335,6 +393,8 @@ public partial class @UserInput : IInputActionCollection2, IDisposable
         void OnRightClick(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
         void OnKey1(InputAction.CallbackContext context);
+        void OnKey2(InputAction.CallbackContext context);
+        void OnDelete(InputAction.CallbackContext context);
     }
     public interface IPointerParametersActions
     {

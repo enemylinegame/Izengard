@@ -15,4 +15,4 @@ MonoBehaviour:
   <ObjectsHolder>k__BackingField: {fileID: 11400000, guid: c66c7ba4a11b5de46a0675453fa87d84, type: 2}
   <UIElementsConfig>k__BackingField: {fileID: 11400000, guid: 377bfbcff70c51842917b6316875a2fe, type: 2}
   <GameConfig>k__BackingField: {fileID: 11400000, guid: 20d3170ef349c654b937b8321c00b600, type: 2}
-  <BuildingDataBase>k__BackingField: {fileID: 11400000, guid: fad81096ca26b3046b90e2fc57db4a17, type: 2}
+  <BuildingsSettingsSo>k__BackingField: {fileID: 11400000, guid: fad81096ca26b3046b90e2fc57db4a17, type: 2}

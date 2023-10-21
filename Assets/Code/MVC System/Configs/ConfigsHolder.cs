@@ -11,6 +11,6 @@ namespace Configs
         [field: SerializeField] public ObjectsHolder ObjectsHolder { get; private set; }
         [field: SerializeField] public UIElementsConfig UIElementsConfig { get; private set; }
         [field: SerializeField] public GameConfig GameConfig { get; private set; }
-        [field: SerializeField] public BuildingDataBase BuildingDataBase { get; private set; }
+        [field: SerializeField] public BuildingsSettingsSO BuildingsSettingsSo { get; private set; }
     }
 }

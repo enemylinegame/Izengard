@@ -1,34 +1,66 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace NewBuildingSystem
 {
     public class BuildingView : MonoBehaviour
     {
+        [SerializeField] private BoxCollider _collider;
+        private List<GameObject> _cellIndicators = new ();
+        
+        public string ID;
         public Renderer BuildingRenderer;
-        [SerializeField] private Transform _positionBuild;
-        private readonly List<GameObject> _cellIndicator = new ();
+        public Transform PositionBuild;
+        [HideInInspector] public Vector2Int Vector2IntPosition;
+        [HideInInspector] public Vector2Int Size;
+        public event Action<bool, BuildingView> OnTriggered;
 
-        public void SearchCenterTile(Vector3 size)
+        public void InstallInCenterTile(Vector2Int size)
         {
-            _positionBuild.position = new Vector3(size.x / 2, 0, size.y / 2);
+            Size = size;
+            var sizeX = size.x / 2;
+            var sizeY = size.y / 2;
+            
+            PositionBuild.position = new Vector3(sizeX, 0, sizeY);
+            _collider.center = new Vector3(sizeX, .36f, sizeY);
+            _collider.size = new Vector3(size.x -.5f , .5f, size.y -.5f);
         }
 
-        public void CreateIndicators(Vector2Int value, GameObject cellIndicator)
+        public void CreateIndicators(Vector2Int size, GameObject cellIndicator)
         {
-            for (float x = 0; x < value.x; x++)
+            for (float x = 0; x < size.x; x++)
             {
-                for (float y = 0; y < value.y; y++)
+                for (float y = 0; y < size.y; y++)
                 {
-                    if (_cellIndicator.Find(ind => ind.transform.position != new Vector3(x, 0, y)) || _cellIndicator.Count == 0)
+                    if (_cellIndicators.Find(ind => ind.transform.position 
+                                                    != new Vector3(x, 0, y)) || _cellIndicators.Count == 0)
                     {
                         var indicator = Instantiate(cellIndicator, transform);
                         indicator.transform.position = new Vector3(x, 0, y);
-                        _cellIndicator.Add(indicator);
+                        _cellIndicators.Add(indicator);
                     }
                     
                 }
             }
+        }
+
+        public void ChangePrewievColor(Color color)
+        {
+            BuildingRenderer.material.color = color;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Building"))
+            {
+                OnTriggered?.Invoke(false, this);
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            OnTriggered?.Invoke(true, this);
         }
     }
 }

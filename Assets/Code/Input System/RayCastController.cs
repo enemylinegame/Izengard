@@ -1,6 +1,7 @@
 ﻿using System;
 using BuildingSystem;
 using Izengard;
+using NewBuildingSystem;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -10,8 +11,10 @@ namespace UserInputSystem
     public class RayCastController
     {
         public event Action LeftClick;
-        public event Action RightClick;
+        public event Action<string> RightClick;
         public event Action KeyDownOne;
+        public event Action KeyDownTwo;
+        public event Action Delete;
         public event Action<Vector3> MousePosition;
 
         private Camera _camera;
@@ -28,13 +31,10 @@ namespace UserInputSystem
 
             input.PlayerControl.LeftClick.started += context => Click(context, true);
             input.PlayerControl.RightClick.started += context => Click(context, false);
-            input.PlayerControl.Key1.started += context => KeyDown1();
+            input.PlayerControl.Key1.started += context => KeyDownOne?.Invoke();
+            input.PlayerControl.Key2.started += context => KeyDownTwo?.Invoke();
+            input.PlayerControl.Delete.started += context => Delete?.Invoke();
             input.PointerParameters.PointerPosition.performed += GetSelectedMapPosition;
-        }
-
-        private void KeyDown1()
-        {
-            KeyDownOne?.Invoke();
         }
 
         private void Click(InputAction.CallbackContext context, bool isClick)
@@ -42,21 +42,20 @@ namespace UserInputSystem
             var screenPosition = _pointerPosition.ReadValue<Vector2>();
             var ray = _camera.ScreenPointToRay(screenPosition);
 
-            if (_eventSystem.IsPointerOverGameObject()) return;
+            //if (_eventSystem.IsPointerOverGameObject()) return;
 
-            if (Physics.Raycast(ray, out var hit, 100,_groundMask))
+            if (Physics.Raycast(ray, out var hit, 100, _groundMask))
             {
                 if (isClick)
                 {
                     Debug.Log($"<color=aqua> Left Click</color>");
-                    LeftClick?.Invoke();//TODO: Add raycast component
+                    LeftClick?.Invoke(); //TODO: Add raycast component
                 }
                 else
                 {
                     Debug.Log($"<color=aqua> Right Click</color>");
-                    RightClick?.Invoke();//TODO: Add raycast component
+                    RightClick?.Invoke(hit.collider.GetComponent<BuildingView>().ID); //TODO: Add raycast component
                 }
-                
             }
         }
 

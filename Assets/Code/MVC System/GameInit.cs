@@ -10,12 +10,14 @@ public class GameInit
     private UserInput _userInput;
     
     
-    public GameInit(Controller controller, ConfigsHolder configs, AudioSource clickAudioSource, Canvas canvas, Grid grid, GameObject plane)
+    public GameInit(Controller controller, ConfigsHolder configs, AudioSource clickAudioSource, Canvas canvas, 
+        Grid grid, GameObject plane, GameObject buildings, Map map)
     {
         var UIPanelInit = new UIPanelsInitialization(configs.UIElementsConfig, canvas);
         var userInputController = new UserInputController();
         _userInput = userInputController.UserInput;
         var rayCastController = new RayCastController(_userInput, configs.GameConfig);
-        var placementSystem = new PlacementSystem(configs.ObjectsHolder, rayCastController, grid, configs.BuildingDataBase, plane);
+        var buildingFactory = new BuildingsFactory(configs.BuildingsSettingsSo, rayCastController, configs.ObjectsHolder, plane, grid, buildings);
+        var MapController = new MapController(map, configs.GameConfig);
     }
 }
