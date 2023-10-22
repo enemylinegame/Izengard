@@ -41,12 +41,12 @@ MonoBehaviour:
     _minRange: 0
     _maxRange: 1.5
     _castingTime: 1
-    _attackTime: 1.5
+    _attackTime: 1
     _criticalChance: 10
     _critScale: 2
     _failChance: 0
     _onFailDamage: 1
     _damageData:
-      _baseDamage: 10
+      _baseDamage: 15
       _fireDamage: 0
       _coldDamage: 0
