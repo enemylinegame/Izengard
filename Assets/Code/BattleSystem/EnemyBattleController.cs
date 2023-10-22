@@ -73,7 +73,6 @@ namespace BattleSystem
         public override void AddUnit(IUnit unit)
         {
             unit.OnReachedZeroHealth += UnitReachedZeroHealth;
-
             switch (unit.Stats.Faction)
             {
                 default:
@@ -205,13 +204,13 @@ namespace BattleSystem
                     case UnitPriorityType.SpecificFoe:
                         {
                             var targetUnit = _defenderUnitCollection.Find(u => u.Id == target.Id);
-
-                            unit.Offence.TimeBeforeAttack += deltaTime;
-
-                            if (unit.Offence.TimeBeforeAttack >= unit.Offence.AttackTime)
+                            
+                            float timeSinceLastAttack = Time.fixedTime - unit.Offence.LastAttackTime;
+                            
+                            if (timeSinceLastAttack >= unit.Offence.AttackTime)
                             {
                                 ExecuteFight(unit, targetUnit);
-                                unit.Offence.TimeBeforeAttack = 0;
+                                unit.Offence.LastAttackTime = Time.fixedTime;
                             }
 
                             break;

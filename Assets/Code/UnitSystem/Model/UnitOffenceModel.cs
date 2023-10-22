@@ -15,13 +15,13 @@ namespace UnitSystem.Model
         public float CastingTime => _offenceData.CastingTime;
         public float AttackTime => _offenceData.AttackTime;
 
-        public float TimeBeforeAttack { get; set; }
+        public float LastAttackTime { get; set; }
 
         public UnitOffenceModel(IUnitOffenceData offenceData)
         {
             _offenceData = offenceData;
 
-            TimeBeforeAttack = _offenceData.AttackTime;
+            LastAttackTime = _offenceData.AttackTime;
         }
 
         public IDamage GetDamage()

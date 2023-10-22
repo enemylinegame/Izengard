@@ -13,6 +13,6 @@ namespace UnitSystem
         float CastingTime { get; }
         float AttackTime { get; }
 
-        float TimeBeforeAttack { get; set; }
+        float LastAttackTime { get; set; }
     }
 }
