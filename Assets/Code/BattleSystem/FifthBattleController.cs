@@ -290,6 +290,9 @@ namespace BattleSystem
                             IUnit unitTarget = FindUnitByITarget(unit.Target.CurrentTarget);
                             if (unitTarget != null)
                             {
+                                Debug.Log("FifthBattleController->UnitAttackState: " + 
+                                          unit.View.SelfTransform.gameObject.name + " ==>> " +
+                                          unitTarget.View.SelfTransform.gameObject.name);
                                 unitTarget.TakeDamage(unit.Offence.GetDamage());
                                 attack.Phase = AttackPhase.None;
                                 attack.TimingProgress = 0.0f;
