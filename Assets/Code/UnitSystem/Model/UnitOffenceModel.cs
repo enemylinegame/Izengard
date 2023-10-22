@@ -12,12 +12,16 @@ namespace UnitSystem.Model
         public float MinRange => _offenceData.MinRange;
         public float MaxRange => _offenceData.MaxRange;
 
-        public float CastingSpeed => _offenceData.CastingTime;
-        public float AttackSpeed => _offenceData.AttackTime;
+        public float CastingTime => _offenceData.CastingTime;
+        public float AttackTime => _offenceData.AttackTime;
+
+        public float TimeBeforeAttack { get; set; }
 
         public UnitOffenceModel(IUnitOffenceData offenceData)
         {
             _offenceData = offenceData;
+
+            TimeBeforeAttack = _offenceData.AttackTime;
         }
 
         public IDamage GetDamage()

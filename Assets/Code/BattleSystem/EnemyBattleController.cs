@@ -11,6 +11,7 @@ namespace BattleSystem
         private List<IUnit> _enemyUnitCollection;
         private List<IUnit> _defenderUnitCollection;
 
+
         public EnemyBattleController(TargetFinder targetFinder) : base(targetFinder)
         {
             _enemyUnitCollection = new List<IUnit>();
@@ -19,12 +20,11 @@ namespace BattleSystem
 
         public override void OnUpdate(float deltaTime)
         {
-            for(int i=0; i < _enemyUnitCollection.Count; i++)
+            for (int i=0; i < _enemyUnitCollection.Count; i++)
             {
                 var unit = _enemyUnitCollection[i];
                
                 UpdateTarget(unit);
-
                 switch (unit.UnitState.CurrentState)
                 {
                     default:
@@ -190,11 +190,33 @@ namespace BattleSystem
         private void UnitAttackState(IUnit unit, float deltaTime)
         {
             var target = unit.Target.CurrentTarget;
-
-            var unitTarget = _defenderUnitCollection.Find(u => u.Id == target.Id);
-            if (unitTarget != null)
+      
+            if (target is not NoneTarget)
             {
-                ExecuteFight(unit, unitTarget);
+
+                switch (unit.Priority.CurrentPriority)
+                {
+                    case UnitPriorityType.MainTower:
+                        {
+                            break;
+                        }
+                    case UnitPriorityType.ClosestFoe:
+                    case UnitPriorityType.FarthestFoe:
+                    case UnitPriorityType.SpecificFoe:
+                        {
+                            var targetUnit = _defenderUnitCollection.Find(u => u.Id == target.Id);
+
+                            unit.Offence.TimeBeforeAttack += deltaTime;
+
+                            if (unit.Offence.TimeBeforeAttack >= unit.Offence.AttackTime)
+                            {
+                                ExecuteFight(unit, targetUnit);
+                                unit.Offence.TimeBeforeAttack = 0;
+                            }
+
+                            break;
+                        }
+                }
             }
         }
 

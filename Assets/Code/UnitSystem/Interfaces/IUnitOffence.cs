@@ -10,7 +10,9 @@ namespace UnitSystem
         float MinRange { get; }
         float MaxRange { get; }
 
-        float CastingSpeed { get; }
-        float AttackSpeed { get; }
+        float CastingTime { get; }
+        float AttackTime { get; }
+
+        float TimeBeforeAttack { get; set; }
     }
 }

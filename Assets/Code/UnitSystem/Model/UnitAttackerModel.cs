@@ -44,13 +44,13 @@ namespace UnitSystem.Model
         public float GetCastTime()
         {
             //throw new NotImplementedException();
-            return  1.0f / _unit.Offence.CastingSpeed; 
+            return  1.0f / _unit.Offence.CastingTime; 
         }
 
         public float GetAttackTime()
         {
             //throw new NotImplementedException();
-            return 1.0f / _unit.Offence.AttackSpeed;
+            return 1.0f / _unit.Offence.AttackTime;
         }
 
         public float GetMinAttackDistance()

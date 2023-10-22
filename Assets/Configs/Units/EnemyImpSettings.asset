@@ -41,7 +41,7 @@ MonoBehaviour:
     _minRange: 0
     _maxRange: 1.5
     _castingTime: 1
-    _attackTime: 1
+    _attackTime: 1.5
     _criticalChance: 10
     _critScale: 2
     _failChance: 0
