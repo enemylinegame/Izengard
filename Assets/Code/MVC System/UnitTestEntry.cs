@@ -26,7 +26,9 @@ public class UnitTestEntry : MonoBehaviour
     private EnemySpawnController _enemySpawnController;
     private DefenderSpawnTestController _defenderSpawnController;
     private TargetFinder _targetFinder;
-    private EnemyBattleController _enemyBattleController;
+    
+    private BaseBattleController _enemyBattleController;
+    private BaseBattleController _defenderBattleController;
 
     private EnemySpawnHandler _enemySpawnHandler;
 
@@ -54,6 +56,10 @@ public class UnitTestEntry : MonoBehaviour
         _enemyBattleController = new EnemyBattleController(_targetFinder);
         _onUpdates.Add(_enemyBattleController);
         _onFixedUpdates.Add(_enemyBattleController);
+
+        _defenderBattleController = new DefenderBattleController(_targetFinder, new RegularAttackController());
+        _onUpdates.Add(_defenderBattleController);
+        _onFixedUpdates.Add(_defenderBattleController);
 
         _enemySpawnHandler = new EnemySpawnHandler(_enemySpawnController, _waveSettings);
         _enemySpawnHandler.OnWavesEnd += OnEnemySpawnEnd;
@@ -85,6 +91,7 @@ public class UnitTestEntry : MonoBehaviour
     {
         unit.Enable();
         _enemyBattleController.AddUnit(unit);
+        _defenderBattleController.AddUnit(unit);
     }
 
     private void OnEnemySpawnEnd()
