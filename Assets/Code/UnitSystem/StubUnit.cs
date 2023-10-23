@@ -32,7 +32,8 @@ namespace UnitSystem
             Debug.LogWarning(logMessage);
         }
 
-        public event Action<IUnit> OnReachedZeroHealth;
+        public event Action<IUnit> OnReachedZeroHealth = default;
+        public event Action<IDamageDealer, IDamageable> OnAttackProcessEnd = default;
 
         public void Disable() { }
 
@@ -63,5 +64,7 @@ namespace UnitSystem
         public void SetRotation(Vector3 rot) { }
 
         public void SetStartPosition(Vector3 spawnPosition) { }
+
+        public void StartAttack(IDamageable damageableTarget) { }
     }
 }

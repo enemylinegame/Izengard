@@ -79,9 +79,11 @@ namespace BattleSystem
                     break;
                 case UnitFactionType.Enemy:
                     {
+                        unit.OnAttackProcessEnd += ExecuteFight;
+
                         unit.Navigation.Enable();
                         unit.UnitState.ChangeState(UnitState.Idle);
-
+                        
                         _enemyUnitCollection.Add(unit);
                         break;
                     }
@@ -110,6 +112,8 @@ namespace BattleSystem
                 case UnitFactionType.Enemy:
                     {
                         Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Type} - dead");
+
+                        unit.OnAttackProcessEnd -= ExecuteFight;
 
                         unit.Disable();
 
@@ -209,7 +213,7 @@ namespace BattleSystem
                             
                             if (timeSinceLastAttack >= unit.Offence.AttackTime)
                             {
-                                ExecuteFight(unit, targetUnit);
+                                unit.StartAttack(targetUnit);
                                 unit.Offence.LastAttackTime = Time.fixedTime;
                             }
 
@@ -219,10 +223,10 @@ namespace BattleSystem
             }
         }
 
-        private void ExecuteFight(IUnit attackingUnit, IUnit attackedUnit)
+        private void ExecuteFight(IDamageDealer damageDealer, IDamageable damageableTarget)
         {
-            var damage = attackingUnit.Offence.GetDamage();
-            attackedUnit.TakeDamage(damage);
+            var damage = damageDealer.GetAttackDamage();
+            damageableTarget.TakeDamage(damage);
         }
 
         private void ChangeUnitState(IUnit unit, UnitState state)
