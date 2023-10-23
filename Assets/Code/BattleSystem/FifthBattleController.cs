@@ -296,6 +296,9 @@ namespace BattleSystem
                                 unitTarget.TakeDamage(unit.Offence.GetDamage());
                                 attack.Phase = AttackPhase.None;
                                 attack.TimingProgress = 0.0f;
+                                
+                                StartAttackAnimation(unit);
+                                StartTakeDamageAnimation(unitTarget);
                             }
                             else
                             {
@@ -331,10 +334,56 @@ namespace BattleSystem
         private void ChangeUnitState(IUnit unit, UnitState state)
         {
             unit.UnitState.ChangeState(state);
+            IUnitAnimationView animView = unit.View.UnitAnimation;
+            if (animView != null)
+            {
+                switch (state)
+                {
+                    case UnitState.None:
+                        animView.Reset();
+                        break;
+                    case UnitState.Idle:
+                        animView.IsMoving = false;
+                        break;
+                    case UnitState.Move:
+                        animView.IsMoving = true;
+                        break;
+                    case UnitState.Approach:
+                        animView.IsMoving = true;
+                        break;
+                    case UnitState.Search:
+                        break;
+                    case UnitState.Attack:
+                        animView.IsMoving = false;
+                        break;
+                    case UnitState.Die:
+                        animView.StartDead();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(state), state, null);
+                }
+            }
+
         }
 
-        
-        
+        private void StartAttackAnimation(IUnit unit)
+        {
+            IUnitAnimationView animView = unit.View.UnitAnimation;
+            if (animView != null)
+            {
+                animView.StartCase();
+            }
+        }
+
+        private void StartTakeDamageAnimation(IUnit unit)
+        {
+            IUnitAnimationView animView = unit.View.UnitAnimation;
+            if (animView != null)
+            {
+                animView.TakeDamage();
+            }
+        }
+
         #region Enemy moving logic
 
         private void MoveUnitToTarget(IUnit unit, ITarget target)
