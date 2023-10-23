@@ -24,20 +24,23 @@ namespace Code.MVC_System.Mocks
             var timeRemainingService = new TimeRemainingController();
 
             var enemySpawner = new EnemySpawnController(sceneObjectsHolder.EnemySpawner);
-            var regularAttackController = new RegularAttackController();
+            //var regularAttackController = new RegularAttackController();
             
             var targetFinder = new TargetFinder(sceneObjectsHolder.MainTower);
-            var enemyBattleController = new EnemyBattleController(targetFinder);
+            //var enemyBattleController = new EnemyBattleController(targetFinder);
             var navigationUpdater = new NavigationUpdater();
             navigationUpdater.AddNavigationSurface(sceneObjectsHolder.GroundSurface);
 
             var defendersSpawner = new DefendersSpawnController(configs.DefendersSpawnSettings.UnitsCreationData,
                 GetPositions(sceneObjectsHolder.DefendersSpawnPoints));
-            var defendersBattleController = new DefenderBattleController(targetFinder, regularAttackController);
+            //var defendersBattleController = new DefenderBattleController(targetFinder, regularAttackController);
+            
+            var fifthBattleController = new FifthBattleController(targetFinder);
             
             var unitSpawnObserver = new UnitSpawnObserver(enemySpawner, defendersSpawner, 
-                enemyBattleController, defendersBattleController);
-
+                //enemyBattleController, defendersBattleController);
+                fifthBattleController);
+            
             var enemySpawnLogic = new EnemySpawnLogicMock(enemySpawner);
             var defendersSpawnLogic = new DefendersSpawnLogicMock(defendersSpawner);
 
@@ -48,10 +51,11 @@ namespace Code.MVC_System.Mocks
             
             controller.Add(timeRemainingService);
             controller.Add(enemySpawner);
-            controller.Add(enemyBattleController);
-            controller.Add(defendersBattleController);
+            //controller.Add(enemyBattleController);
+            //controller.Add(defendersBattleController);
             controller.Add(gameStateManager);
-            controller.Add(regularAttackController);
+            //controller.Add(regularAttackController);
+            controller.Add(fifthBattleController);
         }
 
         private List<Vector3> GetPositions(List<Transform> transforms)

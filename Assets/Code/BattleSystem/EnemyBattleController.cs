@@ -159,8 +159,18 @@ namespace BattleSystem
 
         private void UnitIdleState(IUnit unit, float deltaTime)
         {
-            var target = GetTarget(unit);
+            Debug.Log("EnemyBattleController->UnitIdleState:");
+            ITarget target = GetTarget(unit);
 
+            if (target.Id < 0)
+            {
+                Debug.Log("EnemyBattleController->UnitIdleState: target.Id < 0 ");
+            }
+            if (target is NoneTarget)
+            {
+                Debug.Log("EnemyBattleController->UnitIdleState: target is NoneTarget ");
+            }
+            
             unit.Target.SetTarget(target);
             MoveUnitToTarget(unit, target);
             ChangeUnitState(unit, UnitState.Move);
@@ -168,8 +178,8 @@ namespace BattleSystem
 
         private void UnitMoveState(IUnit unit, float deltaTime)
         {
-            var turgentPos = unit.Target.CurrentTarget.Position;
-            var distance = GetDistanceToTarget(unit.GetPosition(), turgentPos);
+            Vector3 turgentPos = unit.Target.CurrentTarget.Position;
+            float distance = GetDistanceToTarget(unit.GetPosition(), turgentPos);
             if (CheckStopDistance(distance, unit.Offence.MaxRange) == true)
             {
                 StopUnit(unit);
@@ -186,6 +196,7 @@ namespace BattleSystem
             if (unitTarget != null)
             {
                 _enemyInFightCollection.Add(new EnemyInBattleModel(unit, unitTarget));
+                Debug.Log("EnemyBattleController->UnitAttackState: _enemyInFightCollection.Count = " + _enemyInFightCollection.Count);
             }
 
             foreach(var fighter in _enemyInFightCollection)
@@ -229,7 +240,8 @@ namespace BattleSystem
 
         private ITarget GetTarget(IUnit unit)
         {
-            var nextUnitPriority = unit.Priority.GetNext();
+            Debug.Log("EnemyBattleController->GetTarget:");
+            (UnitPriorityType priorityType, UnitRoleType roleType) nextUnitPriority = unit.Priority.GetNext();
            
             switch (nextUnitPriority.priorityType)
             {
@@ -241,7 +253,7 @@ namespace BattleSystem
                     }
                 case UnitPriorityType.ClosestFoe:
                     {
-                        var target = GetClosestDefender(unit);
+                        ITarget target = GetClosestDefender(unit);
                         if (target is NoneTarget)
                         {
                             return GetTarget(unit);
@@ -251,7 +263,7 @@ namespace BattleSystem
                     }
                 case UnitPriorityType.SpecificFoe:
                     {
-                        var target = GetClosestDefender(unit, nextUnitPriority.roleType);
+                        ITarget target = GetClosestDefender(unit, nextUnitPriority.roleType);
                         if (target is NoneTarget)
                         {
                             return GetTarget(unit);
@@ -266,19 +278,19 @@ namespace BattleSystem
         {
             ITarget target = new NoneTarget();
 
-            var unitPos = unit.GetPosition();
-            var minDist = float.MaxValue;
+            Vector3 unitPos = unit.GetPosition();
+            float minDist = float.MaxValue;
 
             for (int i = 0; i < _defenderUnitCollection.Count; i++)
             {
-                var defender = _defenderUnitCollection[i];
+                IUnit defender = _defenderUnitCollection[i];
 
                 if(targetRole != UnitRoleType.None && defender.Stats.Role != targetRole)
                     continue;
 
-                var defenderPos = defender.GetPosition();
+                Vector3 defenderPos = defender.GetPosition();
 
-                var distance = Vector3.Distance(unitPos, defenderPos);
+                float distance = Vector3.Distance(unitPos, defenderPos);
                 if (distance < minDist)
                 {
                     minDist = distance;
