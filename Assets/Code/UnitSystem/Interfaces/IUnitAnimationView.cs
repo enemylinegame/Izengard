@@ -4,7 +4,7 @@
     {
         bool IsMoving { set; }
         void Reset();
-        void StartCase();
+        void StartCast();
         void StartAttack();
         void StartDead();
         void TakeDamage();

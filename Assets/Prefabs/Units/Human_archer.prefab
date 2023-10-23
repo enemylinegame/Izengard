@@ -2092,6 +2092,9 @@ GameObject:
   - component: {fileID: 1436473701885234161}
   - component: {fileID: -8267112835474923397}
   - component: {fileID: 6343854224559908517}
+  - component: {fileID: -4585902390850711075}
+  - component: {fileID: 7273281933007335799}
+  - component: {fileID: -1814083423180313046}
   m_Layer: 9
   m_Name: Human_archer
   m_TagString: Player
@@ -2181,7 +2184,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 147264}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.4
   m_Speed: 1
@@ -2210,6 +2213,50 @@ CapsuleCollider:
   m_Height: 1.5568914
   m_Direction: 1
   m_Center: {x: 0, y: 0.74258316, z: 0}
+--- !u!114 &-4585902390850711075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 147264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 0
+  m_IgnoreFromBuild: 1
+  m_AffectedAgents: ffffffff
+--- !u!114 &7273281933007335799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 147264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 560408897fbb424dbabaead4a8d92d6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 9516174}
+--- !u!114 &-1814083423180313046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 147264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b46236cc90977b44e9bd344e57e97c1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _name: Human_archer
+  _enemyNavMesh: {fileID: -8267112835474923397}
+  _animationView: {fileID: 7273281933007335799}
 --- !u!1 &147358
 GameObject:
   m_ObjectHideFlags: 0

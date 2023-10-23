@@ -27,7 +27,7 @@ namespace UnitSystem.View
             _animator.SetBool(_unitDeadFlag, false);
         }
 
-        public void StartCase()
+        public void StartCast()
         {
             _animator.SetTrigger(_attackTrigger);
         }
