@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: EnemySpSetTestScene2
   m_EditorClassIdentifier: 
   <SpawnFaction>k__BackingField: 2
-  <UnitPoolCopacity>k__BackingField: 5
-  <SpawnDelayTime>k__BackingField: 1.5
   <UnitsCreationData>k__BackingField:
-  - _inPoolCopacity: 2
+  - _poolCopacity: 2
+    _type: 4
     _unitSettings: {fileID: 11400000, guid: a3fed99cd7f792c45a80be94dc801c4c, type: 2}
-    _unitPrefab: {fileID: 168241047001392403, guid: 33d2a0c215583e24e958575744863440, type: 3}
-  - _inPoolCopacity: 2
+    _unitPrefab: {fileID: 162708, guid: c3b34ac9b23323d49afdb0e81d9db5d1, type: 3}
+  - _poolCopacity: 2
+    _type: 5
     _unitSettings: {fileID: 11400000, guid: ea6d9bfaa12ac22488ffd4a873ca3a74, type: 2}
     _unitPrefab: {fileID: 168241047001392403, guid: d77446080fc1a5e4c8cdaab7291cfb11, type: 3}

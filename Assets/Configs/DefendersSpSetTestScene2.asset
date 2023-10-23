@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: DefendersSpSetTestScene2
   m_EditorClassIdentifier: 
   <SpawnFaction>k__BackingField: 1
-  <UnitPoolCopacity>k__BackingField: 5
-  <SpawnDelayTime>k__BackingField: 1.5
   <UnitsCreationData>k__BackingField:
-  - _inPoolCopacity: 3
+  - _poolCopacity: 2
+    _type: 1
     _unitSettings: {fileID: 11400000, guid: c66ebf9d6d72c6b4bb35f003cd31a8e8, type: 2}
-    _unitPrefab: {fileID: 5937658245906128636, guid: f756c832a088c0f468b61f5ab5deef66, type: 3}
+    _unitPrefab: {fileID: 163804, guid: 91367098b0cfd6d468017e15613b1170, type: 3}
