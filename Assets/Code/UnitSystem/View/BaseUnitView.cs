@@ -8,11 +8,11 @@ namespace UnitSystem.View
     {
         protected Transform _selfTransform;
         protected NavMeshAgent _unitNavigation;
-        protected Animator _unitAnimator;
+        protected IUnitAnimationView _unitAnimation;
 
         public Transform SelfTransform => _selfTransform;
         public NavMeshAgent UnitNavigation => _unitNavigation;
-        public Animator UnitAnimator => _unitAnimator;
+        public IUnitAnimationView UnitAnimation => _unitAnimation;
 
         private int _unitId;
 

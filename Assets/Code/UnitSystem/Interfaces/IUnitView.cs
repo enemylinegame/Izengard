@@ -9,7 +9,7 @@ namespace UnitSystem
         Transform SelfTransform { get; }
         NavMeshAgent UnitNavigation { get; }
 
-        Animator UnitAnimator { get; }
+        IUnitAnimationView UnitAnimation { get; }
 
         void Init(int unitId);
 
