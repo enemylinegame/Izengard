@@ -11,7 +11,7 @@ namespace UserInputSystem
     public class RayCastController
     {
         public event Action LeftClick;
-        public event Action<string> RightClick;
+        public event Action<BuildingView> RightClick;
         public event Action KeyDownOne;
         public event Action KeyDownTwo;
         public event Action Delete;
@@ -54,7 +54,7 @@ namespace UserInputSystem
                 else
                 {
                     Debug.Log($"<color=aqua> Right Click</color>");
-                    RightClick?.Invoke(hit.collider.GetComponent<BuildingView>().ID); //TODO: Add raycast component
+                    RightClick?.Invoke(hit.collider.GetComponent<BuildingView>()); //TODO: Add raycast component
                 }
             }
         }

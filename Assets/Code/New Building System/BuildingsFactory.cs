@@ -87,8 +87,7 @@ namespace NewBuildingSystem
         
         private void PlaceFlyingBuilding()
         {
-            if(!_isBuild) return;
-            if (_flyingBuilding == null) return;
+            if(!_isBuild || _flyingBuilding == null) return;
             
             for (int x = 0; x < _flyingBuilding.Size.x; x++)
             {
@@ -97,10 +96,10 @@ namespace NewBuildingSystem
                     _buildings[_mousePos.x + x, _mousePos.y + y] = _flyingBuilding;
                 }
             }
-
+            
             ChangeMaterial(false);
             _flyingBuilding.ID = GUID.Generate().ToString();
-            _buildingsConstructed.Add(_flyingBuilding);
+            //_buildingsConstructed.Add(_flyingBuilding);
                 
             //_selectedBuild.OnTriggered -= _checkingForBorders.CheckingForBordersOnBuildingColliders;
             _rayCastController.MousePosition -= RayCastControllerOnMousePosition;
@@ -122,6 +121,14 @@ namespace NewBuildingSystem
         private void DestroyBuilding()
         {
             _buildingsConstructed.Remove(_flyingBuilding);
+            
+            for (int x = 0; x < _flyingBuilding.Size.x; x++)
+            {
+                for (int y = 0; y < _flyingBuilding.Size.y; y++)
+                {
+                    _buildings[_mousePos.x + x, _mousePos.y + y] = null;
+                }
+            }
 
             _rayCastController.Delete -= DestroyBuilding;
             _rayCastController.RightClick += SelectBuild;
@@ -132,18 +139,18 @@ namespace NewBuildingSystem
             _flyingBuilding = null;
         }
 
-        private void SelectBuild(string ID)
+        private void SelectBuild(BuildingView build)
         {
             _plane.SetActive(true);
             
-            var build = _buildingsConstructed.Find(build => build.ID == ID);
             if(build == null) return;
             
             var materials = build.BuildingRenderer.materials.ToList();
             materials.Clear();
             materials.Add(_previewMaterial);
             build.BuildingRenderer.materials = materials.ToArray();
-            
+
+            _flyingBuilding = build;
             _rayCastController.RightClick -= SelectBuild;
             _rayCastController.Delete += DestroyBuilding;
         }
@@ -169,9 +176,13 @@ namespace NewBuildingSystem
         {
             var scale = _plane.transform.localScale;
             
-            if (_mousePos.x - TheRestOfTheSpaceMap().x < 0 || _mousePos.x - TheRestOfTheSpaceMap().x> scale.x * 10f - _flyingBuilding.Size.x) return false;
-            else if (_mousePos.y - TheRestOfTheSpaceMap().y< 0 || _mousePos.y - TheRestOfTheSpaceMap().y> scale.z * 10f - _flyingBuilding.Size.y) return false;
-            else return true;
+            if (_mousePos.x - TheRestOfTheSpaceMap().x < 0 || 
+                _mousePos.x - TheRestOfTheSpaceMap().x> scale.x * 10f - _flyingBuilding.Size.x) return false;
+            
+            if (_mousePos.y - TheRestOfTheSpaceMap().y< 0 ||
+                _mousePos.y - TheRestOfTheSpaceMap().y> scale.z * 10f - _flyingBuilding.Size.y) return false;
+
+            return true;
         }
         
         private bool IsPlaceTaken()
@@ -181,6 +192,7 @@ namespace NewBuildingSystem
                 for (int y = 0; y < _flyingBuilding.Size.y; y++)
                 {
                     if (_buildings[_mousePos.x + x, _mousePos.y + y] != null) return false;
+                        
                 }
             }
             return true;
