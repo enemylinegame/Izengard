@@ -1,4 +1,4 @@
-﻿using Abstraction;
+using Abstraction;
 using UnitSystem.Enum;
 using UnityEngine;
 

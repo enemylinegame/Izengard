@@ -1,4 +1,4 @@
-﻿using Abstraction;
+using Abstraction;
 using UnitSystem.Enum;
 
 namespace UnitSystem
@@ -8,9 +8,9 @@ namespace UnitSystem
         UnitAttackType AttackType { get; }
 
         float MinRange { get; }
-        float MaxRange { get; }
-
-        float CastingTime { get; }
+        float MaxRange { get; }
+
+        float CastingTime { get; }
         float AttackTime { get; }
 
         float LastAttackTime { get; set; }
