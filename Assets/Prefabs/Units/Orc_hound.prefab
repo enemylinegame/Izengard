@@ -1895,6 +1895,9 @@ GameObject:
   - component: {fileID: -4484706185885328441}
   - component: {fileID: 477096553137004399}
   - component: {fileID: -8714278613744460135}
+  - component: {fileID: 290331745221332987}
+  - component: {fileID: 6897823908451066028}
+  - component: {fileID: 6191777416371704208}
   m_Layer: 8
   m_Name: Orc_hound
   m_TagString: Enemy
@@ -1970,7 +1973,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.1927712, z: 2.438716}
+  m_Size: {x: 1, y: 1.1927712, z: 2.2}
   m_Center: {x: 0, y: 0.613896, z: 0.037416518}
 --- !u!195 &477096553137004399
 NavMeshAgent:
@@ -1979,7 +1982,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 137360}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 1
@@ -2010,6 +2013,50 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &290331745221332987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 137360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 0
+  m_IgnoreFromBuild: 1
+  m_AffectedAgents: ffffffff
+--- !u!114 &6897823908451066028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 137360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 560408897fbb424dbabaead4a8d92d6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 9595548}
+--- !u!114 &6191777416371704208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 137360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b46236cc90977b44e9bd344e57e97c1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _name: Orc_hound
+  _enemyNavMesh: {fileID: 477096553137004399}
+  _animationView: {fileID: 6897823908451066028}
 --- !u!1 &138642
 GameObject:
   m_ObjectHideFlags: 0
