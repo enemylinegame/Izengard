@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
+using Abstraction;
 
 namespace BattleSystem
 {
@@ -24,12 +25,26 @@ namespace BattleSystem
             public float TimingProgress;
             public AttackPhase Phase;
         }
+        
+        private class DeadUnit
+        {
+            public IUnit Unit;
+            public float TimeLeft;
+
+            public DeadUnit(IUnit unit)
+            {
+                Unit = unit;
+                TimeLeft = DEAD_UNITS_DESTROY_DELAY;
+            }
+        }
 
         private const float DESTINATION_POSITION_ERROR_SQR = 0.1f * 0.1f;
+        private const float DEAD_UNITS_DESTROY_DELAY = 10.0f;
         
         private List<IUnit> _enemyUnits;
         private List<IUnit> _defenderUnits;
         private List<AttackModel> _attackModels;
+        private List<DeadUnit> _deadUnits;
 
 
         public FifthBattleController(TargetFinder targetFinder) : base(targetFinder)
@@ -37,23 +52,34 @@ namespace BattleSystem
             _enemyUnits = new ();
             _defenderUnits = new ();
             _attackModels = new();
+            _deadUnits = new();
         }
 
         public override void OnUpdate(float deltaTime)
         {
             
-            for(int i=0; i < _enemyUnits.Count; i++)
+            for (int i = 0; i < _enemyUnits.Count; i++)
             {
                 IUnit unit = _enemyUnits[i];
 
                 ExecuteUnitUpdate(unit, deltaTime);
             }
             
-            for(int i=0; i < _defenderUnits.Count; i++)
+            for (int i = 0; i < _defenderUnits.Count; i++)
             {
                 IUnit unit = _defenderUnits[i];
 
                 ExecuteUnitUpdate(unit, deltaTime);
+            }
+
+            for (int i = _deadUnits.Count - 1; i >= 0; i--)
+            {
+                DeadUnit undead = _deadUnits[i];
+                undead.TimeLeft -= deltaTime;
+                if (undead.TimeLeft <= 0.0f)
+                {
+                    RemoveDeadUnit(undead);
+                }
             }
         }
 
@@ -140,7 +166,24 @@ namespace BattleSystem
       
         private void UnitReachedZeroHealth(IUnit unit)
         {
-            RemoveUnit(unit);
+            Debug.Log($"FifthBattleController->UnitReachedZeroHealth: {unit.View.SelfTransform.gameObject.name}");
+            unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
+            unit.Target.SetTarget(new NoneTarget());
+            ChangeUnitState(unit, UnitState.Die);
+
+            if (unit.Stats.Faction == UnitFactionType.Enemy)
+            {
+                _enemyUnits.Remove(unit);
+            }
+            else if (unit.Stats.Faction == UnitFactionType.Defender)
+            {
+                _defenderUnits.Remove(unit);
+            }
+
+            DeadUnit undead = new DeadUnit(unit);
+            _deadUnits.Add(undead);
+
+            //RemoveUnit(unit);
         }
 
 
@@ -172,6 +215,13 @@ namespace BattleSystem
                         break;
                     }
             }
+        }
+
+        private void RemoveDeadUnit(DeadUnit undead)
+        {
+            undead.Unit.Disable();
+            _deadUnits.Remove(undead);
+            Debug.Log($"FifthBattleController->UnitReachedZeroHealth: {undead.Unit.View.SelfTransform.gameObject.name}");
         }
 
         private void UpdateTargetExistence(IUnit unit)
@@ -253,8 +303,8 @@ namespace BattleSystem
         private void UnitApproachState(IUnit unit, float deltaTime)
         {
             Vector3 targetPos = unit.Target.CurrentTarget.Position;
-            float distance = GetDistanceToTarget(unit.GetPosition(), targetPos);
-            if (distance <= unit.Offence.MaxRange)
+            float distanceSqr = (unit.GetPosition() - targetPos).sqrMagnitude;
+            if (distanceSqr <= unit.Offence.MaxRange * unit.Offence.MaxRange)
             {
                 StopUnit(unit);
 
@@ -360,7 +410,7 @@ namespace BattleSystem
                         animView.StartDead();
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(state), state, null);
+                        throw new ArgumentOutOfRangeException();
                 }
             }
 
@@ -371,7 +421,7 @@ namespace BattleSystem
             IUnitAnimationView animView = unit.View.UnitAnimation;
             if (animView != null)
             {
-                animView.StartCase();
+                animView.StartCast();
             }
         }
 
