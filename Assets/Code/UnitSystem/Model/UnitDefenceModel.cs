@@ -68,8 +68,8 @@ namespace UnitSystem.Model
 
         private bool IsEvaded()
         {
-            var result = Random.Range(0, 101) <= _evadeChance;
-            return result;
+            var gainedChance = Random.value;
+            return gainedChance < _evadeChance / 100f;
         }
 
         private int ApplyDefence(IDamage damageData)
