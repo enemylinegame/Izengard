@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
-using Abstraction;
+
 
 namespace BattleSystem
 {
@@ -170,6 +170,7 @@ namespace BattleSystem
             unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
             unit.Target.SetTarget(new NoneTarget());
             ChangeUnitState(unit, UnitState.Die);
+            unit.Navigation.Stop();
 
             if (unit.Stats.Faction == UnitFactionType.Enemy)
             {
@@ -288,7 +289,6 @@ namespace BattleSystem
             {
                 unit.Target.SetTarget(target);
                 ChangeUnitState(unit, UnitState.Approach);
-                MoveUnitToTarget(unit, target);
             }
             else 
             {
@@ -310,6 +310,10 @@ namespace BattleSystem
 
                 ChangeUnitState(unit, UnitState.Attack);
             }
+            else
+            {
+                unit.Navigation.MoveTo(targetPos);
+            }
         }
 
         private void UnitAttackState(IUnit unit, float deltaTime)
@@ -327,44 +331,68 @@ namespace BattleSystem
             }
             else
             {
-                switch (attack.Phase)
+                IUnit unitTarget = FindUnitByITarget(unit.Target.CurrentTarget);
+                
+                if (unitTarget != null) 
                 {
-                    case AttackPhase.None:
-                        attack.TimingProgress = deltaTime;
-                        attack.Phase = AttackPhase.Cast;
-                        break;
-                    case AttackPhase.Cast:
-                        attack.TimingProgress += deltaTime;
-                        if (attack.TimingProgress >= unit.Offence.CastingTime)
+                    if (IsAttackDistanceSuitable(unit, unitTarget))
+                    {
+                        switch (attack.Phase)
                         {
-                            IUnit unitTarget = FindUnitByITarget(unit.Target.CurrentTarget);
-                            if (unitTarget != null)
-                            {
-                                Debug.Log("FifthBattleController->UnitAttackState: " + 
-                                          unit.View.SelfTransform.gameObject.name + " ==>> " +
-                                          unitTarget.View.SelfTransform.gameObject.name);
-                                unitTarget.TakeDamage(unit.Offence.GetDamage());
-                                attack.Phase = AttackPhase.None;
-                                attack.TimingProgress = 0.0f;
-                                
-                                StartAttackAnimation(unit);
-                                StartTakeDamageAnimation(unitTarget);
-                            }
-                            else
-                            {
-                                unit.Target.SetTarget(new NoneTarget());
-                                ChangeUnitState(unit, UnitState.Idle);
-                            }
+                            case AttackPhase.None:
+                                attack.TimingProgress = deltaTime;
+                                attack.Phase = AttackPhase.Cast;
+                                break;
+                            case AttackPhase.Cast:
+                                attack.TimingProgress += deltaTime;
+                                if (attack.TimingProgress >= unit.Offence.CastingTime)
+                                {
+
+
+                                    Debug.Log("FifthBattleController->UnitAttackState: " +
+                                              unit.View.SelfTransform.gameObject.name + " ==>> " +
+                                              unitTarget.View.SelfTransform.gameObject.name);
+                                    unitTarget.TakeDamage(unit.Offence.GetDamage());
+                                    attack.Phase = AttackPhase.None;
+                                    attack.TimingProgress = 0.0f;
+
+                                    StartAttackAnimation(unit);
+                                    StartTakeDamageAnimation(unitTarget);
+
+                                }
+
+                                break;
+                            case AttackPhase.Attack:
+                                throw new NotImplementedException();
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                                break;
                         }
-                        break;
-                    case AttackPhase.Attack:
-                        throw new NotImplementedException();
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                        break;
+                    }
+                    else
+                    {
+                        attack.Phase = AttackPhase.None;
+                        ChangeUnitState(unit, UnitState.Approach);
+                    }
+
                 }
+                else
+                {
+                    unit.Target.SetTarget(new NoneTarget());
+                    ChangeUnitState(unit, UnitState.Idle);
+                }
+                
             }
+        }
+
+        private bool IsAttackDistanceSuitable(IUnit attacker, IUnit target)
+        {
+            Vector3 attackerPosition = attacker.GetPosition();
+            Vector3 targetPosition = target.GetPosition();
+            float maxAttackDistance = attacker.Offence.MaxRange;
+            
+            return maxAttackDistance * maxAttackDistance >= (attackerPosition - targetPosition).sqrMagnitude;
         }
 
         private IUnit FindUnitByITarget(ITarget target)
