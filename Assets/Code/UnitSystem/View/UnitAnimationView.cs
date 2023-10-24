@@ -13,7 +13,7 @@ namespace UnitSystem.View
         
         
         
-        public bool IsMoving 
+        public virtual bool IsMoving 
         {
             set
             {
@@ -21,28 +21,28 @@ namespace UnitSystem.View
             }
         }
         
-        public void Reset()
+        public virtual void Reset()
         {
             _animator.SetBool(_isMovingFlag, false);
             _animator.SetBool(_unitDeadFlag, false);
         }
 
-        public void StartCast()
+        public virtual void StartCast()
         {
             _animator.SetTrigger(_attackTrigger);
         }
 
-        public void StartAttack()
+        public virtual void StartAttack()
         {
             // Nothing to do, none suitable animation.
         }
 
-        public void StartDead()
+        public virtual void StartDead()
         {
             _animator.SetBool(_unitDeadFlag, true);
         }
 
-        public void TakeDamage()
+        public virtual void TakeDamage()
         {
             _animator.SetTrigger(_takeDamageTrigger);
         }

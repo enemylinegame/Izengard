@@ -13,6 +13,9 @@ GameObject:
   - component: {fileID: 2570301990936295644}
   - component: {fileID: 1373568036533525981}
   - component: {fileID: -1591913101379766618}
+  - component: {fileID: 472195675662372375}
+  - component: {fileID: 7819970389526115638}
+  - component: {fileID: 5709100681867069268}
   m_Layer: 8
   m_Name: Catapult
   m_TagString: Enemy
@@ -90,7 +93,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.8402057, z: 2.9992175}
+  m_Size: {x: 1, y: 1.8402057, z: 2.9}
   m_Center: {x: 0, y: 0.674572, z: -0.37816596}
 --- !u!54 &-1591913101379766618
 Rigidbody:
@@ -108,6 +111,50 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &472195675662372375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 0
+  m_IgnoreFromBuild: 1
+  m_AffectedAgents: ffffffff
+--- !u!114 &7819970389526115638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 560408897fbb424dbabaead4a8d92d6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 9572452}
+--- !u!114 &5709100681867069268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b46236cc90977b44e9bd344e57e97c1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _name: Catapult
+  _enemyNavMesh: {fileID: 2570301990936295644}
+  _animationView: {fileID: 7819970389526115638}
 --- !u!1 &103566
 GameObject:
   m_ObjectHideFlags: 0
