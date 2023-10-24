@@ -265,7 +265,7 @@ namespace BattleSystem
         private ITarget GetTarget(IUnit unit)
         {
             Debug.Log("EnemyBattleController->GetTarget:");
-            (UnitPriorityType priorityType, UnitRoleType roleType) nextUnitPriority = unit.Priority.GetNext();
+            var nextUnitPriority = unit.Priority.GetNext();
            
             switch (nextUnitPriority.priorityType)
             {
@@ -298,7 +298,7 @@ namespace BattleSystem
             }
         }
 
-        private ITarget GetClosestDefender(IUnit unit, UnitType targetRole = UnitType.None)
+        private ITarget GetClosestDefender(IUnit unit, UnitType targetType = UnitType.None)
         {
             ITarget target = new NoneTarget();
 
@@ -309,7 +309,7 @@ namespace BattleSystem
             {
                 IUnit defender = _defenderUnitCollection[i];
 
-                if(targetRole != UnitType.None && defender.Stats.Type != targetRole)
+                if(targetType != UnitType.None && defender.Stats.Type != targetType)
                     continue;
 
                 Vector3 defenderPos = defender.GetPosition();

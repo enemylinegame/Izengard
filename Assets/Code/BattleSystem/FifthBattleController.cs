@@ -516,7 +516,7 @@ namespace BattleSystem
                 }
             }
 
-            (UnitPriorityType priorityType, UnitRoleType roleType) nextUnitPriority = unit.Priority.GetNext();
+            var nextUnitPriority = unit.Priority.GetNext();
            
             switch (nextUnitPriority.priorityType)
             {
@@ -549,7 +549,7 @@ namespace BattleSystem
             }
         }
 
-        private ITarget GetClosestFoe(IUnit unit, UnitRoleType targetRole = UnitRoleType.None)
+        private ITarget GetClosestFoe(IUnit unit, UnitType targetType = UnitType.None)
         {
             ITarget target = new NoneTarget();
             
@@ -562,7 +562,7 @@ namespace BattleSystem
             {
                 IUnit foeUnit = foeUnitList[i];
 
-                if(targetRole != UnitRoleType.None && foeUnit.Stats.Role != targetRole)
+                if(targetType != UnitType.None && foeUnit.Stats.Type != targetType)
                     continue;
 
                 Vector3 defenderPos = foeUnit.GetPosition();

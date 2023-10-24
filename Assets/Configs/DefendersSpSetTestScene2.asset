@@ -17,4 +17,4 @@ MonoBehaviour:
   - _poolCopacity: 2
     _type: 1
     _unitSettings: {fileID: 11400000, guid: c66ebf9d6d72c6b4bb35f003cd31a8e8, type: 2}
-    _unitPrefab: {fileID: 163804, guid: 91367098b0cfd6d468017e15613b1170, type: 3}
+    _unitPrefab: {fileID: 162708, guid: c3b34ac9b23323d49afdb0e81d9db5d1, type: 3}

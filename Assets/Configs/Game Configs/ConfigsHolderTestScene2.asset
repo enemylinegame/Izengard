@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ConfigsHolderTestScene2
   m_EditorClassIdentifier: 
   <PrefabsHolder>k__BackingField: {fileID: 11400000, guid: c66c7ba4a11b5de46a0675453fa87d84, type: 2}
-  <EnemySpawnSettings>k__BackingField: {fileID: 11400000, guid: b526b66d7bbebbb4ca21a33cd981d162, type: 2}
-  <DefendersSpawnSettings>k__BackingField: {fileID: 11400000, guid: 4adfce0bea1ba074f9cae3a049a55818, type: 2}
+  <EnemySpawnSettings>k__BackingField: {fileID: 11400000, guid: 0f2e8834b7f8fc047a271b3e10e253b9, type: 2}
+  <DefendersSpawnSettings>k__BackingField: {fileID: 11400000, guid: c54cd36fef4ab5c41b5f0dc4fa88db0b, type: 2}

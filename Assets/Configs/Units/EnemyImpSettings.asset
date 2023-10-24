@@ -17,7 +17,7 @@ MonoBehaviour:
     _type: 4
     _role: 4
     _healthPoints: 100
-    _size: 0.5
+    _size: 1
     _speed: 2
     _detectionRange: 5
   _unitPriorities:
@@ -47,6 +47,6 @@ MonoBehaviour:
     _failChance: 0
     _onFailDamage: 1
     _damageData:
-      _baseDamage: 15
+      _baseDamage: 30
       _fireDamage: 0
       _coldDamage: 0

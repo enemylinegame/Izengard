@@ -399,7 +399,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _poolHolder: {fileID: 625855859}
-  spawnSettings: {fileID: 11400000, guid: e84ba9ef4e3babe40839e87c0815e680, type: 2}
+  spawnSettings: {fileID: 11400000, guid: 0f2e8834b7f8fc047a271b3e10e253b9, type: 2}
   spawnPoints:
   - {fileID: 1956836826}
   - {fileID: 1388228243}
