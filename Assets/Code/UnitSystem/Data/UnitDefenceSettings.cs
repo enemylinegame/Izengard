@@ -7,8 +7,12 @@ namespace UnitSystem.Data
     public class UnitDefenceData : IUnitDefenceData
     {
         [Range(0,100)]
-        [SerializeField] private float _evadeChance = 0;
-        [SerializeField] private int _armorPoints = 20;
+        [SerializeField] 
+        private float _evadeChance = 0;
+        
+        [SerializeField]
+        [Min(0.0f)]
+        private float _armorPoints = 20;
 
         [SerializeField] private ShieldData _shieldData;
         [SerializeField] private ResistanceData _resistanceData;
@@ -16,7 +20,7 @@ namespace UnitSystem.Data
         #region IUnitDefenceData
 
         public float EvadeChance => _evadeChance;
-        public int ArmorPoints => _armorPoints;
+        public float ArmorPoints => _armorPoints;
 
         public IUnitShieldData ShieldData => _shieldData;
 

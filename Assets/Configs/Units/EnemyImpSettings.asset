@@ -22,9 +22,9 @@ MonoBehaviour:
     _detectionRange: 5
   _unitPriorities:
   - _unitPriority: 4
-    _priorityRole: 1
+    _unitType: 1
   - _unitPriority: 1
-    _priorityRole: 2
+    _unitType: 0
   _defenceData:
     _evadeChance: 0
     _armorPoints: 0
@@ -39,7 +39,7 @@ MonoBehaviour:
   _offenceData:
     _attackType: 1
     _minRange: 0
-    _maxRange: 1.5
+    _maxRange: 2
     _castingTime: 1
     _attackTime: 1
     _criticalChance: 10
