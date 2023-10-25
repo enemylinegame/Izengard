@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Catapult
   _enemyNavMesh: {fileID: 2570301990936295644}
+  _collider: {fileID: 1373568036533525981}
   _animationView: {fileID: 7819970389526115638}
 --- !u!1 &103566
 GameObject:

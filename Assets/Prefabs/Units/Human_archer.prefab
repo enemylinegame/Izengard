@@ -2256,6 +2256,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Human_archer
   _enemyNavMesh: {fileID: -8267112835474923397}
+  _collider: {fileID: 6343854224559908517}
   _animationView: {fileID: 7273281933007335799}
 --- !u!1 &147358
 GameObject:
