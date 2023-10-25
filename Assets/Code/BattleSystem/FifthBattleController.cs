@@ -38,7 +38,7 @@ namespace BattleSystem
             }
         }
 
-        private const float DESTINATION_POSITION_ERROR_SQR = 0.1f * 0.1f;
+        private const float DESTINATION_POSITION_ERROR_SQR = 0.3f * 0.3f;
         private const float DEAD_UNITS_DESTROY_DELAY = 10.0f;
         
         private List<IUnit> _enemyUnits;
@@ -265,7 +265,7 @@ namespace BattleSystem
             //     Debug.Log("FifthBattleController->UnitIdleState: target is NoneTarget ");
             // }
 
-            if (target.Id > 0)
+            if (target.Id >= 0)
             {
                 unit.Target.SetTarget(target);
                 ChangeUnitState(unit, UnitState.Approach);
@@ -285,7 +285,7 @@ namespace BattleSystem
         private void UnitMoveState(IUnit unit, float deltaTime)
         {
             ITarget target = GetTarget(unit);
-            if (target.Id > 0)
+            if (target.Id >= 0)
             {
                 unit.Target.SetTarget(target);
                 ChangeUnitState(unit, UnitState.Approach);
@@ -379,7 +379,7 @@ namespace BattleSystem
                 }
                 else
                 {
-                    unit.Target.SetTarget(new NoneTarget());
+                    unit.Target.ResetTarget();
                     ChangeUnitState(unit, UnitState.Idle);
                 }
                 
