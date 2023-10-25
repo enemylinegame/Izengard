@@ -22,7 +22,7 @@ MonoBehaviour:
     _detectionRange: 10
   _unitPriorities:
   - _unitPriority: 2
-    _priorityRole: 0
+    _unitType: 0
   _defenceData:
     _evadeChance: 0
     _armorPoints: 0

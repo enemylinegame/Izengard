@@ -6,44 +6,38 @@ namespace UnitSystem.Model
 {
     public class UnitPriorityModel
     {
-        private readonly List<UnitPriorityData> _unitPriorities;
-        private UnitPriorityType _currentPriority;
+        private readonly List<UnitPriorityData> _priorities;
+       
+        private (UnitPriorityType Priority, UnitType Type) _currentPriority;
 
-        private int _priorityIndex;
+        private int _index = -1;
+        public int Length => _priorities.Count;
 
-        public UnitPriorityType CurrentPriority => _currentPriority;
-        public bool IsEndPriority { get; private set; }
+        public (UnitPriorityType Priority, UnitType Type) Current => _currentPriority;
 
         public UnitPriorityModel(IReadOnlyList<UnitPriorityData> unitPriorities)
         {
-            _unitPriorities = new List<UnitPriorityData>();
+            _priorities = new List<UnitPriorityData>();
 
             foreach (var unitPriority in unitPriorities)
             {
-                _unitPriorities.Add(unitPriority);
+                _priorities.Add(unitPriority);
             }
         }
 
-        public (UnitPriorityType priorityType, UnitType roleType) GetNext() 
+        public bool GetNext() 
         {
-            if(_unitPriorities.Count == 0)
-            {
-                return (UnitPriorityType.None, UnitType.None);
-            }
+            if (_index == Length - 1)
+                return false;
 
-            if (_priorityIndex >= _unitPriorities.Count)
-            {
-                IsEndPriority = true;
-                _priorityIndex = _unitPriorities.Count - 1;
-            }
+            _index++;
 
-            UnitPriorityData priorityData = _unitPriorities[_priorityIndex];
-            _currentPriority = priorityData.UnitPriority;
-            _priorityIndex++;
+            var priorityData = _priorities[_index];
+            _currentPriority = (priorityData.UnitPriority, priorityData.UnitType);
 
-            return (priorityData.UnitPriority, priorityData.PriorityRole);
+            return true;
         }
 
-        public void ResetIndex() => _priorityIndex = 0;
+        public void Reset() => _index = -1;
     }
 }

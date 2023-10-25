@@ -59,8 +59,8 @@ namespace UnitSystem.Model
 
         private bool CheckChance(float chanceValue)
         {
-            var gainedChance = Random.value; 
-            return gainedChance < chanceValue / 100f;
+            var gainedChance = Random.value * 100f; 
+            return gainedChance < chanceValue;
         }
     }
 }

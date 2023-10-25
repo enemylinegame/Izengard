@@ -6,9 +6,17 @@ namespace UnitSystem.Data
     [Serializable]
     public class UnitDamageData : IUnitDamageData
     {
-        [SerializeField] private float _baseDamage = 10f;
-        [SerializeField] private float _fireDamage = 10f;
-        [SerializeField] private float _coldDamage = 10f;
+        [SerializeField]
+        [Min(0.0f)]
+        private float _baseDamage = 10f;
+
+        [SerializeField]
+        [Min(0.0f)] 
+        private float _fireDamage = 10f;
+        
+        [SerializeField]
+        [Min(0.0f)] 
+        private float _coldDamage = 10f;
 
         #region IUnitDamageData
 

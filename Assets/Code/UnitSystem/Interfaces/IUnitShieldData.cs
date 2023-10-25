@@ -2,8 +2,8 @@
 {
     public interface IUnitShieldData
     {
-        int BaseShieldPoints { get; }
-        int FireShieldPoints { get; }
-        int ColdShieldPoints { get; }
+        float BaseShieldPoints { get; }
+        float FireShieldPoints { get; }
+        float ColdShieldPoints { get; }
     }
 }

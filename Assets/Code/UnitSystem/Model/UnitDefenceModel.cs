@@ -15,24 +15,24 @@ namespace UnitSystem.Model
 
         private readonly IUnitDefenceData _defenceData;
 
-        private readonly IParametr<int> _armorPoints;
+        private readonly IParametr<float> _armorPoints;
 
-        private readonly IParametr<int> _baseShieldPoints;
-        private readonly IParametr<int> _fireShieldPoints;
-        private readonly IParametr<int> _coldShieldPoints;
+        private readonly IParametr<float> _baseShieldPoints;
+        private readonly IParametr<float> _fireShieldPoints;
+        private readonly IParametr<float> _coldShieldPoints;
 
         private readonly float _evadeChance;
         private readonly IUnitResistanceData _unitResistance;
 
         public IUnitDefenceData DefenceData => _defenceData;
 
-        public IParametr<int> BaseShieldPoints => _baseShieldPoints;
+        public IParametr<float> BaseShieldPoints => _baseShieldPoints;
 
-        public IParametr<int> FireShieldPoints => _fireShieldPoints;
+        public IParametr<float> FireShieldPoints => _fireShieldPoints;
 
-        public IParametr<int> ColdShieldPoints => _coldShieldPoints;
+        public IParametr<float> ColdShieldPoints => _coldShieldPoints;
 
-        public IParametr<int> ArmorPoints => _armorPoints;
+        public IParametr<float> ArmorPoints => _armorPoints;
 
         public UnitDefenceModel(IUnitDefenceData defenceData)
         {
@@ -41,20 +41,20 @@ namespace UnitSystem.Model
             _evadeChance = _defenceData.EvadeChance;
 
             _armorPoints = 
-                new ParametrModel<int>(_defenceData.ArmorPoints, 0, int.MaxValue);
+                new ParametrModel<float>(_defenceData.ArmorPoints, 0, float.MaxValue);
             _baseShieldPoints = 
-                new ParametrModel<int>(_defenceData.ShieldData.BaseShieldPoints, 0, int.MaxValue);
+                new ParametrModel<float>(_defenceData.ShieldData.BaseShieldPoints, 0, float.MaxValue);
             _fireShieldPoints =
-                  new ParametrModel<int>(_defenceData.ShieldData.FireShieldPoints, 0, int.MaxValue);
+                  new ParametrModel<float>(_defenceData.ShieldData.FireShieldPoints, 0, float.MaxValue);
             _coldShieldPoints =
-                new ParametrModel<int>(_defenceData.ShieldData.ColdShieldPoints, 0, int.MaxValue);
+                new ParametrModel<float>(_defenceData.ShieldData.ColdShieldPoints, 0, float.MaxValue);
 
             _unitResistance = _defenceData.ResistData;
         }
 
-        public int GetAfterDefDamage(IDamage damageData)
+        public float GetAfterDefDamage(IDamage damageData)
         {
-            var resultDamage = 0;
+            float resultDamage = 0;
 
             if (IsEvaded() == false)
             {
@@ -68,13 +68,13 @@ namespace UnitSystem.Model
 
         private bool IsEvaded()
         {
-            var gainedChance = Random.value;
-            return gainedChance < _evadeChance / 100f;
+            var gainedChance = Random.value * 100f;
+            return gainedChance < _evadeChance;
         }
 
-        private int ApplyDefence(IDamage damageData)
+        private float ApplyDefence(IDamage damageData)
         {
-            int resultDamage = 0;
+            float resultDamage = 0;
 
             if (CheckShield(_baseShieldPoints) == false)
             {
@@ -99,7 +99,7 @@ namespace UnitSystem.Model
             return resultDamage;
         }
 
-        private bool CheckShield(IParametr<int> shield)
+        private bool CheckShield(IParametr<float> shield)
         {
             var shieldPoints = shield.GetValue();
             if(shieldPoints > 0)
@@ -110,25 +110,25 @@ namespace UnitSystem.Model
             return false;
         }
 
-        private int UseResist(float innerDamage, float resistValue)
+        private float UseResist(float innerDamage, float resistValue)
         {
-            var resultDamage = 0;
+            float resultDamage = 0;
 
             if (resistValue != 0)
             {
-                resultDamage = (int)(innerDamage * (1 / resistValue));
+                resultDamage = innerDamage * (1 / resistValue);
             }
             else
             {
-                resultDamage = (int)innerDamage;
+                resultDamage = innerDamage;
             }
 
             return resultDamage;
         }
 
-        private int UseArmor(int innerDamage)
+        private float UseArmor(float innerDamage)
         {
-            int resultDamage = innerDamage;
+            float resultDamage = innerDamage;
             var armorPoints = _armorPoints.GetValue();
             if (armorPoints != 0)
             {

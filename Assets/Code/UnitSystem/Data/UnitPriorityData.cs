@@ -11,9 +11,9 @@ namespace UnitSystem.Data
 
         [SerializeField]
         [DrawIf("_unitPriority", UnitPriorityType.SpecificFoe)] 
-        private UnitType _priorityRole = UnitType.None;
+        private UnitType _unitType = UnitType.None;
 
         public UnitPriorityType UnitPriority => _unitPriority;
-        public UnitType PriorityRole => _priorityRole;
+        public UnitType UnitType => _unitType;
     }
 }

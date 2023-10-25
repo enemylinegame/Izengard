@@ -131,7 +131,7 @@ namespace UnitSystem
             var resultDamageAmount
                 = _unitDefence.GetAfterDefDamage(damageValue);
 
-            var hpLeft = _unitStats.Health.GetValue() - resultDamageAmount;
+            var hpLeft = _unitStats.Health.GetValue() - (int)resultDamageAmount;
             _unitStats.Health.SetValue(hpLeft);
         }
 
