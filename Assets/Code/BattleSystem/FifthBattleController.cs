@@ -227,7 +227,7 @@ namespace BattleSystem
 
         private void UpdateTargetExistence(IUnit unit)
         {
-            switch (unit.Priority.CurrentPriority)
+            switch (unit.Priority.Current.Priority)
             {
                 case UnitPriorityType.MainTower:
                     {
@@ -499,54 +499,44 @@ namespace BattleSystem
 
         #region Enemy finding logic
 
-        private ITarget GetTarget(IUnit unit, int recursionCounter = -1 )
+        private ITarget GetTarget(IUnit unit)
         {
-            //Debug.Log("FifthBattleController->GetTarget:");
-            
-            if (recursionCounter == -1)
+            ITarget result = new NoneTarget();
+
+            while (unit.Priority.GetNext())
             {
-                recursionCounter = 3;
-            }
-            else
-            {
-                recursionCounter--;
-                if (recursionCounter == 0)
+                var currentPriority = unit.Priority.Current;
+
+                switch (currentPriority.Priority)
                 {
-                    return new NoneTarget();
+                    default:
+                    case UnitPriorityType.MainTower:
+                        {
+                            result = targetFinder.GetMainTower();
+                            break;
+                        }
+
+                    case UnitPriorityType.ClosestFoe:
+                        {
+                            result = GetClosestFoe(unit);
+                            break;
+                        }
+                    case UnitPriorityType.SpecificFoe:
+                        {
+                            result = GetClosestFoe(unit, currentPriority.Type);
+                            break;
+                        }
+                }
+
+                if (result is not NoneTarget)
+                {
+                    break;
                 }
             }
 
-            var nextUnitPriority = unit.Priority.GetNext();
-           
-            switch (nextUnitPriority.priorityType)
-            {
-                default:
-                case UnitPriorityType.MainTower:
-                    {
-                        unit.Priority.ResetIndex();
-                        return targetFinder.GetMainTower();
-                    }
-                case UnitPriorityType.ClosestFoe:
-                    {
-                        ITarget target = GetClosestFoe(unit);
-                        if (target is NoneTarget)
-                        {
-                            return GetTarget(unit, recursionCounter);
-                        }
-                        unit.Priority.ResetIndex();
-                        return target;
-                    }
-                case UnitPriorityType.SpecificFoe:
-                    {
-                        ITarget target = GetClosestFoe(unit, nextUnitPriority.roleType);
-                        if (target is NoneTarget)
-                        {
-                            return GetTarget(unit, recursionCounter);
-                        }
-                        unit.Priority.ResetIndex();
-                        return target;
-                    }
-            }
+            unit.Priority.Reset();
+
+            return result;
         }
 
         private ITarget GetClosestFoe(IUnit unit, UnitType targetType = UnitType.None)

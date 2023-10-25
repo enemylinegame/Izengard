@@ -141,7 +141,7 @@ namespace BattleSystem
 
         private void UpdateTarget(IUnit unit)
         {
-            switch (unit.Priority.CurrentPriority)
+            switch (unit.Priority.Current.Priority)
             {
                 case UnitPriorityType.MainTower:
                     {
@@ -197,7 +197,7 @@ namespace BattleSystem
             if (target is not NoneTarget)
             {
 
-                switch (unit.Priority.CurrentPriority)
+                switch (unit.Priority.Current.Priority)
                 {
                     case UnitPriorityType.MainTower:
                         {
@@ -265,40 +265,43 @@ namespace BattleSystem
         private ITarget GetTarget(IUnit unit)
         {
             Debug.Log("EnemyBattleController->GetTarget:");
-            var nextUnitPriority = unit.Priority.GetNext();
-           
-            switch (nextUnitPriority.priorityType)
+            ITarget result = new NoneTarget();
+
+            while (unit.Priority.GetNext())
             {
-                default:
-                case UnitPriorityType.MainTower:
-                    {
-                        unit.Priority.ResetIndex();
-                        return targetFinder.GetMainTower();
-                    }
-                case UnitPriorityType.ClosestFoe:
-                    {
-                        ITarget target = GetClosestDefender(unit);
-                        if (target is NoneTarget)
+                var currentPriority = unit.Priority.Current;
+                switch (currentPriority.Priority)
+                {
+                    default:
+                    case UnitPriorityType.MainTower:
                         {
-                            return GetTarget(unit);
+                            result = targetFinder.GetMainTower();
+                            break;
                         }
-                        unit.Priority.ResetIndex();
-                        return target;
-                    }
-                case UnitPriorityType.SpecificFoe:
-                    {
-                        ITarget target = GetClosestDefender(unit, nextUnitPriority.roleType);
-                        if (target is NoneTarget)
+
+                    case UnitPriorityType.ClosestFoe:
                         {
-                            return GetTarget(unit);
+                            result = GetClosestFoe(unit);
+                            break;
                         }
-                        unit.Priority.ResetIndex();
-                        return target;
-                    }
+                    case UnitPriorityType.SpecificFoe:
+                        {
+                            result = GetClosestFoe(unit, currentPriority.Type);
+                            break;
+                        }
+                }
+
+                if (result is not NoneTarget)
+                {
+                    break;
+                }
             }
+            unit.Priority.Reset();
+
+            return result;
         }
 
-        private ITarget GetClosestDefender(IUnit unit, UnitType targetType = UnitType.None)
+        private ITarget GetClosestFoe(IUnit unit, UnitType targetType = UnitType.None)
         {
             ITarget target = new NoneTarget();
 
