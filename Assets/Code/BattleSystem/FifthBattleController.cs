@@ -137,7 +137,7 @@ namespace BattleSystem
             if (_defenderUnits.Contains(unit)) return;
             if (_enemyUnits.Contains(unit)) return;
             
-            Debug.Log("FifthBattleController->AddUnit: " + unit.View.SelfTransform.gameObject.name);
+            //Debug.Log("FifthBattleController->AddUnit: " + unit.View.SelfTransform.gameObject.name);
             
             unit.OnReachedZeroHealth += UnitReachedZeroHealth;
 
@@ -166,7 +166,7 @@ namespace BattleSystem
       
         private void UnitReachedZeroHealth(IUnit unit)
         {
-            Debug.Log($"FifthBattleController->UnitReachedZeroHealth: {unit.View.SelfTransform.gameObject.name}");
+            //Debug.Log($"FifthBattleController->UnitReachedZeroHealth: {unit.View.SelfTransform.gameObject.name}");
             unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
             unit.Target.SetTarget(new NoneTarget());
             ChangeUnitState(unit, UnitState.Die);
@@ -222,7 +222,7 @@ namespace BattleSystem
         {
             undead.Unit.Disable();
             _deadUnits.Remove(undead);
-            Debug.Log($"FifthBattleController->UnitReachedZeroHealth: {undead.Unit.View.SelfTransform.gameObject.name}");
+            //Debug.Log($"FifthBattleController->UnitReachedZeroHealth: {undead.Unit.View.SelfTransform.gameObject.name}");
         }
 
         private void UpdateTargetExistence(IUnit unit)
@@ -349,9 +349,9 @@ namespace BattleSystem
                                 {
 
 
-                                    Debug.Log("FifthBattleController->UnitAttackState: " +
-                                              unit.View.SelfTransform.gameObject.name + " ==>> " +
-                                              unitTarget.View.SelfTransform.gameObject.name);
+                                    // Debug.Log("FifthBattleController->UnitAttackState: " +
+                                    //           unit.View.SelfTransform.gameObject.name + " ==>> " +
+                                    //           unitTarget.View.SelfTransform.gameObject.name);
                                     unitTarget.TakeDamage(unit.Offence.GetDamage());
                                     attack.Phase = AttackPhase.None;
                                     attack.TimingProgress = 0.0f;

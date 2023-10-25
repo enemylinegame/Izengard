@@ -14,7 +14,7 @@ namespace EnemySystem
 
         public override void ChangeHealth(int hpValue)
         {
-            Debug.Log($"EnemyView->ChangeHealth: {gameObject.name} hpValue = {hpValue}");
+            //Debug.Log($"EnemyView->ChangeHealth: {gameObject.name} hpValue = {hpValue}");
         }
 
         public override void ChangeSize(float sizeValue)

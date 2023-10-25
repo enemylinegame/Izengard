@@ -264,7 +264,7 @@ namespace BattleSystem
 
         private ITarget GetTarget(IUnit unit)
         {
-            Debug.Log("EnemyBattleController->GetTarget:");
+            //Debug.Log("EnemyBattleController->GetTarget:");
             ITarget result = new NoneTarget();
 
             while (unit.Priority.GetNext())

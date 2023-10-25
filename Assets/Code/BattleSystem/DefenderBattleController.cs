@@ -241,7 +241,7 @@ namespace BattleSystem
                     unit.Target.ResetTarget();
                     unit.Disable();
                     _defenders.Remove(unitData);
-                    Debug.Log("DefenderBattleController->RemoveUnit: " + unit.View.SelfTransform.gameObject.name);
+                    //Debug.Log("DefenderBattleController->RemoveUnit: " + unit.View.SelfTransform.gameObject.name);
                 }
             }
             else if (unit.Stats.Faction == UnitFactionType.Enemy)
