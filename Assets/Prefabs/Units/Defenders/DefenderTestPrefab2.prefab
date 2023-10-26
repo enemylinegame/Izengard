@@ -475,7 +475,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Defender1
   _enemyNavMesh: {fileID: 5382495712205038501}
-  _enemyAnimtor: {fileID: 5937658245906128635}
+  _collider: {fileID: 2513670583108069833}
+  _animationView: {fileID: 0}
 --- !u!136 &2513670583108069833
 CapsuleCollider:
   m_ObjectHideFlags: 0
