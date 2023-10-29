@@ -2,6 +2,7 @@
 using Abstraction;
 using EnemySystem;
 using System.Collections.Generic;
+using BattleSystem.Models;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
@@ -168,7 +169,7 @@ namespace BattleSystem
         {
             //Debug.Log($"FifthBattleController->UnitReachedZeroHealth: {unit.View.SelfTransform.gameObject.name}");
             unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
-            unit.Target.SetTarget(new NoneTarget());
+            unit.Target.ResetTarget();
             ChangeUnitState(unit, UnitState.Die);
             unit.Navigation.Stop();
 
@@ -200,7 +201,7 @@ namespace BattleSystem
                     {
                         Debug.Log($"FifthBattleController->RemoveUnit: [{unit.Id}]_{unit.Stats.Role} - dead");
                         
-                        unit.Target.SetTarget(new NoneTarget());
+                        unit.Target.ResetTarget();
                         unit.Disable();
                         _enemyUnits.Remove(unit);
 
@@ -210,7 +211,7 @@ namespace BattleSystem
                     {
                         Debug.Log($"FifthBattleController->RemoveUnit: {unit.View.SelfTransform.gameObject.name}");
                         
-                        unit.Target.SetTarget(new NoneTarget());
+                        unit.Target.ResetTarget();
                         unit.Disable();
                         _defenderUnits.Remove(unit);
                         break;
@@ -239,10 +240,10 @@ namespace BattleSystem
                 {
                     List<IUnit> list = (unit.Stats.Faction == UnitFactionType.Enemy) ? _defenderUnits : _enemyUnits;
 
-                    ITarget target = unit.Target.CurrentTarget;
+                    IAttackTarget target = unit.Target.CurrentTarget;
                     if (!list.Exists(def => def.Id == target.Id)) 
                     {
-                        unit.Target.SetTarget(new NoneTarget());
+                        unit.Target.ResetTarget();
 
                         ChangeUnitState(unit, UnitState.Idle);
                     }
@@ -254,7 +255,7 @@ namespace BattleSystem
         private void UnitIdleState(IUnit unit, float deltaTime)
         {
             //Debug.Log("FifthBattleController->UnitIdleState:");
-            ITarget target = GetTarget(unit);
+            IAttackTarget target = GetTarget(unit);
 
             // if (target.Id < 0)
             // {
@@ -284,7 +285,7 @@ namespace BattleSystem
 
         private void UnitMoveState(IUnit unit, float deltaTime)
         {
-            ITarget target = GetTarget(unit);
+            IAttackTarget target = GetTarget(unit);
             if (target.Id >= 0)
             {
                 unit.Target.SetTarget(target);
@@ -395,7 +396,7 @@ namespace BattleSystem
             return maxAttackDistance * maxAttackDistance >= (attackerPosition - targetPosition).sqrMagnitude;
         }
 
-        private IUnit FindUnitByITarget(ITarget target)
+        private IUnit FindUnitByITarget(IAttackTarget target)
         {
             IUnit targetUnit = null;
 
@@ -462,9 +463,9 @@ namespace BattleSystem
             }
         }
 
-        #region Enemy moving logic
+        #region Movement logic
 
-        private void MoveUnitToTarget(IUnit unit, ITarget target)
+        private void MoveUnitToTarget(IUnit unit, IAttackTarget target)
         {
             unit.Navigation.MoveTo(target.Position);
         }
@@ -497,11 +498,11 @@ namespace BattleSystem
 
         #endregion
 
-        #region Enemy finding logic
+        #region Find target logic
 
-        private ITarget GetTarget(IUnit unit)
+        private IAttackTarget GetTarget(IUnit unit)
         {
-            ITarget result = new NoneTarget();
+            IAttackTarget result = new NoneTarget();
 
             while (unit.Priority.GetNext())
             {
@@ -539,9 +540,9 @@ namespace BattleSystem
             return result;
         }
 
-        private ITarget GetClosestFoe(IUnit unit, UnitType targetType = UnitType.None)
+        private IAttackTarget GetClosestFoe(IUnit unit, UnitType targetType = UnitType.None)
         {
-            ITarget target = new NoneTarget();
+            IAttackTarget target = new NoneTarget();
             
             List<IUnit> foeUnitList = (unit.Stats.Faction == UnitFactionType.Enemy) ? _defenderUnits : _enemyUnits;
 
@@ -561,7 +562,9 @@ namespace BattleSystem
                 if (distance < minDist)
                 {
                     minDist = distance;
-                    target = foeUnit.View;
+                    
+                    
+                    target = new TargetModel(foeUnit, foeUnit.View);
                 }
             }
 

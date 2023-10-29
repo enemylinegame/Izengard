@@ -38,6 +38,7 @@ namespace UnitSystem
         public void Disable() { }
 
         public void Enable() { }
+        public bool IsAlive => true;
         public void TakeDamage(IDamage damageValue) { }
 
         public IDamage GetAttackDamage()

@@ -1,3 +1,4 @@
+using System;
 using Abstraction;
 using System.Collections.Generic;
 using UnitSystem;
@@ -171,7 +172,7 @@ namespace BattleSystem
 
         private void UnitIdleState(IUnit unit, float deltaTime)
         {
-            var target = GetTarget(unit);
+            IAttackTarget target = GetTarget(unit);
             unit.Target.SetTarget(target);
 
             MoveUnitToTarget(unit, unit.Target.CurrentTarget);
@@ -236,7 +237,7 @@ namespace BattleSystem
 
         #region Enemy moving logic
 
-        private void MoveUnitToTarget(IUnit unit, ITarget target)
+        private void MoveUnitToTarget(IUnit unit, IAttackTarget target)
         {
             unit.Navigation.MoveTo(target.Position);
         }
@@ -262,10 +263,10 @@ namespace BattleSystem
 
         #region Enemy finding logic
 
-        private ITarget GetTarget(IUnit unit)
+        private IAttackTarget GetTarget(IUnit unit)
         {
             //Debug.Log("EnemyBattleController->GetTarget:");
-            ITarget result = new NoneTarget();
+            IAttackTarget result = new NoneTarget();
 
             while (unit.Priority.GetNext())
             {
@@ -301,9 +302,9 @@ namespace BattleSystem
             return result;
         }
 
-        private ITarget GetClosestFoe(IUnit unit, UnitType targetType = UnitType.None)
+        private IAttackTarget GetClosestFoe(IUnit unit, UnitType targetType = UnitType.None)
         {
-            ITarget target = new NoneTarget();
+            IAttackTarget target = new NoneTarget();
 
             Vector3 unitPos = unit.GetPosition();
             float minDist = float.MaxValue;
@@ -320,8 +321,9 @@ namespace BattleSystem
                 float distance = Vector3.Distance(unitPos, defenderPos);
                 if (distance < minDist)
                 {
-                    minDist = distance;
-                    target = defender.View;
+                    //minDist = distance;
+                    //target = defender.View;
+                    throw new NotImplementedException();
                 }
             }
 

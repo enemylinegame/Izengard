@@ -2,10 +2,14 @@
 
 namespace Abstraction
 {
-    public class NoneTarget : ITarget
+    public class NoneTarget : IAttackTarget
     {
         public int Id => -1;
 
+        public bool IsAlive => false;
+
         public Vector3 Position => Vector3.zero;
+        
+        public void TakeDamage(IDamage damage) { }
     }
 }

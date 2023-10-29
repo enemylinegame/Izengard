@@ -142,6 +142,8 @@ namespace UnitSystem
         
         #region IDamageable
 
+        public bool IsAlive => _unitStats.Health.GetValue() > 0;
+
         public void TakeDamage(IDamage damageValue)
         {
             var resultDamageAmount

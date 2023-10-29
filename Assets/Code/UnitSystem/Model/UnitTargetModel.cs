@@ -6,21 +6,21 @@ namespace UnitSystem.Model
 {
     public class UnitTargetModel
     {
-        private readonly ITarget _default = new NoneTarget();
+        private readonly IAttackTarget _default = new NoneTarget();
 
-        private ITarget _currentTarget;
+        private IAttackTarget _currentTarget;
         private Vector3 _prevTargetPosition;
 
-        public ITarget CurrentTarget => _currentTarget;
+        public IAttackTarget CurrentTarget => _currentTarget;
 
-        public Action<ITarget> OnTargetChange;
+        public Action<IAttackTarget> OnTargetChange;
 
         public UnitTargetModel() 
         {
             _currentTarget = _default;
         }
 
-        public void SetTarget(ITarget target)
+        public void SetTarget(IAttackTarget target)
         { 
             _currentTarget = target;
 
@@ -36,13 +36,8 @@ namespace UnitSystem.Model
 
         public bool IsTargetChangePosition()
         {
-            bool checkResult = false;
-            
-            if(_currentTarget.Position != _prevTargetPosition)
-            {
-                checkResult = true;
-            }
-            
+            bool checkResult = _currentTarget.Position != _prevTargetPosition;
+
             _prevTargetPosition = _currentTarget.Position;
 
             return checkResult;

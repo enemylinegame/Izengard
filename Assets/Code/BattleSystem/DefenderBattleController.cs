@@ -28,15 +28,15 @@ namespace BattleSystem
         {
             public IUnit Unit;
 
+            public bool IsAlive => Unit.IsAlive;
+            
             public void TakeDamage(IDamage damage)
             {
                 Unit.TakeDamage(damage);
             }
 
-            public Vector3 GetPosition()
-            {
-                return Unit.View.SelfTransform.position;
-            }
+            public int Id => 0;
+            public Vector3 Position => Unit.View.SelfTransform.position;
         }
 
         private const float MAX_DEFEND_POSITION_ERROR_SQR = 0.1f * 0.1f;
@@ -115,7 +115,7 @@ namespace BattleSystem
 
         private void ExecuteIdleState(UnitData unit, float deltaTime)
         {
-            ITarget foundTarget = targetFinder.GetClosestUnit(unit.Unit);
+            IAttackTarget foundTarget = targetFinder.GetClosestUnit(unit.Unit);
             if (foundTarget is not NoneTarget)
             {
                 //IUnit target = GetUnitByView(foundTarget);
@@ -134,7 +134,7 @@ namespace BattleSystem
 
         private void ExecuteMoveState(UnitData unitData, float deltaTime)
         {
-            ITarget target = unitData.Unit.Target.CurrentTarget;
+            IAttackTarget target = unitData.Unit.Target.CurrentTarget;
             IUnit defender = unitData.Unit;
             if (target is not NoneTarget)
             {
