@@ -57,7 +57,7 @@ public class UnitTestEntry : MonoBehaviour
         _onUpdates.Add(_enemyBattleController);
         _onFixedUpdates.Add(_enemyBattleController);
 
-        _defenderBattleController = new DefenderBattleController(_targetFinder, new RegularAttackController());
+        _defenderBattleController = new DefenderBattleController(_targetFinder);
         _onUpdates.Add(_defenderBattleController);
         _onFixedUpdates.Add(_defenderBattleController);
 

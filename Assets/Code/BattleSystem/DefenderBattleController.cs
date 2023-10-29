@@ -41,16 +41,14 @@ namespace BattleSystem
 
         private const float MAX_DEFEND_POSITION_ERROR_SQR = 0.1f * 0.1f;
 
-        private readonly IRegularAttackController _regularAttackController; 
-            
         private List<UnitData> _defenders = new();
         private List<TargetData> _enemies = new();
 
 
-        public DefenderBattleController(TargetFinder targetFinder, IRegularAttackController regularAttackController) 
+        public DefenderBattleController(TargetFinder targetFinder) 
             : base(targetFinder)
         {
-            _regularAttackController = regularAttackController;
+            
         }
 
         public override void OnUpdate(float deltaTime)
@@ -173,7 +171,7 @@ namespace BattleSystem
         
         private void ExecuteAttackState(UnitData unit, float deltaTime)
         {
-            _regularAttackController.AddUnit(unit.AttackerModel);
+
         }
 
         // private IUnit GetUnitByView(BaseUnitView targetView)
@@ -236,7 +234,6 @@ namespace BattleSystem
                 UnitData unitData = _defenders.Find(u => u.Unit == unit);
                 if (unitData != null)
                 {
-                    _regularAttackController.RemoveUnit(unitData.AttackerModel);
                     //unit.Navigation.Stop();
                     unit.Target.ResetTarget();
                     unit.Disable();
