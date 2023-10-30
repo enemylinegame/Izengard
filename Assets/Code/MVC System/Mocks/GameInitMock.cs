@@ -52,6 +52,7 @@ namespace Code.MVC_System.Mocks
             controller.Add(enemySpawner);
             controller.Add(gameStateManager);
             controller.Add(fifthBattleController);
+            controller.Add(warBuildingController);
         }
 
         private List<Vector3> GetPositions(List<Transform> transforms)

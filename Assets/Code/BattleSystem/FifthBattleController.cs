@@ -332,11 +332,11 @@ namespace BattleSystem
             }
             else
             {
-                IUnit unitTarget = FindUnitByITarget(unit.Target.CurrentTarget);
+                IAttackTarget target = unit.Target.CurrentTarget;
                 
-                if (unitTarget != null) 
+                if (target != null) 
                 {
-                    if (IsAttackDistanceSuitable(unit, unitTarget))
+                    if (IsAttackDistanceSuitable(unit, target.Position))
                     {
                         switch (attack.Phase)
                         {
@@ -349,26 +349,21 @@ namespace BattleSystem
                                 if (attack.TimingProgress >= unit.Offence.CastingTime)
                                 {
 
-
-                                    // Debug.Log("FifthBattleController->UnitAttackState: " +
-                                    //           unit.View.SelfTransform.gameObject.name + " ==>> " +
-                                    //           unitTarget.View.SelfTransform.gameObject.name);
-                                    unitTarget.TakeDamage(unit.Offence.GetDamage());
+                                    target.TakeDamage(unit.Offence.GetDamage());
                                     attack.Phase = AttackPhase.None;
                                     attack.TimingProgress = 0.0f;
 
                                     StartAttackAnimation(unit);
-                                    StartTakeDamageAnimation(unitTarget);
-
+                                    //StartTakeDamageAnimation(unitTarget);
                                 }
 
                                 break;
                             case AttackPhase.Attack:
                                 throw new NotImplementedException();
-                                break;
+                                //break;
                             default:
                                 throw new ArgumentOutOfRangeException();
-                                break;
+                                //break;
                         }
                     }
                     else
@@ -387,28 +382,13 @@ namespace BattleSystem
             }
         }
 
-        private bool IsAttackDistanceSuitable(IUnit attacker, IUnit target)
+        private bool IsAttackDistanceSuitable(IUnit attacker, Vector3 targetPosition)
         {
             Vector3 attackerPosition = attacker.GetPosition();
-            Vector3 targetPosition = target.GetPosition();
             float maxAttackDistance = attacker.Offence.MaxRange;
             
             return maxAttackDistance * maxAttackDistance >= (attackerPosition - targetPosition).sqrMagnitude;
         }
-
-        private IUnit FindUnitByITarget(IAttackTarget target)
-        {
-            IUnit targetUnit = null;
-
-            targetUnit = _defenderUnits.Find(u => u.Id == target.Id);
-            if (targetUnit == null)
-            {
-                targetUnit = _enemyUnits.Find(u => u.Id == target.Id);
-            }
-
-            return targetUnit;
-        }
-
 
         private void ChangeUnitState(IUnit unit, UnitState state)
         {

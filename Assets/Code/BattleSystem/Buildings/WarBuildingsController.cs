@@ -7,7 +7,7 @@ using UnitSystem.Model;
 
 namespace BattleSystem.Buildings
 {
-    public class WarBuildingsController : IWarBuildingsContainer//, IOnController, IOnStart
+    public class WarBuildingsController : IWarBuildingsContainer, IOnController, IOnStart
     {
 
         private WarBuildingHandler _mainTower;
@@ -25,7 +25,7 @@ namespace BattleSystem.Buildings
         
         public void OnStart()
         {
-            
+            _mainTower.Enable();
         }
 
 

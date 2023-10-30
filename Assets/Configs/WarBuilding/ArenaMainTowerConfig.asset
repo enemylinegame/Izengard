@@ -21,6 +21,6 @@ MonoBehaviour:
       _fireShieldPoints: 0
       _coldShieldPoints: 0
     _resistanceData:
-      _baseDamageResist: 25
-      _fireDamageResist: 25
-      _coldDamageResist: 25
+      _baseDamageResist: 0
+      _fireDamageResist: 0
+      _coldDamageResist: 0
