@@ -31,9 +31,9 @@ namespace UserInputSystem
 
             input.PlayerControl.LeftClick.started += context => Click(context, true);
             input.PlayerControl.RightClick.started += context => Click(context, false);
-            input.PlayerControl.Key1.started += context => KeyDownOne?.Invoke();
-            input.PlayerControl.Key2.started += context => KeyDownTwo?.Invoke();
-            input.PlayerControl.Delete.started += context => Delete?.Invoke();
+            input.PlayerControl.Key1.started += _ => KeyDownOne?.Invoke();
+            input.PlayerControl.Key2.started += _ => KeyDownTwo?.Invoke();
+            input.PlayerControl.Delete.started += _ => Delete?.Invoke();
             input.PointerParameters.PointerPosition.performed += GetSelectedMapPosition;
         }
 

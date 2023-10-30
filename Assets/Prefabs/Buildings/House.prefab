@@ -43,7 +43,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1138223848582951129}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -60,10 +60,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dfcc4eb64b74b6f94cf1d30801e4af9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _collider: {fileID: 0}
+  _collider: {fileID: 7150711903418290329}
   ID: 
   BuildingRenderer: {fileID: 1165142701940639483}
   PositionBuild: {fileID: 1185783862225123979}
+  Vector2IntPosition: {x: 0, y: 0}
+  Size: {x: 0, y: 0}
 --- !u!54 &-4849004566348512328
 Rigidbody:
   m_ObjectHideFlags: 0

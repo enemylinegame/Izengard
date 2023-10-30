@@ -19,8 +19,8 @@ namespace NewBuildingSystem
         public void InstallInCenterTile(Vector2Int size)
         {
             Size = size;
-            var sizeX = size.x / 2;
-            var sizeY = size.y / 2;
+            var sizeX = size.x / 2f;
+            var sizeY = size.y / 2f;
             
             PositionBuild.position = new Vector3(sizeX, 0, sizeY);
             _collider.center = new Vector3(sizeX, .36f, sizeY);

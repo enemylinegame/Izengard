@@ -53,6 +53,7 @@ namespace NewBuildingSystem
             _buildings = new BuildingView[x, y];
 
             rayCastController.KeyDownOne += () => PlaceBuilding(1);
+            rayCastController.KeyDownTwo += () => PlaceBuilding(2);
             _rayCastController.RightClick += SelectBuild;
             PlaceFlyingBuilding();
         }
@@ -192,7 +193,6 @@ namespace NewBuildingSystem
                 for (int y = 0; y < _flyingBuilding.Size.y; y++)
                 {
                     if (_buildings[_mousePos.x + x, _mousePos.y + y] != null) return false;
-                        
                 }
             }
             return true;
