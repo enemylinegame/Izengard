@@ -1,11 +1,15 @@
-﻿using Izengard.UnitSystem.Enum;
+﻿using System.Collections.Generic;
+using UnitSystem.Data;
+using UnitSystem.Enum;
 
-namespace Izengard.UnitSystem
+namespace UnitSystem
 {
     public interface IUnitData
     {
-        UnitFactionType Faction { get; }
         IUnitStatsData StatsData { get; }
+
+        IReadOnlyList<UnitPriorityData> UnitPriorities { get; }
+        
         IUnitDefenceData DefenceData { get; }
         IUnitOffenceData OffenceData { get; }
     }

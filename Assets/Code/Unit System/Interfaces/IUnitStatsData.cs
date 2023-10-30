@@ -1,14 +1,13 @@
-﻿using Izengard.UnitSystem.Enum;
+﻿using UnitSystem.Enum;
 
-namespace Izengard.UnitSystem
+namespace UnitSystem
 {
     public interface IUnitStatsData
     {
-        UnitType Type { get; }
+        UnitFactionType Faction { get; }
+        UnitRoleType Role { get; }
 
         int HealthPoints { get; }
-        int ArmorPoints { get; }
-
         float Size { get; }
         float Speed { get; }
         float DetectionRange { get; }

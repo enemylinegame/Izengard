@@ -4,7 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Building
+  - Hunter
+  - Militiaman
+  - Mage
+  - Imp
+  - Fiend
+  - Hound
   layers:
   - Default
   - TransparentFX
@@ -13,9 +18,9 @@ TagManager:
   - Water
   - UI
   - 
-  - Plane
-  - Placement
-  - 
+  - Building
+  - Enemy
+  - Defender
   - 
   - 
   - 

@@ -1,12 +1,21 @@
-﻿namespace Izengard.UnitSystem
+﻿using UnitSystem.Enum;
+
+namespace UnitSystem
 {
     public interface IUnitOffenceData
     {
-        float AttackSpeed { get; }
-        float MeleeAttackReach { get; }
-        float RangedAttackMinRange { get; }
-        float RangedAttackMaxRange { get; }
+        UnitAttackType AttackType { get; }
+        
+        float MinRange { get; }
+        float MaxRange { get; }
+
+        float CastingTime { get; }
+        float AttackTime { get; }
+        
         float CriticalChance { get; }
+        float CritScale { get; }
+        float FailChance { get; }
+        float OnFailDamage { get; }
 
         IUnitDamageData DamageData { get; }
     }

@@ -1,7 +1,7 @@
 ﻿using System;
-using Izengard.Abstraction.Interfaces;
+using Abstraction;
 
-namespace Izengard.Tools
+namespace Tools
 {
     public class ParametrModel<TParam> : IParametr<TParam>
         where TParam : IComparable<TParam>
@@ -11,7 +11,7 @@ namespace Izengard.Tools
         private TParam _maxValue;
 
         public event Action<TParam> OnValueChange;
-
+        public event Action<TParam> OnMinValueSet;
         public ParametrModel(TParam initValue, TParam minValue, TParam maxValue)
         {
             _paramValue = initValue;
@@ -27,9 +27,10 @@ namespace Izengard.Tools
             {
                 _paramValue = _maxValue;
             }
-            else if (newValue.CompareTo(_minValue) < 0)
+            else if (newValue.CompareTo(_minValue) <= 0)
             {
                 _paramValue = _minValue;
+                OnMinValueSet?.Invoke(_minValue);
             }
             else
             {

@@ -1,10 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Izengard.UnitSystem.Data
+namespace UnitSystem.Data
 {
     [Serializable]
-    public class DamageData : IUnitDamageData
+    public class UnitDamageData : IUnitDamageData
     {
         [SerializeField] private float _baseDamage = 10f;
         [SerializeField] private float _fireDamage = 10f;
@@ -12,11 +12,11 @@ namespace Izengard.UnitSystem.Data
 
         #region IUnitDamageData
 
-        float IUnitDamageData.BaseDamage => _baseDamage;
+        public float BaseDamage => _baseDamage;
 
-        float IUnitDamageData.FireDamage => _fireDamage;
+        public float FireDamage => _fireDamage;
 
-        float IUnitDamageData.ColdDamage => _coldDamage;
+        public float ColdDamage => _coldDamage;
 
         #endregion
     }

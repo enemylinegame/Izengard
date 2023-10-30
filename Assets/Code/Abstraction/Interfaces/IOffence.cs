@@ -1,9 +1,7 @@
-﻿namespace Izengard.Abstraction.Interfaces
+﻿namespace Abstraction
 {
-    public interface IOffence<TData, TValue>
+    public interface IOffence
     {
-        TData OffenceData { get; }
-
-        TValue GetDamage();
+        IDamage GetDamage();
     }
 }

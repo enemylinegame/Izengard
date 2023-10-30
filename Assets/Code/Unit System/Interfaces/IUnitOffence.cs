@@ -1,8 +1,16 @@
-﻿using Izengard.Abstraction.Interfaces;
+﻿using Abstraction;
+using UnitSystem.Enum;
 
-namespace Izengard.UnitSystem
+namespace UnitSystem
 {
-    public interface IUnitOffence : IOffence<IUnitOffenceData, UnitDamage>
+    public interface IUnitOffence : IOffence
     {
+        UnitAttackType AttackType { get; }
+
+        float MinRange { get; }
+        float MaxRange { get; }
+
+        float CastingSpeed { get; }
+        float AttackSpeed { get; }
     }
 }

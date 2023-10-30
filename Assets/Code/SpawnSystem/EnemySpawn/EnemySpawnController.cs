@@ -1,0 +1,53 @@
+﻿using System;
+using System.Collections.Generic;
+using EnemySystem;
+using Tools;
+using UnitSystem;
+using UnitSystem.Enum;
+using UnityEngine;
+using Random = UnityEngine.Random;
+
+namespace SpawnSystem
+{
+    public class EnemySpawnController : IOnController, IOnUpdate
+    {
+        private readonly SpawnerView _spawner;
+        private readonly EnemyPool _pool;
+
+        private readonly List<Transform> _spawnPoints = new List<Transform>();
+        
+        private TimeRemaining _timer;
+        private bool _isTiming;
+
+        public event Action<IUnit> OnUnitSpawned;
+
+        public EnemySpawnController(SpawnerView spawner)
+        {
+            _spawner = spawner;
+
+            var unitsCreationData = _spawner.SpawnSettings.UnitsCreationData;
+
+            var factory = new EnemyUnitFactory(unitsCreationData);
+            
+            _pool = new EnemyPool(spawner.PoolHolder, factory, unitsCreationData);
+        }
+
+        public void SpawnUnit(UnitRoleType unitType)
+        {
+            var unit = _pool.GetFromPool(unitType);
+
+            var spawnIndex = Random.Range(0, _spawnPoints.Count);
+            var spwanPosition = _spawner.SpawnPoints[spawnIndex].position;
+
+            unit.SetStartPosition(spwanPosition);
+
+            OnUnitSpawned?.Invoke(unit);
+        }
+
+
+        public void OnUpdate(float deltaTime)
+        {
+
+        }
+    }
+}

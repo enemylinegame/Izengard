@@ -1,24 +1,37 @@
-﻿using Izengard.Abstraction.Interfaces;
-using Izengard.UnitSystem.Enum;
-using Izengard.Tools;
+﻿using Abstraction;
+using System;
+using System.Collections.Generic;
+using UnitSystem.Data;
+using UnitSystem.Model;
+using UnityEngine;
 
-namespace Izengard.UnitSystem
+namespace UnitSystem
 {
-    public interface IUnit : IDamageable<UnitDamage>, IDamageDealer<UnitDamage>
+    public interface IUnit : 
+        IDamageable, 
+        IDamageDealer, 
+        IPositioned<Vector3>, 
+        IRotated<Vector3>
     {
-        ObjectTransformModel TransformModel { get; }
-
-        UnitFactionType Faction { get; }
-        UnitType Type { get; }
-
-        IParametr<int> Health { get; }
-        IParametr<int> Armor { get; }
-        IParametr<float> Size { get; }
-        IParametr<float> Speed { get; }
-        IParametr<float> DetectionRange { get; }
-
+        IUnitView View { get; }
+        UnitStatsModel Stats { get; }
         IUnitDefence Defence { get; }
         IUnitOffence Offence { get; }
+        INavigation<Vector3> Navigation { get; }
+        UnitTargetModel Target { get; }
+        UnitStateModel UnitState { get; }
+        UnitPriorityModel Priority { get; }
 
+        event Action<IUnit> OnReachedZeroHealth;
+
+        int Id { get; }
+
+        Vector3 StartPosition { get; }
+
+        void Enable();
+
+        void Disable();
+
+        void SetStartPosition(Vector3 spawnPosition);
     }
 }
