@@ -51,7 +51,7 @@ public class UnitTestEntry : MonoBehaviour
         _defenderSpawnController.OnUnitSpawned += OnCreatedUnit;
         _onUpdates.Add(_defenderSpawnController);
 
-        _targetFinder = new TargetFinder(_mainTower);
+        _targetFinder = new TargetFinder(null);
 
         _enemyBattleController = new EnemyBattleController(_targetFinder);
         _onUpdates.Add(_enemyBattleController);

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using BattleSystem.Buildings.Configs;
 using SpawnSystem;
 using UnityEngine;
 
@@ -10,6 +11,6 @@ namespace Configs
         [field: SerializeField] public PrefabsHolder PrefabsHolder { get; set; }
         [field: SerializeField] public SpawnSettings EnemySpawnSettings { get; private set; }
         [field: SerializeField] public SpawnSettings DefendersSpawnSettings { get; private set; }
-        
+        [field: SerializeField] public MainTowerConfig MainTowerSettings { get; private set; }
     }
 }

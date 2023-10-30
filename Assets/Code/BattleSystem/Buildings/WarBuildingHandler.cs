@@ -27,6 +27,7 @@ namespace BattleSystem.Buildings
             _health = new ParametrModel<int>(durability, 0, durability);
         }
         
+        
         #region IWarBuilding
         
         public event Action<IWarBuilding> OnReachedZeroHealth;
@@ -61,6 +62,7 @@ namespace BattleSystem.Buildings
         }
 
         #endregion
+        
         
         private void ReachedZeroHealth(int value)
         {

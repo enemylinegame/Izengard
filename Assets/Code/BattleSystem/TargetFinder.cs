@@ -1,4 +1,6 @@
 ﻿using Abstraction;
+using BattleSystem.Buildings;
+using BattleSystem.Buildings.Interfaces;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
@@ -12,11 +14,11 @@ namespace BattleSystem
         private readonly LayerMask _defenderMask;
         private readonly IAttackTarget _defaultTarget;
 
-        private ITarget _mainTower;
+        private IWarBuildingsContainer _warBuildingsContainer;
 
-        public TargetFinder(ITarget mainTower)
+        public TargetFinder(IWarBuildingsContainer container)
         {
-            _mainTower = mainTower;
+            _warBuildingsContainer = container;
 
             _buildingsMask = LayerMask.GetMask("Building");
             _enemyMask =  LayerMask.GetMask("Enemy");
@@ -27,7 +29,7 @@ namespace BattleSystem
 
         public IAttackTarget GetMainTower()
         {
-            return _defaultTarget;
+            return _warBuildingsContainer.GetMainTowerAsAttackTarget();
         }
 
         public IAttackTarget GetClosestUnit(IUnit unit)

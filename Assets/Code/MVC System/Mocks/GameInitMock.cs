@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using BattleSystem;
+using BattleSystem.Buildings;
 using Code.GlobalGameState;
 using Code.SceneConfigs;
 using Configs;
@@ -24,21 +25,19 @@ namespace Code.MVC_System.Mocks
             var timeRemainingService = new TimeRemainingController();
 
             var enemySpawner = new EnemySpawnController(sceneObjectsHolder.EnemySpawner);
-            //var regularAttackController = new RegularAttackController();
+
+            var warBuildingController = new WarBuildingsController(sceneObjectsHolder.MainTower, configs.MainTowerSettings);
             
-            var targetFinder = new TargetFinder(sceneObjectsHolder.MainTower);
-            //var enemyBattleController = new EnemyBattleController(targetFinder);
+            var targetFinder = new TargetFinder(warBuildingController);
             var navigationUpdater = new NavigationUpdater();
             navigationUpdater.AddNavigationSurface(sceneObjectsHolder.GroundSurface);
 
             var defendersSpawner = new DefendersSpawnController(configs.DefendersSpawnSettings.UnitsCreationData,
                 GetPositions(sceneObjectsHolder.DefendersSpawnPoints));
-            //var defendersBattleController = new DefenderBattleController(targetFinder, regularAttackController);
             
             var fifthBattleController = new FifthBattleController(targetFinder);
             
-            var unitSpawnObserver = new UnitSpawnObserver(enemySpawner, defendersSpawner, 
-                //enemyBattleController, defendersBattleController);
+            var unitSpawnObserver = new UnitSpawnObserver(enemySpawner, defendersSpawner,
                 fifthBattleController);
             
             var enemySpawnLogic = new EnemySpawnLogicMock(enemySpawner);
@@ -51,10 +50,7 @@ namespace Code.MVC_System.Mocks
             
             controller.Add(timeRemainingService);
             controller.Add(enemySpawner);
-            //controller.Add(enemyBattleController);
-            //controller.Add(defendersBattleController);
             controller.Add(gameStateManager);
-            //controller.Add(regularAttackController);
             controller.Add(fifthBattleController);
         }
 

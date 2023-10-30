@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BattleSystem.Buildings.View
 {
-    public class WarBuildingView : MonoBehaviour, IWarBuildingView, ITarget
+    public class WarBuildingView : MonoBehaviour, IWarBuildingView
     {
 
         private int _id;
@@ -32,7 +32,10 @@ namespace BattleSystem.Buildings.View
             gameObject.SetActive(false);
         }
 
-        public void ChangeHealth(int hpValue) { }
+        public void ChangeHealth(int hpValue)
+        {
+            Debug.Log("WarBuildingView->ChangeHealth: hpValue = " + hpValue.ToString());
+        }
         
         #endregion
 
