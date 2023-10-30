@@ -1,6 +1,6 @@
 ﻿namespace Abstraction
 {
-    public class DamageStructure : IDamage
+    public class UnitDamage : IDamage
     {
         private float _baseDamage;
         private float _fireDamage;
@@ -22,6 +22,6 @@
             set => _coldDamage = value;
         }
 
-        public DamageStructure() { }
+        public UnitDamage() { }
     }
 }

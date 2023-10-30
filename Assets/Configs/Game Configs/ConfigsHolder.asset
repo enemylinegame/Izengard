@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac7cef430b8741a8bc5f1de7ac70367d, type: 3}
   m_Name: ConfigsHolder
   m_EditorClassIdentifier: 
-  <PrefabsHolder>k__BackingField: {fileID: 11400000, guid: c66c7ba4a11b5de46a0675453fa87d84, type: 2}
+  <ObjectsHolder>k__BackingField: {fileID: 11400000, guid: c66c7ba4a11b5de46a0675453fa87d84, type: 2}
+  <UIElementsConfig>k__BackingField: {fileID: 11400000, guid: 377bfbcff70c51842917b6316875a2fe, type: 2}
+  <GameConfig>k__BackingField: {fileID: 11400000, guid: 20d3170ef349c654b937b8321c00b600, type: 2}
   <EnemySpawnSettings>k__BackingField: {fileID: 11400000, guid: b526b66d7bbebbb4ca21a33cd981d162, type: 2}
+  <BuildingsSettingsSo>k__BackingField: {fileID: 11400000, guid: fad81096ca26b3046b90e2fc57db4a17, type: 2}
+  <DefendersSpawnSettings>k__BackingField: {fileID: 11400000, guid: 4adfce0bea1ba074f9cae3a049a55818, type: 2}

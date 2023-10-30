@@ -4,7 +4,7 @@ using UnityEngine;
 namespace UnitSystem.Data
 {
     [Serializable]
-    public class UnitDamageData : IUnitDamageData
+    public class DamageData : IUnitDamageData
     {
         [SerializeField] private float _baseDamage = 10f;
         [SerializeField] private float _fireDamage = 10f;
