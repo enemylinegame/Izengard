@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 using Code.Game;
+=======
+using Configs;
+>>>>>>> Dev-Anton
 using UnityEngine;
 
 public class Main : MonoBehaviour

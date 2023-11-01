@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 using Code.BuildingSystem;
 using Code.Game;
 using Code.Player;
@@ -10,11 +11,15 @@ using CombatSystem.Views;
 using Controllers.BaseUnit;
 using ResourceMarket;
 using ResourceSystem;
+=======
+using Configs;
+using Tools;
+>>>>>>> Dev-Anton
 using UnityEngine;
-using Wave;
 
 public class GameInit
 {
+<<<<<<< HEAD
     public GameInit(Controller controller, ConfigsHolder configs, AudioSource clickAudioSource, Canvas canvas)
     {
         //TODO Do not change the structure of the script
@@ -91,5 +96,16 @@ public class GameInit
 
         // var testDummyTargetController = new TestDummyTargetController(levelGenerator, gameConfig.TestBuilding);
         // controller.Add(testDummyTargetController);
+=======
+    public GameInit(
+        Controller controller, 
+        ConfigsHolder configs, 
+        AudioSource clickAudioSource, 
+        Canvas canvas)
+    {
+        var timeRemainingService = new TimeRemainingController();
+            
+        controller.Add(timeRemainingService);
+>>>>>>> Dev-Anton
     }
 }
