@@ -3020,6 +3020,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Human_warrior
   _enemyNavMesh: {fileID: 2192190955237394796}
+  _collider: {fileID: -8959338978983441128}
   _animationView: {fileID: 6203591159176070674}
 --- !u!1 &162874
 GameObject:

@@ -2739,6 +2739,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Orc_warrior
   _enemyNavMesh: {fileID: 5013786577506457904}
+  _collider: {fileID: -5567821665638126747}
   _animationView: {fileID: 4416200106365465764}
 --- !u!1 &163906
 GameObject:

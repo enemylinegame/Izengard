@@ -36,10 +36,10 @@ namespace SpawnSystem
         {
             var unit = _pool.GetFromPool(unitType);
 
-            var spawnIndex = Random.Range(0, _spawnPoints.Count);
-            var spwanPosition = _spawner.SpawnPoints[spawnIndex].position;
+            var spawnIndex = Random.Range(0, _spawner.SpawnPoints.Count);
+            var spawnPosition = _spawner.SpawnPoints[spawnIndex].position;
 
-            unit.SetStartPosition(spwanPosition);
+            unit.SetStartPosition(spawnPosition);
 
             OnUnitSpawned?.Invoke(unit);
         }

@@ -2056,6 +2056,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Orc_hound
   _enemyNavMesh: {fileID: 477096553137004399}
+  _collider: {fileID: -4484706185885328441}
   _animationView: {fileID: 6897823908451066028}
 --- !u!1 &138642
 GameObject:

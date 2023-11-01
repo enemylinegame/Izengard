@@ -51,13 +51,13 @@ public class UnitTestEntry : MonoBehaviour
         _defenderSpawnController.OnUnitSpawned += OnCreatedUnit;
         _onUpdates.Add(_defenderSpawnController);
 
-        _targetFinder = new TargetFinder(_mainTower);
+        _targetFinder = new TargetFinder(null);
 
         _enemyBattleController = new EnemyBattleController(_targetFinder);
         _onUpdates.Add(_enemyBattleController);
         _onFixedUpdates.Add(_enemyBattleController);
 
-        _defenderBattleController = new DefenderBattleController(_targetFinder, new RegularAttackController());
+        _defenderBattleController = new DefenderBattleController(_targetFinder);
         _onUpdates.Add(_defenderBattleController);
         _onFixedUpdates.Add(_defenderBattleController);
 

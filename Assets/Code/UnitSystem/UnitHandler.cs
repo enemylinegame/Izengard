@@ -1,5 +1,6 @@
 ﻿using Abstraction;
 using System;
+using UnitSystem.Enum;
 using UnitSystem.Model;
 using UnityEngine;
 
@@ -80,6 +81,7 @@ namespace UnitSystem
             Subscribe();
 
             _unitView.Show();
+            _unitView.SetCollisionEnabled(true);
 
             _unitView.ChangeHealth(_unitStats.Health.GetValue());
             _unitView.ChangeSize(_unitStats.Size.GetValue());
@@ -93,6 +95,8 @@ namespace UnitSystem
 
             _unitStats.Size.OnValueChange += _unitView.ChangeSize;
             _unitStats.Speed.OnValueChange += _unitView.ChangeSpeed;
+
+            _unitState.OnStateChange += OnStateChanged;
         }
 
         public void Disable()
@@ -111,6 +115,8 @@ namespace UnitSystem
 
             _unitStats.Size.OnValueChange -= _unitView.ChangeSize;
             _unitStats.Speed.OnValueChange -= _unitView.ChangeSpeed;
+            
+            _unitState.OnStateChange -= OnStateChanged;
         }
 
         public void SetStartPosition(Vector3 spawnPosition)
@@ -124,7 +130,19 @@ namespace UnitSystem
             OnReachedZeroHealth?.Invoke(this);
         }
 
+        private void OnStateChanged(UnitState newState)
+        {
+            if (newState == Enum.UnitState.Die)
+            {
+                _unitView.SetCollisionEnabled(false);
+                _navigation.Disable();
+            }
+        }
+        
+        
         #region IDamageable
+
+        public bool IsAlive => _unitStats.Health.GetValue() > 0;
 
         public void TakeDamage(IDamage damageValue)
         {

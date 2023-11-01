@@ -9,11 +9,12 @@ namespace EnemySystem
     {
         [SerializeField] private string _name;
         [SerializeField] private NavMeshAgent _enemyNavMesh;
+        [SerializeField] private Collider _collider;
         [SerializeField] private UnitAnimationView _animationView;
 
         public override void ChangeHealth(int hpValue)
         {
-            Debug.Log($"EnemyView->ChangeHealth: {gameObject.name} hpValue = {hpValue}");
+            //Debug.Log($"EnemyView->ChangeHealth: {gameObject.name} hpValue = {hpValue}");
         }
 
         public override void ChangeSize(float sizeValue)
@@ -42,6 +43,11 @@ namespace EnemySystem
         protected override void SetUnitNavigation()
         {
             _unitNavigation ??= _enemyNavMesh;
+        }
+
+        protected override void SetCollision()
+        {
+            _unitCollider ??= _collider;
         }
     }
 }

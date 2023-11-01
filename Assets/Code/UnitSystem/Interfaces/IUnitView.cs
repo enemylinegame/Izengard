@@ -18,6 +18,7 @@ namespace UnitSystem
         void ChangeHealth(int hpValue);
         void ChangeSize(float sizeValue);
         void ChangeSpeed(float speedValue);
- 
+        void SetCollisionEnabled(bool isEnabled);
+
     }
 }

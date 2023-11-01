@@ -28,29 +28,27 @@ namespace BattleSystem
         {
             public IUnit Unit;
 
+            public bool IsAlive => Unit.IsAlive;
+            
             public void TakeDamage(IDamage damage)
             {
                 Unit.TakeDamage(damage);
             }
 
-            public Vector3 GetPosition()
-            {
-                return Unit.View.SelfTransform.position;
-            }
+            public int Id => 0;
+            public Vector3 Position => Unit.View.SelfTransform.position;
         }
 
         private const float MAX_DEFEND_POSITION_ERROR_SQR = 0.1f * 0.1f;
 
-        private readonly IRegularAttackController _regularAttackController; 
-            
         private List<UnitData> _defenders = new();
         private List<TargetData> _enemies = new();
 
 
-        public DefenderBattleController(TargetFinder targetFinder, IRegularAttackController regularAttackController) 
+        public DefenderBattleController(TargetFinder targetFinder) 
             : base(targetFinder)
         {
-            _regularAttackController = regularAttackController;
+            
         }
 
         public override void OnUpdate(float deltaTime)
@@ -117,7 +115,7 @@ namespace BattleSystem
 
         private void ExecuteIdleState(UnitData unit, float deltaTime)
         {
-            ITarget foundTarget = targetFinder.GetClosestUnit(unit.Unit);
+            IAttackTarget foundTarget = targetFinder.GetClosestUnit(unit.Unit);
             if (foundTarget is not NoneTarget)
             {
                 //IUnit target = GetUnitByView(foundTarget);
@@ -136,7 +134,7 @@ namespace BattleSystem
 
         private void ExecuteMoveState(UnitData unitData, float deltaTime)
         {
-            ITarget target = unitData.Unit.Target.CurrentTarget;
+            IAttackTarget target = unitData.Unit.Target.CurrentTarget;
             IUnit defender = unitData.Unit;
             if (target is not NoneTarget)
             {
@@ -173,7 +171,7 @@ namespace BattleSystem
         
         private void ExecuteAttackState(UnitData unit, float deltaTime)
         {
-            _regularAttackController.AddUnit(unit.AttackerModel);
+
         }
 
         // private IUnit GetUnitByView(BaseUnitView targetView)
@@ -236,12 +234,11 @@ namespace BattleSystem
                 UnitData unitData = _defenders.Find(u => u.Unit == unit);
                 if (unitData != null)
                 {
-                    _regularAttackController.RemoveUnit(unitData.AttackerModel);
                     //unit.Navigation.Stop();
                     unit.Target.ResetTarget();
                     unit.Disable();
                     _defenders.Remove(unitData);
-                    Debug.Log("DefenderBattleController->RemoveUnit: " + unit.View.SelfTransform.gameObject.name);
+                    //Debug.Log("DefenderBattleController->RemoveUnit: " + unit.View.SelfTransform.gameObject.name);
                 }
             }
             else if (unit.Stats.Faction == UnitFactionType.Enemy)

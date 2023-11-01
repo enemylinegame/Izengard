@@ -21,5 +21,7 @@
         protected override void SetUnitAnimator() { }
 
         protected override void SetUnitNavigation() { }
+
+        protected override void SetCollision() { }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Abstraction;
+using BattleSystem.Buildings;
+using BattleSystem.Buildings.Interfaces;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
@@ -10,13 +12,13 @@ namespace BattleSystem
         private readonly LayerMask _buildingsMask;
         private readonly LayerMask _enemyMask;
         private readonly LayerMask _defenderMask;
-        private readonly ITarget _defaultTarget;
+        private readonly IAttackTarget _defaultTarget;
 
-        private ITarget _mainTower;
+        private IWarBuildingsContainer _warBuildingsContainer;
 
-        public TargetFinder(ITarget mainTower)
+        public TargetFinder(IWarBuildingsContainer container)
         {
-            _mainTower = mainTower;
+            _warBuildingsContainer = container;
 
             _buildingsMask = LayerMask.GetMask("Building");
             _enemyMask =  LayerMask.GetMask("Enemy");
@@ -25,12 +27,12 @@ namespace BattleSystem
             _defaultTarget = new NoneTarget();
         }
 
-        public ITarget GetMainTower()
+        public IAttackTarget GetMainTower()
         {
-            return _mainTower;
+            return _warBuildingsContainer.GetMainTowerAsAttackTarget();
         }
 
-        public ITarget GetClosestUnit(IUnit unit)
+        public IAttackTarget GetClosestUnit(IUnit unit)
         {
             var findingUnit = _defaultTarget;
 
@@ -46,7 +48,7 @@ namespace BattleSystem
             {
                 var findGO = collider.gameObject;
 
-                if (findGO.TryGetComponent<ITarget>(out var findedTarget))
+                if (findGO.TryGetComponent<IAttackTarget>(out var findedTarget))
                 {
                     var distance
                         = Vector3.Distance(unitPosition, findedTarget.Position);
@@ -62,7 +64,7 @@ namespace BattleSystem
             return findingUnit;
         }
 
-        public ITarget GetClosestUnit(IUnit unit, UnitRoleType findingRole)
+        public IAttackTarget GetClosestUnit(IUnit unit, UnitRoleType findingRole)
         {
             var findingUnit = _defaultTarget;
 
@@ -81,7 +83,7 @@ namespace BattleSystem
                 if (findGO.tag != findingRole.ToString())
                     continue;
 
-                if (findGO.TryGetComponent<ITarget>(out var findedTarget))
+                if (findGO.TryGetComponent<IAttackTarget>(out var findedTarget))
                 {
                     var distance
                         = Vector3.Distance(unitPosition, findedTarget.Position);
@@ -98,7 +100,7 @@ namespace BattleSystem
         }
 
 
-        public ITarget GetFarthestUnit(IUnit unit)
+        public IAttackTarget GetFarthestUnit(IUnit unit)
         {
             var findingUnit = _defaultTarget;
 
@@ -114,7 +116,7 @@ namespace BattleSystem
             {
                 var findGO = collider.gameObject;
 
-                if (findGO.TryGetComponent<ITarget>(out var findedTarget))
+                if (findGO.TryGetComponent<IAttackTarget>(out var findedTarget))
                 {
                     var distance
                         = Vector3.Distance(unitPosition, findedTarget.Position);
