@@ -12,50 +12,20 @@ namespace BattleSystem
 {
     public class UnitBattleController : IOnController, IOnUpdate
     {
-        
-        private enum AttackPhase
-        {
-            None = 0,
-            Cast,
-            Attack
-        }
-        
-        private class AttackModel
-        {
-            public IUnit Attacker;
-            public float TimingProgress;
-            public AttackPhase Phase;
-        }
-        
-        private class DeadUnit
-        {
-            public IUnit Unit;
-            public float TimeLeft;
-
-            public DeadUnit(IUnit unit)
-            {
-                Unit = unit;
-                TimeLeft = DEAD_UNITS_DESTROY_DELAY;
-            }
-        }
-
         private const float DESTINATION_POSITION_ERROR_SQR = 0.3f * 0.3f;
         private const float DEAD_UNITS_DESTROY_DELAY = 10.0f;
         
-        protected readonly TargetFinder _targetFinder;
+        private readonly TargetFinder _targetFinder;
         
         private List<IUnit> _enemyUnits;
         private List<IUnit> _defenderUnits;
-        private List<AttackModel> _attackModels;
-        private List<DeadUnit> _deadUnits;
-
+        private List<IUnit> _deadUnits;
 
         public UnitBattleController(TargetFinder targetFinder)
         {
             _targetFinder = targetFinder;
             _enemyUnits = new ();
             _defenderUnits = new ();
-            _attackModels = new();
             _deadUnits = new();
         }
 
@@ -75,22 +45,17 @@ namespace BattleSystem
 
                 ExecuteUnitUpdate(unit, deltaTime);
             }
-
-            for (int i = _deadUnits.Count - 1; i >= 0; i--)
+            
+            for (int i = 0; i < _deadUnits.Count; i++)
             {
-                DeadUnit undead = _deadUnits[i];
-                undead.TimeLeft -= deltaTime;
-                if (undead.TimeLeft <= 0.0f)
-                {
-                    RemoveDeadUnit(undead);
-                }
+                IUnit unit = _deadUnits[i];
+
+                UnitDeadState(unit, deltaTime);
             }
         }
 
         private void ExecuteUnitUpdate(IUnit unit, float deltaTime)
         {
-            UpdateTargetExistence(unit);
-
             switch (unit.UnitState.CurrentState)
             {
                 default:
@@ -108,6 +73,7 @@ namespace BattleSystem
                 }
                 case UnitState.Approach:
                 {
+                    UpdateTargetExistence(unit);
                     UnitApproachState(unit, deltaTime);
                     break;
                 }
@@ -117,11 +83,13 @@ namespace BattleSystem
                 }
                 case UnitState.Attack:
                 {
+                    UpdateTargetExistence(unit);
                     UnitAttackState(unit, deltaTime);
                     break;
                 }
                 case UnitState.Die:
                 {
+                    UnitDeadState(unit, deltaTime);
                     break;
                 }
             }
@@ -164,10 +132,8 @@ namespace BattleSystem
         {
             //Debug.Log($"FifthBattleController->UnitReachedZeroHealth: {unit.View.SelfTransform.gameObject.name}");
             unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
-            unit.Target.ResetTarget();
             ChangeUnitState(unit, UnitState.Die);
-            unit.Navigation.Stop();
-
+            
             if (unit.Stats.Faction == UnitFactionType.Enemy)
             {
                 _enemyUnits.Remove(unit);
@@ -176,49 +142,47 @@ namespace BattleSystem
             {
                 _defenderUnits.Remove(unit);
             }
-
-            DeadUnit undead = new DeadUnit(unit);
-            _deadUnits.Add(undead);
-
-            //RemoveUnit(unit);
+            _deadUnits.Add(unit);
+            
         }
 
 
         public void RemoveUnit(IUnit unit)
         {
-            unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
-
-            switch (unit.Stats.Faction)
+            if (unit.UnitState.CurrentState == UnitState.Die)
             {
-                default:
-                    break;
-                case UnitFactionType.Enemy:
+                unit.Disable();
+                _deadUnits.Remove(unit);
+            }
+            else
+            {
+                unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
+
+                switch (unit.Stats.Faction)
+                {
+                    default:
+                        break;
+                    case UnitFactionType.Enemy:
                     {
-                        Debug.Log($"FifthBattleController->RemoveUnit: [{unit.Id}]_{unit.Stats.Role} - dead");
-                        
+                        //Debug.Log($"FifthBattleController->RemoveUnit: [{unit.Id}]_{unit.Stats.Role} - dead");
+
                         unit.Target.ResetTarget();
                         unit.Disable();
                         _enemyUnits.Remove(unit);
 
                         break;
                     }
-                case UnitFactionType.Defender:
+                    case UnitFactionType.Defender:
                     {
-                        Debug.Log($"FifthBattleController->RemoveUnit: {unit.View.SelfTransform.gameObject.name}");
-                        
+                        //Debug.Log($"FifthBattleController->RemoveUnit: {unit.View.SelfTransform.gameObject.name}");
+
                         unit.Target.ResetTarget();
                         unit.Disable();
                         _defenderUnits.Remove(unit);
                         break;
                     }
+                }
             }
-        }
-
-        private void RemoveDeadUnit(DeadUnit undead)
-        {
-            undead.Unit.Disable();
-            _deadUnits.Remove(undead);
-            //Debug.Log($"FifthBattleController->UnitReachedZeroHealth: {undead.Unit.View.SelfTransform.gameObject.name}");
         }
 
         private void UpdateTargetExistence(IUnit unit)
@@ -236,10 +200,14 @@ namespace BattleSystem
                     List<IUnit> list = (unit.Stats.Faction == UnitFactionType.Enemy) ? _defenderUnits : _enemyUnits;
 
                     IAttackTarget target = unit.Target.CurrentTarget;
-                    if (!list.Exists(def => def.Id == target.Id)) 
+                    if (!target.IsAlive)
                     {
                         unit.Target.ResetTarget();
-
+                        ChangeUnitState(unit, UnitState.Idle);
+                    }
+                    else if (!list.Exists(def => def.Id == target.Id)) 
+                    {
+                        unit.Target.ResetTarget();
                         ChangeUnitState(unit, UnitState.Idle);
                     }
                     break;
@@ -314,67 +282,53 @@ namespace BattleSystem
 
         private void UnitAttackState(IUnit unit, float deltaTime)
         {
-            AttackModel attack = _attackModels.Find(model => model.Attacker == unit);
-            if (attack == null)
+            IAttackTarget target = unit.Target.CurrentTarget;
+            
+            if (target != null) 
             {
-                attack = new AttackModel()
+                if (IsAttackDistanceSuitable(unit, target.Position))
                 {
-                    Attacker = unit,
-                    TimingProgress = deltaTime,
-                    Phase = AttackPhase.Cast
-                };
-                _attackModels.Add(attack);
-            }
-            else
-            {
-                IAttackTarget target = unit.Target.CurrentTarget;
-                
-                if (target != null) 
-                {
-                    if (IsAttackDistanceSuitable(unit, target.Position))
+                    switch (unit.UnitState.CurrentAttackPhase)
                     {
-                        switch (attack.Phase)
-                        {
-                            case AttackPhase.None:
-                                attack.TimingProgress = deltaTime;
-                                attack.Phase = AttackPhase.Cast;
-                                break;
-                            case AttackPhase.Cast:
-                                attack.TimingProgress += deltaTime;
-                                if (attack.TimingProgress >= unit.Offence.CastingTime)
-                                {
+                        case AttackPhase.None:
+                            unit.TimeProgress = deltaTime;
+                            unit.UnitState.CurrentAttackPhase = AttackPhase.Cast;
+                            break;
+                        case AttackPhase.Cast:
+                            unit.TimeProgress += deltaTime;
+                            if (unit.TimeProgress >= unit.Offence.CastingTime)
+                            {
 
-                                    target.TakeDamage(unit.Offence.GetDamage());
-                                    attack.Phase = AttackPhase.None;
-                                    attack.TimingProgress = 0.0f;
+                                target.TakeDamage(unit.Offence.GetDamage());
+                                unit.UnitState.CurrentAttackPhase = AttackPhase.None;
+                                unit.TimeProgress = 0.0f;
 
-                                    StartAttackAnimation(unit);
-                                    //StartTakeDamageAnimation(unitTarget);
-                                }
+                                StartAttackAnimation(unit);
+                                //StartTakeDamageAnimation(unitTarget);
+                            }
 
-                                break;
-                            case AttackPhase.Attack:
-                                throw new NotImplementedException();
-                                //break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
-                                //break;
-                        }
+                            break;
+                        case AttackPhase.Attack:
+                            throw new NotImplementedException();
+                            //break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                            //break;
                     }
-                    else
-                    {
-                        attack.Phase = AttackPhase.None;
-                        ChangeUnitState(unit, UnitState.Approach);
-                    }
-
                 }
                 else
                 {
-                    unit.Target.ResetTarget();
-                    ChangeUnitState(unit, UnitState.Idle);
+                    unit.UnitState.CurrentAttackPhase = AttackPhase.None;
+                    ChangeUnitState(unit, UnitState.Approach);
                 }
-                
+
             }
+            else
+            {
+                unit.Target.ResetTarget();
+                ChangeUnitState(unit, UnitState.Idle);
+            }
+
         }
 
         private bool IsAttackDistanceSuitable(IUnit attacker, Vector3 targetPosition)
@@ -385,13 +339,22 @@ namespace BattleSystem
             return maxAttackDistance * maxAttackDistance >= (attackerPosition - targetPosition).sqrMagnitude;
         }
 
-        private void ChangeUnitState(IUnit unit, UnitState state)
+        private void UnitDeadState(IUnit unit, float deltaTime)
         {
-            unit.UnitState.ChangeState(state);
+            unit.TimeProgress += deltaTime;
+            if (unit.TimeProgress >= DEAD_UNITS_DESTROY_DELAY)
+            {
+                RemoveUnit(unit);
+            }
+        }
+
+        private void ChangeUnitState(IUnit unit, UnitState newState)
+        {
+            unit.UnitState.ChangeState(newState);
             IUnitAnimationView animView = unit.View.UnitAnimation;
             if (animView != null)
             {
-                switch (state)
+                switch (newState)
                 {
                     case UnitState.None:
                         animView.Reset();
@@ -411,6 +374,9 @@ namespace BattleSystem
                         animView.IsMoving = false;
                         break;
                     case UnitState.Die:
+                        unit.Target.ResetTarget();
+                        unit.Navigation.Stop();
+                        unit.TimeProgress = 0.0f;
                         animView.StartDead();
                         break;
                     default:
@@ -528,7 +494,7 @@ namespace BattleSystem
             {
                 IUnit foeUnit = foeUnitList[i];
 
-                if(targetType != UnitType.None && foeUnit.Stats.Type != targetType)
+                if( (targetType != UnitType.None && foeUnit.Stats.Type != targetType) || !foeUnit.IsAlive )
                     continue;
 
                 Vector3 defenderPos = foeUnit.GetPosition();

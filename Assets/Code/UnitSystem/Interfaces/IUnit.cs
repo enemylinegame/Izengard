@@ -27,6 +27,8 @@ namespace UnitSystem
         int Id { get; }
 
         Vector3 StartPosition { get; }
+        
+        public float TimeProgress { get; set; }
 
         void Enable();
 
