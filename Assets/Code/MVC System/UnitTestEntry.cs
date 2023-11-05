@@ -1,5 +1,9 @@
 using System.Collections.Generic;
 using BattleSystem;
+using BattleSystem.Buildings;
+using BattleSystem.Buildings.Configs;
+using BattleSystem.Buildings.View;
+using Code.SceneConfigs;
 using SpawnSystem;
 using Tools;
 using Tools.Navigation;
@@ -9,31 +13,43 @@ using UnityEngine;
 
 public class UnitTestEntry : MonoBehaviour
 {
-    [SerializeField] private MainTowerView _mainTower;
+    [SerializeField] private WarBuildingView _mainTower;
+    [SerializeField] private MainTowerConfig _mainTowerConfig;
+
     [Header("Enemy Spawn Parametrs")]
     [SerializeField] private SpawnerView _enemySpawner;
     [SerializeField] private WaveSettings _waveSettings;
 
     [Header("Defender Spawn Parametrs")]
+    [SerializeField] private bool _enableDefenders = true;
     [SerializeField] private SpawnSettings _defenderSpawnSettings;
     [SerializeField] private List<Transform> _defenderSpawnPoints;
     [Space(10)]
     [SerializeField] private NavigationSurfaceView _groundSurface;
 
+    [Header("Obstacles")]
+    [SerializeField] private List<DefendWallObstacleView> _defendWalls;
+
     private TimeRemainingController timeRemainingController;
 
     private NavigationUpdater _navigationUpdater;
+
+    private WarBuildingsController _mainTowerController;
+    private ObstacleController _obstacleController;
+
     private EnemySpawnController _enemySpawnController;
     private DefenderSpawnTestController _defenderSpawnController;
     private TargetFinder _targetFinder;
     
-    private BaseBattleController _enemyBattleController;
-    private BaseBattleController _defenderBattleController;
+    private FifthBattleController _enemyBattleController;
+    private FifthBattleController _defenderBattleController;
 
     private EnemySpawnHandler _enemySpawnHandler;
 
     private List<IOnUpdate> _onUpdates = new List<IOnUpdate>();
     private List<IOnFixedUpdate> _onFixedUpdates = new List<IOnFixedUpdate>();
+
+    private int _surfaceId;
 
     private void Start()
     {
@@ -41,33 +57,43 @@ public class UnitTestEntry : MonoBehaviour
         _onUpdates.Add(timeRemainingController);
 
         _navigationUpdater = new NavigationUpdater();
-        _navigationUpdater.AddNavigationSurface(_groundSurface);
-        
+        _surfaceId = _navigationUpdater.AddNavigationSurface(_groundSurface);
+
+        _mainTowerController = new WarBuildingsController(_mainTower, _mainTowerConfig);
+
+        _targetFinder = new TargetFinder(_mainTowerController);
+
+        _obstacleController = new ObstacleController(_surfaceId, _navigationUpdater, _defendWalls);
+
         _enemySpawnController = new EnemySpawnController(_enemySpawner);
         _enemySpawnController.OnUnitSpawned += OnCreatedUnit;
         _onUpdates.Add(_enemySpawnController);
-
-        _defenderSpawnController = new DefenderSpawnTestController(_defenderSpawnPoints, _defenderSpawnSettings);
-        _defenderSpawnController.OnUnitSpawned += OnCreatedUnit;
-        _onUpdates.Add(_defenderSpawnController);
-
-        _targetFinder = new TargetFinder(null);
-
-        _enemyBattleController = new EnemyBattleController(_targetFinder);
+        
+        _enemyBattleController = new EnemyTestBattleController(_targetFinder, _obstacleController);
         _onUpdates.Add(_enemyBattleController);
         _onFixedUpdates.Add(_enemyBattleController);
-
-        _defenderBattleController = new DefenderBattleController(_targetFinder);
-        _onUpdates.Add(_defenderBattleController);
-        _onFixedUpdates.Add(_defenderBattleController);
-
+        
         _enemySpawnHandler = new EnemySpawnHandler(_enemySpawnController, _waveSettings);
         _enemySpawnHandler.OnWavesEnd += OnEnemySpawnEnd;
 
-        _enemySpawnHandler.StartSpawn();
+        if (_enableDefenders)
+        {
+            _defenderSpawnController = new DefenderSpawnTestController(_defenderSpawnPoints, _defenderSpawnSettings);
+            _defenderSpawnController.OnUnitSpawned += OnCreatedUnit;
+            _onUpdates.Add(_defenderSpawnController);
 
-        _defenderSpawnController.SpawnUnit(UnitType.Militiaman);
-        _defenderSpawnController.SpawnUnit(UnitType.Militiaman);
+            _defenderBattleController = new FifthBattleController(_targetFinder);
+            _onUpdates.Add(_defenderBattleController);
+            _onFixedUpdates.Add(_defenderBattleController);
+
+            _defenderSpawnController.SpawnUnit(UnitType.Militiaman);
+            _defenderSpawnController.SpawnUnit(UnitType.Militiaman);
+        }
+
+        _mainTowerController.OnStart();
+        _obstacleController.OnStart();
+
+        _enemySpawnHandler.StartSpawn();
     }
 
 
@@ -91,7 +117,11 @@ public class UnitTestEntry : MonoBehaviour
     {
         unit.Enable();
         _enemyBattleController.AddUnit(unit);
-        _defenderBattleController.AddUnit(unit);
+
+        if(_enableDefenders) 
+        {
+            _defenderBattleController.AddUnit(unit);
+        }
     }
 
     private void OnEnemySpawnEnd()

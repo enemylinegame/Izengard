@@ -42,8 +42,8 @@ namespace BattleSystem
         private const float DESTINATION_POSITION_ERROR_SQR = 0.3f * 0.3f;
         private const float DEAD_UNITS_DESTROY_DELAY = 10.0f;
         
-        private List<IUnit> _enemyUnits;
-        private List<IUnit> _defenderUnits;
+        protected List<IUnit> _enemyUnits;
+        protected List<IUnit> _defenderUnits;
         private List<AttackModel> _attackModels;
         private List<DeadUnit> _deadUnits;
 
@@ -92,7 +92,7 @@ namespace BattleSystem
             // }
         }
 
-        private void ExecuteUnitUpdate(IUnit unit, float deltaTime)
+        protected virtual void ExecuteUnitUpdate(IUnit unit, float deltaTime)
         {
             UpdateTargetExistence(unit);
 
@@ -226,7 +226,7 @@ namespace BattleSystem
             //Debug.Log($"FifthBattleController->UnitReachedZeroHealth: {undead.Unit.View.SelfTransform.gameObject.name}");
         }
 
-        private void UpdateTargetExistence(IUnit unit)
+        protected virtual void UpdateTargetExistence(IUnit unit)
         {
             switch (unit.Priority.Current.Priority)
             {
@@ -252,7 +252,7 @@ namespace BattleSystem
             }
         }
 
-        private void UnitIdleState(IUnit unit, float deltaTime)
+        protected void UnitIdleState(IUnit unit, float deltaTime)
         {
             //Debug.Log("FifthBattleController->UnitIdleState:");
             IAttackTarget target = GetTarget(unit);
@@ -283,7 +283,7 @@ namespace BattleSystem
 
         }
 
-        private void UnitMoveState(IUnit unit, float deltaTime)
+        protected void UnitMoveState(IUnit unit, float deltaTime)
         {
             IAttackTarget target = GetTarget(unit);
             if (target.Id >= 0)
@@ -300,8 +300,8 @@ namespace BattleSystem
                 }
             }
         }
-        
-        private void UnitApproachState(IUnit unit, float deltaTime)
+
+        protected void UnitApproachState(IUnit unit, float deltaTime)
         {
             Vector3 targetPos = unit.Target.CurrentTarget.Position;
             float distanceSqr = (unit.GetPosition() - targetPos).sqrMagnitude;
@@ -317,7 +317,7 @@ namespace BattleSystem
             }
         }
 
-        private void UnitAttackState(IUnit unit, float deltaTime)
+        protected void UnitAttackState(IUnit unit, float deltaTime)
         {
             AttackModel attack = _attackModels.Find(model => model.Attacker == unit);
             if (attack == null)
@@ -390,7 +390,7 @@ namespace BattleSystem
             return maxAttackDistance * maxAttackDistance >= (attackerPosition - targetPosition).sqrMagnitude;
         }
 
-        private void ChangeUnitState(IUnit unit, UnitState state)
+        protected void ChangeUnitState(IUnit unit, UnitState state)
         {
             unit.UnitState.ChangeState(state);
             IUnitAnimationView animView = unit.View.UnitAnimation;
