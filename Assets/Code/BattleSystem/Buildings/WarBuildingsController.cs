@@ -11,12 +11,12 @@ namespace BattleSystem.Buildings
     {
 
         private WarBuildingHandler _mainTower;
-        private MainTowerConfig _config;
+        private WarBuildingConfig _config;
         private UnitDefenceModel _towerDefenceModel;
         private IAttackTarget _mainTowerAsTarget;
 
 
-        public WarBuildingsController(WarBuildingView mainTower, MainTowerConfig config)
+        public WarBuildingsController(WarBuildingView mainTower, WarBuildingConfig config)
         {
             _config = config;
             _towerDefenceModel = new UnitDefenceModel(_config.DefenceData);
