@@ -10,21 +10,21 @@ namespace SpawnSystem
         private readonly DefendersSpawnController _defendersSpawner;
         //private readonly EnemyBattleController _enemyBattleController;
         //private readonly DefenderBattleController _defenderBattleController;
-        private readonly FifthBattleController _battleController;
+        private readonly BattleUnitController _battleController;
 
 
         public UnitSpawnObserver(EnemySpawnController enemySpawner, 
             DefendersSpawnController defendersSpawner, 
             //EnemyBattleController enemyBattleController, 
             //DefenderBattleController defenderBattleController,
-            FifthBattleController fifthBattleController
+            BattleUnitController battleController
             )
         {
             _enemySpawner = enemySpawner;
             _defendersSpawner = defendersSpawner;
             //_enemyBattleController = enemyBattleController;
             //_defenderBattleController = defenderBattleController;
-            _battleController = fifthBattleController;
+            _battleController = battleController;
             _enemySpawner.OnUnitSpawned += EnemySpawned;
             _defendersSpawner.OnUnitSpawned += DefenderSpawned;
         }

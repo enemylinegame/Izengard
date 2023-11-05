@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace BattleSystem
 {
-    public class FifthBattleController : IOnController, IOnUpdate
+    public class BattleUnitController : IOnController, IOnUpdate
     {
         
         private enum AttackPhase
@@ -50,7 +50,7 @@ namespace BattleSystem
         private List<DeadUnit> _deadUnits;
 
 
-        public FifthBattleController(TargetFinder targetFinder)
+        public BattleUnitController(TargetFinder targetFinder)
         {
             _targetFinder = targetFinder;
             _enemyUnits = new ();

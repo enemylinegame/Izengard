@@ -35,10 +35,10 @@ namespace Code.MVC_System.Mocks
             var defendersSpawner = new DefendersSpawnController(configs.DefendersSpawnSettings.UnitsCreationData,
                 GetPositions(sceneObjectsHolder.DefendersSpawnPoints));
             
-            var fifthBattleController = new FifthBattleController(targetFinder);
+            var battleController = new BattleUnitController(targetFinder);
             
             var unitSpawnObserver = new UnitSpawnObserver(enemySpawner, defendersSpawner,
-                fifthBattleController);
+                battleController);
             
             var enemySpawnLogic = new EnemySpawnLogicMock(enemySpawner);
             var defendersSpawnLogic = new DefendersSpawnLogicMock(defendersSpawner);
@@ -51,7 +51,7 @@ namespace Code.MVC_System.Mocks
             controller.Add(timeRemainingService);
             controller.Add(enemySpawner);
             controller.Add(gameStateManager);
-            controller.Add(fifthBattleController);
+            controller.Add(battleController);
             controller.Add(warBuildingController);
         }
 
