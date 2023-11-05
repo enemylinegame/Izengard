@@ -8,12 +8,12 @@ namespace SpawnSystem
 
         private readonly EnemySpawnController _enemySpawner;
         private readonly DefendersSpawnController _defendersSpawner;
-        private readonly BattleUnitController _battleController;
+        private readonly UnitBattleController _battleController;
 
 
         public UnitSpawnObserver(EnemySpawnController enemySpawner, 
             DefendersSpawnController defendersSpawner, 
-            BattleUnitController battleController
+            UnitBattleController battleController
             )
         {
             _enemySpawner = enemySpawner;

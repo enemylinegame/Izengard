@@ -35,7 +35,7 @@ namespace Code.MVC_System.Mocks
             var defendersSpawner = new DefendersSpawnController(configs.DefendersSpawnSettings.UnitsCreationData,
                 GetPositions(sceneObjectsHolder.DefendersSpawnPoints));
             
-            var battleController = new BattleUnitController(targetFinder);
+            var battleController = new UnitBattleController(targetFinder);
             
             var unitSpawnObserver = new UnitSpawnObserver(enemySpawner, defendersSpawner,
                 battleController);
