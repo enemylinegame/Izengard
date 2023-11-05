@@ -5,22 +5,25 @@ using BattleSystem.Buildings.View;
 using BattleSystem.Models;
 using UnitSystem.Model;
 
+
 namespace BattleSystem.Buildings
 {
     public class WarBuildingsController : IWarBuildingsContainer, IOnController, IOnStart
     {
 
+        private const int MAIN_TOWER_ID = 12345;
+        
         private WarBuildingHandler _mainTower;
-        private WarBuildingConfig _config;
+        private WarBuildingConfig _mainTowerConfig;
         private UnitDefenceModel _towerDefenceModel;
         private IAttackTarget _mainTowerAsTarget;
 
 
-        public WarBuildingsController(WarBuildingView mainTower, WarBuildingConfig config)
+        public WarBuildingsController(WarBuildingView mainTowerView, WarBuildingConfig mainTowerConfig)
         {
-            _config = config;
-            _towerDefenceModel = new UnitDefenceModel(_config.DefenceData);
-            _mainTower = new WarBuildingHandler(12345, mainTower, _towerDefenceModel, (int)_config.Durability);
+            _mainTowerConfig = mainTowerConfig;
+            _towerDefenceModel = new UnitDefenceModel(_mainTowerConfig.DefenceData);
+            _mainTower = new WarBuildingHandler(MAIN_TOWER_ID, mainTowerView, _towerDefenceModel, (int)_mainTowerConfig.Durability);
         }
         
         public void OnStart()
