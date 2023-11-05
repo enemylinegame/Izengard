@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace BattleSystem
 {
-    public class FifthBattleController : BaseBattleController
+    public class FifthBattleController : IOnController, IOnUpdate
     {
         
         private enum AttackPhase
@@ -42,21 +42,24 @@ namespace BattleSystem
         private const float DESTINATION_POSITION_ERROR_SQR = 0.3f * 0.3f;
         private const float DEAD_UNITS_DESTROY_DELAY = 10.0f;
         
+        protected readonly TargetFinder _targetFinder;
+        
         private List<IUnit> _enemyUnits;
         private List<IUnit> _defenderUnits;
         private List<AttackModel> _attackModels;
         private List<DeadUnit> _deadUnits;
 
 
-        public FifthBattleController(TargetFinder targetFinder) : base(targetFinder)
+        public FifthBattleController(TargetFinder targetFinder)
         {
+            _targetFinder = targetFinder;
             _enemyUnits = new ();
             _defenderUnits = new ();
             _attackModels = new();
             _deadUnits = new();
         }
 
-        public override void OnUpdate(float deltaTime)
+        public void OnUpdate(float deltaTime)
         {
             
             for (int i = 0; i < _enemyUnits.Count; i++)
@@ -82,14 +85,6 @@ namespace BattleSystem
                     RemoveDeadUnit(undead);
                 }
             }
-        }
-
-        public override void OnFixedUpdate(float fixedDeltaTime)
-        {
-            // for (int i = 0; i < _enemyUnitCollection.Count; i++)
-            // {
-            //     IUnit unit = _enemyUnitCollection[i];
-            // }
         }
 
         private void ExecuteUnitUpdate(IUnit unit, float deltaTime)
@@ -132,7 +127,7 @@ namespace BattleSystem
             }
         }
 
-        public override void AddUnit(IUnit unit)
+        public void AddUnit(IUnit unit)
         {
             if (unit == null) return;
             if (_defenderUnits.Contains(unit)) return;
@@ -493,7 +488,7 @@ namespace BattleSystem
                     default:
                     case UnitPriorityType.MainTower:
                         {
-                            result = targetFinder.GetMainTower();
+                            result = _targetFinder.GetMainTower();
                             break;
                         }
 
