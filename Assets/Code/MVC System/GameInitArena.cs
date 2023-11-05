@@ -10,12 +10,12 @@ using Tools.Navigation;
 using UnitSystem;
 using UnityEngine;
 
-namespace Code.MVC_System.Mocks
+namespace Code.MVC_System
 {
-    public class GameInitMock
+    public class GameInitArena
     {
         
-        public GameInitMock( 
+        public GameInitArena( 
             Controller controller, 
             ConfigsHolder configs, 
             AudioSource clickAudioSource, 

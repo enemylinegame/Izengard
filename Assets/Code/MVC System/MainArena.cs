@@ -3,9 +3,9 @@ using Code.SceneConfigs;
 using Configs;
 using UnityEngine;
 
-namespace Code.MVC_System.Mocks
+namespace Code.MVC_System
 {
-    public class MainMock : MonoBehaviour
+    public class MainArena : MonoBehaviour
     {
         [SerializeField] private ConfigsHolder _configsHolder;
         [SerializeField] private Canvas _canvas;
@@ -18,7 +18,7 @@ namespace Code.MVC_System.Mocks
         {
             _controllers = new Controller();
 
-            new GameInitMock(_controllers, _configsHolder, _clickAudioSource, _canvas, _sceneObjectsHolder);
+            new GameInitArena(_controllers, _configsHolder, _clickAudioSource, _canvas, _sceneObjectsHolder);
 
             _controllers.OnStart();
         }
