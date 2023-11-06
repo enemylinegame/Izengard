@@ -3,6 +3,7 @@ using Abstraction;
 using EnemySystem;
 using System.Collections.Generic;
 using BattleSystem.Models;
+using Configs;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
@@ -12,21 +13,25 @@ namespace BattleSystem
 {
     public class UnitBattleController : IOnController, IOnUpdate
     {
-        private const float DESTINATION_POSITION_ERROR_SQR = 0.3f * 0.3f;
-        private const float DEAD_UNITS_DESTROY_DELAY = 10.0f;
-        
         private readonly TargetFinder _targetFinder;
         
         private List<IUnit> _enemyUnits;
         private List<IUnit> _defenderUnits;
         private List<IUnit> _deadUnits;
-
-        public UnitBattleController(TargetFinder targetFinder)
+        
+        private float _destinationPositionErrorSqr;
+        private float _deadUnitsDestroyDelay;
+        
+        
+        public UnitBattleController(BattleSystemConstants battleSystemConstants, TargetFinder targetFinder)
         {
             _targetFinder = targetFinder;
             _enemyUnits = new ();
             _defenderUnits = new ();
             _deadUnits = new();
+            _destinationPositionErrorSqr = 
+                battleSystemConstants.DestinationPositionError * battleSystemConstants.DestinationPositionError;
+            _deadUnitsDestroyDelay = battleSystemConstants.DeadUnitsDestroyDelay;
         }
 
         public void OnUpdate(float deltaTime)
@@ -342,7 +347,7 @@ namespace BattleSystem
         private void UnitDeadState(IUnit unit, float deltaTime)
         {
             unit.TimeProgress += deltaTime;
-            if (unit.TimeProgress >= DEAD_UNITS_DESTROY_DELAY)
+            if (unit.TimeProgress >= _deadUnitsDestroyDelay)
             {
                 RemoveUnit(unit);
             }
@@ -425,7 +430,7 @@ namespace BattleSystem
             Vector3 destination = unit.StartPosition;
             Vector3 position = unit.GetPosition();
 
-            return (position - destination).sqrMagnitude <= DESTINATION_POSITION_ERROR_SQR;
+            return (position - destination).sqrMagnitude <= _destinationPositionErrorSqr;
         }
         
         // private bool CheckStopDistance(float curDistance, float stopDistance)

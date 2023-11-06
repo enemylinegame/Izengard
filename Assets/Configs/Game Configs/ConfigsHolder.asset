@@ -15,3 +15,5 @@ MonoBehaviour:
   <PrefabsHolder>k__BackingField: {fileID: 11400000, guid: c66c7ba4a11b5de46a0675453fa87d84, type: 2}
   <EnemySpawnSettings>k__BackingField: {fileID: 11400000, guid: b526b66d7bbebbb4ca21a33cd981d162, type: 2}
   <DefendersSpawnSettings>k__BackingField: {fileID: 11400000, guid: 4adfce0bea1ba074f9cae3a049a55818, type: 2}
+  <MainTowerSettings>k__BackingField: {fileID: 0}
+  <BattleSystemConst>k__BackingField: {fileID: 11400000, guid: b3db18a81090ca741bc2a9eb72a85453, type: 2}
