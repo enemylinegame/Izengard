@@ -222,7 +222,7 @@ namespace BattleSystem
         private void UnitIdleState(IUnit unit, float deltaTime)
         {
             //Debug.Log("FifthBattleController->UnitIdleState:");
-            IAttackTarget target = GetTarget(unit);
+            IAttackTarget target = _targetFinder.GetTarget(unit);
 
             // if (target.Id < 0)
             // {
@@ -252,7 +252,7 @@ namespace BattleSystem
 
         private void UnitMoveState(IUnit unit, float deltaTime)
         {
-            IAttackTarget target = GetTarget(unit);
+            IAttackTarget target = _targetFinder.GetTarget(unit);
             if (target.Id >= 0)
             {
                 unit.Target.SetTarget(target);
@@ -442,81 +442,6 @@ namespace BattleSystem
         // }
 
         #endregion
-
-        #region Find target logic
-
-        private IAttackTarget GetTarget(IUnit unit)
-        {
-            IAttackTarget result = new NoneTarget();
-
-            while (unit.Priority.GetNext())
-            {
-                var currentPriority = unit.Priority.Current;
-
-                switch (currentPriority.Priority)
-                {
-                    default:
-                    case UnitPriorityType.MainTower:
-                        {
-                            result = _targetFinder.GetMainTower();
-                            break;
-                        }
-
-                    case UnitPriorityType.ClosestFoe:
-                        {
-                            result = GetClosestFoe(unit);
-                            break;
-                        }
-                    case UnitPriorityType.SpecificFoe:
-                        {
-                            result = GetClosestFoe(unit, currentPriority.Type);
-                            break;
-                        }
-                }
-
-                if (result is not NoneTarget)
-                {
-                    break;
-                }
-            }
-
-            unit.Priority.Reset();
-
-            return result;
-        }
-
-        private IAttackTarget GetClosestFoe(IUnit unit, UnitType targetType = UnitType.None)
-        {
-            IAttackTarget target = new NoneTarget();
-            
-            List<IUnit> foeUnitList = (unit.Stats.Faction == UnitFactionType.Enemy) ? 
-                _unitsContainer.DefenderUnits : _unitsContainer.EnemyUnits;
-
-            Vector3 unitPos = unit.GetPosition();
-            float minDist = float.MaxValue;
-
-            for (int i = 0; i < foeUnitList.Count; i++)
-            {
-                IUnit foeUnit = foeUnitList[i];
-
-                if( (targetType != UnitType.None && foeUnit.Stats.Type != targetType) || !foeUnit.IsAlive )
-                    continue;
-
-                Vector3 defenderPos = foeUnit.GetPosition();
-
-                float distance = Vector3.Distance(unitPos, defenderPos);
-                if (distance < minDist)
-                {
-                    minDist = distance;
-                    
-                    
-                    target = new TargetModel(foeUnit, foeUnit.View);
-                }
-            }
-
-            return target;
-        }
-
-        #endregion
+        
     }
 }

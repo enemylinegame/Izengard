@@ -29,7 +29,7 @@ namespace Code.MVC_System
             var warBuildingController = new WarBuildingsController(sceneObjectsHolder.MainTower, configs.MainTowerSettings);
 
             var unitsContainer = new UnitsContainer();
-            var targetFinder = new TargetFinder(warBuildingController);
+            var targetFinder = new TargetFinder(warBuildingController, unitsContainer);
             var navigationUpdater = new NavigationUpdater();
             navigationUpdater.AddNavigationSurface(sceneObjectsHolder.GroundSurface);
 
