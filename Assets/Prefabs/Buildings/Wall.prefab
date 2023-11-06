@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 7755953964095894173}
   - component: {fileID: 6127675036024295103}
   - component: {fileID: 2016527728239464833}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,7 +162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_OverrideArea: 1
   m_Area: 1
-  m_IgnoreFromBuild: 1
+  m_IgnoreFromBuild: 0
   m_AffectedAgents: 00000000
 --- !u!114 &2016527728239464833
 MonoBehaviour:

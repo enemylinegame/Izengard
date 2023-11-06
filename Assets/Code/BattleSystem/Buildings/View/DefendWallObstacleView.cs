@@ -16,7 +16,7 @@ namespace BattleSystem.Buildings.View
 
         public int Id => _id;
 
-        public Vector3 Position => transform.position;
+        public Vector3 Position => transform.localPosition;
 
         public void Init(int id)
         {

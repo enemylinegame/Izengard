@@ -1,6 +1,7 @@
 ﻿using Abstraction;
 using BattleSystem.Buildings;
 using BattleSystem.Buildings.Interfaces;
+using BattleSystem.Models;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace BattleSystem
         private readonly IAttackTarget _defaultTarget;
 
         private IWarBuildingsContainer _warBuildingsContainer;
-
+        
         public TargetFinder(IWarBuildingsContainer container)
         {
             _warBuildingsContainer = container;

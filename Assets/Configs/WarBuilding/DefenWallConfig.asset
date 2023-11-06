@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28b108c26884afe438a69e0c11dc9392, type: 3}
   m_Name: DefenWallConfig
   m_EditorClassIdentifier: 
-  _healtPoints: 500
+  _healtPoints: 200

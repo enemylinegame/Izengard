@@ -11,7 +11,7 @@ namespace BattleSystem.Buildings
         private readonly int _obstPlacedSurfaceId;
         private readonly NavigationUpdater _navigationUpdater;
 
-        private int _obstacleIndex = 0;
+        private int _obstacleIndex = 12354;
 
         public List<IObstacle> ObstaclesCollection => _obstaclesCollection;
 
@@ -59,7 +59,5 @@ namespace BattleSystem.Buildings
 
             _navigationUpdater.UpdateSurface(_obstPlacedSurfaceId);
         }
-
-    
     }
 }
