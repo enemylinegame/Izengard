@@ -14,21 +14,18 @@ namespace BattleSystem
     public class UnitBattleController : IOnController, IOnUpdate
     {
         private readonly TargetFinder _targetFinder;
-        
-        private List<IUnit> _enemyUnits;
-        private List<IUnit> _defenderUnits;
-        private List<IUnit> _deadUnits;
+        private readonly IUnitsContainer _unitsContainer;
         
         private float _destinationPositionErrorSqr;
         private float _deadUnitsDestroyDelay;
         
         
-        public UnitBattleController(BattleSystemConstants battleSystemConstants, TargetFinder targetFinder)
+        public UnitBattleController(BattleSystemConstants battleSystemConstants,
+            IUnitsContainer unitsContainer,
+            TargetFinder targetFinder)
         {
+            _unitsContainer = unitsContainer;
             _targetFinder = targetFinder;
-            _enemyUnits = new ();
-            _defenderUnits = new ();
-            _deadUnits = new();
             _destinationPositionErrorSqr = 
                 battleSystemConstants.DestinationPositionError * battleSystemConstants.DestinationPositionError;
             _deadUnitsDestroyDelay = battleSystemConstants.DeadUnitsDestroyDelay;
@@ -37,23 +34,23 @@ namespace BattleSystem
         public void OnUpdate(float deltaTime)
         {
             
-            for (int i = 0; i < _enemyUnits.Count; i++)
+            for (int i = 0; i < _unitsContainer.EnemyUnits.Count; i++)
             {
-                IUnit unit = _enemyUnits[i];
+                IUnit unit = _unitsContainer.EnemyUnits[i];
 
                 ExecuteUnitUpdate(unit, deltaTime);
             }
             
-            for (int i = 0; i < _defenderUnits.Count; i++)
+            for (int i = 0; i < _unitsContainer.DefenderUnits.Count; i++)
             {
-                IUnit unit = _defenderUnits[i];
+                IUnit unit = _unitsContainer.DefenderUnits[i];
 
                 ExecuteUnitUpdate(unit, deltaTime);
             }
             
-            for (int i = 0; i < _deadUnits.Count; i++)
+            for (int i = 0; i < _unitsContainer.DeadUnits.Count; i++)
             {
-                IUnit unit = _deadUnits[i];
+                IUnit unit = _unitsContainer.DeadUnits[i];
 
                 UnitDeadState(unit, deltaTime);
             }
@@ -103,31 +100,33 @@ namespace BattleSystem
         public void AddUnit(IUnit unit)
         {
             if (unit == null) return;
-            if (_defenderUnits.Contains(unit)) return;
-            if (_enemyUnits.Contains(unit)) return;
             
             //Debug.Log("FifthBattleController->AddUnit: " + unit.View.SelfTransform.gameObject.name);
             
-            unit.OnReachedZeroHealth += UnitReachedZeroHealth;
-
             switch (unit.Stats.Faction)
             {
                 default:
                     break;
                 case UnitFactionType.Enemy:
                     {
-                        unit.Navigation.Enable();
-                        unit.UnitState.ChangeState(UnitState.Idle);
-
-                        _enemyUnits.Add(unit);
+                        if (!_unitsContainer.EnemyUnits.Contains(unit))
+                        {
+                            _unitsContainer.EnemyUnits.Add(unit);
+                            unit.OnReachedZeroHealth += UnitReachedZeroHealth;
+                            unit.Navigation.Enable();
+                            unit.UnitState.ChangeState(UnitState.Idle);
+                        }
                         break;
                     }
                 case UnitFactionType.Defender:
-                    {    
-                        unit.Navigation.Enable();
-                        unit.UnitState.ChangeState(UnitState.Idle);
-                        
-                        _defenderUnits.Add(unit);
+                    {
+                        if (!_unitsContainer.DefenderUnits.Contains(unit))
+                        {
+                            _unitsContainer.DefenderUnits.Add(unit);
+                            unit.OnReachedZeroHealth += UnitReachedZeroHealth;
+                            unit.Navigation.Enable();
+                            unit.UnitState.ChangeState(UnitState.Idle);
+                        }
                         break;
                     }
             }
@@ -141,23 +140,22 @@ namespace BattleSystem
             
             if (unit.Stats.Faction == UnitFactionType.Enemy)
             {
-                _enemyUnits.Remove(unit);
+                _unitsContainer.EnemyUnits.Remove(unit);
             }
             else if (unit.Stats.Faction == UnitFactionType.Defender)
             {
-                _defenderUnits.Remove(unit);
+                _unitsContainer.DefenderUnits.Remove(unit);
             }
-            _deadUnits.Add(unit);
+            _unitsContainer.DeadUnits.Add(unit);
             
         }
-
 
         public void RemoveUnit(IUnit unit)
         {
             if (unit.UnitState.CurrentState == UnitState.Die)
             {
                 unit.Disable();
-                _deadUnits.Remove(unit);
+                _unitsContainer.DeadUnits.Remove(unit);
             }
             else
             {
@@ -173,7 +171,7 @@ namespace BattleSystem
 
                         unit.Target.ResetTarget();
                         unit.Disable();
-                        _enemyUnits.Remove(unit);
+                        _unitsContainer.EnemyUnits.Remove(unit);
 
                         break;
                     }
@@ -183,7 +181,7 @@ namespace BattleSystem
 
                         unit.Target.ResetTarget();
                         unit.Disable();
-                        _defenderUnits.Remove(unit);
+                        _unitsContainer.DefenderUnits.Remove(unit);
                         break;
                     }
                 }
@@ -202,7 +200,8 @@ namespace BattleSystem
                 case UnitPriorityType.FarthestFoe:
                 case UnitPriorityType.SpecificFoe:
                 {
-                    List<IUnit> list = (unit.Stats.Faction == UnitFactionType.Enemy) ? _defenderUnits : _enemyUnits;
+                    List<IUnit> list = (unit.Stats.Faction == UnitFactionType.Enemy) ? 
+                        _unitsContainer.DefenderUnits : _unitsContainer.EnemyUnits;
 
                     IAttackTarget target = unit.Target.CurrentTarget;
                     if (!target.IsAlive)
@@ -490,7 +489,8 @@ namespace BattleSystem
         {
             IAttackTarget target = new NoneTarget();
             
-            List<IUnit> foeUnitList = (unit.Stats.Faction == UnitFactionType.Enemy) ? _defenderUnits : _enemyUnits;
+            List<IUnit> foeUnitList = (unit.Stats.Faction == UnitFactionType.Enemy) ? 
+                _unitsContainer.DefenderUnits : _unitsContainer.EnemyUnits;
 
             Vector3 unitPos = unit.GetPosition();
             float minDist = float.MaxValue;

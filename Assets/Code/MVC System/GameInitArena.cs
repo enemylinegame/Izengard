@@ -27,7 +27,8 @@ namespace Code.MVC_System
             var enemySpawner = new EnemySpawnController(sceneObjectsHolder.EnemySpawner);
 
             var warBuildingController = new WarBuildingsController(sceneObjectsHolder.MainTower, configs.MainTowerSettings);
-            
+
+            var unitsContainer = new UnitsContainer();
             var targetFinder = new TargetFinder(warBuildingController);
             var navigationUpdater = new NavigationUpdater();
             navigationUpdater.AddNavigationSurface(sceneObjectsHolder.GroundSurface);
@@ -35,7 +36,7 @@ namespace Code.MVC_System
             var defendersSpawner = new DefendersSpawnController(configs.DefendersSpawnSettings.UnitsCreationData,
                 GetPositions(sceneObjectsHolder.DefendersSpawnPoints));
             
-            var battleController = new UnitBattleController(configs.BattleSystemConst, targetFinder);
+            var battleController = new UnitBattleController(configs.BattleSystemConst, unitsContainer, targetFinder);
             
             var unitSpawnObserver = new UnitSpawnObserver(enemySpawner, defendersSpawner,
                 battleController);
