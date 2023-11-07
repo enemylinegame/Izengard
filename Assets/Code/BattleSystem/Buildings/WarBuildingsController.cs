@@ -11,7 +11,7 @@ namespace BattleSystem.Buildings
     public class WarBuildingsController : IWarBuildingsContainer, IOnController, IOnStart
     {
 
-        private const int MAIN_TOWER_ID = 12345;
+        private readonly IIdGenerator _idGenerator;
         
         private WarBuildingHandler _mainTower;
         private WarBuildingConfig _mainTowerConfig;
@@ -19,11 +19,13 @@ namespace BattleSystem.Buildings
         private IAttackTarget _mainTowerAsTarget;
 
 
-        public WarBuildingsController(WarBuildingView mainTowerView, WarBuildingConfig mainTowerConfig)
+        public WarBuildingsController(WarBuildingView mainTowerView, WarBuildingConfig mainTowerConfig, 
+            IIdGenerator idg)
         {
+            _idGenerator = idg;
             _mainTowerConfig = mainTowerConfig;
             _towerDefenceModel = new UnitDefenceModel(_mainTowerConfig.DefenceData);
-            _mainTower = new WarBuildingHandler(MAIN_TOWER_ID, mainTowerView, _towerDefenceModel, (int)_mainTowerConfig.Durability);
+            _mainTower = new WarBuildingHandler(_idGenerator.GetNext(), mainTowerView, _towerDefenceModel, (int)_mainTowerConfig.Durability);
         }
         
         public void OnStart()
