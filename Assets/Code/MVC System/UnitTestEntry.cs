@@ -4,6 +4,7 @@ using BattleSystem.Buildings;
 using BattleSystem.Buildings.Configs;
 using BattleSystem.Buildings.View;
 using Code.SceneConfigs;
+using Configs;
 using SpawnSystem;
 using Tools;
 using Tools.Navigation;
@@ -14,7 +15,9 @@ using UnityEngine;
 public class UnitTestEntry : MonoBehaviour
 {
     [SerializeField] private WarBuildingView _mainTower;
-    [SerializeField] private MainTowerConfig _mainTowerConfig;
+    [SerializeField] private WarBuildingConfig _mainTowerConfig;
+
+    [SerializeField] private BattleSystemConstants _battleSystemConst;
 
     [Header("Enemy Spawn Parametrs")]
     [SerializeField] private SpawnerView _enemySpawner;
@@ -42,7 +45,7 @@ public class UnitTestEntry : MonoBehaviour
     private TargetFinder _targetFinder;
     
     private EnemyTestBattleController _enemyBattleController;
-    private FifthBattleController _defenderBattleController;
+    private UnitBattleController _defenderBattleController;
 
     private EnemySpawnHandler _enemySpawnHandler;
 
@@ -80,10 +83,11 @@ public class UnitTestEntry : MonoBehaviour
             _defenderSpawnController = new DefenderSpawnTestController(_defenderSpawnPoints, _defenderSpawnSettings);
             _defenderSpawnController.OnUnitSpawned += OnCreatedUnit;
             _onUpdates.Add(_defenderSpawnController);
+            
+            var unitsContainer = new UnitsContainer();
 
-            _defenderBattleController = new FifthBattleController(_targetFinder);
+            _defenderBattleController = new UnitBattleController(_battleSystemConst, unitsContainer, _targetFinder);
             _onUpdates.Add(_defenderBattleController);
-            _onFixedUpdates.Add(_defenderBattleController);
 
             _defenderSpawnController.SpawnUnit(UnitType.Militiaman);
             _defenderSpawnController.SpawnUnit(UnitType.Militiaman);

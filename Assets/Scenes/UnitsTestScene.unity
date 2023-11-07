@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427194, b: 0.5645252, a: 1}
+  m_IndirectSpecularColor: {r: 0.43667555, g: 0.48427176, b: 0.56452405, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -19087,9 +19087,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mainTower: {fileID: 1859384421}
   _mainTowerConfig: {fileID: 11400000, guid: d0a3e9869b0b1e143a5c82feb9cb56eb, type: 2}
+  _battleSystemConst: {fileID: 11400000, guid: b3db18a81090ca741bc2a9eb72a85453, type: 2}
   _enemySpawner: {fileID: 498162221}
   _waveSettings: {fileID: 11400000, guid: dfcbe4ef25efae242907bc033371ac4b, type: 2}
-  _enableDefenders: 1
+  _enableDefenders: 0
   _defenderSpawnSettings: {fileID: 11400000, guid: 4adfce0bea1ba074f9cae3a049a55818, type: 2}
   _defenderSpawnPoints:
   - {fileID: 1123273412}
