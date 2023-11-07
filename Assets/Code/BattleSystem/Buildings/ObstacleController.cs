@@ -1,4 +1,5 @@
 ﻿using BattleSystem.Buildings.Interfaces;
+using System;
 using System.Collections.Generic;
 using Tools.Navigation;
 
@@ -14,6 +15,8 @@ namespace BattleSystem.Buildings
         private int _obstacleIndex = 12354;
 
         public List<IObstacle> ObstaclesCollection => _obstaclesCollection;
+
+        public event Action<IObstacle> OnObstalceRemoved;
 
         public ObstacleController(
             int obstPlacedSurfaceId, 
@@ -56,6 +59,8 @@ namespace BattleSystem.Buildings
             obstacle.Disable();
 
             _obstaclesCollection.Remove(obstacle);
+
+            OnObstalceRemoved?.Invoke(obstacle);
 
             _navigationUpdater.UpdateSurface(_obstPlacedSurfaceId);
         }

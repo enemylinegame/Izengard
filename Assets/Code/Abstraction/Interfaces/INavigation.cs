@@ -7,5 +7,7 @@
 
         void MoveTo(T position);
         void Stop();
+
+        bool CheckForPathComplete();
     }
 }

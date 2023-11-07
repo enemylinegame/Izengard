@@ -8,6 +8,7 @@ namespace EnemySystem
     {
         private readonly NavMeshAgent _navMesh;
         private readonly Vector3 _initPos;
+
         public EnemyNavigationModel(NavMeshAgent navMesh, Vector3 initPos)
         {
             _navMesh = navMesh;
@@ -50,6 +51,16 @@ namespace EnemySystem
             {
                 _navMesh.ResetPath();
             }
+        }
+
+        public bool CheckForPathComplete()
+        {
+            if (!_navMesh.isOnNavMesh)
+            {
+                return false;
+            }
+
+            return _navMesh.pathStatus == NavMeshPathStatus.PathComplete;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Abstraction;
 using BattleSystem.Buildings;
+using BattleSystem.Buildings.Interfaces;
 using BattleSystem.Models;
 using System;
 using System.Collections.Generic;
@@ -52,7 +53,23 @@ namespace BattleSystem
             ObstacleController obstacleController) : base(targetFinder)
         {
             _obstacleController = obstacleController;
+            _obstacleController.OnObstalceRemoved += UpdateEnemyObstalce;
         }
+
+        private void UpdateEnemyObstalce(IObstacle obstacle)
+        {
+
+            for (int i = 0; i < _enemyUnits.Count; i++)
+            {
+                IUnit unit = _enemyUnits[i];
+
+                if(unit.Target.CurrentTarget.Id == obstacle.Id)
+                {
+                    unit.Target.ResetTarget();
+                }
+            }
+        }
+
 
         public override void OnUpdate(float deltaTime)
         {
@@ -118,6 +135,55 @@ namespace BattleSystem
             }
         }
 
+
+       
+        private void UpdateTargetExistence(IUnit unit)
+        {
+            IAttackTarget target = unit.Target.CurrentTarget;
+
+            if (target is NoneTarget)
+            {
+                ChangeUnitState(unit, UnitState.Idle);
+                return;
+            }
+
+            switch (unit.Priority.Current.Priority)
+            {
+                case UnitPriorityType.MainTower:
+                    {
+                        var mainTowerTarget = targetFinder.GetMainTower();
+                        if (target.Id == mainTowerTarget.Id)
+                        {
+                            if (unit.Navigation.CheckForPathComplete() == false)
+                            {
+                                if (CheckBlockByObstacle(unit) == true)
+                                {
+                                    ChangeUnitState(unit, UnitState.Approach);
+                                }
+                            }
+                        }
+                        break;
+                    }
+                case UnitPriorityType.ClosestFoe:
+                case UnitPriorityType.FarthestFoe:
+                case UnitPriorityType.SpecificFoe:
+                    {
+                        if (_defenderUnits.Exists(def => def.Id == target.Id))
+                        {
+                            if (unit.Navigation.CheckForPathComplete() == false)
+                            {
+                                if (CheckBlockByObstacle(unit) == true)
+                                {
+                                    ChangeUnitState(unit, UnitState.Approach);
+                                }
+                            }
+                        }
+                        break;
+                    }
+            }
+        }
+
+
         public override void AddUnit(IUnit unit)
         {
             if (unit == null) return;
@@ -181,41 +247,6 @@ namespace BattleSystem
             _deadUnits.Remove(undead);
         }
 
-        protected void UpdateTargetExistence(IUnit unit)
-        {
-            IAttackTarget target = unit.Target.CurrentTarget;
-   
-            switch (unit.Priority.Current.Priority)
-            {
-                case UnitPriorityType.MainTower:
-                    {
-                        var mainTowerTarget = targetFinder.GetMainTower();
-                        if (unit.Target.CurrentTarget.Id != mainTowerTarget.Id)
-                        {
-                            if (!_obstacleController.ObstaclesCollection.Exists(obst => obst.Id == target.Id))
-                            {
-                                unit.Target.ResetTarget();
-                                ChangeUnitState(unit, UnitState.Idle);
-                                return;
-                            }
-                        }
-                        break;
-                    }
-                case UnitPriorityType.ClosestFoe:
-                case UnitPriorityType.FarthestFoe:
-                case UnitPriorityType.SpecificFoe:
-                    {
-                        if (unit.Target.CurrentTarget is NoneTarget)
-                        {
-                            ChangeUnitState(unit, UnitState.Idle);
-                            return;
-                        }
-                        break;
-                    }
-            }
-        }
-
-
         protected void UnitIdleState(IUnit unit, float deltaTime)
         {        
             IAttackTarget target = GetTarget(unit);
@@ -224,8 +255,6 @@ namespace BattleSystem
             {
                 unit.Target.SetTarget(target);
                 
-                CheckForObstacle(unit);
-
                 ChangeUnitState(unit, UnitState.Approach);
                 MoveUnitToTarget(unit, target);
             }
@@ -500,15 +529,21 @@ namespace BattleSystem
 
         #endregion
 
-        private void CheckForObstacle(IUnit unit)
+        private bool CheckBlockByObstacle(IUnit unit)
         {
             var existObstacle = GetObstacle(unit);
             
             if(existObstacle is not NoneTarget)
             {
-                unit.Target.ResetTarget();
-                unit.Target.SetTarget(existObstacle);
+                if(unit.Target.CurrentTarget.Id != existObstacle.Id)
+                {
+                    unit.Target.ResetTarget();
+                    unit.Target.SetTarget(existObstacle);
+
+                    return true;
+                }
             }
+            return false;
         }
 
         public IAttackTarget GetObstacle(IUnit unit)

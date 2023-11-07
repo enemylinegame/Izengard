@@ -64,8 +64,10 @@ public class UnitTestEntry : MonoBehaviour
 
         _mainTowerController = new WarBuildingsController(_mainTower, _mainTowerConfig);
         _obstacleController = new ObstacleController(_surfaceId, _navigationUpdater, _defendWalls);
+        
+        var unitsContainer = new UnitsContainer();
 
-        _targetFinder = new TargetFinder(_mainTowerController);
+        _targetFinder = new TargetFinder(_mainTowerController, unitsContainer);
 
         _enemySpawnController = new EnemySpawnController(_enemySpawner);
         _enemySpawnController.OnUnitSpawned += OnCreatedUnit;
@@ -84,7 +86,7 @@ public class UnitTestEntry : MonoBehaviour
             _defenderSpawnController.OnUnitSpawned += OnCreatedUnit;
             _onUpdates.Add(_defenderSpawnController);
             
-            var unitsContainer = new UnitsContainer();
+   
 
             _defenderBattleController = new UnitBattleController(_battleSystemConst, unitsContainer, _targetFinder);
             _onUpdates.Add(_defenderBattleController);
