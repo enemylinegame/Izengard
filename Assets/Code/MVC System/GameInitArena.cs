@@ -10,12 +10,12 @@ using Tools.Navigation;
 using UnitSystem;
 using UnityEngine;
 
-namespace Code.MVC_System.Mocks
+namespace Code.MVC_System
 {
-    public class GameInitMock
+    public class GameInitArena
     {
         
-        public GameInitMock( 
+        public GameInitArena( 
             Controller controller, 
             ConfigsHolder configs, 
             AudioSource clickAudioSource, 
@@ -27,18 +27,19 @@ namespace Code.MVC_System.Mocks
             var enemySpawner = new EnemySpawnController(sceneObjectsHolder.EnemySpawner);
 
             var warBuildingController = new WarBuildingsController(sceneObjectsHolder.MainTower, configs.MainTowerSettings);
-            
-            var targetFinder = new TargetFinder(warBuildingController);
+
+            var unitsContainer = new UnitsContainer();
+            var targetFinder = new TargetFinder(warBuildingController, unitsContainer);
             var navigationUpdater = new NavigationUpdater();
             navigationUpdater.AddNavigationSurface(sceneObjectsHolder.GroundSurface);
 
             var defendersSpawner = new DefendersSpawnController(configs.DefendersSpawnSettings.UnitsCreationData,
                 GetPositions(sceneObjectsHolder.DefendersSpawnPoints));
             
-            var fifthBattleController = new FifthBattleController(targetFinder);
+            var battleController = new UnitBattleController(configs.BattleSystemConst, unitsContainer, targetFinder);
             
             var unitSpawnObserver = new UnitSpawnObserver(enemySpawner, defendersSpawner,
-                fifthBattleController);
+                battleController);
             
             var enemySpawnLogic = new EnemySpawnLogicMock(enemySpawner);
             var defendersSpawnLogic = new DefendersSpawnLogicMock(defendersSpawner);
@@ -51,7 +52,7 @@ namespace Code.MVC_System.Mocks
             controller.Add(timeRemainingService);
             controller.Add(enemySpawner);
             controller.Add(gameStateManager);
-            controller.Add(fifthBattleController);
+            controller.Add(battleController);
             controller.Add(warBuildingController);
         }
 

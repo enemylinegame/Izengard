@@ -1,30 +1,34 @@
-﻿using Abstraction;
+using System.Collections.Generic;
+using UnityEngine;
+
+using Abstraction;
 using BattleSystem.Buildings;
 using BattleSystem.Buildings.Interfaces;
 using BattleSystem.Models;
 using UnitSystem;
 using UnitSystem.Enum;
-using UnityEngine;
+
 
 namespace BattleSystem
 {
     public class TargetFinder
     {
-        private readonly LayerMask _buildingsMask;
-        private readonly LayerMask _enemyMask;
-        private readonly LayerMask _defenderMask;
-        private readonly IAttackTarget _defaultTarget;
 
         private IWarBuildingsContainer _warBuildingsContainer;
+        private IUnitsContainer _unitsContainer;
+        private readonly IAttackTarget _defaultTarget;
+        
         
         public TargetFinder(IWarBuildingsContainer container)
         {
             _warBuildingsContainer = container;
-
-            _buildingsMask = LayerMask.GetMask("Building");
-            _enemyMask =  LayerMask.GetMask("Enemy");
-            _defenderMask = LayerMask.GetMask("Defender");
-
+            _defaultTarget = new NoneTarget();
+        }
+        
+        public TargetFinder(IWarBuildingsContainer warBuildingsContainer, IUnitsContainer unitsContainer)
+        {
+            _warBuildingsContainer = warBuildingsContainer;
+            _unitsContainer = unitsContainer;
             _defaultTarget = new NoneTarget();
         }
 
@@ -33,115 +37,77 @@ namespace BattleSystem
             return _warBuildingsContainer.GetMainTowerAsAttackTarget();
         }
 
-        public IAttackTarget GetClosestUnit(IUnit unit)
+        public IAttackTarget GetTarget(IUnit unit)
         {
-            var findingUnit = _defaultTarget;
+            IAttackTarget result = new NoneTarget();
 
-            var searchMask = GetUnitMask(unit.Stats.Faction);
-            var unitPosition = unit.GetPosition();
-            var searchRange = unit.Stats.DetectionRange.GetValue();
-            
-            var findedColliders = Physics.OverlapSphere(unitPosition, searchRange, searchMask);
-            
-            float maxDist = float.MaxValue;
-
-            foreach (var collider  in findedColliders)
+            while (unit.Priority.GetNext())
             {
-                var findGO = collider.gameObject;
+                var currentPriority = unit.Priority.Current;
 
-                if (findGO.TryGetComponent<IAttackTarget>(out var findedTarget))
+                switch (currentPriority.Priority)
                 {
-                    var distance
-                        = Vector3.Distance(unitPosition, findedTarget.Position);
+                    default:
+                    case UnitPriorityType.MainTower:
+                        {
+                            result = GetMainTower();
+                            break;
+                        }
 
-                    if (distance < maxDist)
-                    {
-                        maxDist = distance;
-                        findingUnit = findedTarget;
-                    }
+                    case UnitPriorityType.ClosestFoe:
+                        {
+                            result = GetClosestFoe(unit);
+                            break;
+                        }
+                    case UnitPriorityType.SpecificFoe:
+                        {
+                            result = GetClosestFoe(unit, currentPriority.Type);
+                            break;
+                        }
+                }
+
+                if (result is not NoneTarget)
+                {
+                    break;
                 }
             }
 
-            return findingUnit;
+            unit.Priority.Reset();
+
+            return result;
         }
 
-        public IAttackTarget GetClosestUnit(IUnit unit, UnitRoleType findingRole)
+        private IAttackTarget GetClosestFoe(IUnit unit, UnitType targetType = UnitType.None)
         {
-            var findingUnit = _defaultTarget;
+            IAttackTarget target = new NoneTarget();
+            
+            List<IUnit> foeUnitList = (unit.Stats.Faction == UnitFactionType.Enemy) ? 
+                _unitsContainer.DefenderUnits : _unitsContainer.EnemyUnits;
 
-            var searchMask = GetUnitMask(unit.Stats.Faction);
-            var unitPosition = unit.GetPosition();
-            var searchRange = unit.Stats.DetectionRange.GetValue();
+            Vector3 unitPos = unit.GetPosition();
+            float minDist = float.MaxValue;
 
-            var findedColliders = Physics.OverlapSphere(unitPosition, searchRange, searchMask);
-
-            float maxDist = float.MaxValue;
-
-            foreach (var collider in findedColliders)
+            for (int i = 0; i < foeUnitList.Count; i++)
             {
-                var findGO = collider.gameObject;
-                
-                if (findGO.tag != findingRole.ToString())
+                IUnit foeUnit = foeUnitList[i];
+
+                if( (targetType != UnitType.None && foeUnit.Stats.Type != targetType) || !foeUnit.IsAlive )
                     continue;
 
-                if (findGO.TryGetComponent<IAttackTarget>(out var findedTarget))
-                {
-                    var distance
-                        = Vector3.Distance(unitPosition, findedTarget.Position);
+                Vector3 defenderPos = foeUnit.GetPosition();
 
-                    if (distance < maxDist)
-                    {
-                        maxDist = distance;
-                        findingUnit = findedTarget;
-                    }
+                float distance = Vector3.Distance(unitPos, defenderPos);
+                if (distance < minDist)
+                {
+                    minDist = distance;
+                    
+                    
+                    target = new TargetModel(foeUnit, foeUnit.View);
                 }
             }
 
-            return findingUnit;
+            return target;
         }
 
-
-        public IAttackTarget GetFarthestUnit(IUnit unit)
-        {
-            var findingUnit = _defaultTarget;
-
-            var searchMask = GetUnitMask(unit.Stats.Faction);
-            var unitPosition = unit.GetPosition();
-            var searchRange = unit.Stats.DetectionRange.GetValue();
-
-            var findedColliders = Physics.OverlapSphere(unitPosition, searchRange, searchMask);
-
-            float minDist = 0;
-
-            foreach (var collider in findedColliders)
-            {
-                var findGO = collider.gameObject;
-
-                if (findGO.TryGetComponent<IAttackTarget>(out var findedTarget))
-                {
-                    var distance
-                        = Vector3.Distance(unitPosition, findedTarget.Position);
-
-                    if (distance > minDist)
-                    {
-                        minDist = distance;
-                        findingUnit = findedTarget;
-                    }
-                }
-            }
-
-            return findingUnit;
-        }
-
-        private int GetUnitMask(UnitFactionType unitFaction)
-        {
-            if (unitFaction == UnitFactionType.Enemy)
-                return _defenderMask;
-
-            if (unitFaction == UnitFactionType.Defender)
-                return _enemyMask;
-
-            return 0;
-        }
     }
 }

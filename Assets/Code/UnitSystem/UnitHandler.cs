@@ -37,6 +37,8 @@ namespace UnitSystem
         public int Id => _id;
 
         public Vector3 StartPosition => _startPosition;
+        
+        public float TimeProgress { get; set; }
 
         public event Action<IUnit> OnReachedZeroHealth;
 
