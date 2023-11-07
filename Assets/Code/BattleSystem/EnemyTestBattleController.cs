@@ -4,9 +4,11 @@ using BattleSystem.Buildings.Interfaces;
 using BattleSystem.Models;
 using System;
 using System.Collections.Generic;
+using Tools;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
+using NoneTarget = Abstraction.NoneTarget;
 
 namespace BattleSystem
 {
@@ -48,12 +50,45 @@ namespace BattleSystem
 
         private readonly ObstacleController _obstacleController;
 
+        private TimeRemaining _timer;
+
         public EnemyTestBattleController(
             TargetFinder targetFinder, 
             ObstacleController obstacleController) : base(targetFinder)
         {
             _obstacleController = obstacleController;
             _obstacleController.OnObstalceRemoved += UpdateEnemyObstalce;
+
+            _timer = new TimeRemaining(UpdateTargetPosition, 1.5f, true);
+            TimersHolder.AddTimer(_timer);
+        }
+
+        private void UpdateTargetPosition()
+        {
+            for (int i = 0; i < _enemyUnits.Count; i++)
+            {
+                IUnit unit = _enemyUnits[i];
+
+                IAttackTarget target = unit.Target.CurrentTarget;
+
+                if(target is not NoneTarget)
+                {
+                    switch (unit.UnitState.CurrentState)
+                    {
+                        default:
+                            break;
+                        case UnitState.Move:
+                        case UnitState.Approach:
+                            {
+                                if (unit.Target.IsTargetChangePosition())
+                                {
+                                    MoveUnitToTarget(unit, unit.Target.CurrentTarget);
+                                }
+                                break;
+                            }
+                    }
+                }
+            }
         }
 
         private void UpdateEnemyObstalce(IObstacle obstacle)
@@ -200,6 +235,7 @@ namespace BattleSystem
                         unit.UnitState.ChangeState(UnitState.Idle);
 
                         _enemyUnits.Add(unit);
+
                         break;
                     }
                 case UnitFactionType.Defender:
@@ -294,15 +330,7 @@ namespace BattleSystem
             if (distanceSqr <= unit.Offence.MaxRange * unit.Offence.MaxRange)
             {
                 StopUnit(unit);
-
                 ChangeUnitState(unit, UnitState.Attack);
-            }
-            else
-            {
-                if (unit.Target.IsTargetChangePosition())
-                {
-                    unit.Navigation.MoveTo(targetPos);
-                }
             }
         }
 
