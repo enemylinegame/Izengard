@@ -7,6 +7,7 @@ namespace UnitSystem.Data
     public class UnitOffenceData : IUnitOffenceData
     {
         [SerializeField] private UnitAttackType _attackType;
+        [SerializeField] private UnitAbilityType _abilityType;
         [SerializeField] private float _minRange = 0f;
         [SerializeField] private float _maxRange = 5f;
         [SerializeField] private float _castingTime = 1f;
@@ -27,6 +28,7 @@ namespace UnitSystem.Data
         #region IUnitOffenceData
 
         public UnitAttackType AttackType => _attackType;
+        public UnitAbilityType AbilityType => _abilityType;
 
         public float MinRange => _minRange;
 

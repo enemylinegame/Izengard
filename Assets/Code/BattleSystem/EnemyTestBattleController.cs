@@ -53,7 +53,7 @@ namespace BattleSystem
         private TimeRemaining _timer;
 
         public EnemyTestBattleController(
-            TargetFinder targetFinder, 
+            TargetFinder targetFinder,
             ObstacleController obstacleController) : base(targetFinder)
         {
             _obstacleController = obstacleController;
@@ -71,7 +71,7 @@ namespace BattleSystem
 
                 IAttackTarget target = unit.Target.CurrentTarget;
 
-                if(target is not NoneTarget)
+                if (target is not NoneTarget)
                 {
                     switch (unit.UnitState.CurrentState)
                     {
@@ -98,7 +98,7 @@ namespace BattleSystem
             {
                 IUnit unit = _enemyUnits[i];
 
-                if(unit.Target.CurrentTarget.Id == obstacle.Id)
+                if (unit.Target.CurrentTarget.Id == obstacle.Id)
                 {
                     unit.Target.ResetTarget();
                 }
@@ -171,7 +171,7 @@ namespace BattleSystem
         }
 
 
-       
+
         private void UpdateTargetExistence(IUnit unit)
         {
             IAttackTarget target = unit.Target.CurrentTarget;
@@ -249,13 +249,13 @@ namespace BattleSystem
         private void UnitReachedZeroHealth(IUnit unit)
         {
             unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
-           
+
             if (unit.Stats.Faction == UnitFactionType.Enemy)
-            {                           
+            {
                 ChangeUnitState(unit, UnitState.Die);
-                
+
                 unit.Target.ResetTarget();
-                
+
                 unit.Navigation.Stop();
 
                 _enemyUnits.Remove(unit);
@@ -265,7 +265,7 @@ namespace BattleSystem
             }
             else if (unit.Stats.Faction == UnitFactionType.Defender)
             {
-                var linkedEnemy = 
+                var linkedEnemy =
                     _enemyUnits.FindAll(e => e.Target.CurrentTarget == unit.View);
 
                 foreach (var enemy in linkedEnemy)
@@ -284,13 +284,13 @@ namespace BattleSystem
         }
 
         protected void UnitIdleState(IUnit unit, float deltaTime)
-        {        
+        {
             IAttackTarget target = GetTarget(unit);
-            
+
             if (target.Id >= 0)
             {
                 unit.Target.SetTarget(target);
-                
+
                 ChangeUnitState(unit, UnitState.Approach);
                 MoveUnitToTarget(unit, target);
             }
@@ -365,8 +365,16 @@ namespace BattleSystem
                                 attack.TimingProgress += deltaTime;
                                 if (attack.TimingProgress >= unit.Offence.CastingTime)
                                 {
+                                    var unitDamage = unit.Offence.GetDamage();
 
-                                    target.TakeDamage(unit.Offence.GetDamage());
+                                    target.TakeDamage(unitDamage); // damage main target
+
+                                    var additionTargets = GetAdditionAttackTargets(unit);
+                                    for (int i = 0; i < additionTargets.Count; i++)
+                                    {
+                                        additionTargets[i].TakeDamage(unitDamage);
+                                    }
+
                                     attack.Phase = AttackPhase.None;
                                     attack.TimingProgress = 0.0f;
 
@@ -397,6 +405,91 @@ namespace BattleSystem
                 }
 
             }
+        }
+
+        private List<IAttackTarget> GetAdditionAttackTargets(IUnit unit)
+        {
+            var result = new List<IAttackTarget>();
+
+            switch (unit.Offence.AbilityType)
+            {
+                default:
+                    break;
+                case UnitAbilityType.ClosedAOE:
+                    {
+                        var unitPos = unit.GetPosition();
+                        var range = unit.Offence.MaxRange;
+
+                        var findedColl = Physics.OverlapSphere(unitPos, range);
+
+                        for (int i = 0; i < findedColl.Length; i++)
+                        {
+                            if (findedColl[i].gameObject.TryGetComponent<ITarget>(out var findedTarget))
+                            {
+                                if (findedTarget.Id != unit.Target.CurrentTarget.Id
+                                    && IsTargetInUnitRangeAngle(unit, findedTarget))
+                                {
+                                    var target = GetAttackTarget(findedTarget);
+                                    if (target is not NoneTarget)
+                                    {
+                                        result.Add(target);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    }
+            }
+
+            return result;
+
+        }
+
+        private bool IsTargetInUnitRangeAngle(IUnit unit, ITarget target, float angle = 120)
+        {
+            var unitPos = unit.GetPosition();
+            var targetPos = target.Position;
+
+            Vector3 direction = (targetPos - unitPos);
+
+            float dot = Vector3.Dot(unit.View.SelfTransform.forward, direction.normalized);
+
+            bool result;
+
+            if (dot < 1)
+            {
+                float angleRadians = Mathf.Acos(dot);
+                float angleDeg = angleRadians * Mathf.Rad2Deg;
+                result = (angleDeg <= angle);
+            }
+            else
+            {
+                result = true;
+            }
+
+            return result;
+        }
+
+        private IAttackTarget GetAttackTarget(ITarget target)
+        {
+            var mainTower = targetFinder.GetMainTower();
+            if (mainTower.Id == target.Id)
+                return mainTower;
+
+            if (_defenderUnits.Exists(def => def.Id == target.Id))
+            {
+                var defender = _defenderUnits.Find(def => def.Id == target.Id);
+                return new TargetModel(defender, target);
+            }
+
+            var obstacles = _obstacleController.ObstaclesCollection;
+            if (obstacles.Exists(def => def.Id == target.Id))
+            {
+                var obstacle = obstacles.Find(def => def.Id == target.Id);
+                return new TargetModel(obstacle, target);
+            }
+
+            return new NoneTarget();
         }
 
         private bool IsAttackDistanceSuitable(IUnit attacker, Vector3 targetPosition)
@@ -560,10 +653,10 @@ namespace BattleSystem
         private bool CheckBlockByObstacle(IUnit unit)
         {
             var existObstacle = GetObstacle(unit);
-            
-            if(existObstacle is not NoneTarget)
+
+            if (existObstacle is not NoneTarget)
             {
-                if(unit.Target.CurrentTarget.Id != existObstacle.Id)
+                if (unit.Target.CurrentTarget.Id != existObstacle.Id)
                 {
                     unit.Target.ResetTarget();
                     unit.Target.SetTarget(existObstacle);

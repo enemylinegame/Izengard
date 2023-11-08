@@ -5,7 +5,7 @@ namespace UnitSystem
     public interface IUnitOffenceData
     {
         UnitAttackType AttackType { get; }
-        
+        UnitAbilityType AbilityType { get; }
         float MinRange { get; }
         float MaxRange { get; }
 

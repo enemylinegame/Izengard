@@ -9,6 +9,9 @@ namespace UnitSystem.Model
         private readonly IUnitOffenceData _offenceData;
         
         public UnitAttackType AttackType => _offenceData.AttackType;
+
+        public UnitAbilityType AbilityType => _offenceData.AbilityType;
+
         public float MinRange => _offenceData.MinRange;
         public float MaxRange => _offenceData.MaxRange;
 

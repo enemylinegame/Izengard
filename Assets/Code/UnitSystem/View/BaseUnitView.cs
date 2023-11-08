@@ -52,6 +52,11 @@ namespace UnitSystem.View
         protected abstract void SetUnitAnimator();
         protected abstract void SetCollision();
 
+        private void FixedUpdate()
+        {
+            Debug.DrawRay(transform.position, transform.forward * 1, Color.red, 0); 
+        }
+
         #region ITarget
 
         public int Id => _unitId;
