@@ -8,6 +8,7 @@ using Tools;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 using NoneTarget = Abstraction.NoneTarget;
 
 namespace BattleSystem
@@ -417,24 +418,14 @@ namespace BattleSystem
                     break;
                 case UnitAbilityType.ClosedAOE:
                     {
-                        var unitPos = unit.GetPosition();
-                        var range = unit.Offence.MaxRange;
 
-                        var findedColl = Physics.OverlapSphere(unitPos, range);
-
-                        for (int i = 0; i < findedColl.Length; i++)
+                        var targets = FindTargetsInAOERange(unit, unit.Offence.MaxRange);
+                        for (int i = 0; i < targets.Count; i++) 
                         {
-                            if (findedColl[i].gameObject.TryGetComponent<ITarget>(out var findedTarget))
+                            var target = GetAttackTarget(targets[i]);
+                            if (target is not NoneTarget)
                             {
-                                if (findedTarget.Id != unit.Target.CurrentTarget.Id
-                                    && IsTargetInUnitRangeAngle(unit, findedTarget))
-                                {
-                                    var target = GetAttackTarget(findedTarget);
-                                    if (target is not NoneTarget)
-                                    {
-                                        result.Add(target);
-                                    }
-                                }
+                                result.Add(target);
                             }
                         }
                         break;
@@ -445,26 +436,30 @@ namespace BattleSystem
 
         }
 
-        private bool IsTargetInUnitRangeAngle(IUnit unit, ITarget target, float angle = 120)
+        private List<ITarget> FindTargetsInAOERange(IUnit unit, float aoeRange, float angle = 120)
         {
+            var result = new List<ITarget>();
+
             var unitPos = unit.GetPosition();
-            var targetPos = target.Position;
+           
+            var targetsInViewRadius = Physics.OverlapSphere(unitPos, aoeRange);
 
-            Vector3 direction = (targetPos - unitPos);
-
-            float dot = Vector3.Dot(unit.View.SelfTransform.forward, direction.normalized);
-
-            bool result;
-
-            if (dot < 1)
+            for (int i = 0; i < targetsInViewRadius.Length; i++)
             {
-                float angleRadians = Mathf.Acos(dot);
-                float angleDeg = angleRadians * Mathf.Rad2Deg;
-                result = (angleDeg <= angle);
-            }
-            else
-            {
-                result = true;
+                if (targetsInViewRadius[i].gameObject.TryGetComponent<ITarget>(out var findedTarget))
+                {
+                    if (findedTarget.Id != unit.Target.CurrentTarget.Id)
+                    {
+                        var targetPos = findedTarget.Position;
+
+                        Vector3 dirToTarget = (targetPos - unitPos).normalized;
+
+                        if (Vector3.Angle(unit.View.SelfTransform.forward, dirToTarget) < angle / 2)
+                        {
+                            result.Add(findedTarget);
+                        }
+                    }
+                }
             }
 
             return result;
