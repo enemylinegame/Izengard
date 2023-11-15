@@ -21,6 +21,7 @@ public class UnitTestEntry : MonoBehaviour
     [SerializeField] private NavigationSurfaceView _groundSurface;
 
     private TimeRemainingController timeRemainingController;
+    private IdGenerator _idGenerator;
 
     private NavigationUpdater _navigationUpdater;
     private EnemySpawnController _enemySpawnController;
@@ -37,17 +38,19 @@ public class UnitTestEntry : MonoBehaviour
 
     private void Start()
     {
+        _idGenerator = new IdGenerator();
         timeRemainingController = new TimeRemainingController();
         _onUpdates.Add(timeRemainingController);
 
         _navigationUpdater = new NavigationUpdater();
         _navigationUpdater.AddNavigationSurface(_groundSurface);
         
-        _enemySpawnController = new EnemySpawnController(_enemySpawner);
+        _enemySpawnController = new EnemySpawnController(_enemySpawner, _idGenerator);
         _enemySpawnController.OnUnitSpawned += OnCreatedUnit;
         _onUpdates.Add(_enemySpawnController);
 
-        _defenderSpawnController = new DefenderSpawnTestController(_defenderSpawnPoints, _defenderSpawnSettings);
+        _defenderSpawnController = new DefenderSpawnTestController(_defenderSpawnPoints, _defenderSpawnSettings, 
+            _idGenerator);
         _defenderSpawnController.OnUnitSpawned += OnCreatedUnit;
         _onUpdates.Add(_defenderSpawnController);
 

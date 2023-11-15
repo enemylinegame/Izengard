@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace BattleSystem.Buildings.Configs
 {
-    [CreateAssetMenu(fileName = nameof(MainTowerConfig), menuName = "Building/" + nameof(MainTowerConfig))]
-    public class MainTowerConfig : ScriptableObject
+    [CreateAssetMenu(fileName = nameof(WarBuildingConfig), menuName = "Building/" + nameof(WarBuildingConfig))]
+    public class WarBuildingConfig : ScriptableObject
     {
         [field: SerializeField] public uint Durability { get; private set; }
         [field: SerializeField] public UnitDefenceData DefenceData { get; private set; }

@@ -115,21 +115,21 @@ namespace BattleSystem
 
         private void ExecuteIdleState(UnitData unit, float deltaTime)
         {
-            IAttackTarget foundTarget = targetFinder.GetClosestUnit(unit.Unit);
-            if (foundTarget is not NoneTarget)
-            {
-                //IUnit target = GetUnitByView(foundTarget);
- 
-                if (foundTarget.Id > 0)
-                {
-                    unit.Unit.Target.SetTarget(foundTarget);
-
-                    TargetData target = _enemies.Find(u => u.Unit.Id == foundTarget.Id);
-                    unit.AttackerModel.SetTarget(target);
-                    ChangeState(unit, UnitState.Move);
-                }
-                
-            }
+            // IAttackTarget foundTarget = targetFinder.GetClosestUnit(unit.Unit);
+            // if (foundTarget is not NoneTarget)
+            // {
+            //     //IUnit target = GetUnitByView(foundTarget);
+            //
+            //     if (foundTarget.Id > 0)
+            //     {
+            //         unit.Unit.Target.SetTarget(foundTarget);
+            //
+            //         TargetData target = _enemies.Find(u => u.Unit.Id == foundTarget.Id);
+            //         unit.AttackerModel.SetTarget(target);
+            //         ChangeState(unit, UnitState.Move);
+            //     }
+            //     
+            // }
         }
 
         private void ExecuteMoveState(UnitData unitData, float deltaTime)
