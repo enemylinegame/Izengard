@@ -205,32 +205,11 @@ namespace BattleSystem
 
         private void UpdateTargetExistence(IUnit unit)
         {
-            switch (unit.Priority.Current.Priority)
+            IAttackTarget target = unit.Target.CurrentTarget;
+            if (!target.IsAlive)
             {
-                case UnitPriorityType.MainTower:
-                    {
-                        break;
-                    }
-                case UnitPriorityType.ClosestFoe:
-                case UnitPriorityType.FarthestFoe:
-                case UnitPriorityType.SpecificFoe:
-                {
-                    List<IUnit> list = (unit.Stats.Faction == UnitFactionType.Enemy) ? 
-                        _unitsContainer.DefenderUnits : _unitsContainer.EnemyUnits;
-
-                    IAttackTarget target = unit.Target.CurrentTarget;
-                    if (!target.IsAlive)
-                    {
-                        unit.Target.ResetTarget();
-                        ChangeUnitState(unit, UnitState.Idle);
-                    }
-                    else if (!list.Exists(def => def.Id == target.Id)) 
-                    {
-                        unit.Target.ResetTarget();
-                        ChangeUnitState(unit, UnitState.Idle);
-                    }
-                    break;
-                }
+                unit.Target.ResetTarget();
+                ChangeUnitState(unit, UnitState.Idle);
             }
         }
 
@@ -295,7 +274,10 @@ namespace BattleSystem
             }
             else
             {
-                unit.Navigation.MoveTo(targetPos);
+                if (unit.Target.IsTargetChangePosition())
+                {
+                    unit.Navigation.MoveTo(targetPos);
+                }
             }
         }
 
