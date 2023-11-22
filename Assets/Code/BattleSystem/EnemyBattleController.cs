@@ -1,6 +1,5 @@
 using System;
 using Abstraction;
-using System.Collections.Generic;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
@@ -9,22 +8,18 @@ namespace BattleSystem
 {
     public class EnemyBattleController : BaseBattleController
     {
-        private List<IUnit> _enemyUnitCollection;
-        private List<IUnit> _defenderUnitCollection;
-
-
-        public EnemyBattleController(TargetFinder targetFinder) : base(targetFinder)
+        public EnemyBattleController(TargetFinder targetFinder, UnitsContainer unitsContainer) 
+            : base(targetFinder, unitsContainer)
         {
-            _enemyUnitCollection = new List<IUnit>();
-            _defenderUnitCollection = new List<IUnit>();
+
         }
 
-        public override void OnUpdate(float deltaTime)
+        protected override void ExecuteOnUpdate(float deltaTime)
         {
-            for (int i=0; i < _enemyUnitCollection.Count; i++)
+            for (int i = 0; i < unitsContainer.EnemyUnits.Count; i++)
             {
-                var unit = _enemyUnitCollection[i];
-               
+                var unit = unitsContainer.EnemyUnits[i];
+
                 UpdateTarget(unit);
                 switch (unit.UnitState.CurrentState)
                 {
@@ -38,15 +33,7 @@ namespace BattleSystem
                         }
                     case UnitState.Move:
                         {
-                            UnitMoveState(unit, deltaTime);   
-                            break;
-                        }
-                    case UnitState.Approach:
-                        {
-                            break;
-                        }
-                    case UnitState.Search:
-                        {
+                            UnitMoveState(unit, deltaTime);
                             break;
                         }
                     case UnitState.Attack:
@@ -60,83 +47,6 @@ namespace BattleSystem
                         }
                 }
 
-            }
-        }
-
-        public override void OnFixedUpdate(float fixedDeltaTime)
-        {
-            for (int i =0; i < _enemyUnitCollection.Count; i++)
-            {
-                var unit = _enemyUnitCollection[i];
-            }
-        }
-
-        public override void AddUnit(IUnit unit)
-        {
-            unit.OnReachedZeroHealth += UnitReachedZeroHealth;
-            switch (unit.Stats.Faction)
-            {
-                default:
-                    break;
-                case UnitFactionType.Enemy:
-                    {
-                        unit.OnAttackProcessEnd += ExecuteFight;
-
-                        unit.Navigation.Enable();
-                        unit.UnitState.ChangeState(UnitState.Idle);
-                        
-                        _enemyUnitCollection.Add(unit);
-                        break;
-                    }
-                case UnitFactionType.Defender:
-                    {    
-                        _defenderUnitCollection.Add(unit);
-                        break;
-                    }
-            }
-        }
-      
-        private void UnitReachedZeroHealth(IUnit unit)
-        {
-            RemoveUnit(unit);
-        }
-
-
-        public void RemoveUnit(IUnit unit)
-        {
-            unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
-
-            switch (unit.Stats.Faction)
-            {
-                default:
-                    break;
-                case UnitFactionType.Enemy:
-                    {
-                        Debug.Log($"Enemy[{unit.Id}]_{unit.Stats.Type} - dead");
-
-                        unit.OnAttackProcessEnd -= ExecuteFight;
-
-                        unit.Disable();
-
-                        unit.Target.ResetTarget();
-
-                        _enemyUnitCollection.Remove(unit);
-
-                        break;
-                    }
-                case UnitFactionType.Defender:
-                    {
-                        var linkedEnemy = 
-                            _enemyUnitCollection.FindAll(e => e.Target.CurrentTarget == unit.View);
-
-                        foreach(var enemy in linkedEnemy)
-                        {
-                            enemy.Target.ResetTarget();
-                        }
-
-                        _defenderUnitCollection.Remove(unit);
-                        break;
-                    }
             }
         }
 
@@ -170,7 +80,7 @@ namespace BattleSystem
             }
         }
 
-        private void UnitIdleState(IUnit unit, float deltaTime)
+        protected override void UnitIdleState(IUnit unit, float deltaTime)
         {
             IAttackTarget target = GetTarget(unit);
             unit.Target.SetTarget(target);
@@ -179,7 +89,7 @@ namespace BattleSystem
             ChangeUnitState(unit, UnitState.Move);
         }
 
-        private void UnitMoveState(IUnit unit, float deltaTime)
+        protected override void UnitMoveState(IUnit unit, float deltaTime)
         {
             Vector3 turgentPos = unit.Target.CurrentTarget.Position;
             float distance = GetDistanceToTarget(unit.GetPosition(), turgentPos);
@@ -191,7 +101,7 @@ namespace BattleSystem
             }
         }
 
-        private void UnitAttackState(IUnit unit, float deltaTime)
+        protected override void UnitAttackState(IUnit unit, float deltaTime)
         {
             var target = unit.Target.CurrentTarget;
       
@@ -208,7 +118,7 @@ namespace BattleSystem
                     case UnitPriorityType.FarthestFoe:
                     case UnitPriorityType.SpecificFoe:
                         {
-                            var targetUnit = _defenderUnitCollection.Find(u => u.Id == target.Id);
+                            var targetUnit = unitsContainer.DefenderUnits.Find(u => u.Id == target.Id);
                             
                             float timeSinceLastAttack = Time.fixedTime - unit.Offence.LastAttackTime;
                             
@@ -224,16 +134,14 @@ namespace BattleSystem
             }
         }
 
+        protected override void UnitDeadState(IUnit unit, float deltaTime) { }
+
         private void ExecuteFight(IDamageDealer damageDealer, IDamageable damageableTarget)
         {
             var damage = damageDealer.GetAttackDamage();
             damageableTarget.TakeDamage(damage);
         }
 
-        private void ChangeUnitState(IUnit unit, UnitState state)
-        {
-            unit.UnitState.ChangeState(state);
-        }
 
         #region Enemy moving logic
 
@@ -309,9 +217,9 @@ namespace BattleSystem
             Vector3 unitPos = unit.GetPosition();
             float minDist = float.MaxValue;
 
-            for (int i = 0; i < _defenderUnitCollection.Count; i++)
+            for (int i = 0; i < unitsContainer.DefenderUnits.Count; i++)
             {
-                IUnit defender = _defenderUnitCollection[i];
+                IUnit defender = unitsContainer.DefenderUnits[i];
 
                 if(targetType != UnitType.None && defender.Stats.Type != targetType)
                     continue;
@@ -329,6 +237,7 @@ namespace BattleSystem
 
             return target;
         }
+
 
         #endregion
     }

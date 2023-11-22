@@ -1,8 +1,6 @@
 ﻿using System;
 using Abstraction;
-using EnemySystem;
 using System.Collections.Generic;
-using BattleSystem.Models;
 using Configs;
 using UnitSystem;
 using UnitSystem.Enum;
@@ -20,7 +18,8 @@ namespace BattleSystem
         private float _deadUnitsDestroyDelay;
         
         
-        public UnitBattleController(BattleSystemConstants battleSystemConstants,
+        public UnitBattleController(
+            BattleSystemConstants battleSystemConstants,
             IUnitsContainer unitsContainer,
             TargetFinder targetFinder)
         {
@@ -73,16 +72,12 @@ namespace BattleSystem
                     UnitMoveState(unit, deltaTime);
                     break;
                 }
-                case UnitState.Approach:
+                /*case UnitState.Approach:
                 {
                     UpdateTargetExistence(unit);
                     UnitApproachState(unit, deltaTime);
                     break;
-                }
-                case UnitState.Search:
-                {
-                    break;
-                }
+                }*/
                 case UnitState.Attack:
                 {
                     UpdateTargetExistence(unit);
@@ -224,19 +219,10 @@ namespace BattleSystem
             //Debug.Log("FifthBattleController->UnitIdleState:");
             IAttackTarget target = _targetFinder.GetTarget(unit);
 
-            // if (target.Id < 0)
-            // {
-            //     Debug.Log("FifthBattleController->UnitIdleState: target.Id < 0 ");
-            // }
-            // if (target is NoneTarget)
-            // {
-            //     Debug.Log("FifthBattleController->UnitIdleState: target is NoneTarget ");
-            // }
-
             if (target.Id >= 0)
             {
                 unit.Target.SetTarget(target);
-                ChangeUnitState(unit, UnitState.Approach);
+                ChangeUnitState(unit, UnitState.Move);
                 MoveUnitToTarget(unit, target);
             }
             else 
@@ -256,7 +242,7 @@ namespace BattleSystem
             if (target.Id >= 0)
             {
                 unit.Target.SetTarget(target);
-                ChangeUnitState(unit, UnitState.Approach);
+                ChangeUnitState(unit, UnitState.Move);
             }
             else 
             {
@@ -323,7 +309,7 @@ namespace BattleSystem
                 else
                 {
                     unit.UnitState.CurrentAttackPhase = AttackPhase.None;
-                    ChangeUnitState(unit, UnitState.Approach);
+                    ChangeUnitState(unit, UnitState.Move);
                 }
 
             }
@@ -367,9 +353,6 @@ namespace BattleSystem
                         animView.IsMoving = false;
                         break;
                     case UnitState.Move:
-                        animView.IsMoving = true;
-                        break;
-                    case UnitState.Approach:
                         animView.IsMoving = true;
                         break;
                     case UnitState.Search:

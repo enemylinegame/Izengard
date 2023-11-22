@@ -12,7 +12,7 @@ namespace UnitSystem
         private readonly UnitStatsModel _unitStats;       
         private readonly IUnitDefence _unitDefence;
         private readonly IUnitOffence _unitOffence;
-        private readonly INavigation<Vector3> _navigation;
+        private readonly UnitNavigationModel _navigation;
         private readonly UnitStateModel _unitState;
         private readonly UnitTargetModel _unitTarget;
         private readonly UnitPriorityModel _priority;
@@ -28,7 +28,7 @@ namespace UnitSystem
 
         public IUnitOffence Offence => _unitOffence;
 
-        public INavigation<Vector3> Navigation => _navigation;
+        public UnitNavigationModel Navigation => _navigation;
 
         public UnitTargetModel Target => _unitTarget;
         public UnitStateModel UnitState => _unitState;
@@ -48,7 +48,7 @@ namespace UnitSystem
             UnitStatsModel unitStats,
             IUnitDefence unitDefence,
             IUnitOffence unitOffence,
-            INavigation<Vector3> navigation,
+            UnitNavigationModel navigation,
             UnitPriorityModel priority)
         {
             _id = index;

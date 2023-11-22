@@ -8,7 +8,6 @@ using Tools;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 using NoneTarget = Abstraction.NoneTarget;
 
 namespace BattleSystem
@@ -44,8 +43,6 @@ namespace BattleSystem
         private const float DESTINATION_POSITION_ERROR_SQR = 0.3f * 0.3f;
         private const float DEAD_UNITS_DESTROY_DELAY = 10.0f;
 
-        protected List<IUnit> _enemyUnits = new();
-        protected List<IUnit> _defenderUnits = new();
         private List<AttackModel> _attackModels = new();
         private List<DeadUnit> _deadUnits = new();
 
@@ -54,8 +51,9 @@ namespace BattleSystem
         private TimeRemaining _timer;
 
         public EnemyTestBattleController(
-            TargetFinder targetFinder,
-            ObstacleController obstacleController) : base(targetFinder)
+            TargetFinder targetFinder, 
+            UnitsContainer unitsContainer,
+            ObstacleController obstacleController) : base(targetFinder, unitsContainer)
         {
             _obstacleController = obstacleController;
             _obstacleController.OnObstalceRemoved += UpdateEnemyObstalce;
@@ -64,57 +62,39 @@ namespace BattleSystem
             TimersHolder.AddTimer(_timer);
         }
 
-        private void UpdateTargetPosition()
+        protected override void ExecuteOnUpdate(float deltaTime)
         {
-            for (int i = 0; i < _enemyUnits.Count; i++)
+            for (int i = 0; i < unitsContainer.EnemyUnits.Count; i++)
             {
-                IUnit unit = _enemyUnits[i];
+                IUnit unit = unitsContainer.EnemyUnits[i];
 
-                IAttackTarget target = unit.Target.CurrentTarget;
+                UpdateTargetExistence(unit);
 
-                if (target is not NoneTarget)
+                switch (unit.UnitState.CurrentState)
                 {
-                    switch (unit.UnitState.CurrentState)
-                    {
-                        default:
+                    default:
+                        break;
+
+                    case UnitState.Idle:
+                        {
+                            UnitIdleState(unit, deltaTime);
                             break;
-                        case UnitState.Move:
-                        case UnitState.Approach:
-                            {
-                                if (unit.Target.IsTargetChangePosition())
-                                {
-                                    MoveUnitToTarget(unit, unit.Target.CurrentTarget);
-                                }
-                                break;
-                            }
-                    }
+                        }
+                    case UnitState.Move:
+                        {
+                            UnitMoveState(unit, deltaTime);
+                            break;
+                        }
+                    case UnitState.Attack:
+                        {
+                            UnitAttackState(unit, deltaTime);
+                            break;
+                        }
+                    case UnitState.Die:
+                        {
+                            break;
+                        }
                 }
-            }
-        }
-
-        private void UpdateEnemyObstalce(IObstacle obstacle)
-        {
-
-            for (int i = 0; i < _enemyUnits.Count; i++)
-            {
-                IUnit unit = _enemyUnits[i];
-
-                if (unit.Target.CurrentTarget.Id == obstacle.Id)
-                {
-                    unit.Target.ResetTarget();
-                }
-            }
-        }
-
-
-        public override void OnUpdate(float deltaTime)
-        {
-
-            for (int i = 0; i < _enemyUnits.Count; i++)
-            {
-                IUnit unit = _enemyUnits[i];
-
-                ExecuteUnitUpdate(unit, deltaTime);
             }
 
             for (int i = _deadUnits.Count - 1; i >= 0; i--)
@@ -128,50 +108,48 @@ namespace BattleSystem
             }
         }
 
-        public override void OnFixedUpdate(float fixedDeltaTime) { }
 
-
-        protected void ExecuteUnitUpdate(IUnit unit, float deltaTime)
+        private void UpdateTargetPosition()
         {
-            UpdateTargetExistence(unit);
-
-            switch (unit.UnitState.CurrentState)
+            for (int i = 0; i < unitsContainer.EnemyUnits.Count; i++)
             {
-                default:
-                    break;
+                IUnit unit = unitsContainer.EnemyUnits[i];
 
-                case UnitState.Idle:
+                IAttackTarget target = unit.Target.CurrentTarget;
+
+                if (target is not NoneTarget)
+                {
+                    switch (unit.UnitState.CurrentState)
                     {
-                        UnitIdleState(unit, deltaTime);
-                        break;
+                        default:
+                            break;
+                        case UnitState.Move:
+                            {
+                                if (unit.Target.IsTargetChangePosition())
+                                {
+                                    MoveUnitToTarget(unit, unit.Target.CurrentTarget);
+                                }
+                                break;
+                            }
+
                     }
-                case UnitState.Move:
-                    {
-                        UnitMoveState(unit, deltaTime);
-                        break;
-                    }
-                case UnitState.Approach:
-                    {
-                        UnitApproachState(unit, deltaTime);
-                        break;
-                    }
-                case UnitState.Search:
-                    {
-                        break;
-                    }
-                case UnitState.Attack:
-                    {
-                        UnitAttackState(unit, deltaTime);
-                        break;
-                    }
-                case UnitState.Die:
-                    {
-                        break;
-                    }
+                }
             }
         }
 
+        private void UpdateEnemyObstalce(IObstacle obstacle)
+        {
 
+            for (int i = 0; i < unitsContainer.EnemyUnits.Count; i++)
+            {
+                IUnit unit = unitsContainer.EnemyUnits[i];
+
+                if (unit.Target.CurrentTarget.Id == obstacle.Id)
+                {
+                    unit.Target.ResetTarget();
+                }
+            }
+        }
 
         private void UpdateTargetExistence(IUnit unit)
         {
@@ -194,7 +172,7 @@ namespace BattleSystem
                             {
                                 if (CheckBlockByObstacle(unit) == true)
                                 {
-                                    ChangeUnitState(unit, UnitState.Approach);
+                                    ChangeUnitState(unit, UnitState.Move);
                                 }
                             }
                         }
@@ -204,13 +182,13 @@ namespace BattleSystem
                 case UnitPriorityType.FarthestFoe:
                 case UnitPriorityType.SpecificFoe:
                     {
-                        if (_defenderUnits.Exists(def => def.Id == target.Id))
+                        if (unitsContainer.DefenderUnits.Exists(def => def.Id == target.Id))
                         {
                             if (unit.Navigation.CheckForPathComplete() == false)
                             {
                                 if (CheckBlockByObstacle(unit) == true)
                                 {
-                                    ChangeUnitState(unit, UnitState.Approach);
+                                    ChangeUnitState(unit, UnitState.Move);
                                 }
                             }
                         }
@@ -220,71 +198,13 @@ namespace BattleSystem
         }
 
 
-        public override void AddUnit(IUnit unit)
-        {
-            if (unit == null) return;
-
-            unit.OnReachedZeroHealth += UnitReachedZeroHealth;
-
-            switch (unit.Stats.Faction)
-            {
-                default:
-                    break;
-                case UnitFactionType.Enemy:
-                    {
-                        unit.Navigation.Enable();
-                        unit.UnitState.ChangeState(UnitState.Idle);
-
-                        _enemyUnits.Add(unit);
-
-                        break;
-                    }
-                case UnitFactionType.Defender:
-                    {
-                        _defenderUnits.Add(unit);
-                        break;
-                    }
-            }
-        }
-
-        private void UnitReachedZeroHealth(IUnit unit)
-        {
-            unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
-
-            if (unit.Stats.Faction == UnitFactionType.Enemy)
-            {
-                ChangeUnitState(unit, UnitState.Die);
-
-                unit.Target.ResetTarget();
-
-                unit.Navigation.Stop();
-
-                _enemyUnits.Remove(unit);
-
-                var undead = new DeadUnit(unit);
-                _deadUnits.Add(undead);
-            }
-            else if (unit.Stats.Faction == UnitFactionType.Defender)
-            {
-                var linkedEnemy =
-                    _enemyUnits.FindAll(e => e.Target.CurrentTarget == unit.View);
-
-                foreach (var enemy in linkedEnemy)
-                {
-                    enemy.Target.ResetTarget();
-                }
-
-                _defenderUnits.Remove(unit);
-            }
-        }
-
         private void RemoveDeadUnit(DeadUnit undead)
         {
             undead.Unit.Disable();
             _deadUnits.Remove(undead);
         }
 
-        protected void UnitIdleState(IUnit unit, float deltaTime)
+        protected override void UnitIdleState(IUnit unit, float deltaTime)
         {
             IAttackTarget target = GetTarget(unit);
 
@@ -292,7 +212,7 @@ namespace BattleSystem
             {
                 unit.Target.SetTarget(target);
 
-                ChangeUnitState(unit, UnitState.Approach);
+                ChangeUnitState(unit, UnitState.Move);
                 MoveUnitToTarget(unit, target);
             }
             else
@@ -306,13 +226,17 @@ namespace BattleSystem
 
         }
 
-        protected void UnitMoveState(IUnit unit, float deltaTime)
+        protected override void UnitMoveState(IUnit unit, float deltaTime)
         {
-            IAttackTarget target = GetTarget(unit);
-            if (target.Id >= 0)
+            if (unit.Target.CurrentTarget.Id >= 0)
             {
-                unit.Target.SetTarget(target);
-                ChangeUnitState(unit, UnitState.Approach);
+                Vector3 targetPos = unit.Target.CurrentTarget.Position;
+                float distanceSqr = (unit.GetPosition() - targetPos).sqrMagnitude;
+                if (distanceSqr <= unit.Offence.MaxRange * unit.Offence.MaxRange)
+                {
+                    StopUnit(unit);
+                    ChangeUnitState(unit, UnitState.Attack);
+                }
             }
             else
             {
@@ -324,18 +248,7 @@ namespace BattleSystem
             }
         }
 
-        protected void UnitApproachState(IUnit unit, float deltaTime)
-        {
-            Vector3 targetPos = unit.Target.CurrentTarget.Position;
-            float distanceSqr = (unit.GetPosition() - targetPos).sqrMagnitude;
-            if (distanceSqr <= unit.Offence.MaxRange * unit.Offence.MaxRange)
-            {
-                StopUnit(unit);
-                ChangeUnitState(unit, UnitState.Attack);
-            }
-        }
-
-        protected void UnitAttackState(IUnit unit, float deltaTime)
+        protected override void UnitAttackState(IUnit unit, float deltaTime)
         {
             AttackModel attack = _attackModels.Find(model => model.Attacker == unit);
             if (attack == null)
@@ -395,7 +308,7 @@ namespace BattleSystem
                     else
                     {
                         attack.Phase = AttackPhase.None;
-                        ChangeUnitState(unit, UnitState.Approach);
+                        ChangeUnitState(unit, UnitState.Move);
                     }
 
                 }
@@ -407,6 +320,9 @@ namespace BattleSystem
 
             }
         }
+
+
+        protected override void UnitDeadState(IUnit unit, float deltaTime) { }
 
         private List<IAttackTarget> GetAdditionAttackTargets(IUnit unit)
         {
@@ -471,9 +387,9 @@ namespace BattleSystem
             if (mainTower.Id == target.Id)
                 return mainTower;
 
-            if (_defenderUnits.Exists(def => def.Id == target.Id))
+            if (unitsContainer.DefenderUnits.Exists(def => def.Id == target.Id))
             {
-                var defender = _defenderUnits.Find(def => def.Id == target.Id);
+                var defender = unitsContainer.DefenderUnits.Find(def => def.Id == target.Id);
                 return new TargetModel(defender, target);
             }
 
@@ -493,41 +409,6 @@ namespace BattleSystem
             float maxAttackDistance = attacker.Offence.MaxRange;
 
             return maxAttackDistance * maxAttackDistance >= (attackerPosition - targetPosition).sqrMagnitude;
-        }
-
-        protected void ChangeUnitState(IUnit unit, UnitState state)
-        {
-            unit.UnitState.ChangeState(state);
-            IUnitAnimationView animView = unit.View.UnitAnimation;
-            if (animView != null)
-            {
-                switch (state)
-                {
-                    case UnitState.None:
-                        animView.Reset();
-                        break;
-                    case UnitState.Idle:
-                        animView.IsMoving = false;
-                        break;
-                    case UnitState.Move:
-                        animView.IsMoving = true;
-                        break;
-                    case UnitState.Approach:
-                        animView.IsMoving = true;
-                        break;
-                    case UnitState.Search:
-                        break;
-                    case UnitState.Attack:
-                        animView.IsMoving = false;
-                        break;
-                    case UnitState.Die:
-                        animView.StartDead();
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-
         }
 
         private void StartAttackAnimation(IUnit unit)
@@ -623,9 +504,9 @@ namespace BattleSystem
             Vector3 unitPos = unit.GetPosition();
             float minDist = float.MaxValue;
 
-            for (int i = 0; i < _defenderUnits.Count; i++)
+            for (int i = 0; i < unitsContainer.DefenderUnits.Count; i++)
             {
-                IUnit foeUnit = _defenderUnits[i];
+                IUnit foeUnit = unitsContainer.DefenderUnits[i];
 
                 if (targetType != UnitType.None && foeUnit.Stats.Type != targetType)
                     continue;

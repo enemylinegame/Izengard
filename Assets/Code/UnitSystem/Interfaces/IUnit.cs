@@ -1,7 +1,5 @@
 ﻿using Abstraction;
 using System;
-using System.Collections.Generic;
-using UnitSystem.Data;
 using UnitSystem.Model;
 using UnityEngine;
 
@@ -17,7 +15,7 @@ namespace UnitSystem
         UnitStatsModel Stats { get; }
         IUnitDefence Defence { get; }
         IUnitOffence Offence { get; }
-        INavigation<Vector3> Navigation { get; }
+        UnitNavigationModel Navigation { get; }
         UnitTargetModel Target { get; }
         UnitStateModel UnitState { get; }
         UnitPriorityModel Priority { get; }

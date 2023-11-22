@@ -45,13 +45,15 @@ namespace BattleSystem
         private List<TargetData> _enemies = new();
 
 
-        public DefenderBattleController(TargetFinder targetFinder) 
-            : base(targetFinder)
+
+
+        public DefenderBattleController(TargetFinder targetFinder, UnitsContainer unitsContainer) 
+            : base(targetFinder, unitsContainer)
         {
-            
         }
 
-        public override void OnUpdate(float deltaTime)
+
+        protected override void ExecuteOnUpdate(float deltaTime)
         {
             for (int i = 0; i < _defenders.Count; i++)
             {
@@ -80,57 +82,16 @@ namespace BattleSystem
             }
         }
 
-        public override void OnFixedUpdate(float fixedDeltaTime)
-        {
-            
-        }
+        protected override void UnitIdleState(IUnit unit, float deltaTime) { }
 
-        public override void AddUnit(IUnit unit)
-        {
-            if (unit != null)
-            {
-                if (unit.Stats.Faction == UnitFactionType.Defender)
-                {
-                    if (!_defenders.Exists(unitData => unitData.Unit == unit))
-                    {
-                        _defenders.Add( new UnitData(unit));
-                        unit.Enable();
-                        unit.Navigation.Enable();
-                        unit.OnReachedZeroHealth += UnitReachedZeroHealth;
-                        Debug.Log("DefenderBattleController->AddUnit: " + unit.View.SelfTransform.gameObject.name + 
-                                  " UnitState = " + unit.UnitState.CurrentState.ToString());
-                    }
-                }
-                else if (unit.Stats.Faction == UnitFactionType.Enemy)
-                {
-                    if (!_enemies.Exists(data => data.Unit == unit))
-                    {
-                        _enemies.Add( new TargetData() {Unit = unit} );
-                        unit.OnReachedZeroHealth += UnitReachedZeroHealth;
-                    }
-                }
+        protected override void UnitMoveState(IUnit unit, float deltaTime) { }
 
-            }
-        }
+        protected override void UnitAttackState(IUnit unit, float deltaTime) { }
 
-        private void ExecuteIdleState(UnitData unit, float deltaTime)
-        {
-            // IAttackTarget foundTarget = targetFinder.GetClosestUnit(unit.Unit);
-            // if (foundTarget is not NoneTarget)
-            // {
-            //     //IUnit target = GetUnitByView(foundTarget);
-            //
-            //     if (foundTarget.Id > 0)
-            //     {
-            //         unit.Unit.Target.SetTarget(foundTarget);
-            //
-            //         TargetData target = _enemies.Find(u => u.Unit.Id == foundTarget.Id);
-            //         unit.AttackerModel.SetTarget(target);
-            //         ChangeState(unit, UnitState.Move);
-            //     }
-            //     
-            // }
-        }
+        protected override void UnitDeadState(IUnit unit, float deltaTime) { }
+
+
+        private void ExecuteIdleState(UnitData unit, float deltaTime) { }
 
         private void ExecuteMoveState(UnitData unitData, float deltaTime)
         {
@@ -174,26 +135,6 @@ namespace BattleSystem
 
         }
 
-        // private IUnit GetUnitByView(BaseUnitView targetView)
-        // {
-        //     IUnit target = null;
-        //     IUnitView view = targetView;
-        //
-        //     if (targetView != null)
-        //     {
-        //         for (int i = 0; i < _enemies.Count; i++)
-        //         {
-        //             IUnitView current = _enemies[i].View;
-        //             if ( current == view)
-        //             {
-        //                 target = _enemies[i];
-        //                 break;
-        //             }
-        //         }
-        //     }
-        //
-        //     return target;
-        // }
 
         public void SetDefendPosition(IUnit unit, Vector3 position)
         {
@@ -255,6 +196,6 @@ namespace BattleSystem
                 _enemies.RemoveAt(index);
             }
         }
-        
+
     }
 }

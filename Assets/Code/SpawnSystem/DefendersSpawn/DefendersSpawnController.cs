@@ -45,7 +45,7 @@ namespace BattleSystem
             var unitStats = new UnitStatsModel(creationData.UnitSettings.StatsData);
             var unitDefence = new UnitDefenceModel(creationData.UnitSettings.DefenceData);
             var unitOffence = new UnitOffenceModel(creationData.UnitSettings.OffenceData);
-            var navigation = new EnemyNavigationModel(view.UnitNavigation, view.SelfTransform.position);
+            var navigation = new UnitNavigationModel(view.UnitNavigation, view.SelfTransform.position);
             var priorities = new UnitPriorityModel(creationData.UnitSettings.UnitPriorities);
             var unitHandler = 
                 new UnitHandler(_nextUnitId++, view, unitStats, unitDefence, unitOffence, navigation, priorities);

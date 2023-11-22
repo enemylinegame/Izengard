@@ -14,7 +14,7 @@ namespace UnitSystem
 
         public UnitStatsModel Stats { get; private set; }
 
-        public INavigation<Vector3> Navigation { get; }
+        public UnitNavigationModel Navigation { get; }
 
         public IUnitDefence Defence { get; }
 

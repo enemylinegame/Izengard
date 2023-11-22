@@ -59,12 +59,26 @@ namespace EnemySystem
             var unitOffence = new UnitOffenceModel(unitData.OffenceData);
 
             var navigation =
-                new EnemyNavigationModel(view.UnitNavigation, view.SelfTransform.position);
+                new UnitNavigationModel(view.UnitNavigation, view.SelfTransform.position);
 
             var priorities = new UnitPriorityModel(unitData.UnitPriorities);
 
-            var unitHandler = 
-                new UnitHandler(_enemyId++, view, unitStats, unitDefence, unitOffence, navigation, priorities);
+            IUnit unitHandler;
+
+            if (view == null 
+                || unitStats == null 
+                || unitDefence == null 
+                || unitOffence == null 
+                || navigation == null 
+                || priorities == null) 
+            {
+                 unitHandler = new StubUnit("Error on create");
+            }
+            else
+            {
+                 unitHandler =
+                           new UnitHandler(_enemyId++, view, unitStats, unitDefence, unitOffence, navigation, priorities);           
+            }
 
             return unitHandler;
         }

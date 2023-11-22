@@ -54,7 +54,7 @@ namespace UnitSystem.View
 
         private void FixedUpdate()
         {
-            Debug.DrawRay(transform.position, transform.forward * 1, Color.red, 0); 
+            Debug.DrawRay(transform.position, transform.forward * 1.5f, Color.red, 0); 
         }
 
         #region ITarget
