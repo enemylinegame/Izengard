@@ -12,6 +12,7 @@ using NoneTarget = Abstraction.NoneTarget;
 
 namespace BattleSystem
 {
+    [Obsolete]
     public class EnemyTestBattleController : BaseBattleController
     {
         private enum AttackPhase

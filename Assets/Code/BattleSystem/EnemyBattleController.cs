@@ -43,6 +43,7 @@ namespace BattleSystem
                         }
                     case UnitState.Die:
                         {
+                            UnitDeadState(unit, deltaTime);
                             break;
                         }
                 }
@@ -103,34 +104,64 @@ namespace BattleSystem
 
         protected override void UnitAttackState(IUnit unit, float deltaTime)
         {
-            var target = unit.Target.CurrentTarget;
-      
-            if (target is not NoneTarget)
-            {
+            IAttackTarget target = unit.Target.CurrentTarget;
 
-                switch (unit.Priority.Current.Priority)
+            if (target != null)
+            {
+                if (IsAttackDistanceSuitable(unit, target.Position))
                 {
-                    case UnitPriorityType.MainTower:
-                        {
+                    switch (unit.UnitState.CurrentAttackPhase)
+                    {
+                        case AttackPhase.None:
+                            unit.TimeProgress = deltaTime;
+                            unit.UnitState.CurrentAttackPhase = AttackPhase.Cast;
                             break;
-                        }
-                    case UnitPriorityType.ClosestFoe:
-                    case UnitPriorityType.FarthestFoe:
-                    case UnitPriorityType.SpecificFoe:
-                        {
-                            var targetUnit = unitsContainer.DefenderUnits.Find(u => u.Id == target.Id);
-                            
-                            float timeSinceLastAttack = Time.fixedTime - unit.Offence.LastAttackTime;
-                            
-                            if (timeSinceLastAttack >= unit.Offence.AttackTime)
+                        case AttackPhase.Cast:
+                            unit.TimeProgress += deltaTime;
+                            if (unit.TimeProgress >= unit.Offence.CastingTime)
                             {
-                                unit.StartAttack(targetUnit);
-                                unit.Offence.LastAttackTime = Time.fixedTime;
+
+                                target.TakeDamage(unit.Offence.GetDamage());
+                                unit.UnitState.CurrentAttackPhase = AttackPhase.None;
+                                unit.TimeProgress = 0.0f;
+
+                                StartAttackAnimation(unit);
                             }
 
                             break;
-                        }
+                        case AttackPhase.Attack:
+                            throw new NotImplementedException();
+                    }
                 }
+                else
+                {
+                    unit.UnitState.CurrentAttackPhase = AttackPhase.None;
+                    ChangeUnitState(unit, UnitState.Move);
+                }
+
+            }
+            else
+            {
+                unit.Target.ResetTarget();
+                ChangeUnitState(unit, UnitState.Idle);
+            }
+
+        }
+
+        private bool IsAttackDistanceSuitable(IUnit attacker, Vector3 targetPosition)
+        {
+            Vector3 attackerPosition = attacker.GetPosition();
+            float maxAttackDistance = attacker.Offence.MaxRange;
+
+            return maxAttackDistance * maxAttackDistance >= (attackerPosition - targetPosition).sqrMagnitude;
+        }
+
+        private void StartAttackAnimation(IUnit unit)
+        {
+            IUnitAnimationView animView = unit.View.UnitAnimation;
+            if (animView != null)
+            {
+                animView.StartCast();
             }
         }
 

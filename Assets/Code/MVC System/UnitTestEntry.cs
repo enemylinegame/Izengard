@@ -29,8 +29,6 @@ public class UnitTestEntry : MonoBehaviour
     [Space(10)]
     [SerializeField] private NavigationSurfaceView _groundSurface;
 
-    [Header("Obstacles")]
-    [SerializeField] private List<DefendWallObstacleView> _defendWalls;
 
     private TimeRemainingController timeRemainingController;
     private IdGenerator _idGenerator;
@@ -40,13 +38,12 @@ public class UnitTestEntry : MonoBehaviour
     private UnitsContainer _unitsContainer;
 
     private WarBuildingsController _mainTowerController;
-    private ObstacleController _obstacleController;
 
     private EnemySpawnController _enemySpawnController;
     private DefenderSpawnTestController _defenderSpawnController;
     private TargetFinder _targetFinder;
     
-    private EnemyTestBattleController _enemyBattleController;
+    private BaseBattleController _enemyBattleController;
     private UnitBattleController _defenderBattleController;
 
     private EnemySpawnHandler _enemySpawnHandler;
@@ -66,7 +63,6 @@ public class UnitTestEntry : MonoBehaviour
         _surfaceId = _navigationUpdater.AddNavigationSurface(_groundSurface);
        
         _mainTowerController = new WarBuildingsController(_mainTower, _mainTowerConfig, _idGenerator);
-        _obstacleController = new ObstacleController(_surfaceId, _navigationUpdater, _defendWalls);
 
         _unitsContainer = new UnitsContainer();
 
@@ -76,7 +72,7 @@ public class UnitTestEntry : MonoBehaviour
         _enemySpawnController.OnUnitSpawned += OnCreatedUnit;
         _onUpdates.Add(_enemySpawnController);
         
-        _enemyBattleController = new EnemyTestBattleController(_targetFinder, _unitsContainer, _obstacleController);
+        _enemyBattleController = new EnemyBattleController(_targetFinder, _unitsContainer);
         _onUpdates.Add(_enemyBattleController);
         
         _enemySpawnHandler = new EnemySpawnHandler(_enemySpawnController, _waveSettings);
@@ -96,7 +92,6 @@ public class UnitTestEntry : MonoBehaviour
         }
 
         _mainTowerController.OnStart();
-        _obstacleController.OnStart();
 
         _enemySpawnHandler.StartSpawn();
     }
