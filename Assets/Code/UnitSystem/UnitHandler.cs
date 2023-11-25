@@ -136,6 +136,9 @@ namespace UnitSystem
         {
             if (newState == Enum.UnitState.Die)
             {
+                Target.ResetTarget();
+                //_navigation.Stop();
+                TimeProgress = 0.0f;
                 _unitView.SetCollisionEnabled(false);
                 _navigation.Disable();
             }

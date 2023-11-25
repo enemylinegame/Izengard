@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Abstraction;
 using System.Collections.Generic;
 using Configs;
@@ -11,11 +11,16 @@ namespace BattleSystem
 {
     public class UnitBattleController : IOnController, IOnUpdate
     {
+
+        public event Action OnAllEnemyDestroyed;
+        
         private readonly TargetFinder _targetFinder;
         private readonly IUnitsContainer _unitsContainer;
         
         private float _destinationPositionErrorSqr;
         private float _deadUnitsDestroyDelay;
+
+        private bool _isLastEnemyDestroyedThisTact; 
         
         
         public UnitBattleController(
@@ -52,6 +57,12 @@ namespace BattleSystem
                 IUnit unit = _unitsContainer.DeadUnits[i];
 
                 UnitDeadState(unit, deltaTime);
+            }
+
+            if (_isLastEnemyDestroyedThisTact)
+            {
+                _isLastEnemyDestroyedThisTact = false;
+                OnAllEnemyDestroyed?.Invoke();
             }
         }
 
@@ -136,6 +147,10 @@ namespace BattleSystem
             if (unit.Stats.Faction == UnitFactionType.Enemy)
             {
                 _unitsContainer.EnemyUnits.Remove(unit);
+                if (_unitsContainer.EnemyUnits.Count == 0)
+                {
+                    _isLastEnemyDestroyedThisTact = true;
+                }
             }
             else if (unit.Stats.Faction == UnitFactionType.Defender)
             {
@@ -185,32 +200,11 @@ namespace BattleSystem
 
         private void UpdateTargetExistence(IUnit unit)
         {
-            switch (unit.Priority.Current.Priority)
+            IAttackTarget target = unit.Target.CurrentTarget;
+            if (!target.IsAlive)
             {
-                case UnitPriorityType.MainTower:
-                    {
-                        break;
-                    }
-                case UnitPriorityType.ClosestFoe:
-                case UnitPriorityType.FarthestFoe:
-                case UnitPriorityType.SpecificFoe:
-                {
-                    List<IUnit> list = (unit.Stats.Faction == UnitFactionType.Enemy) ? 
-                        _unitsContainer.DefenderUnits : _unitsContainer.EnemyUnits;
-
-                    IAttackTarget target = unit.Target.CurrentTarget;
-                    if (!target.IsAlive)
-                    {
-                        unit.Target.ResetTarget();
-                        ChangeUnitState(unit, UnitState.Idle);
-                    }
-                    else if (!list.Exists(def => def.Id == target.Id)) 
-                    {
-                        unit.Target.ResetTarget();
-                        ChangeUnitState(unit, UnitState.Idle);
-                    }
-                    break;
-                }
+                unit.Target.ResetTarget();
+                ChangeUnitState(unit, UnitState.Idle);
             }
         }
 
@@ -223,7 +217,7 @@ namespace BattleSystem
             {
                 unit.Target.SetTarget(target);
                 ChangeUnitState(unit, UnitState.Move);
-                MoveUnitToTarget(unit, target);
+                unit.Navigation.MoveTo(target.Position);
             }
             else 
             {
@@ -260,13 +254,16 @@ namespace BattleSystem
             float distanceSqr = (unit.GetPosition() - targetPos).sqrMagnitude;
             if (distanceSqr <= unit.Offence.MaxRange * unit.Offence.MaxRange)
             {
-                StopUnit(unit);
+                unit.Navigation.Stop();;
 
                 ChangeUnitState(unit, UnitState.Attack);
             }
             else
             {
-                unit.Navigation.MoveTo(targetPos);
+                if (unit.Target.IsTargetChangePosition())
+                {
+                    unit.Navigation.MoveTo(targetPos);
+                }
             }
         }
 
@@ -361,9 +358,6 @@ namespace BattleSystem
                         animView.IsMoving = false;
                         break;
                     case UnitState.Die:
-                        unit.Target.ResetTarget();
-                        unit.Navigation.Stop();
-                        unit.TimeProgress = 0.0f;
                         animView.StartDead();
                         break;
                     default:
@@ -391,22 +385,6 @@ namespace BattleSystem
             }
         }
 
-        #region Movement logic
-
-        private void MoveUnitToTarget(IUnit unit, IAttackTarget target)
-        {
-            unit.Navigation.MoveTo(target.Position);
-        }
-
-        private void StopUnit(IUnit unit)
-        {
-            unit.Navigation.Stop();
-        }
-
-        private float GetDistanceToTarget(Vector3 unitPos, Vector3 targetPos) => 
-            Vector3.Distance(unitPos, targetPos);
-
-
         private bool CheckIsOnDestinationPosition(IUnit unit)
         {
             Vector3 destination = unit.StartPosition;
@@ -414,17 +392,6 @@ namespace BattleSystem
 
             return (position - destination).sqrMagnitude <= _destinationPositionErrorSqr;
         }
-        
-        // private bool CheckStopDistance(float curDistance, float stopDistance)
-        // {
-        //     if (curDistance <= stopDistance)
-        //     {
-        //         return true;
-        //     }
-        //     return false;
-        // }
-
-        #endregion
         
     }
 }

@@ -33,6 +33,7 @@ public class UnitTestEntry : MonoBehaviour
     [SerializeField] private List<DefendWallObstacleView> _defendWalls;
 
     private TimeRemainingController timeRemainingController;
+    private IdGenerator _idGenerator;
 
     private NavigationUpdater _navigationUpdater;
 
@@ -57,20 +58,21 @@ public class UnitTestEntry : MonoBehaviour
 
     private void Start()
     {
+        _idGenerator = new IdGenerator();
         timeRemainingController = new TimeRemainingController();
         _onUpdates.Add(timeRemainingController);
 
         _navigationUpdater = new NavigationUpdater();
         _surfaceId = _navigationUpdater.AddNavigationSurface(_groundSurface);
-
-        _mainTowerController = new WarBuildingsController(_mainTower, _mainTowerConfig);
+       
+        _mainTowerController = new WarBuildingsController(_mainTower, _mainTowerConfig, _idGenerator);
         _obstacleController = new ObstacleController(_surfaceId, _navigationUpdater, _defendWalls);
 
         _unitsContainer = new UnitsContainer();
 
         _targetFinder = new TargetFinder(_mainTowerController, _unitsContainer);
 
-        _enemySpawnController = new EnemySpawnController(_enemySpawner);
+        _enemySpawnController = new EnemySpawnController(_enemySpawner, _idGenerator);
         _enemySpawnController.OnUnitSpawned += OnCreatedUnit;
         _onUpdates.Add(_enemySpawnController);
         
@@ -82,12 +84,10 @@ public class UnitTestEntry : MonoBehaviour
 
         if (_enableDefenders)
         {
-            _defenderSpawnController = new DefenderSpawnTestController(_defenderSpawnPoints, _defenderSpawnSettings);
+            _defenderSpawnController = new DefenderSpawnTestController(_defenderSpawnPoints, _defenderSpawnSettings, _idGenerator);
             _defenderSpawnController.OnUnitSpawned += OnCreatedUnit;
             _onUpdates.Add(_defenderSpawnController);
             
-   
-
             _defenderBattleController = new UnitBattleController(_battleSystemConst, _unitsContainer, _targetFinder);
             _onUpdates.Add(_defenderBattleController);
 

@@ -22,11 +22,13 @@ namespace Code.MVC_System
             Canvas canvas, 
             SceneObjectsHolder sceneObjectsHolder)
         {
+            var idGenerator = new IdGenerator();
             var timeRemainingService = new TimeRemainingController();
 
-            var enemySpawner = new EnemySpawnController(sceneObjectsHolder.EnemySpawner);
+            var enemySpawner = new EnemySpawnController(sceneObjectsHolder.EnemySpawner, idGenerator);
 
-            var warBuildingController = new WarBuildingsController(sceneObjectsHolder.MainTower, configs.MainTowerSettings);
+            var warBuildingController = new WarBuildingsController(sceneObjectsHolder.MainTower, 
+                configs.MainTowerSettings, idGenerator);
 
             var unitsContainer = new UnitsContainer();
             var targetFinder = new TargetFinder(warBuildingController, unitsContainer);
@@ -34,7 +36,7 @@ namespace Code.MVC_System
             navigationUpdater.AddNavigationSurface(sceneObjectsHolder.GroundSurface);
 
             var defendersSpawner = new DefendersSpawnController(configs.DefendersSpawnSettings.UnitsCreationData,
-                GetPositions(sceneObjectsHolder.DefendersSpawnPoints));
+                GetPositions(sceneObjectsHolder.DefendersSpawnPoints), idGenerator);
             
             var battleController = new UnitBattleController(configs.BattleSystemConst, unitsContainer, targetFinder);
             
@@ -54,6 +56,7 @@ namespace Code.MVC_System
             controller.Add(gameStateManager);
             controller.Add(battleController);
             controller.Add(warBuildingController);
+            
         }
 
         private List<Vector3> GetPositions(List<Transform> transforms)

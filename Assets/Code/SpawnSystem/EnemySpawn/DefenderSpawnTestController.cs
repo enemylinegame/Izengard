@@ -1,6 +1,7 @@
 ﻿using EnemySystem;
 using System.Collections.Generic;
 using System;
+using Abstraction;
 using UnitSystem.Enum;
 using UnitSystem;
 using UnityEngine;
@@ -18,10 +19,11 @@ namespace SpawnSystem
 
         private int _spawnIndex;
         
-        public DefenderSpawnTestController(List<Transform> spawnPoints, SpawnSettings spawnSettings)
+        public DefenderSpawnTestController(List<Transform> spawnPoints, SpawnSettings spawnSettings, 
+            IIdGenerator idGenerator)
         {
 
-            _factory = new EnemyUnitFactory(spawnSettings.UnitsCreationData);
+            _factory = new EnemyUnitFactory(spawnSettings.UnitsCreationData, idGenerator);
 
             foreach (var creationData in spawnSettings.UnitsCreationData)
             {
