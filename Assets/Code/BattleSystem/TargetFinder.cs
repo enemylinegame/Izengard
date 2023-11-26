@@ -32,7 +32,7 @@ namespace BattleSystem
 
         public IAttackTarget GetMainTower()
         {
-            return _warBuildingsContainer.GetMainTowerAsAttackTarget();
+            return _warBuildingsContainer.GetMainTower();
         }
 
         public IAttackTarget GetTarget(IUnit unit)
@@ -89,7 +89,7 @@ namespace BattleSystem
             {
                 IUnit foeUnit = foeUnitList[i];
 
-                if( (targetType != UnitType.None && foeUnit.Stats.Type != targetType) || !foeUnit.IsAlive )
+                if( (targetType != UnitType.None && foeUnit.Stats.Type != targetType) || foeUnit is NoneTarget )
                     continue;
 
                 Vector3 defenderPos = foeUnit.GetPosition();
@@ -98,9 +98,8 @@ namespace BattleSystem
                 if (distance < minDist)
                 {
                     minDist = distance;
-                    
-                    
-                    target = new TargetModel(foeUnit, foeUnit.View);
+
+                    target = foeUnit.View;
                 }
             }
 

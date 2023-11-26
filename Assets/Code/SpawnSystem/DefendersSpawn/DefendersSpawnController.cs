@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-
 using Abstraction;
-using EnemySystem;
 using UnitSystem;
 using UnitSystem.Data;
 using UnitSystem.Enum;
@@ -14,8 +12,6 @@ namespace BattleSystem
 {
     public class DefendersSpawnController
     {
-
-        private readonly IIdGenerator _idGenerator;
         
         private List<UnitCreationData> _unitCreationDataList;
         private List<Vector3> _spawnPositions;
@@ -25,13 +21,11 @@ namespace BattleSystem
         private int _nextSpawnPositionsIndex;
 
         
-        public DefendersSpawnController(List<UnitCreationData> unitCreationsDataList, List<Vector3> spawnPositions,
-            IIdGenerator idGenerator)
+        public DefendersSpawnController(List<UnitCreationData> unitCreationsDataList, List<Vector3> spawnPositions)
         {
             _unitCreationDataList = unitCreationsDataList;
             _spawnPositions = spawnPositions;
             _nextSpawnPositionsIndex = 0;
-            _idGenerator = idGenerator;
         }
 
         public void SpawnUnit(UnitType unitType)
@@ -42,8 +36,6 @@ namespace BattleSystem
 
             GameObject prefab = creationData.UnitPrefab;
             GameObject instance = GameObject.Instantiate(prefab);
-            int id = _idGenerator.GetNext();
-            instance.name = unitType.ToString() + "_" + id.ToString(); 
             IUnitView view = instance.GetComponent<IUnitView>();
 
             var unitStats = new UnitStatsModel(creationData.UnitSettings.StatsData);
@@ -51,8 +43,7 @@ namespace BattleSystem
             var unitOffence = new UnitOffenceModel(creationData.UnitSettings.OffenceData);
             var navigation = new UnitNavigationModel(view.UnitNavigation, view.SelfTransform.position);
             var priorities = new UnitPriorityModel(creationData.UnitSettings.UnitPriorities);
-            var unitHandler = 
-                new UnitHandler(id, view, unitStats, unitDefence, unitOffence, navigation, priorities);
+            var unitHandler = new UnitHandler(view, unitStats, unitDefence, unitOffence, navigation, priorities);
             
             unitHandler.SetStartPosition(SelectSpawnPosition());
             

@@ -1,6 +1,6 @@
 ﻿namespace UnitSystem.Enum
 {
-    public enum UnitState
+    public enum UnitStateType
     {
         None,
         Idle,

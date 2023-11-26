@@ -1,7 +1,6 @@
 using UnitSystem;
 using UnitSystem.Data;
 using System.Collections.Generic;
-using Abstraction;
 using UnityEngine;
 using UnitSystem.Model;
 
@@ -10,12 +9,10 @@ namespace EnemySystem
 {
     public class EnemyUnitFactory : UnitFactory
     {
-        private readonly IIdGenerator _idGenerator;
-
-        public EnemyUnitFactory(List<UnitCreationData> unitObjectDataList, IIdGenerator idGenerator) 
+        public EnemyUnitFactory(List<UnitCreationData> unitObjectDataList)
             : base(unitObjectDataList)
         {
-            _idGenerator = idGenerator;
+
         }
 
         public override IUnit CreateMilitiaman(IUnitData unitData)
@@ -51,9 +48,16 @@ namespace EnemySystem
         {
             var unitPrefab = unitObjectsData[unitData.StatsData.Type];
 
-            var unitGO = Object.Instantiate(unitPrefab);
+            var unitGO =
+                Object.Instantiate(unitPrefab);
 
-            var view = unitGO.GetComponent<IUnitView>();
+            var view =
+                unitGO.GetComponent<IUnitView>();
+
+            if (view == null)
+            {
+                return new StubUnit("Error on create. Can't find view component");
+            }
 
             var unitStats = new UnitStatsModel(unitData.StatsData);
 
@@ -61,27 +65,11 @@ namespace EnemySystem
 
             var unitOffence = new UnitOffenceModel(unitData.OffenceData);
 
-            var navigation =
-                new UnitNavigationModel(view.UnitNavigation, view.SelfTransform.position);
+            var navigation = new UnitNavigationModel(view.UnitNavigation, view.SelfTransform.position);
 
             var priorities = new UnitPriorityModel(unitData.UnitPriorities);
 
-            IUnit unitHandler;
-
-            if (view == null 
-                || unitStats == null 
-                || unitDefence == null 
-                || unitOffence == null 
-                || navigation == null 
-                || priorities == null) 
-            {
-                 unitHandler = new StubUnit("Error on create");
-            }
-            else
-            {
-                 unitHandler =
-                           new UnitHandler(_idGenerator.GetNext(), view, unitStats, unitDefence, unitOffence, navigation, priorities);           
-            }
+            var unitHandler = new UnitHandler(view, unitStats, unitDefence, unitOffence, navigation, priorities);
 
             return unitHandler;
         }

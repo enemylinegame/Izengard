@@ -22,13 +22,13 @@ namespace SpawnSystem
 
         public event Action<IUnit> OnUnitSpawned;
 
-        public EnemySpawnController(SpawnerView spawner, IIdGenerator idGenerator)
+        public EnemySpawnController(SpawnerView spawner)
         {
             _spawner = spawner;
 
             var unitsCreationData = _spawner.SpawnSettings.UnitsCreationData;
 
-            var factory = new EnemyUnitFactory(unitsCreationData, idGenerator);
+            var factory = new EnemyUnitFactory(unitsCreationData);
             
             _pool = new EnemyPool(spawner.PoolHolder, factory, unitsCreationData);
         }

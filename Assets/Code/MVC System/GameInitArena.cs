@@ -22,23 +22,21 @@ namespace Code.MVC_System
             Canvas canvas, 
             SceneObjectsHolder sceneObjectsHolder)
         {
-            var idGenerator = new IdGenerator();
             var timeRemainingService = new TimeRemainingController();
 
-            var enemySpawner = new EnemySpawnController(sceneObjectsHolder.EnemySpawner, idGenerator);
+            var enemySpawner = new EnemySpawnController(sceneObjectsHolder.EnemySpawner);
 
-            var warBuildingController = new WarBuildingsController(sceneObjectsHolder.MainTower, 
-                configs.MainTowerSettings, idGenerator);
+            var warBuildingController = new WarBuildingsController(sceneObjectsHolder.MainTower, configs.MainTowerSettings);
 
             var unitsContainer = new UnitsContainer();
             var targetFinder = new TargetFinder(warBuildingController, unitsContainer);
             var navigationUpdater = new NavigationUpdater();
             navigationUpdater.AddNavigationSurface(sceneObjectsHolder.GroundSurface);
 
-            var defendersSpawner = new DefendersSpawnController(configs.DefendersSpawnSettings.UnitsCreationData,
-                GetPositions(sceneObjectsHolder.DefendersSpawnPoints), idGenerator);
+            var defendersSpawner 
+                = new DefendersSpawnController(configs.DefendersSpawnSettings.UnitsCreationData, GetPositions(sceneObjectsHolder.DefendersSpawnPoints));
             
-            var battleController = new UnitBattleController(configs.BattleSystemConst, unitsContainer, targetFinder);
+            var battleController = new UnitBattleController(targetFinder, unitsContainer,configs.BattleSystemConst);
             
             var unitSpawnObserver = new UnitSpawnObserver(enemySpawner, defendersSpawner,
                 battleController);

@@ -4,6 +4,6 @@ namespace BattleSystem.Buildings.Interfaces
 {
     public interface IWarBuildingsContainer
     {
-        IAttackTarget GetMainTowerAsAttackTarget();
+        IAttackTarget GetMainTower();
     }
 }

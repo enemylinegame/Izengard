@@ -4,14 +4,12 @@ using UnityEngine.AI;
 
 namespace UnitSystem
 {
-    public interface IUnitView : IFightingObject, ITarget
+    public interface IUnitView : IAttackTarget
     {
         Transform SelfTransform { get; }
         NavMeshAgent UnitNavigation { get; }
 
         IUnitAnimationView UnitAnimation { get; }
-
-        void Init(int unitId);
 
         void Show();
         void Hide();
@@ -19,6 +17,5 @@ namespace UnitSystem
         void ChangeSize(float sizeValue);
         void ChangeSpeed(float speedValue);
         void SetCollisionEnabled(bool isEnabled);
-
     }
 }

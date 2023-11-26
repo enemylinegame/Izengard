@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Abstraction;
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,18 +11,18 @@ namespace UnitSystem.View
         protected NavMeshAgent _unitNavigation;
         protected Collider _unitCollider;
         protected IUnitAnimationView _unitAnimation;
+        
+        [SerializeField] private int _id;
+        
+        public int Id => _id;
+
+        public Vector3 Position => _selfTransform.position;
 
         public Transform SelfTransform => _selfTransform;
         public NavMeshAgent UnitNavigation => _unitNavigation;
         public IUnitAnimationView UnitAnimation => _unitAnimation;
 
-        private int _unitId;
-
-        public void Init(int unitId)
-        {
-            _unitId = unitId;
-            Hide();
-        }
+        public event Action<IDamage> OnTakeDamage;
 
         public void Show() => 
             gameObject.SetActive(true);
@@ -39,12 +40,14 @@ namespace UnitSystem.View
         
         private void Awake()
         {
-            _unitId = -1;
+            _id = Math.Abs(gameObject.GetInstanceID());
 
             SetTransform();
             SetUnitNavigation();
             SetUnitAnimator();
             SetCollision();
+
+            Hide();
         }
 
         protected abstract void SetTransform();
@@ -57,35 +60,9 @@ namespace UnitSystem.View
             Debug.DrawRay(transform.position, transform.forward * 1.5f, Color.red, 0); 
         }
 
-        #region ITarget
-
-        public int Id => _unitId;
-
-        public Vector3 Position => _selfTransform.position;
-
-        #endregion
-
-        #region IFightingObject
-
-        public bool IsFighting { get; protected set; }
-
-        public event Action OnPulledInFight;
-        public event Action OnReleasedFromFight;
-
-        public void PullIntoFight()
+        public void TakeDamage(IDamage damage)
         {
-            OnPulledInFight?.Invoke();
-            IsFighting = true;
-            Debug.Log($"{gameObject.name} pulled into fight");
+            OnTakeDamage?.Invoke(damage);
         }
-
-        public void ReleaseFromFight()
-        {
-            OnReleasedFromFight?.Invoke();
-            IsFighting = false;
-            Debug.Log($"{gameObject.name} Released from fight");
-        }
-
-        #endregion
     }
 }

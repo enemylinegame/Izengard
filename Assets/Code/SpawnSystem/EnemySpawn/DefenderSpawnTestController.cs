@@ -19,11 +19,9 @@ namespace SpawnSystem
 
         private int _spawnIndex;
         
-        public DefenderSpawnTestController(List<Transform> spawnPoints, SpawnSettings spawnSettings, 
-            IIdGenerator idGenerator)
+        public DefenderSpawnTestController(List<Transform> spawnPoints, SpawnSettings spawnSettings)
         {
-
-            _factory = new EnemyUnitFactory(spawnSettings.UnitsCreationData, idGenerator);
+            _factory = new EnemyUnitFactory(spawnSettings.UnitsCreationData);
 
             foreach (var creationData in spawnSettings.UnitsCreationData)
             {

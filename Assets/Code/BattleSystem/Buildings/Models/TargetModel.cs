@@ -1,4 +1,5 @@
 ﻿using Abstraction;
+using System;
 using UnityEngine;
 
 namespace BattleSystem.Models
@@ -17,7 +18,8 @@ namespace BattleSystem.Models
         private readonly Vector3 _position;
         private readonly int _id;
         private readonly MobilityType _mobilityType;
-        
+
+        public event Action<IDamage> OnTakeDamage;
 
         public TargetModel(IDamageable damageable, ITarget target)
         {
@@ -27,17 +29,7 @@ namespace BattleSystem.Models
             _mobilityType = MobilityType.Dynamic;
         }
 
-        public TargetModel(IDamageable damageable, int id, Vector3 position)
-        {
-            _damageable = damageable;
-            _id = id;
-            _position = position;
-            _mobilityType = MobilityType.Static;
-        }
-
         #region IAttackTarget
-
-        public bool IsAlive => _damageable.IsAlive;
 
         public void TakeDamage(IDamage damage)
         {

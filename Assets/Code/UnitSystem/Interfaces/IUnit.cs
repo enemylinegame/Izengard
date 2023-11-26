@@ -6,7 +6,6 @@ using UnityEngine;
 namespace UnitSystem
 {
     public interface IUnit : 
-        IDamageable, 
         IDamageDealer, 
         IPositioned<Vector3>, 
         IRotated<Vector3>
@@ -17,7 +16,7 @@ namespace UnitSystem
         IUnitOffence Offence { get; }
         UnitNavigationModel Navigation { get; }
         UnitTargetModel Target { get; }
-        UnitStateModel UnitState { get; }
+        UnitStateModel State { get; }
         UnitPriorityModel Priority { get; }
 
         event Action<IUnit> OnReachedZeroHealth;

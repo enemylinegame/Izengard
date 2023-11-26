@@ -8,7 +8,6 @@ namespace BattleSystem.Buildings
 {
     public class WarBuildingHandler : IWarBuilding
     {
-
         private readonly IWarBuildingView _view;
         private readonly IUnitDefence _defence;
         private readonly IParametr<int> _health;
@@ -16,40 +15,28 @@ namespace BattleSystem.Buildings
         private int _maxHealth;
         private int _id;
 
-
-        public WarBuildingHandler(int id, IWarBuildingView view, IUnitDefence defence, int durability)
-        {
-            _id = id;
-            _view = view;
-            _defence = defence;
-            _view.Init(id);
-            _maxHealth = durability;
-            _health = new ParametrModel<int>(durability, 0, durability);
-        }
-        
-        
-        #region IWarBuilding
+        public int Id => _id;
+        public IWarBuildingView View => _view;
         
         public event Action<IWarBuilding> OnReachedZeroHealth;
 
-        public bool IsAlive => _health.GetValue() > 0;
-        
-        public void TakeDamage(IDamage damage)
-        {
-            float resultDamageAmount = _defence.GetAfterDefDamage(damage);
+        public WarBuildingHandler(IWarBuildingView view, IUnitDefence defence, int durability)
+        {        
+            _view = view;
+            _defence = defence;
+            _maxHealth = durability;
+            _health = new ParametrModel<int>(durability, 0, durability);
 
-            int hpLeft = _health.GetValue() - (int)resultDamageAmount;
-            _health.SetValue(hpLeft);
+            _id = _view.Id;
         }
-
-        public int Id => _id;
-
-        public IWarBuildingView View => _view;
 
         public void Enable()
         {
             _health.OnValueChange += _view.ChangeHealth;
             _health.OnMinValueSet += ReachedZeroHealth;
+
+            _view.OnTakeDamage += TakeDamage;
+
             _view.Show();
             _view.ChangeHealth(_health.GetValue());
         }
@@ -58,12 +45,24 @@ namespace BattleSystem.Buildings
         {
             _health.OnValueChange -= _view.ChangeHealth;
             _health.OnMinValueSet -= ReachedZeroHealth;
+
+            _view.OnTakeDamage -= TakeDamage;
+
             _view.Hide();
         }
 
-        #endregion
-        
-        
+
+
+        private void TakeDamage(IDamage damage)
+        {
+            float resultDamageAmount = _defence.GetAfterDefDamage(damage);
+
+            int hpLeft = _health.GetValue() - (int)resultDamageAmount;
+            _health.SetValue(hpLeft);
+        }
+
+
+ 
         private void ReachedZeroHealth(int value)
         {
             OnReachedZeroHealth?.Invoke(this);

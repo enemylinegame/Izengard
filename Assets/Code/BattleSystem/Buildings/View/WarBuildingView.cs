@@ -1,25 +1,23 @@
 ﻿using Abstraction;
 using BattleSystem.Buildings.Interfaces;
+using System;
 using UnityEngine;
 
 namespace BattleSystem.Buildings.View
 {
     public class WarBuildingView : MonoBehaviour, IWarBuildingView
     {
+        [SerializeField] private int _id;
 
-        private int _id;
-
-        
         public int Id => _id;
-
-        
-        #region IWarBuildingView
 
         public Vector3 Position => transform.position;
         
-        public void Init(int id)
+        public event Action<IDamage> OnTakeDamage;
+
+        private void Awake()
         {
-            _id = id;
+            _id = Math.Abs(gameObject.GetInstanceID());
         }
 
         public void Show()
@@ -36,8 +34,10 @@ namespace BattleSystem.Buildings.View
         {
             Debug.Log("WarBuildingView->ChangeHealth: hpValue = " + hpValue.ToString());
         }
-        
-        #endregion
 
+        public void TakeDamage(IDamage damage)
+        {
+            OnTakeDamage?.Invoke(damage);
+        }
     }
 }

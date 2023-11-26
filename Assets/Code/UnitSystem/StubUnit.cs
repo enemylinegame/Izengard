@@ -20,7 +20,7 @@ namespace UnitSystem
 
         public IUnitOffence Offence { get; }
 
-        public UnitStateModel UnitState { get; }
+        public UnitStateModel State { get; }
         public UnitTargetModel Target { get; }
         public UnitPriorityModel Priority { get; }
 

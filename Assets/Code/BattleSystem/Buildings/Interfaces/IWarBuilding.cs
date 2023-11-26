@@ -1,12 +1,9 @@
 ﻿using System;
-using UnityEngine;
-using Abstraction;
-using UnitSystem;
 
 
 namespace BattleSystem.Buildings.Interfaces
 {
-    public interface IWarBuilding : IDamageable
+    public interface IWarBuilding 
     {
         int Id { get; }
         

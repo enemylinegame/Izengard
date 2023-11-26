@@ -12,8 +12,6 @@ namespace BattleSystem.Buildings
         private readonly int _obstPlacedSurfaceId;
         private readonly NavigationUpdater _navigationUpdater;
 
-        private int _obstacleIndex = 12354;
-
         public List<IObstacle> ObstaclesCollection => _obstaclesCollection;
 
         public event Action<IObstacle> OnObstalceRemoved;
@@ -29,11 +27,9 @@ namespace BattleSystem.Buildings
 
             foreach (var defendWall in defendWalls) 
             {
-                var obstacle = new ObstacleHandler(_obstacleIndex, defendWall);
+                var obstacle = new ObstacleHandler(defendWall);
 
                 _obstaclesCollection.Add(obstacle);
-
-                _obstacleIndex++;
             }
         }
 
@@ -48,7 +44,6 @@ namespace BattleSystem.Buildings
                 obstacle.Enable();
             }
         }
-
 
         private void ObstacleReachedZeroHealth(int obstacleId)
         {

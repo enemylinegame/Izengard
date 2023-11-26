@@ -3,11 +3,8 @@
 
 namespace Abstraction
 {
-    public interface IAttackTarget : IDamageable
+    public interface IAttackTarget : ITarget,  IDamageable
     {
-        int Id { get; }
-        Vector3 Position { get; }
-        //bool IsAlive { get; }             // from IDamageable
-        //void TakeDamage(IDamage damage);  // from IDamageable
+
     }
 }

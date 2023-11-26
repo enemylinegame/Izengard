@@ -31,7 +31,6 @@ public class UnitTestEntry : MonoBehaviour
 
 
     private TimeRemainingController timeRemainingController;
-    private IdGenerator _idGenerator;
 
     private NavigationUpdater _navigationUpdater;
 
@@ -55,20 +54,19 @@ public class UnitTestEntry : MonoBehaviour
 
     private void Start()
     {
-        _idGenerator = new IdGenerator();
         timeRemainingController = new TimeRemainingController();
         _onUpdates.Add(timeRemainingController);
 
         _navigationUpdater = new NavigationUpdater();
         _surfaceId = _navigationUpdater.AddNavigationSurface(_groundSurface);
        
-        _mainTowerController = new WarBuildingsController(_mainTower, _mainTowerConfig, _idGenerator);
+        _mainTowerController = new WarBuildingsController(_mainTower, _mainTowerConfig);
 
         _unitsContainer = new UnitsContainer();
 
         _targetFinder = new TargetFinder(_mainTowerController, _unitsContainer);
 
-        _enemySpawnController = new EnemySpawnController(_enemySpawner, _idGenerator);
+        _enemySpawnController = new EnemySpawnController(_enemySpawner);
         _enemySpawnController.OnUnitSpawned += OnCreatedUnit;
         _onUpdates.Add(_enemySpawnController);
         
@@ -80,11 +78,11 @@ public class UnitTestEntry : MonoBehaviour
 
         if (_enableDefenders)
         {
-            _defenderSpawnController = new DefenderSpawnTestController(_defenderSpawnPoints, _defenderSpawnSettings, _idGenerator);
+            _defenderSpawnController = new DefenderSpawnTestController(_defenderSpawnPoints, _defenderSpawnSettings);
             _defenderSpawnController.OnUnitSpawned += OnCreatedUnit;
             _onUpdates.Add(_defenderSpawnController);
             
-            _defenderBattleController = new UnitBattleController(_battleSystemConst, _unitsContainer, _targetFinder);
+            _defenderBattleController = new UnitBattleController(_targetFinder, _unitsContainer,_battleSystemConst);
             _onUpdates.Add(_defenderBattleController);
 
             _defenderSpawnController.SpawnUnit(UnitType.Militiaman);
@@ -115,13 +113,7 @@ public class UnitTestEntry : MonoBehaviour
 
     private void OnCreatedUnit(IUnit unit) 
     {
-        unit.Enable();
         _unitsContainer.AddUnit(unit);
-
-        if(_enableDefenders) 
-        {
-            _defenderBattleController.AddUnit(unit);
-        }
     }
 
     private void OnEnemySpawnEnd()

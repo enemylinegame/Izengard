@@ -1,5 +1,7 @@
-﻿using BattleSystem.Buildings.Configs;
+﻿using Abstraction;
+using BattleSystem.Buildings.Configs;
 using BattleSystem.Buildings.Interfaces;
+using System;
 using UnityEngine;
 
 namespace BattleSystem.Buildings.View
@@ -8,19 +10,19 @@ namespace BattleSystem.Buildings.View
     {
         [SerializeField] private DefenWallConfig _config;
 
-        public DefenWallConfig Config => _config;
-
-        #region IWarBuildingView
-
         private int _id;
+
+        public DefenWallConfig Config => _config;
 
         public int Id => _id;
 
         public Vector3 Position => transform.localPosition;
+        
+        public event Action<IDamage> OnTakeDamage;
 
-        public void Init(int id)
+        private void Awake()
         {
-            _id = id;
+            _id = Math.Abs(gameObject.GetInstanceID());
         }
 
         public void Show()
@@ -38,6 +40,9 @@ namespace BattleSystem.Buildings.View
             Debug.Log("DefendWallObstacleView->ChangeHealth: hpValue = " + hpValue.ToString());
         }
 
-        #endregion
+        public void TakeDamage(IDamage damage)
+        {
+            OnTakeDamage?.Invoke(damage);
+        }
     }
 }

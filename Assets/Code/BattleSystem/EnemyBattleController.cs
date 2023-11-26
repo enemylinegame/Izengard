@@ -21,27 +21,27 @@ namespace BattleSystem
                 var unit = unitsContainer.EnemyUnits[i];
 
                 UpdateTarget(unit);
-                switch (unit.UnitState.CurrentState)
+                switch (unit.State.Current)
                 {
                     default:
                         break;
 
-                    case UnitState.Idle:
+                    case UnitStateType.Idle:
                         {
                             UnitIdleState(unit, deltaTime);
                             break;
                         }
-                    case UnitState.Move:
+                    case UnitStateType.Move:
                         {
                             UnitMoveState(unit, deltaTime);
                             break;
                         }
-                    case UnitState.Attack:
+                    case UnitStateType.Attack:
                         {
                             UnitAttackState(unit, deltaTime);
                             break;
                         }
-                    case UnitState.Die:
+                    case UnitStateType.Die:
                         {
                             UnitDeadState(unit, deltaTime);
                             break;
@@ -65,14 +65,14 @@ namespace BattleSystem
                     {
                         if(unit.Target.CurrentTarget is NoneTarget)
                         {
-                            ChangeUnitState(unit, UnitState.Idle);
+                            ChangeUnitState(unit, UnitStateType.Idle);
                             return;
                         }
 
                         if (unit.Target.IsTargetChangePosition())
                         {
                             MoveUnitToTarget(unit, unit.Target.CurrentTarget);
-                            ChangeUnitState(unit, UnitState.Move);
+                            ChangeUnitState(unit, UnitStateType.Move);
                             return;
                         }
 
@@ -83,11 +83,11 @@ namespace BattleSystem
 
         protected override void UnitIdleState(IUnit unit, float deltaTime)
         {
-            IAttackTarget target = GetTarget(unit);
+            IAttackTarget target = targetFinder.GetTarget(unit);
             unit.Target.SetTarget(target);
 
             MoveUnitToTarget(unit, unit.Target.CurrentTarget);
-            ChangeUnitState(unit, UnitState.Move);
+            ChangeUnitState(unit, UnitStateType.Move);
         }
 
         protected override void UnitMoveState(IUnit unit, float deltaTime)
@@ -98,23 +98,23 @@ namespace BattleSystem
             {
                 StopUnit(unit);
 
-                ChangeUnitState(unit, UnitState.Attack);
+                ChangeUnitState(unit, UnitStateType.Attack);
             }
         }
 
         protected override void UnitAttackState(IUnit unit, float deltaTime)
         {
-            IAttackTarget target = unit.Target.CurrentTarget;
+            var target = unit.Target.CurrentTarget;
 
             if (target != null)
             {
                 if (IsAttackDistanceSuitable(unit, target.Position))
                 {
-                    switch (unit.UnitState.CurrentAttackPhase)
+                    switch (unit.State.CurrentAttackPhase)
                     {
                         case AttackPhase.None:
                             unit.TimeProgress = deltaTime;
-                            unit.UnitState.CurrentAttackPhase = AttackPhase.Cast;
+                            unit.State.CurrentAttackPhase = AttackPhase.Cast;
                             break;
                         case AttackPhase.Cast:
                             unit.TimeProgress += deltaTime;
@@ -122,7 +122,7 @@ namespace BattleSystem
                             {
 
                                 target.TakeDamage(unit.Offence.GetDamage());
-                                unit.UnitState.CurrentAttackPhase = AttackPhase.None;
+                                unit.State.CurrentAttackPhase = AttackPhase.None;
                                 unit.TimeProgress = 0.0f;
 
                                 StartAttackAnimation(unit);
@@ -135,18 +135,24 @@ namespace BattleSystem
                 }
                 else
                 {
-                    unit.UnitState.CurrentAttackPhase = AttackPhase.None;
-                    ChangeUnitState(unit, UnitState.Move);
+                    unit.State.CurrentAttackPhase = AttackPhase.None;
+                    ChangeUnitState(unit, UnitStateType.Move);
                 }
 
             }
             else
             {
                 unit.Target.ResetTarget();
-                ChangeUnitState(unit, UnitState.Idle);
+                ChangeUnitState(unit, UnitStateType.Idle);
             }
 
         }
+
+        protected override void UnitDeadState(IUnit unit, float deltaTime) 
+        {
+
+        }
+
 
         private bool IsAttackDistanceSuitable(IUnit attacker, Vector3 targetPosition)
         {
@@ -165,15 +171,7 @@ namespace BattleSystem
             }
         }
 
-        protected override void UnitDeadState(IUnit unit, float deltaTime) { }
-
-        private void ExecuteFight(IDamageDealer damageDealer, IDamageable damageableTarget)
-        {
-            var damage = damageDealer.GetAttackDamage();
-            damageableTarget.TakeDamage(damage);
-        }
-
-
+ 
         #region Enemy moving logic
 
         private void MoveUnitToTarget(IUnit unit, IAttackTarget target)
@@ -197,78 +195,6 @@ namespace BattleSystem
             }
             return false;
         }
-
-        #endregion
-
-        #region Enemy finding logic
-
-        private IAttackTarget GetTarget(IUnit unit)
-        {
-            //Debug.Log("EnemyBattleController->GetTarget:");
-            IAttackTarget result = new NoneTarget();
-
-            while (unit.Priority.GetNext())
-            {
-                var currentPriority = unit.Priority.Current;
-                switch (currentPriority.Priority)
-                {
-                    default:
-                    case UnitPriorityType.MainTower:
-                        {
-                            result = targetFinder.GetMainTower();
-                            break;
-                        }
-
-                    case UnitPriorityType.ClosestFoe:
-                        {
-                            result = GetClosestFoe(unit);
-                            break;
-                        }
-                    case UnitPriorityType.SpecificFoe:
-                        {
-                            result = GetClosestFoe(unit, currentPriority.Type);
-                            break;
-                        }
-                }
-
-                if (result is not NoneTarget)
-                {
-                    break;
-                }
-            }
-            unit.Priority.Reset();
-
-            return result;
-        }
-
-        private IAttackTarget GetClosestFoe(IUnit unit, UnitType targetType = UnitType.None)
-        {
-            IAttackTarget target = new NoneTarget();
-
-            Vector3 unitPos = unit.GetPosition();
-            float minDist = float.MaxValue;
-
-            for (int i = 0; i < unitsContainer.DefenderUnits.Count; i++)
-            {
-                IUnit defender = unitsContainer.DefenderUnits[i];
-
-                if(targetType != UnitType.None && defender.Stats.Type != targetType)
-                    continue;
-
-                Vector3 defenderPos = defender.GetPosition();
-
-                float distance = Vector3.Distance(unitPos, defenderPos);
-                if (distance < minDist)
-                {
-                    //minDist = distance;
-                    //target = defender.View;
-                    throw new NotImplementedException();
-                }
-            }
-
-            return target;
-        }
-
 
         #endregion
     }

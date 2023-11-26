@@ -5,28 +5,28 @@ namespace UnitSystem.Model
 {
     public class UnitStateModel
     {
-        private UnitState _currentState;
+        private UnitStateType _current;
         private AttackPhase _attackPhase;
         
-        public UnitState CurrentState => _currentState;
+        public UnitStateType Current => _current;
         public AttackPhase CurrentAttackPhase
         {
             get => _attackPhase;
             set => _attackPhase = value;
         } 
 
-        public event Action<UnitState> OnStateChange;
+        public event Action<UnitStateType> OnStateChange;
 
         public UnitStateModel()
         {
-            _currentState = UnitState.Idle;
+            _current = UnitStateType.Idle;
         }
 
-        public void ChangeState(UnitState newState) 
+        public void ChangeState(UnitStateType newState) 
         {
-            if(newState != _currentState)
+            if(newState != _current)
             {
-                _currentState = newState;
+                _current = newState;
                 OnStateChange?.Invoke(newState);
             }
         }

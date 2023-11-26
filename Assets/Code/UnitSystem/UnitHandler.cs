@@ -8,7 +8,7 @@ namespace UnitSystem
 {
     public class UnitHandler : IUnit, IDisposable
     {
-        private readonly IUnitView _unitView;
+        private readonly IUnitView _view;
         private readonly UnitStatsModel _unitStats;       
         private readonly IUnitDefence _unitDefence;
         private readonly IUnitOffence _unitOffence;
@@ -20,7 +20,7 @@ namespace UnitSystem
         private int _id;
         private Vector3 _startPosition;
 
-        public IUnitView View => _unitView;
+        public IUnitView View => _view;
 
         public UnitStatsModel Stats => _unitStats;
 
@@ -29,9 +29,8 @@ namespace UnitSystem
         public IUnitOffence Offence => _unitOffence;
 
         public UnitNavigationModel Navigation => _navigation;
-
+        public UnitStateModel State => _unitState;
         public UnitTargetModel Target => _unitTarget;
-        public UnitStateModel UnitState => _unitState;
         public UnitPriorityModel Priority => _priority;
 
         public int Id => _id;
@@ -40,10 +39,10 @@ namespace UnitSystem
         
         public float TimeProgress { get; set; }
 
+      
         public event Action<IUnit> OnReachedZeroHealth;
 
         public UnitHandler(
-            int index,
             IUnitView view, 
             UnitStatsModel unitStats,
             IUnitDefence unitDefence,
@@ -51,54 +50,52 @@ namespace UnitSystem
             UnitNavigationModel navigation,
             UnitPriorityModel priority)
         {
-            _id = index;
 
-            _unitView = 
-                view ?? throw new ArgumentNullException(nameof(view));
+            _view = view;
 
-            _unitStats = 
-                unitStats ?? throw new ArgumentNullException(nameof(unitStats));
+            _unitStats = unitStats;
 
-            _unitDefence = 
-                unitDefence ?? throw new ArgumentNullException(nameof(unitDefence));
+            _unitDefence = unitDefence;
 
-            _unitOffence =
-               unitOffence ?? throw new ArgumentNullException(nameof(unitOffence));
+            _unitOffence = unitOffence;
 
-            _navigation = 
-                navigation ?? throw new ArgumentNullException(nameof(navigation));
+            _navigation = navigation;
 
-            _priority = 
-                priority ?? throw new ArgumentNullException(nameof(priority));
+            _priority = priority;
 
             _unitState = new UnitStateModel();
             
             _unitTarget = new UnitTargetModel();
 
-            _unitView.Init(_id);
+            _id = _view.Id;
         }
 
         public void Enable()
         {
             Subscribe();
 
-            _unitView.Show();
-            _unitView.SetCollisionEnabled(true);
+            _view.Show();
+            _view.SetCollisionEnabled(true);
 
-            _unitView.ChangeHealth(_unitStats.Health.GetValue());
-            _unitView.ChangeSize(_unitStats.Size.GetValue());
-            _unitView.ChangeSpeed(_unitStats.Speed.GetValue());
+            _view.ChangeHealth(_unitStats.Health.GetValue());
+            _view.ChangeSize(_unitStats.Size.GetValue());
+            _view.ChangeSpeed(_unitStats.Speed.GetValue());
+
+            _navigation.Enable();
+            _unitState.ChangeState(UnitStateType.Idle);
         }
 
         private void Subscribe()
         {
-            _unitStats.Health.OnValueChange += _unitView.ChangeHealth;
+            _unitStats.Health.OnValueChange += _view.ChangeHealth;
             _unitStats.Health.OnMinValueSet += ReachedZeroHealth;
 
-            _unitStats.Size.OnValueChange += _unitView.ChangeSize;
-            _unitStats.Speed.OnValueChange += _unitView.ChangeSpeed;
+            _unitStats.Size.OnValueChange += _view.ChangeSize;
+            _unitStats.Speed.OnValueChange += _view.ChangeSpeed;
 
             _unitState.OnStateChange += OnStateChanged;
+
+            _view.OnTakeDamage += TakeDamage;
         }
 
         public void Disable()
@@ -106,19 +103,22 @@ namespace UnitSystem
             Unsubscribe();
 
             _navigation.Disable();
-            
-            _unitView.Hide();
+            _unitState.ChangeState(UnitStateType.None);
+
+            _view.Hide();
         }
 
         private void Unsubscribe()
         {
-            _unitStats.Health.OnValueChange -= _unitView.ChangeHealth;
+            _unitStats.Health.OnValueChange -= _view.ChangeHealth;
             _unitStats.Health.OnMinValueSet -= ReachedZeroHealth;
 
-            _unitStats.Size.OnValueChange -= _unitView.ChangeSize;
-            _unitStats.Speed.OnValueChange -= _unitView.ChangeSpeed;
+            _unitStats.Size.OnValueChange -= _view.ChangeSize;
+            _unitStats.Speed.OnValueChange -= _view.ChangeSpeed;
             
             _unitState.OnStateChange -= OnStateChanged;
+
+            _view.OnTakeDamage -= TakeDamage;
         }
 
         public void SetStartPosition(Vector3 spawnPosition)
@@ -126,28 +126,6 @@ namespace UnitSystem
             _startPosition = spawnPosition;
             SetPosition(spawnPosition);
         }
-
-        private void ReachedZeroHealth(int value)
-        {
-            OnReachedZeroHealth?.Invoke(this);
-        }
-
-        private void OnStateChanged(UnitState newState)
-        {
-            if (newState == Enum.UnitState.Die)
-            {
-                Target.ResetTarget();
-                //_navigation.Stop();
-                TimeProgress = 0.0f;
-                _unitView.SetCollisionEnabled(false);
-                _navigation.Disable();
-            }
-        }
-        
-        
-        #region IDamageable
-
-        public bool IsAlive => _unitStats.Health.GetValue() > 0;
 
         public void TakeDamage(IDamage damageValue)
         {
@@ -158,7 +136,21 @@ namespace UnitSystem
             _unitStats.Health.SetValue(hpLeft);
         }
 
-        #endregion
+        private void OnStateChanged(UnitStateType newState)
+        {
+            if (newState == Enum.UnitStateType.Die)
+            {
+                Target.ResetTarget();
+                TimeProgress = 0.0f;
+                _view.SetCollisionEnabled(false);
+                _navigation.Disable();
+            }
+        }
+
+        private void ReachedZeroHealth(int value)
+        {
+            OnReachedZeroHealth?.Invoke(this);
+        }
 
         #region IDamageDealer
 
@@ -183,12 +175,12 @@ namespace UnitSystem
 
         public Vector3 GetPosition()
         {
-            return _unitView.SelfTransform.position;
+            return _view.Position;
         }
 
         public void SetPosition(Vector3 pos)
         {
-            _unitView.SelfTransform.position = pos;
+            _view.SelfTransform.position = pos;
         }
 
         #endregion
@@ -197,14 +189,14 @@ namespace UnitSystem
 
         public Vector3 GetRotation()
         {
-            var angleVector = _unitView.SelfTransform.rotation.eulerAngles;
+            var angleVector = _view.SelfTransform.rotation.eulerAngles;
             return angleVector;
         }
 
         public void SetRotation(Vector3 rotation)
         {
             var newRotation = Quaternion.Euler(rotation);
-            _unitView.SelfTransform.rotation = newRotation;
+            _view.SelfTransform.rotation = newRotation;
         }
 
         #endregion

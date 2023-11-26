@@ -11,9 +11,8 @@ namespace BattleSystem.Buildings
         private readonly IParametr<int> _health;
         private readonly IObstacleView _view;
 
-        private bool _isAlive;
-
         public event Action<int> OnReacheZeroHealth;
+        public event Action<IDamage> OnTakeDamage;
 
         public int Id => _id;
 
@@ -21,19 +20,14 @@ namespace BattleSystem.Buildings
 
         public IObstacleView View => _view;
 
-        public bool IsAlive => _isAlive;
-
-        public ObstacleHandler(int id, IObstacleView view)
+        public ObstacleHandler(IObstacleView view)
         {
-            _id = id;
             _view = view;
-
             var cfg = view.Config;
             _health = new ParametrModel<int>(cfg.HealtPoints, 0, cfg.HealtPoints);
 
-            _view.Init(_id);
-
-            _isAlive = true;
+            _id = _view.Id;
+            _view.Show();
         }
 
         public void Enable()

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnitSystem.Enum;
 
 namespace UnitSystem
@@ -13,9 +14,16 @@ namespace UnitSystem
         public List<IUnit> DefenderUnits => _defenderUnits;
         public List<IUnit> DeadUnits => _deadUnits;
 
+        public event Action OnAllEnemyDestroyed;
+
+        public event Action OnAllDefenderDestroyed;
+
         public void AddUnit(IUnit unit)
         {
             if (unit == null) return;
+
+            unit.Enable();
+            unit.OnReachedZeroHealth += UnitReachedZeroHealth;
 
             switch (unit.Stats.Faction)
             {
@@ -26,9 +34,6 @@ namespace UnitSystem
                         if (!_enemyUnits.Contains(unit))
                         {
                             _enemyUnits.Add(unit);
-                            unit.OnReachedZeroHealth += UnitReachedZeroHealth;
-                            unit.Navigation.Enable();
-                            unit.UnitState.ChangeState(UnitState.Idle);
                         }
                         break;
                     }
@@ -37,9 +42,6 @@ namespace UnitSystem
                         if (!_defenderUnits.Contains(unit))
                         {
                             _defenderUnits.Add(unit);
-                            unit.OnReachedZeroHealth += UnitReachedZeroHealth;
-                            unit.Navigation.Enable();
-                            unit.UnitState.ChangeState(UnitState.Idle);
                         }
                         break;
                     }
@@ -48,7 +50,7 @@ namespace UnitSystem
 
         public void RemoveUnit(IUnit unit)
         {
-            if (unit.UnitState.CurrentState == UnitState.Die)
+            if (unit.State.Current == UnitStateType.Die)
             {
                 unit.Disable();
                 _deadUnits.Remove(unit);
@@ -63,21 +65,28 @@ namespace UnitSystem
                         break;
                     case UnitFactionType.Enemy:
                         {
-                            //Debug.Log($"FifthBattleController->RemoveUnit: [{unit.Id}]_{unit.Stats.Role} - dead");
-
                             unit.Target.ResetTarget();
                             unit.Disable();
                             _enemyUnits.Remove(unit);
+
+                            if(_enemyUnits.Count == 0)
+                            {
+                                OnAllEnemyDestroyed?.Invoke();
+                            }
 
                             break;
                         }
                     case UnitFactionType.Defender:
                         {
-                            //Debug.Log($"FifthBattleController->RemoveUnit: {unit.View.SelfTransform.gameObject.name}");
-
                             unit.Target.ResetTarget();
                             unit.Disable();
                             _defenderUnits.Remove(unit);
+
+                            if (_defenderUnits.Count == 0)
+                            {
+                                OnAllDefenderDestroyed?.Invoke();
+                            }
+
                             break;
                         }
                 }
@@ -88,14 +97,27 @@ namespace UnitSystem
         {
             unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
 
+            List<IUnit> linkedUnits = new();
+
             if (unit.Stats.Faction == UnitFactionType.Enemy)
             {
                 _enemyUnits.Remove(unit);
+
+                linkedUnits = _defenderUnits.FindAll(e => e.Target.CurrentTarget == unit.View);
+
             }
             else if (unit.Stats.Faction == UnitFactionType.Defender)
             {
                 _defenderUnits.Remove(unit);
+
+                linkedUnits = _enemyUnits.FindAll(e => e.Target.CurrentTarget == unit.View);
             }
+
+            foreach (var linkedUnit in linkedUnits)
+            {
+                linkedUnit.Target.ResetTarget();
+            }
+
             _deadUnits.Add(unit);
         }
     }

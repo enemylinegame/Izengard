@@ -23,28 +23,10 @@ namespace BattleSystem
                 AttackerModel = new UnitAttackerModel(unit);
             }
         }
-        
-        private class TargetData : IAttackTarget
-        {
-            public IUnit Unit;
-
-            public bool IsAlive => Unit.IsAlive;
-            
-            public void TakeDamage(IDamage damage)
-            {
-                Unit.TakeDamage(damage);
-            }
-
-            public int Id => 0;
-            public Vector3 Position => Unit.View.SelfTransform.position;
-        }
 
         private const float MAX_DEFEND_POSITION_ERROR_SQR = 0.1f * 0.1f;
 
         private List<UnitData> _defenders = new();
-        private List<TargetData> _enemies = new();
-
-
 
 
         public DefenderBattleController(TargetFinder targetFinder, UnitsContainer unitsContainer) 
@@ -58,23 +40,23 @@ namespace BattleSystem
             for (int i = 0; i < _defenders.Count; i++)
             {
                 UnitData currentUnit = _defenders[i];
-                UnitState state = currentUnit.Unit.UnitState.CurrentState;
+                UnitStateType state = currentUnit.Unit.State.Current;
                 switch (state)
                 {
-                    case UnitState.None:
+                    case UnitStateType.None:
                         break;
-                    case UnitState.Idle:
+                    case UnitStateType.Idle:
                         ExecuteIdleState(currentUnit, deltaTime);
                         break;
-                    case UnitState.Move:
+                    case UnitStateType.Move:
                         ExecuteMoveState(currentUnit, deltaTime);
                         break;
-                    case UnitState.Search:
+                    case UnitStateType.Search:
                         break;
-                    case UnitState.Attack:
+                    case UnitStateType.Attack:
                         ExecuteAttackState(currentUnit, deltaTime);
                         break;
-                    case UnitState.Die:
+                    case UnitStateType.Die:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -105,7 +87,7 @@ namespace BattleSystem
                 if ( (defender.GetPosition() - currentTargetPosition).sqrMagnitude <= maxAttackRange * maxAttackRange )
                 {
                     defender.Navigation.Stop();
-                    ChangeState(unitData, UnitState.Attack);
+                    ChangeState(unitData, UnitStateType.Attack);
                 }
                 else
                 {
@@ -120,12 +102,12 @@ namespace BattleSystem
                     if ((defender.GetPosition() - unitData.DefendPosition).sqrMagnitude <=
                         MAX_DEFEND_POSITION_ERROR_SQR)
                     {
-                        ChangeState(unitData, UnitState.Idle);
+                        ChangeState(unitData, UnitStateType.Idle);
                     }
                 }
                 else
                 {
-                    ChangeState(unitData, UnitState.Idle);
+                    ChangeState(unitData, UnitStateType.Idle);
                 }
             }
         }
@@ -146,14 +128,14 @@ namespace BattleSystem
             }
         }
 
-        private void ChangeState(UnitData unit, UnitState newState)
+        private void ChangeState(UnitData unit, UnitStateType newState)
         {
-            if (unit.Unit.UnitState.CurrentState != newState)
+            if (unit.Unit.State.Current != newState)
             {
                 Debug.Log("DefenderBattleController->ChangeState: " + unit.Unit.View.SelfTransform.gameObject.name +  
                     " newState = " + newState.ToString() );
-                unit.Unit.UnitState.ChangeState(newState);
-                if (newState == UnitState.Move && 
+                unit.Unit.State.ChangeState(newState);
+                if (newState == UnitStateType.Move && 
                     unit.Unit.Target.CurrentTarget is NoneTarget && 
                     unit.HaveDefendPosition) 
                 {
@@ -192,8 +174,6 @@ namespace BattleSystem
                     }
                 });
                 
-                int index = _enemies.FindIndex(data=> data.Unit == unit);
-                _enemies.RemoveAt(index);
             }
         }
 
