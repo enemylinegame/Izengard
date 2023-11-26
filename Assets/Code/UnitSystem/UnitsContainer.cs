@@ -97,6 +97,8 @@ namespace UnitSystem
         {
             unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
 
+            unit.ChangeState(UnitStateType.Die);
+
             List<IUnit> linkedUnits = new();
 
             if (unit.Stats.Faction == UnitFactionType.Enemy)

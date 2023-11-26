@@ -93,8 +93,6 @@ namespace UnitSystem
             _unitStats.Size.OnValueChange += _view.ChangeSize;
             _unitStats.Speed.OnValueChange += _view.ChangeSpeed;
 
-            _unitState.OnStateChange += OnStateChanged;
-
             _view.OnTakeDamage += TakeDamage;
         }
 
@@ -116,8 +114,6 @@ namespace UnitSystem
             _unitStats.Size.OnValueChange -= _view.ChangeSize;
             _unitStats.Speed.OnValueChange -= _view.ChangeSpeed;
             
-            _unitState.OnStateChange -= OnStateChanged;
-
             _view.OnTakeDamage -= TakeDamage;
         }
 
@@ -136,16 +132,44 @@ namespace UnitSystem
             _unitStats.Health.SetValue(hpLeft);
         }
 
-        private void OnStateChanged(UnitStateType newState)
+        public void ChangeState(UnitStateType state)
         {
-            if (newState == Enum.UnitStateType.Die)
+            State.ChangeState(state);
+            var animView = View.UnitAnimation;
+            if (animView != null)
             {
-                Target.ResetTarget();
-                TimeProgress = 0.0f;
-                _view.SetCollisionEnabled(false);
-                _navigation.Disable();
+                switch (state)
+                {
+                    case UnitStateType.None:
+                        animView.Reset();
+                        break;
+                    case UnitStateType.Idle:
+                        animView.IsMoving = false;
+                        break;
+                    case UnitStateType.Move:
+                        animView.IsMoving = true;
+                        break;
+                    case UnitStateType.Search:
+                        break;
+                    case UnitStateType.Attack:
+                        animView.IsMoving = false;
+                        break;
+                    case UnitStateType.Die:
+                        {
+                            Target.ResetTarget();
+                            TimeProgress = 0.0f;
+                            _view.SetCollisionEnabled(false);
+                            _navigation.Disable();
+
+                            animView.StartDead();
+                        }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
         }
+
 
         private void ReachedZeroHealth(int value)
         {

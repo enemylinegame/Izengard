@@ -25,36 +25,5 @@ namespace BattleSystem
         protected virtual void UnitMoveState(IUnit unit, float deltaTime) { }
         protected virtual void UnitAttackState(IUnit unit, float deltaTime) { }
         protected virtual void UnitDeadState(IUnit unit, float deltaTime) { }
-     
-        protected virtual void ChangeUnitState(IUnit unit, UnitStateType state)
-        {
-            unit.State.ChangeState(state);
-            IUnitAnimationView animView = unit.View.UnitAnimation;
-            if (animView != null)
-            {
-                switch (state)
-                {
-                    case UnitStateType.None:
-                        animView.Reset();
-                        break;
-                    case UnitStateType.Idle:
-                        animView.IsMoving = false;
-                        break;
-                    case UnitStateType.Move:
-                        animView.IsMoving = true;
-                        break;
-                    case UnitStateType.Search:
-                        break;
-                    case UnitStateType.Attack:
-                        animView.IsMoving = false;
-                        break;
-                    case UnitStateType.Die:
-                        animView.StartDead();
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
     }
 }

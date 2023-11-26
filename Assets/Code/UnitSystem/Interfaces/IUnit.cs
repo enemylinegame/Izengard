@@ -1,5 +1,6 @@
 ﻿using Abstraction;
 using System;
+using UnitSystem.Enum;
 using UnitSystem.Model;
 using UnityEngine;
 
@@ -32,5 +33,7 @@ namespace UnitSystem
         void Disable();
 
         void SetStartPosition(Vector3 spawnPosition);
+
+        void ChangeState(UnitStateType state);
     }
 }

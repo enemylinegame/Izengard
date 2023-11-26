@@ -73,7 +73,7 @@ namespace BattleSystem
             if (target is NoneTarget)
             {
                 unit.Target.ResetTarget();
-                ChangeUnitState(unit, UnitStateType.Idle);
+                unit.ChangeState(UnitStateType.Idle);
             }
         }
 
@@ -84,14 +84,14 @@ namespace BattleSystem
             if (target is not NoneTarget)
             {
                 unit.Target.SetTarget(target);
-                ChangeUnitState(unit, UnitStateType.Move);
+                unit.ChangeState(UnitStateType.Move);
                 unit.Navigation.MoveTo(target.Position);
             }
             else 
             {
                 if (!CheckIsOnDestinationPosition(unit))
                 {
-                    ChangeUnitState(unit, UnitStateType.Move);
+                    unit.ChangeState(UnitStateType.Move);
                     unit.Navigation.MoveTo(unit.StartPosition);
                 }
             }
@@ -107,7 +107,7 @@ namespace BattleSystem
                 if (distanceSqr <= unit.Offence.MaxRange * unit.Offence.MaxRange)
                 {
                     unit.Navigation.Stop();
-                    ChangeUnitState(unit, UnitStateType.Attack);
+                    unit.ChangeState(UnitStateType.Attack);
                 }
                 else
                 {
@@ -121,7 +121,7 @@ namespace BattleSystem
             {
                 if (CheckIsOnDestinationPosition(unit))
                 {
-                    ChangeUnitState(unit, UnitStateType.Idle);
+                    unit.ChangeState(UnitStateType.Idle);
                     unit.Navigation.Stop();
                 }
             }
@@ -167,14 +167,14 @@ namespace BattleSystem
                 else
                 {
                     unit.State.CurrentAttackPhase = AttackPhase.None;
-                    ChangeUnitState(unit, UnitStateType.Move);
+                    unit.ChangeState(UnitStateType.Move);
                 }
 
             }
             else
             {
                 unit.Target.ResetTarget();
-                ChangeUnitState(unit, UnitStateType.Idle);
+                unit.ChangeState(UnitStateType.Idle);
             }
 
         }

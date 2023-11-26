@@ -65,14 +65,14 @@ namespace BattleSystem
                     {
                         if(unit.Target.CurrentTarget is NoneTarget)
                         {
-                            ChangeUnitState(unit, UnitStateType.Idle);
+                            unit.ChangeState(UnitStateType.Idle);
                             return;
                         }
 
                         if (unit.Target.IsTargetChangePosition())
                         {
                             MoveUnitToTarget(unit, unit.Target.CurrentTarget);
-                            ChangeUnitState(unit, UnitStateType.Move);
+                            unit.ChangeState(UnitStateType.Move);
                             return;
                         }
 
@@ -87,7 +87,7 @@ namespace BattleSystem
             unit.Target.SetTarget(target);
 
             MoveUnitToTarget(unit, unit.Target.CurrentTarget);
-            ChangeUnitState(unit, UnitStateType.Move);
+            unit.ChangeState(UnitStateType.Move);
         }
 
         protected override void UnitMoveState(IUnit unit, float deltaTime)
@@ -98,7 +98,7 @@ namespace BattleSystem
             {
                 StopUnit(unit);
 
-                ChangeUnitState(unit, UnitStateType.Attack);
+                unit.ChangeState(UnitStateType.Attack);
             }
         }
 
@@ -136,14 +136,14 @@ namespace BattleSystem
                 else
                 {
                     unit.State.CurrentAttackPhase = AttackPhase.None;
-                    ChangeUnitState(unit, UnitStateType.Move);
+                    unit.ChangeState(UnitStateType.Move);
                 }
 
             }
             else
             {
                 unit.Target.ResetTarget();
-                ChangeUnitState(unit, UnitStateType.Idle);
+                unit.ChangeState(UnitStateType.Idle);
             }
 
         }

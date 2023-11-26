@@ -1,5 +1,6 @@
 ﻿using Abstraction;
 using System;
+using UnitSystem.Enum;
 using UnitSystem.Model;
 using UnitSystem.View;
 using UnityEngine;
@@ -69,5 +70,7 @@ namespace UnitSystem
         public void SetStartPosition(Vector3 spawnPosition) { }
 
         public void StartAttack(IDamageable damageableTarget) { }
+
+        public void ChangeState(UnitStateType state) { }
     }
 }
