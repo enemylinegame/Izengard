@@ -145,6 +145,10 @@ namespace BattleSystem
                         case AttackPhase.None:
                             unit.TimeProgress = deltaTime;
                             unit.State.CurrentAttackPhase = AttackPhase.Cast;
+
+                            var dir = unit.Target.CurrentTarget.Position - unit.GetPosition();
+                            unit.SetRotation(dir);
+
                             break;
                         case AttackPhase.Cast:
                             unit.TimeProgress += deltaTime;

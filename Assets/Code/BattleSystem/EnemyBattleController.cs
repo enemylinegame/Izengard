@@ -132,6 +132,10 @@ namespace BattleSystem
                         case AttackPhase.None:
                             unit.TimeProgress = deltaTime;
                             unit.State.CurrentAttackPhase = AttackPhase.Cast;
+
+                            var dir = unit.Target.CurrentTarget.Position - unit.GetPosition();
+                            unit.SetRotation(dir);
+
                             break;
                         case AttackPhase.Cast:
                             unit.TimeProgress += deltaTime;
@@ -193,18 +197,6 @@ namespace BattleSystem
         private void StopUnit(IUnit unit)
         {
             unit.Navigation.Stop();
-        }
-
-        private float GetDistanceToTarget(Vector3 unitPos, Vector3 targetPos) => 
-            Vector3.Distance(unitPos, targetPos);
-
-        private bool CheckStopDistance(float curDistance, float stopDistance)
-        {
-            if (curDistance <= stopDistance)
-            {
-                return true;
-            }
-            return false;
         }
 
         #endregion

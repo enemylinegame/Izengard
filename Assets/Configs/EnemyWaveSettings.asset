@@ -22,3 +22,6 @@ MonoBehaviour:
   - WaveName: wave2
     WaveDuration: 8
     InWaveUnits: 0500000004000000
+  - WaveName: wave3
+    WaveDuration: 5
+    InWaveUnits: 04000000040000000400000004000000

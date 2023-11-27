@@ -219,7 +219,7 @@ namespace UnitSystem
 
         public void SetRotation(Vector3 rotation)
         {
-            var newRotation = Quaternion.Euler(rotation);
+            var newRotation = Quaternion.LookRotation(rotation);
             _view.SelfTransform.rotation = newRotation;
         }
 
