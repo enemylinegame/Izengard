@@ -16,7 +16,7 @@ public class UnitTestEntry : MonoBehaviour
     [SerializeField] private WarBuildingView _mainTower;
     [SerializeField] private WarBuildingConfig _mainTowerConfig;
 
-    [SerializeField] private BattleSystemConstants _battleSystemConst;
+    [SerializeField] private BattleSystemData _battleSystemData;
 
     [Header("Enemy Spawn Parametrs")]
     [SerializeField] private SpawnerView _enemySpawner;
@@ -43,7 +43,7 @@ public class UnitTestEntry : MonoBehaviour
     private TargetFinder _targetFinder;
     
     private BaseBattleController _enemyBattleController;
-    private UnitBattleController _defenderBattleController;
+    private DefenderBattleController _defenderBattleController;
 
     private EnemySpawnHandler _enemySpawnHandler;
 
@@ -70,7 +70,8 @@ public class UnitTestEntry : MonoBehaviour
         _enemySpawnController.OnUnitSpawned += OnCreatedUnit;
         _onUpdates.Add(_enemySpawnController);
         
-        _enemyBattleController = new EnemyBattleController(_targetFinder, _unitsContainer);
+        _enemyBattleController 
+            = new EnemyBattleController(_battleSystemData, _targetFinder, _unitsContainer);
         _onUpdates.Add(_enemyBattleController);
         
         _enemySpawnHandler = new EnemySpawnHandler(_enemySpawnController, _waveSettings);
@@ -82,9 +83,11 @@ public class UnitTestEntry : MonoBehaviour
             _defenderSpawnController.OnUnitSpawned += OnCreatedUnit;
             _onUpdates.Add(_defenderSpawnController);
             
-            _defenderBattleController = new UnitBattleController(_targetFinder, _unitsContainer,_battleSystemConst);
+            _defenderBattleController
+                = new DefenderBattleController(_battleSystemData, _targetFinder, _unitsContainer);
             _onUpdates.Add(_defenderBattleController);
 
+            _defenderSpawnController.SpawnUnit(UnitType.Militiaman);
             _defenderSpawnController.SpawnUnit(UnitType.Militiaman);
             _defenderSpawnController.SpawnUnit(UnitType.Militiaman);
         }

@@ -1,5 +1,6 @@
 using System;
 using Abstraction;
+using Configs;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
@@ -8,10 +9,12 @@ namespace BattleSystem
 {
     public class EnemyBattleController : BaseBattleController
     {
-        public EnemyBattleController(TargetFinder targetFinder, UnitsContainer unitsContainer) 
-            : base(targetFinder, unitsContainer)
+        public EnemyBattleController(
+            BattleSystemData data,
+            TargetFinder targetFinder,
+            UnitsContainer unitsContainer) : base(data, targetFinder, unitsContainer)
         {
-
+            
         }
 
         protected override void ExecuteOnUpdate(float deltaTime)
@@ -20,7 +23,6 @@ namespace BattleSystem
             {
                 var unit = unitsContainer.EnemyUnits[i];
 
-                UpdateTarget(unit);
                 switch (unit.State.Current)
                 {
                     default:
@@ -51,54 +53,66 @@ namespace BattleSystem
             }
         }
 
-        private void UpdateTarget(IUnit unit)
+        protected override void UpdateTargetExistance(ITarget target)
         {
-            switch (unit.Priority.Current.Priority)
+            var linkedUnits 
+                = unitsContainer.EnemyUnits.FindAll(e => e.Target.CurrentTarget.Id == target.Id);
+
+            if (linkedUnits == null)
+                return;
+
+            for (int i = 0; i < linkedUnits.Count; i++)
             {
-                case UnitPriorityType.MainTower:
-                    {
-                        break;
-                    }
-                case UnitPriorityType.ClosestFoe:
-                case UnitPriorityType.FarthestFoe:
-                case UnitPriorityType.SpecificFoe:
-                    {
-                        if(unit.Target.CurrentTarget is NoneTarget)
-                        {
-                            unit.ChangeState(UnitStateType.Idle);
-                            return;
-                        }
+                var unit = linkedUnits[i];
 
-                        if (unit.Target.IsTargetChangePosition())
-                        {
-                            MoveUnitToTarget(unit, unit.Target.CurrentTarget);
-                            unit.ChangeState(UnitStateType.Move);
-                            return;
-                        }
+                unit.Target.ResetTarget();
 
-                        break;
-                    }
+                unit.ChangeState(UnitStateType.Idle);
             }
         }
 
         protected override void UnitIdleState(IUnit unit, float deltaTime)
         {
-            IAttackTarget target = targetFinder.GetTarget(unit);
-            unit.Target.SetTarget(target);
-
-            MoveUnitToTarget(unit, unit.Target.CurrentTarget);
-            unit.ChangeState(UnitStateType.Move);
+            var target = targetFinder.GetTarget(unit);
+            if(target is not NoneTarget) 
+            {
+                unit.Target.SetTarget(target);
+                MoveUnitToTarget(unit, unit.Target.CurrentTarget);
+                unit.ChangeState(UnitStateType.Move);
+            }
+            else
+            {
+                StopUnit(unit);
+                unit.ChangeState(UnitStateType.None);
+            }
         }
 
         protected override void UnitMoveState(IUnit unit, float deltaTime)
         {
-            Vector3 turgentPos = unit.Target.CurrentTarget.Position;
-            float distance = GetDistanceToTarget(unit.GetPosition(), turgentPos);
-            if (CheckStopDistance(distance, unit.Offence.MaxRange) == true)
+            if (unit.Target.CurrentTarget is not NoneTarget) 
             {
-                StopUnit(unit);
-
-                unit.ChangeState(UnitStateType.Attack);
+                var targetPos = unit.Target.CurrentTarget.Position;
+                float distanceSqr = (unit.GetPosition() - targetPos).sqrMagnitude;
+                if (distanceSqr <= unit.Offence.MaxRange * unit.Offence.MaxRange)
+                {
+                    StopUnit(unit);
+                    unit.ChangeState(UnitStateType.Attack);
+                }
+                else
+                {
+                    if (unit.Target.IsTargetChangePosition())
+                    {
+                        MoveUnitToTarget(unit, unit.Target.CurrentTarget);
+                    }
+                }
+            }
+            else
+            {
+                if (CheckIsOnDestinationPosition(unit))
+                {
+                    StopUnit(unit);
+                    unit.Navigation.Stop();
+                }
             }
         }
 
@@ -106,12 +120,15 @@ namespace BattleSystem
         {
             var target = unit.Target.CurrentTarget;
 
-            if (target != null)
+            if (target is not NoneTarget)
             {
-                if (IsAttackDistanceSuitable(unit, target.Position))
+                if (IsAttackDistanceSuitable(unit))
                 {
                     switch (unit.State.CurrentAttackPhase)
                     {
+                        default:
+                            break;
+
                         case AttackPhase.None:
                             unit.TimeProgress = deltaTime;
                             unit.State.CurrentAttackPhase = AttackPhase.Cast;
@@ -129,8 +146,11 @@ namespace BattleSystem
                             }
 
                             break;
-                        case AttackPhase.Attack:
-                            throw new NotImplementedException();
+                        case AttackPhase.Attack: 
+                            {
+                                Debug.Log($"Unit - {unit.Stats.Faction} in Attack phase");
+                                break;
+                            } 
                     }
                 }
                 else
@@ -148,18 +168,9 @@ namespace BattleSystem
 
         }
 
-        protected override void UnitDeadState(IUnit unit, float deltaTime) 
+        protected override void UnitDeadState(IUnit unit, float deltaTime)
         {
-
-        }
-
-
-        private bool IsAttackDistanceSuitable(IUnit attacker, Vector3 targetPosition)
-        {
-            Vector3 attackerPosition = attacker.GetPosition();
-            float maxAttackDistance = attacker.Offence.MaxRange;
-
-            return maxAttackDistance * maxAttackDistance >= (attackerPosition - targetPosition).sqrMagnitude;
+            base.UnitDeadState(unit, deltaTime);
         }
 
         private void StartAttackAnimation(IUnit unit)

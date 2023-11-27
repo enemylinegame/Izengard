@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Abstraction;
+using System;
 using System.Collections.Generic;
 using UnitSystem.Enum;
 
@@ -13,6 +14,8 @@ namespace UnitSystem
         public List<IUnit> EnemyUnits => _enemyUnits;
         public List<IUnit> DefenderUnits => _defenderUnits;
         public List<IUnit> DeadUnits => _deadUnits;
+
+        public event Action<ITarget> OnUnitDead;
 
         public event Action OnAllEnemyDestroyed;
 
@@ -99,28 +102,19 @@ namespace UnitSystem
 
             unit.ChangeState(UnitStateType.Die);
 
-            List<IUnit> linkedUnits = new();
 
             if (unit.Stats.Faction == UnitFactionType.Enemy)
             {
                 _enemyUnits.Remove(unit);
-
-                linkedUnits = _defenderUnits.FindAll(e => e.Target.CurrentTarget == unit.View);
-
             }
             else if (unit.Stats.Faction == UnitFactionType.Defender)
             {
                 _defenderUnits.Remove(unit);
-
-                linkedUnits = _enemyUnits.FindAll(e => e.Target.CurrentTarget == unit.View);
-            }
-
-            foreach (var linkedUnit in linkedUnits)
-            {
-                linkedUnit.Target.ResetTarget();
             }
 
             _deadUnits.Add(unit);
+
+            OnUnitDead?.Invoke(unit.View);
         }
     }
 }

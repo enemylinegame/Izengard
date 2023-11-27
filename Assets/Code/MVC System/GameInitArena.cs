@@ -36,7 +36,7 @@ namespace Code.MVC_System
             var defendersSpawner 
                 = new DefendersSpawnController(configs.DefendersSpawnSettings.UnitsCreationData, GetPositions(sceneObjectsHolder.DefendersSpawnPoints));
             
-            var battleController = new UnitBattleController(targetFinder, unitsContainer,configs.BattleSystemConst);
+            var battleController = new DefenderBattleController(configs.BattleSystemConst, targetFinder, unitsContainer);
             
             var unitSpawnObserver = new UnitSpawnObserver(enemySpawner, defendersSpawner,
                 battleController);

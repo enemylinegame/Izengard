@@ -6845,7 +6845,7 @@ GameObject:
   m_Component:
   - component: {fileID: 516845915}
   m_Layer: 0
-  m_Name: SpawnPoint (1)
+  m_Name: SpawnPoint (2)
   m_TagString: Untagged
   m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -6864,7 +6864,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1710353296}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &520406252
 GameObject:
@@ -7941,6 +7941,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 610389839}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &622380962
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 622380963}
+  m_Layer: 0
+  m_Name: SpawnPoint (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &622380963
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622380962}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 20, y: 0.1, z: 10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1710353296}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &626497534
 GameObject:
   m_ObjectHideFlags: 0
@@ -14184,7 +14215,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1123273411}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 24, y: 0.1, z: 7}
+  m_LocalPosition: {x: 20, y: 0.1, z: 7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18385,16 +18416,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mainTower: {fileID: 1859384421}
   _mainTowerConfig: {fileID: 11400000, guid: d0a3e9869b0b1e143a5c82feb9cb56eb, type: 2}
-  _battleSystemConst: {fileID: 11400000, guid: b3db18a81090ca741bc2a9eb72a85453, type: 2}
+  _battleSystemData: {fileID: 11400000, guid: b3db18a81090ca741bc2a9eb72a85453, type: 2}
   _enemySpawner: {fileID: 498162221}
   _waveSettings: {fileID: 11400000, guid: dfcbe4ef25efae242907bc033371ac4b, type: 2}
-  _enableDefenders: 0
+  _enableDefenders: 1
   _defenderSpawnSettings: {fileID: 11400000, guid: 4adfce0bea1ba074f9cae3a049a55818, type: 2}
   _defenderSpawnPoints:
   - {fileID: 1123273412}
+  - {fileID: 622380963}
   - {fileID: 516845915}
   _groundSurface: {fileID: 373587546}
-  _defendWalls: []
 --- !u!1 &1541230505
 GameObject:
   m_ObjectHideFlags: 0
@@ -20550,6 +20581,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1123273412}
+  - {fileID: 622380963}
   - {fileID: 516845915}
   m_Father: {fileID: 1067758049}
   m_RootOrder: 6
