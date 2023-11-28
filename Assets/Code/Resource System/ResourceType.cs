@@ -5,12 +5,8 @@ namespace ResourceSystem
         None,
         Wood,
         Iron,
-        Deer,
-        Horse,
-        MagicStones,
-        Textile,
-        Steel,
         Gold,
+        Mana,
     }
     
    

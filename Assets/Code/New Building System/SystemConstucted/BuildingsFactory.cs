@@ -123,7 +123,7 @@ namespace NewBuildingSystem
             
             _buildings.ForEach(build =>
             {
-                if (build.BuildingsType == EnumBuildings.Mining) build.ColliderArea.enabled = true;
+                if (build.BuildingsType == EnumBuildings.Res) build.ColliderArea.enabled = true;
             });
         }
 
