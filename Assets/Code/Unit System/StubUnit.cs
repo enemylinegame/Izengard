@@ -1,7 +1,5 @@
 ﻿using Abstraction;
 using System;
-using System.Collections.Generic;
-using UnitSystem.Data;
 using UnitSystem.Model;
 using UnitSystem.View;
 using UnityEngine;
@@ -28,17 +26,21 @@ namespace UnitSystem
 
         public Vector3 StartPosition => Vector3.zero;
 
+        public float TimeProgress { get; set; }
+        
         public StubUnit(string logMessage)
         {
             View = new StubUnitView();
             Debug.LogWarning(logMessage);
         }
 
-        public event Action<IUnit> OnReachedZeroHealth;
+        public event Action<IUnit> OnReachedZeroHealth = default;
+        public event Action<IDamageDealer, IDamageable> OnAttackProcessEnd = default;
 
         public void Disable() { }
 
         public void Enable() { }
+        public bool IsAlive => true;
         public void TakeDamage(IDamage damageValue) { }
 
         public IDamage GetAttackDamage()
@@ -65,5 +67,7 @@ namespace UnitSystem
         public void SetRotation(Vector3 rot) { }
 
         public void SetStartPosition(Vector3 spawnPosition) { }
+
+        public void StartAttack(IDamageable damageableTarget) { }
     }
 }

@@ -4,10 +4,10 @@ namespace UnitSystem
 {
     public interface IUnitDefence : IDefence<IUnitDefenceData, IDamage>
     {
-        IParametr<int> ArmorPoints { get; }
+        IParametr<float> ArmorPoints { get; }
 
-        IParametr<int> BaseShieldPoints { get; }
-        IParametr<int> FireShieldPoints { get; }
-        IParametr<int> ColdShieldPoints { get; }
+        IParametr<float> BaseShieldPoints { get; }
+        IParametr<float> FireShieldPoints { get; }
+        IParametr<float> ColdShieldPoints { get; }
     }
 }

@@ -8,11 +8,12 @@ namespace UnitSystem.View
     {
         protected Transform _selfTransform;
         protected NavMeshAgent _unitNavigation;
-        protected Animator _unitAnimator;
+        protected Collider _unitCollider;
+        protected IUnitAnimationView _unitAnimation;
 
         public Transform SelfTransform => _selfTransform;
         public NavMeshAgent UnitNavigation => _unitNavigation;
-        public Animator UnitAnimator => _unitAnimator;
+        public IUnitAnimationView UnitAnimation => _unitAnimation;
 
         private int _unitId;
 
@@ -26,11 +27,16 @@ namespace UnitSystem.View
             gameObject.SetActive(true);
         public void Hide() => 
             gameObject.SetActive(false);
-
+        
         public abstract void ChangeHealth(int hpValue);
         public abstract void ChangeSize(float sizeValue);
         public abstract void ChangeSpeed(float speedValue);
 
+        public void SetCollisionEnabled(bool isEnabled)
+        {
+            _unitCollider.enabled = isEnabled;
+        }
+        
         private void Awake()
         {
             _unitId = -1;
@@ -38,11 +44,13 @@ namespace UnitSystem.View
             SetTransform();
             SetUnitNavigation();
             SetUnitAnimator();
+            SetCollision();
         }
 
         protected abstract void SetTransform();
         protected abstract void SetUnitNavigation();
         protected abstract void SetUnitAnimator();
+        protected abstract void SetCollision();
 
         #region ITarget
 

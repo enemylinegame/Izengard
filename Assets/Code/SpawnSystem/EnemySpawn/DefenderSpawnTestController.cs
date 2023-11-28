@@ -1,6 +1,7 @@
 ﻿using EnemySystem;
 using System.Collections.Generic;
 using System;
+using Abstraction;
 using UnitSystem.Enum;
 using UnitSystem;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace SpawnSystem
 {
     public class DefenderSpawnTestController : IOnController, IOnUpdate
     {
-        private readonly Dictionary<UnitRoleType, IUnitData> _unitSpawnDataCollection = new();
+        private readonly Dictionary<UnitType, IUnitData> _unitSpawnDataCollection = new();
 
         private readonly UnitFactory _factory;
         private readonly List<Transform> _spawnPoints = new List<Transform>();
@@ -18,15 +19,16 @@ namespace SpawnSystem
 
         private int _spawnIndex;
         
-        public DefenderSpawnTestController(List<Transform> spawnPoints, SpawnSettings spawnSettings)
+        public DefenderSpawnTestController(List<Transform> spawnPoints, SpawnSettings spawnSettings, 
+            IIdGenerator idGenerator)
         {
 
-            _factory = new EnemyUnitFactory(spawnSettings.UnitsCreationData);
+            _factory = new EnemyUnitFactory(spawnSettings.UnitsCreationData, idGenerator);
 
             foreach (var creationData in spawnSettings.UnitsCreationData)
             {
                 var unitData = creationData.UnitSettings;
-                _unitSpawnDataCollection[unitData.StatsData.Role] = unitData;
+                _unitSpawnDataCollection[unitData.StatsData.Type] = unitData;
             }
 
             foreach (var spawnPoint in spawnPoints)
@@ -37,7 +39,7 @@ namespace SpawnSystem
             _spawnIndex = 0;
         }
 
-        public void SpawnUnit(UnitRoleType unitType)
+        public void SpawnUnit(UnitType unitType)
         {
             if (_spawnIndex >= _spawnPoints.Count)
                 return;

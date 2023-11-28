@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
+
+using Abstraction;
 using EnemySystem;
 using UnitSystem;
 using UnitSystem.Data;
 using UnitSystem.Enum;
 using UnitSystem.Model;
-using UnityEngine;
+
 
 namespace BattleSystem
 {
     public class DefendersSpawnController
     {
 
-        private const int FIRST_UNIT_ID = 10001;
+        private readonly IIdGenerator _idGenerator;
         
         private List<UnitCreationData> _unitCreationDataList;
         private List<Vector3> _spawnPositions;
@@ -20,26 +23,27 @@ namespace BattleSystem
         public event Action<IUnit> OnUnitSpawned;
 
         private int _nextSpawnPositionsIndex;
-        private int _nextUnitId;
-        
 
-        public DefendersSpawnController(List<UnitCreationData> unitCreationsDataList, List<Vector3> spawnPositions)
+        
+        public DefendersSpawnController(List<UnitCreationData> unitCreationsDataList, List<Vector3> spawnPositions,
+            IIdGenerator idGenerator)
         {
             _unitCreationDataList = unitCreationsDataList;
             _spawnPositions = spawnPositions;
-            _nextUnitId = FIRST_UNIT_ID;
             _nextSpawnPositionsIndex = 0;
+            _idGenerator = idGenerator;
         }
 
-        public void SpawnUnit(UnitRoleType unitType)
+        public void SpawnUnit(UnitType unitType)
         {
             UnitCreationData creationData =
-                _unitCreationDataList.Find(ucd => ucd.UnitSettings.StatsData.Role == unitType);
+                _unitCreationDataList.Find(ucd => ucd.UnitSettings.StatsData.Type == unitType);
             if (creationData == null) return;
 
             GameObject prefab = creationData.UnitPrefab;
             GameObject instance = GameObject.Instantiate(prefab);
-            instance.name = unitType.ToString() + "_" + _nextUnitId.ToString(); 
+            int id = _idGenerator.GetNext();
+            instance.name = unitType.ToString() + "_" + id.ToString(); 
             IUnitView view = instance.GetComponent<IUnitView>();
 
             var unitStats = new UnitStatsModel(creationData.UnitSettings.StatsData);
@@ -48,7 +52,7 @@ namespace BattleSystem
             var navigation = new EnemyNavigationModel(view.UnitNavigation, view.SelfTransform.position);
             var priorities = new UnitPriorityModel(creationData.UnitSettings.UnitPriorities);
             var unitHandler = 
-                new UnitHandler(_nextUnitId++, view, unitStats, unitDefence, unitOffence, navigation, priorities);
+                new UnitHandler(id, view, unitStats, unitDefence, unitOffence, navigation, priorities);
             
             unitHandler.SetStartPosition(SelectSpawnPosition());
             
@@ -57,7 +61,7 @@ namespace BattleSystem
 
         private Vector3 SelectSpawnPosition()
         {
-            if (_nextSpawnPositionsIndex > _spawnPositions.Count)
+            if (_nextSpawnPositionsIndex >= _spawnPositions.Count)
             {
                 _nextSpawnPositionsIndex = 0;
             }

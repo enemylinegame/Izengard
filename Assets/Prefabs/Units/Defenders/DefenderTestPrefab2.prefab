@@ -432,7 +432,7 @@ GameObject:
   - component: {fileID: 5091195671343296552}
   m_Layer: 9
   m_Name: DefenderTestPrefab2
-  m_TagString: Militiaman
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -475,7 +475,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Defender1
   _enemyNavMesh: {fileID: 5382495712205038501}
-  _enemyAnimtor: {fileID: 5937658245906128635}
+  _collider: {fileID: 2513670583108069833}
+  _animationView: {fileID: 0}
 --- !u!136 &2513670583108069833
 CapsuleCollider:
   m_ObjectHideFlags: 0

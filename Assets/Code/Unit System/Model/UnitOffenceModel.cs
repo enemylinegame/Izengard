@@ -1,4 +1,4 @@
-﻿using Abstraction;
+using Abstraction;
 using UnitSystem.Enum;
 using UnityEngine;
 
@@ -12,12 +12,16 @@ namespace UnitSystem.Model
         public float MinRange => _offenceData.MinRange;
         public float MaxRange => _offenceData.MaxRange;
 
-        public float CastingSpeed => _offenceData.CastingTime;
-        public float AttackSpeed => _offenceData.AttackTime;
+        public float CastingTime => _offenceData.CastingTime;
+        public float AttackTime => _offenceData.AttackTime;
+
+        public float LastAttackTime { get; set; }
 
         public UnitOffenceModel(IUnitOffenceData offenceData)
         {
             _offenceData = offenceData;
+
+            LastAttackTime = _offenceData.AttackTime;
         }
 
         public IDamage GetDamage()
@@ -55,8 +59,8 @@ namespace UnitSystem.Model
 
         private bool CheckChance(float chanceValue)
         {
-            var gainedChance = Random.Range(0, 101);
-            return gainedChance <= chanceValue;
+            var gainedChance = Random.value * 100f; 
+            return gainedChance < chanceValue;
         }
     }
 }

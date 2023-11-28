@@ -4,6 +4,6 @@
     {
         TData DefenceData { get; }
 
-        int GetAfterDefDamage(TValue value);
+        float GetAfterDefDamage(TValue value);
     }
 }

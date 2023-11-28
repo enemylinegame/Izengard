@@ -1,4 +1,5 @@
-﻿using UnitSystem.View;
+﻿using UnitSystem;
+using UnitSystem.View;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,11 +9,12 @@ namespace EnemySystem
     {
         [SerializeField] private string _name;
         [SerializeField] private NavMeshAgent _enemyNavMesh;
-        [SerializeField] private Animator _enemyAnimtor;
+        [SerializeField] private Collider _collider;
+        [SerializeField] private UnitAnimationView _animationView;
 
         public override void ChangeHealth(int hpValue)
         {
-            Debug.Log($"{_name}[Helth] = {hpValue}");
+            //Debug.Log($"EnemyView->ChangeHealth: {gameObject.name} hpValue = {hpValue}");
         }
 
         public override void ChangeSize(float sizeValue)
@@ -35,12 +37,17 @@ namespace EnemySystem
 
         protected override void SetUnitAnimator()
         {
-            _unitAnimator ??= _enemyAnimtor;
+            _unitAnimation ??= _animationView;
         }
 
         protected override void SetUnitNavigation()
         {
             _unitNavigation ??= _enemyNavMesh;
+        }
+
+        protected override void SetCollision()
+        {
+            _unitCollider ??= _collider;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace BattleSystem
         private TimeRemaining _timer;
 
         private float _spawnInterval = 1.0f;
-        private int _unitsToSpawn = 2;
+        private int _unitsToSpawn = 4;
         private int _unitsCounter = 0;
         
         private bool _isTiming;
@@ -43,7 +43,7 @@ namespace BattleSystem
         private void SpawnPack()
         {
             _isTiming = false;
-            _spawnController.SpawnUnit(UnitRoleType.Militiaman);
+            _spawnController.SpawnUnit(UnitType.Militiaman);
             _unitsCounter++;
             if (_unitsCounter < _unitsToSpawn)
             {

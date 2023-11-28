@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: DefenderSpawnSettings
   m_EditorClassIdentifier: 
   <SpawnFaction>k__BackingField: 1
-  <UnitPoolCopacity>k__BackingField: 5
-  <SpawnDelayTime>k__BackingField: 1.5
   <UnitsCreationData>k__BackingField:
-  - _inPoolCopacity: 2
+  - _poolCopacity: 2
+    _type: 1
     _unitSettings: {fileID: 11400000, guid: c66ebf9d6d72c6b4bb35f003cd31a8e8, type: 2}
-    _unitPrefab: {fileID: 168241047001392403, guid: 65332fae06027a44aabd2e0622ea7d1b, type: 3}
+    _unitPrefab: {fileID: 5937658245906128636, guid: f756c832a088c0f468b61f5ab5deef66, type: 3}

@@ -9,7 +9,7 @@ namespace UnitSystem
         Transform SelfTransform { get; }
         NavMeshAgent UnitNavigation { get; }
 
-        Animator UnitAnimator { get; }
+        IUnitAnimationView UnitAnimation { get; }
 
         void Init(int unitId);
 
@@ -18,6 +18,7 @@ namespace UnitSystem
         void ChangeHealth(int hpValue);
         void ChangeSize(float sizeValue);
         void ChangeSpeed(float speedValue);
- 
+        void SetCollisionEnabled(bool isEnabled);
+
     }
 }

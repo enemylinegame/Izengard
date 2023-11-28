@@ -8,6 +8,6 @@ namespace SpawnSystem
     {
         public string WaveName;
         public float WaveDuration = 10f;
-        public UnitRoleType[] InWaveUnits;
+        public UnitType[] InWaveUnits;
     }
 }

@@ -6,7 +6,14 @@ namespace UnitSystem.Model
     public class UnitStateModel
     {
         private UnitState _currentState;
+        private AttackPhase _attackPhase;
+        
         public UnitState CurrentState => _currentState;
+        public AttackPhase CurrentAttackPhase
+        {
+            get => _attackPhase;
+            set => _attackPhase = value;
+        } 
 
         public event Action<UnitState> OnStateChange;
 

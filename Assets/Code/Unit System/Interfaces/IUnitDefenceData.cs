@@ -3,7 +3,7 @@
     public interface IUnitDefenceData
     {
         float EvadeChance { get; }
-        int ArmorPoints { get; }
+        float ArmorPoints { get; }
         IUnitShieldData ShieldData { get; }
         IUnitResistanceData ResistData { get; }
     }

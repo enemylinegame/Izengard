@@ -1,5 +1,6 @@
 ﻿using Abstraction;
 using System;
+using UnitSystem.Enum;
 using UnitSystem.Model;
 using UnityEngine;
 
@@ -36,6 +37,8 @@ namespace UnitSystem
         public int Id => _id;
 
         public Vector3 StartPosition => _startPosition;
+        
+        public float TimeProgress { get; set; }
 
         public event Action<IUnit> OnReachedZeroHealth;
 
@@ -80,6 +83,7 @@ namespace UnitSystem
             Subscribe();
 
             _unitView.Show();
+            _unitView.SetCollisionEnabled(true);
 
             _unitView.ChangeHealth(_unitStats.Health.GetValue());
             _unitView.ChangeSize(_unitStats.Size.GetValue());
@@ -93,6 +97,8 @@ namespace UnitSystem
 
             _unitStats.Size.OnValueChange += _unitView.ChangeSize;
             _unitStats.Speed.OnValueChange += _unitView.ChangeSpeed;
+
+            _unitState.OnStateChange += OnStateChanged;
         }
 
         public void Disable()
@@ -111,6 +117,8 @@ namespace UnitSystem
 
             _unitStats.Size.OnValueChange -= _unitView.ChangeSize;
             _unitStats.Speed.OnValueChange -= _unitView.ChangeSpeed;
+            
+            _unitState.OnStateChange -= OnStateChanged;
         }
 
         public void SetStartPosition(Vector3 spawnPosition)
@@ -124,24 +132,49 @@ namespace UnitSystem
             OnReachedZeroHealth?.Invoke(this);
         }
 
+        private void OnStateChanged(UnitState newState)
+        {
+            if (newState == Enum.UnitState.Die)
+            {
+                Target.ResetTarget();
+                //_navigation.Stop();
+                TimeProgress = 0.0f;
+                _unitView.SetCollisionEnabled(false);
+                _navigation.Disable();
+            }
+        }
+        
+        
         #region IDamageable
+
+        public bool IsAlive => _unitStats.Health.GetValue() > 0;
 
         public void TakeDamage(IDamage damageValue)
         {
             var resultDamageAmount
                 = _unitDefence.GetAfterDefDamage(damageValue);
 
-            var hpLost = _unitStats.Health.GetValue() - resultDamageAmount;
-            _unitStats.Health.SetValue(hpLost);
+            var hpLeft = _unitStats.Health.GetValue() - (int)resultDamageAmount;
+            _unitStats.Health.SetValue(hpLeft);
         }
 
         #endregion
 
         #region IDamageDealer
 
+        public event Action<IDamageDealer, IDamageable> OnAttackProcessEnd;
+
+        private IDamageable _damageableTarget;
+
         public IDamage GetAttackDamage()
         {
             return _unitOffence.GetDamage();
+        }
+        
+        public void StartAttack(IDamageable damageableTarget)
+        {
+            _damageableTarget = damageableTarget;
+            OnAttackProcessEnd?.Invoke(this, _damageableTarget);
         }
 
         #endregion

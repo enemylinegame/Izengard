@@ -14,6 +14,7 @@ namespace UnitSystem.Model
         private readonly IParametr<float> _detectionRange;
         
         private UnitFactionType _faction;
+        private UnitType _type;
         private UnitRoleType _role;
 
         #endregion
@@ -21,6 +22,7 @@ namespace UnitSystem.Model
         #region Public Property
     
         public UnitFactionType Faction => _faction;
+        public UnitType Type => _type;
         public UnitRoleType Role => _role;
 
         public IParametr<int> Health => _health;
@@ -35,7 +37,8 @@ namespace UnitSystem.Model
 
         public UnitStatsModel(IUnitStatsData stats) 
         {       
-            _faction = stats.Faction; 
+            _faction = stats.Faction;
+            _type = stats.Type;
             _role = stats.Role;
 
             _health = new ParametrModel<int>(stats.HealthPoints, 0, stats.HealthPoints);

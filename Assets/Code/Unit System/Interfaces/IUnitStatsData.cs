@@ -5,6 +5,8 @@ namespace UnitSystem
     public interface IUnitStatsData
     {
         UnitFactionType Faction { get; }
+        
+        UnitType Type { get; }
         UnitRoleType Role { get; }
 
         int HealthPoints { get; }

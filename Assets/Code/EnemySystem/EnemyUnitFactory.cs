@@ -1,18 +1,21 @@
 ﻿using UnitSystem;
 using UnitSystem.Data;
 using System.Collections.Generic;
+using Abstraction;
 using UnityEngine;
 using UnitSystem.Model;
+
 
 namespace EnemySystem
 {
     public class EnemyUnitFactory : UnitFactory
     {
-        private int _enemyId;
+        private readonly IIdGenerator _idGenerator;
 
-        public EnemyUnitFactory(List<UnitCreationData> unitObjectDataList) : base(unitObjectDataList)
+        public EnemyUnitFactory(List<UnitCreationData> unitObjectDataList, IIdGenerator idGenerator) 
+            : base(unitObjectDataList)
         {
-            _enemyId = 0;
+            _idGenerator = idGenerator;
         }
 
         public override IUnit CreateMilitiaman(IUnitData unitData)
@@ -46,7 +49,7 @@ namespace EnemySystem
 
         private IUnit CreateEnemy(IUnitData unitData)
         {
-            var unitPrefab = unitObjectsData[unitData.StatsData.Role];
+            var unitPrefab = unitObjectsData[unitData.StatsData.Type];
 
             var unitGO = Object.Instantiate(unitPrefab);
 
@@ -64,7 +67,7 @@ namespace EnemySystem
             var priorities = new UnitPriorityModel(unitData.UnitPriorities);
 
             var unitHandler = 
-                new UnitHandler(_enemyId++, view, unitStats, unitDefence, unitOffence, navigation, priorities);
+                new UnitHandler(_idGenerator.GetNext(), view, unitStats, unitDefence, unitOffence, navigation, priorities);
 
             return unitHandler;
         }

@@ -8,9 +8,9 @@ namespace EnemySystem
 {
     public class EnemyPool
     {
-        private readonly Dictionary<UnitRoleType, Queue<IUnit>> _pool = new();
-        private readonly Dictionary<UnitRoleType, IUnitData> _spawnData = new();
-        private readonly Dictionary<UnitRoleType, Transform> _poolHolders = new();
+        private readonly Dictionary<UnitType, Queue<IUnit>> _pool = new();
+        private readonly Dictionary<UnitType, IUnitData> _spawnData = new();
+        private readonly Dictionary<UnitType, Transform> _poolHolders = new();
         private readonly EnemyUnitFactory _enemyFactory;
 
         private Transform _root;
@@ -55,7 +55,7 @@ namespace EnemySystem
             }
         }
 
-        public IUnit GetFromPool(UnitRoleType type)
+        public IUnit GetFromPool(UnitType type)
         {
             if (_pool[type].Count > 0)
             {
@@ -71,7 +71,7 @@ namespace EnemySystem
 
         public void ReturnToPool(IUnit enemy)
         {
-            var type = enemy.Stats.Role;
+            var type = enemy.Stats.Type;
 
             enemy.Disable();
             enemy.SetPosition(_poolHolders[type].localPosition);

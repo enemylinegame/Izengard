@@ -21,12 +21,15 @@ public class UnitTestEntry : MonoBehaviour
     [SerializeField] private NavigationSurfaceView _groundSurface;
 
     private TimeRemainingController timeRemainingController;
+    private IdGenerator _idGenerator;
 
     private NavigationUpdater _navigationUpdater;
     private EnemySpawnController _enemySpawnController;
     private DefenderSpawnTestController _defenderSpawnController;
     private TargetFinder _targetFinder;
-    private EnemyBattleController _enemyBattleController;
+    
+    private BaseBattleController _enemyBattleController;
+    private BaseBattleController _defenderBattleController;
 
     private EnemySpawnHandler _enemySpawnHandler;
 
@@ -35,33 +38,39 @@ public class UnitTestEntry : MonoBehaviour
 
     private void Start()
     {
+        _idGenerator = new IdGenerator();
         timeRemainingController = new TimeRemainingController();
         _onUpdates.Add(timeRemainingController);
 
         _navigationUpdater = new NavigationUpdater();
         _navigationUpdater.AddNavigationSurface(_groundSurface);
         
-        _enemySpawnController = new EnemySpawnController(_enemySpawner);
+        _enemySpawnController = new EnemySpawnController(_enemySpawner, _idGenerator);
         _enemySpawnController.OnUnitSpawned += OnCreatedUnit;
         _onUpdates.Add(_enemySpawnController);
 
-        _defenderSpawnController = new DefenderSpawnTestController(_defenderSpawnPoints, _defenderSpawnSettings);
+        _defenderSpawnController = new DefenderSpawnTestController(_defenderSpawnPoints, _defenderSpawnSettings, 
+            _idGenerator);
         _defenderSpawnController.OnUnitSpawned += OnCreatedUnit;
         _onUpdates.Add(_defenderSpawnController);
 
-        _targetFinder = new TargetFinder(_mainTower);
+        _targetFinder = new TargetFinder(null);
 
         _enemyBattleController = new EnemyBattleController(_targetFinder);
         _onUpdates.Add(_enemyBattleController);
         _onFixedUpdates.Add(_enemyBattleController);
+
+        _defenderBattleController = new DefenderBattleController(_targetFinder);
+        _onUpdates.Add(_defenderBattleController);
+        _onFixedUpdates.Add(_defenderBattleController);
 
         _enemySpawnHandler = new EnemySpawnHandler(_enemySpawnController, _waveSettings);
         _enemySpawnHandler.OnWavesEnd += OnEnemySpawnEnd;
 
         _enemySpawnHandler.StartSpawn();
 
-        _defenderSpawnController.SpawnUnit(UnitRoleType.Militiaman);
-        _defenderSpawnController.SpawnUnit(UnitRoleType.Militiaman);
+        _defenderSpawnController.SpawnUnit(UnitType.Militiaman);
+        _defenderSpawnController.SpawnUnit(UnitType.Militiaman);
     }
 
 
@@ -85,6 +94,7 @@ public class UnitTestEntry : MonoBehaviour
     {
         unit.Enable();
         _enemyBattleController.AddUnit(unit);
+        _defenderBattleController.AddUnit(unit);
     }
 
     private void OnEnemySpawnEnd()

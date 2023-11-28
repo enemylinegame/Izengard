@@ -14,36 +14,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mainStats:
     _faction: 2
+    _type: 5
     _role: 5
-    _healthPoints: 60
+    _healthPoints: 30
     _size: 0.5
     _speed: 3
     _detectionRange: 10
   _unitPriorities:
   - _unitPriority: 1
-    _priorityRole: 0
+    _unitType: 0
   _defenceData:
     _evadeChance: 0
-    _armorPoints: 20
+    _armorPoints: 0
     _shieldData:
-      _baseShieldPoints: 10
-      _fireShieldPoints: 10
-      _coldShieldPoints: 10
+      _baseShieldPoints: 0
+      _fireShieldPoints: 0
+      _coldShieldPoints: 0
     _resistanceData:
-      _baseDamageResist: 25
-      _fireDamageResist: 25
-      _coldDamageResist: 25
+      _baseDamageResist: 0
+      _fireDamageResist: 0
+      _coldDamageResist: 0
   _offenceData:
     _attackType: 2
     _minRange: 1
     _maxRange: 5
-    _castingSpeed: 1
-    _attackSpeed: 1
+    _castingTime: 1
+    _attackTime: 1
     _criticalChance: 10
     _critScale: 2
     _failChance: 0
     _onFailDamage: 1
     _damageData:
       _baseDamage: 10
-      _fireDamage: 10
-      _coldDamage: 10
+      _fireDamage: 0
+      _coldDamage: 0

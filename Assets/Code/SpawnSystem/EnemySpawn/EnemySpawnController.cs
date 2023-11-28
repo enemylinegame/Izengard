@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Abstraction;
 using EnemySystem;
 using Tools;
 using UnitSystem;
@@ -21,25 +22,25 @@ namespace SpawnSystem
 
         public event Action<IUnit> OnUnitSpawned;
 
-        public EnemySpawnController(SpawnerView spawner)
+        public EnemySpawnController(SpawnerView spawner, IIdGenerator idGenerator)
         {
             _spawner = spawner;
 
             var unitsCreationData = _spawner.SpawnSettings.UnitsCreationData;
 
-            var factory = new EnemyUnitFactory(unitsCreationData);
+            var factory = new EnemyUnitFactory(unitsCreationData, idGenerator);
             
             _pool = new EnemyPool(spawner.PoolHolder, factory, unitsCreationData);
         }
 
-        public void SpawnUnit(UnitRoleType unitType)
+        public void SpawnUnit(UnitType unitType)
         {
             var unit = _pool.GetFromPool(unitType);
 
-            var spawnIndex = Random.Range(0, _spawnPoints.Count);
-            var spwanPosition = _spawner.SpawnPoints[spawnIndex].position;
+            var spawnIndex = Random.Range(0, _spawner.SpawnPoints.Count);
+            var spawnPosition = _spawner.SpawnPoints[spawnIndex].position;
 
-            unit.SetStartPosition(spwanPosition);
+            unit.SetStartPosition(spawnPosition);
 
             OnUnitSpawned?.Invoke(unit);
         }
