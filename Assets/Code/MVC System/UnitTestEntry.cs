@@ -75,13 +75,13 @@ public class UnitTestEntry : MonoBehaviour
                 = new DefenderBattleController(_configsHolder.BattleSystemConst, _targetFinder, _unitsContainer);
             _onUpdates.Add(_defenderBattleController);
 
-            _defenderSpawnHandler = new DefenderSpawnHandler(_defenderSpawnController);
+            _defenderSpawnHandler 
+                = new DefenderSpawnHandler(_defenderSpawnController, _sceneObjects.DefenderSpawnButton);
         }
 
         _mainTowerController.OnStart();
 
         _enemySpawnHandler.StartSpawn();
-        _defenderSpawnHandler.StartSpawn();
     }
 
 

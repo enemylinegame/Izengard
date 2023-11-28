@@ -17,7 +17,6 @@ namespace Code.GlobalGameState
         public void StartPhase()
         {
             _enemySpawnHandler.StartSpawn();
-            _defendersSpawnHandler.StartSpawn();
         }
 
         public void EndPhase()
