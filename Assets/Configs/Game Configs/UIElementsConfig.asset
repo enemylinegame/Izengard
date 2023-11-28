@@ -15,6 +15,7 @@ MonoBehaviour:
   <ResPanel>k__BackingField: {fileID: 0}
   <InfoPanel>k__BackingField: {fileID: 3692438763612410592, guid: a8971d1ff5e2ece4382e49bb32dfda2e, type: 3}
   <BuildingPanel>k__BackingField: {fileID: 5675874369190241431, guid: ef53a7603c73bcb4ab8d3fcb4e474b00, type: 3}
+  <BuildingInfoPanel>k__BackingField: {fileID: 8604098255959042808, guid: d0411a06289ef06419b8f01465de78df, type: 3}
   <FunctionPanel>k__BackingField: {fileID: 4900253970531227908, guid: cb4305cb6077aaf499e4cd5c638b7d21, type: 3}
   <CenterPanel>k__BackingField: {fileID: 0}
   <EndGameScreenPanel>k__BackingField: {fileID: 0}

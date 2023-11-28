@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using DG.Tweening;
+using NewBuildingSystem;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Code.UI
 {
@@ -16,17 +19,24 @@ namespace Code.UI
             _panel.CloseButton.onClick.AddListener(ClosePanel);
             _panel.OpenButton.onClick.AddListener(OpenPanel);
         }
+
+        public void NewBuilds(ObjectData data, UnityAction action)
+        {
+            var hud = Object.Instantiate(_panel.ObjectHUD.GetComponent<BuildingHUD>(), _panel.GridPanel);
+            hud.Image.sprite = data.Image;
+            hud.spawn.onClick.AddListener(action);
+        }
         
         private void ClosePanel()
         {
-            PositionPanel.DOMoveY(-50, 0.2f, true);
+            PositionPanel.DOMoveY(-70, 0.2f, true);
             _panel.OpenButton.gameObject.SetActive(true);
             _panel.CloseButton.gameObject.SetActive(false);
         }
         
         private void OpenPanel()
         {
-            PositionPanel.DOMoveY(90, 0.2f, true);
+            PositionPanel.DOMoveY(110, 0.2f, true);
             _panel.OpenButton.gameObject.SetActive(false);
             _panel.CloseButton.gameObject.SetActive(true);
         }

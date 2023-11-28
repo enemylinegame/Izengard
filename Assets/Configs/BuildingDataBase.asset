@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54f5201f25cd48718db20bb97a7ca873, type: 3}
+  m_Name: BuildingDataBase
+  m_EditorClassIdentifier: 
+  objectsData:
+  - <ID>k__BackingField: 1
+    <Image>k__BackingField: {fileID: 21300000, guid: 5b709f21c72c78446b58de8b2eb307b8, type: 3}
+    <BuildingType>k__BackingField: 2
+    <Name>k__BackingField: Carrot
+    <MaxWorkers>k__BackingField: 10
+    <Size>k__BackingField: {x: 1, y: 1}
+    <Prefab>k__BackingField: {fileID: 2601389833466989999, guid: bde4c170cacf9294fa9823f8854aaf6f, type: 3}
+  - <ID>k__BackingField: 2
+    <Image>k__BackingField: {fileID: 21300000, guid: 8f587d2821edf9540bf38f4fa14eb01c, type: 3}
+    <BuildingType>k__BackingField: 4
+    <Name>k__BackingField: Mining
+    <MaxWorkers>k__BackingField: 20
+    <Size>k__BackingField: {x: 2, y: 1}
+    <Prefab>k__BackingField: {fileID: 1138223848582951129, guid: 13c2353c53e267f4abd52e07d880c447, type: 3}
+  - <ID>k__BackingField: 3
+    <Image>k__BackingField: {fileID: 21300000, guid: ff5c89d47eaab58e794b453f0f79d8cf, type: 3}
+    <BuildingType>k__BackingField: 3
+    <Name>k__BackingField: Processing
+    <MaxWorkers>k__BackingField: 15
+    <Size>k__BackingField: {x: 1, y: 1}
+    <Prefab>k__BackingField: {fileID: 4638287529856525201, guid: c67ac7068bb17444bba08c014318a924, type: 3}
+  interactiveArea: 1

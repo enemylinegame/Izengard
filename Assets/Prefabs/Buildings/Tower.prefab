@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6982797712385239986}
   - component: {fileID: 8050568772376677929}
   - component: {fileID: 6137789195967620577}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: Tower
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -47,12 +47,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dfcc4eb64b74b6f94cf1d30801e4af9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _collider: {fileID: 8050568772376677929}
   ID: 
+  Collider: {fileID: 8050568772376677929}
+  ColliderArea: {fileID: 0}
   BuildingRenderer: {fileID: 2774631238916107445}
   PositionBuild: {fileID: 2800610261733325595}
-  CellIndicators: []
-  size: {x: 3, y: 3}
+  ObjectBuild: {fileID: 4909122968349479861}
+  BuildingsType: 0
+  Size: {x: 0, y: 0}
 --- !u!65 &8050568772376677929
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -78,7 +80,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -95,7 +97,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1854227555480934, guid: 37e529ea4624e3b46a8e325e0288c883, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4400365205746552, guid: 37e529ea4624e3b46a8e325e0288c883, type: 3}
       propertyPath: m_RootOrder

@@ -10,8 +10,8 @@ namespace UserInputSystem
 {
     public class RayCastController
     {
-        public event Action LeftClick;
-        public event Action<BuildingView> RightClick;
+        public event Action<String> LeftClick;
+        public event Action<String> RightClick;
         public event Action KeyDownOne;
         public event Action KeyDownTwo;
         public event Action Delete;
@@ -42,19 +42,23 @@ namespace UserInputSystem
             var screenPosition = _pointerPosition.ReadValue<Vector2>();
             var ray = _camera.ScreenPointToRay(screenPosition);
 
-            //if (_eventSystem.IsPointerOverGameObject()) return;
+            if (_eventSystem.IsPointerOverGameObject()) return;
 
             if (Physics.Raycast(ray, out var hit, 100, _groundMask))
             {
                 if (isClick)
                 {
                     Debug.Log($"<color=aqua> Left Click</color>");
-                    LeftClick?.Invoke(); //TODO: Add raycast component
+                    if (hit.collider.GetComponent<Building>())
+                        LeftClick?.Invoke(hit.collider.GetComponent<Building>().ID); //TODO: Add raycast component
+                    else LeftClick?.Invoke(null);
                 }
                 else
                 {
                     Debug.Log($"<color=aqua> Right Click</color>");
-                    RightClick?.Invoke(hit.collider.GetComponent<BuildingView>()); //TODO: Add raycast component
+                    if (hit.collider.GetComponent<Building>())
+                        RightClick?.Invoke(hit.collider.GetComponent<Building>().ID); //TODO: Add raycast component
+                    else RightClick?.Invoke(null);
                 }
             }
         }

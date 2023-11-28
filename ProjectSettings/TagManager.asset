@@ -10,6 +10,7 @@ TagManager:
   - Imp
   - Fiend
   - Hound
+  - Building
   layers:
   - Default
   - TransparentFX

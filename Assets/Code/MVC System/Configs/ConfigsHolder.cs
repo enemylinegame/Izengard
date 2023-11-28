@@ -14,7 +14,7 @@ namespace Configs
         [field: SerializeField] public UIElementsConfig UIElementsConfig { get; set; }
         [field: SerializeField] public GameConfig GameConfig { get; set; }
         [field: SerializeField] public SpawnSettings EnemySpawnSettings { get; private set; }
-        [field: SerializeField] public BuildingsSettingsSO BuildingsSettingsSo { get; private set; }
+        [field: SerializeField] public BuildingsSettings BuildingsSettings { get; private set; }
         [field: SerializeField] public SpawnSettings DefendersSpawnSettings { get; private set; }
         
     }

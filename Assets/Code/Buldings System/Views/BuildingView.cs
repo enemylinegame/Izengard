@@ -5,7 +5,7 @@ using UnityEngine;
 using BuildingSystem;
 using Random = UnityEngine.Random;
 
-public class Building : BaseBuildAndResources, ICollectable
+public class BuildingView : BaseBuildAndResources, ICollectable
 {
     public int BuildingID { get; set; }
     public ResourceType ResourceType { get; set; }

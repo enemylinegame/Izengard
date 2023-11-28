@@ -700,7 +700,7 @@ GameObject:
   - component: {fileID: -1743502538154517619}
   m_Layer: 7
   m_Name: MainTower
-  m_TagString: Player
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -781,6 +781,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 008b151ca3131a84789724f56148e324, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _id: 0
+  _position: {x: 0, y: 0, z: 0}
 --- !u!1 &6159994257669579350
 GameObject:
   m_ObjectHideFlags: 0

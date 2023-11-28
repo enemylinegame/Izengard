@@ -17,7 +17,8 @@ public class GameInit
         var userInputController = new UserInputController();
         _userInput = userInputController.UserInput;
         var rayCastController = new RayCastController(_userInput, configs.GameConfig);
-        var buildingFactory = new BuildingsFactory(configs.BuildingsSettingsSo, rayCastController, configs.ObjectsHolder, plane, grid, buildings);
+        var buildingFactory = new BuildingsFactory(configs.BuildingsSettings, rayCastController, configs.ObjectsHolder, plane, grid, 
+            buildings, UIPanelInit);
         var MapController = new MapController(map, configs.GameConfig);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Code.UI
 {
-    public class FunctionPanelController
+    public class FunctionPanelController : IDisposable
     {
         private readonly FunctionPanel _panel;
 

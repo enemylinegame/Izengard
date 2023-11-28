@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 970669503202865422}
-  - component: {fileID: 7150711903418290329}
   - component: {fileID: 3181491828637995048}
+  - component: {fileID: 7150711903418290329}
   - component: {fileID: -4849004566348512328}
-  m_Layer: 0
-  m_Name: House
+  m_Layer: 7
+  m_Name: mining
   m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35,6 +35,30 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3181491828637995048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1138223848582951129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dfcc4eb64b74b6f94cf1d30801e4af9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Collider: {fileID: 7150711903418290329}
+  ColliderArea: {fileID: 0}
+  BuildingRenderer: {fileID: 1165142701940639483}
+  PositionBuild: {fileID: 1185783862225123979}
+  ObjectBuild: {fileID: 1138223848582951129}
+  ID: 
+  Name: 
+  Image: {fileID: 0}
+  BuildingsType: 0
+  CurrentCountWorkers: 0
+  MaxCountWorkers: 0
+  Size: {x: 0, y: 0}
 --- !u!65 &7150711903418290329
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48,24 +72,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3181491828637995048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1138223848582951129}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4dfcc4eb64b74b6f94cf1d30801e4af9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _collider: {fileID: 7150711903418290329}
-  ID: 
-  BuildingRenderer: {fileID: 1165142701940639483}
-  PositionBuild: {fileID: 1185783862225123979}
-  Vector2IntPosition: {x: 0, y: 0}
-  Size: {x: 0, y: 0}
 --- !u!54 &-4849004566348512328
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -78,7 +84,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -92,6 +98,10 @@ PrefabInstance:
     - target: {fileID: 1270087151159818, guid: 9836dcd00a6903040804e82bf876375f, type: 3}
       propertyPath: m_Name
       value: house_lvl3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1270087151159818, guid: 9836dcd00a6903040804e82bf876375f, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4026031674222394, guid: 9836dcd00a6903040804e82bf876375f, type: 3}
       propertyPath: m_RootOrder
@@ -111,7 +121,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4026031674222394, guid: 9836dcd00a6903040804e82bf876375f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4026031674222394, guid: 9836dcd00a6903040804e82bf876375f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -119,7 +129,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4026031674222394, guid: 9836dcd00a6903040804e82bf876375f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4026031674222394, guid: 9836dcd00a6903040804e82bf876375f, type: 3}
       propertyPath: m_LocalRotation.w
