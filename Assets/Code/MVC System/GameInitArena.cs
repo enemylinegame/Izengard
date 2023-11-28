@@ -31,18 +31,15 @@ namespace Code.MVC_System
             var unitsContainer = new UnitsContainer();
             var targetFinder = new TargetFinder(warBuildingController, unitsContainer);
             var navigationUpdater = new NavigationUpdater();
+
             navigationUpdater.AddNavigationSurface(sceneObjectsHolder.GroundSurface);
 
-            var defendersSpawner 
-                = new DefendersSpawnController(configs.DefendersSpawnSettings.UnitsCreationData, GetPositions(sceneObjectsHolder.DefendersSpawnPoints));
+            var defendersSpawner = new DefendersSpawnController(sceneObjectsHolder.DefendersSpawner);
             
             var battleController = new DefenderBattleController(configs.BattleSystemConst, targetFinder, unitsContainer);
-            
-            var unitSpawnObserver = new UnitSpawnObserver(enemySpawner, defendersSpawner,
-                battleController);
-            
-            var enemySpawnLogic = new EnemySpawnLogicMock(enemySpawner);
-            var defendersSpawnLogic = new DefendersSpawnLogicMock(defendersSpawner);
+                  
+            var enemySpawnLogic = new EnemySpawnHandler(enemySpawner, configs.EnemyWaveSettings);
+            var defendersSpawnLogic = new DefenderSpawnHandler(defendersSpawner);
 
             var peaceStateManager = new PeaceStateManager();
             var battleStateManager = new BattleStateManager(defendersSpawnLogic, enemySpawnLogic);

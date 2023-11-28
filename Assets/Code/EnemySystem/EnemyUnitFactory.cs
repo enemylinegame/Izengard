@@ -59,17 +59,7 @@ namespace EnemySystem
                 return new StubUnit("Error on create. Can't find view component");
             }
 
-            var unitStats = new UnitStatsModel(unitData.StatsData);
-
-            var unitDefence = new UnitDefenceModel(unitData.DefenceData);
-
-            var unitOffence = new UnitOffenceModel(unitData.OffenceData);
-
-            var navigation = new UnitNavigationModel(view.UnitNavigation, view.SelfTransform.position);
-
-            var priorities = new UnitPriorityModel(unitData.UnitPriorities);
-
-            var unitHandler = new UnitHandler(view, unitStats, unitDefence, unitOffence, navigation, priorities);
+            var unitHandler = new UnitHandler(view, unitData);
 
             return unitHandler;
         }

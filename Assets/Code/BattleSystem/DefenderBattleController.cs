@@ -85,15 +85,17 @@ namespace BattleSystem
             if (target is not NoneTarget)
             {
                 unit.Target.SetTarget(target);
+                
                 unit.ChangeState(UnitStateType.Move);
-                unit.Navigation.MoveTo(target.Position);
+
+                unit.MoveTo(target.Position);
             }
             else 
             {
                 if (!CheckIsOnDestinationPosition(unit))
                 {
                     unit.ChangeState(UnitStateType.Move);
-                    unit.Navigation.MoveTo(unit.StartPosition);
+                    unit.MoveTo(unit.StartPosition);
                 }
             }
 
@@ -101,20 +103,21 @@ namespace BattleSystem
 
         protected override void UnitMoveState(IUnit unit, float deltaTime)
         {
-            if (unit.Target.CurrentTarget is not NoneTarget)
+            var target = unit.Target.CurrentTarget;
+
+            if (target is not NoneTarget)
             {
-                var targetPos = unit.Target.CurrentTarget.Position;
-                float distanceSqr = (unit.GetPosition() - targetPos).sqrMagnitude;
+                float distanceSqr = (unit.GetPosition() - target.Position).sqrMagnitude;
                 if (distanceSqr <= unit.Offence.MaxRange * unit.Offence.MaxRange)
                 {
-                    unit.Navigation.Stop();
+                    unit.Stop();
                     unit.ChangeState(UnitStateType.Attack);
                 }
                 else
                 {
                     if (unit.Target.IsTargetChangePosition())
                     {
-                        unit.Navigation.MoveTo(targetPos);
+                        unit.MoveTo(target.Position);
                     }
                 }
             }
@@ -123,7 +126,7 @@ namespace BattleSystem
                 if (CheckIsOnDestinationPosition(unit))
                 {
                     unit.ChangeState(UnitStateType.Idle);
-                    unit.Navigation.Stop();
+                    unit.Stop();
                 }
             }
         }
@@ -183,7 +186,6 @@ namespace BattleSystem
                 unit.Target.ResetTarget();
                 unit.ChangeState(UnitStateType.Idle);
             }
-
         }
 
         protected override void UnitDeadState(IUnit unit, float deltaTime)

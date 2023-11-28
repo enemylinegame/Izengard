@@ -1,30 +1,28 @@
-﻿using BattleSystem;
+﻿using SpawnSystem;
 
 namespace Code.GlobalGameState
 {
     public class BattleStateManager
     {
 
-        private DefendersSpawnLogicMock _defendersSpawnLogic;
-        private EnemySpawnLogicMock _enemySpawnLogic;
+        private DefenderSpawnHandler _defendersSpawnHandler;
+        private EnemySpawnHandler _enemySpawnHandler;
 
-        public BattleStateManager(DefendersSpawnLogicMock defendersSpawnLogic, EnemySpawnLogicMock enemySpawnLogic)
+        public BattleStateManager(DefenderSpawnHandler defendersSpawnHandler, EnemySpawnHandler enemySpawnHandler)
         {
-            _defendersSpawnLogic = defendersSpawnLogic;
-            _enemySpawnLogic = enemySpawnLogic;
+            _defendersSpawnHandler = defendersSpawnHandler;
+            _enemySpawnHandler = enemySpawnHandler;
         }
 
         public void StartPhase()
         {
-            _enemySpawnLogic.StartSpawn();
-            _defendersSpawnLogic.StartSpawn();
+            _enemySpawnHandler.StartSpawn();
+            _defendersSpawnHandler.StartSpawn();
         }
 
         public void EndPhase()
         {
-            _enemySpawnLogic.StopSpawn();
+            _enemySpawnHandler.StopSpawn();
         }
-        
-        
     }
 }

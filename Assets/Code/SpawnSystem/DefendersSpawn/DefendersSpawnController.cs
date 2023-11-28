@@ -1,30 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Abstraction;
 using UnitSystem;
 using UnitSystem.Data;
 using UnitSystem.Enum;
-using UnitSystem.Model;
 
 
-namespace BattleSystem
+namespace SpawnSystem
 {
-    public class DefendersSpawnController
+    public class DefendersSpawnController : ISpawnController
     {
-        
-        private List<UnitCreationData> _unitCreationDataList;
-        private List<Vector3> _spawnPositions;
+        private readonly SpawnerView _spawner;
 
-        public event Action<IUnit> OnUnitSpawned;
+        private List<UnitCreationData> _unitCreationDataList;
 
         private int _nextSpawnPositionsIndex;
 
-        
-        public DefendersSpawnController(List<UnitCreationData> unitCreationsDataList, List<Vector3> spawnPositions)
+        public event Action<IUnit> OnUnitSpawned;
+
+        public DefendersSpawnController(SpawnerView spawner)
         {
-            _unitCreationDataList = unitCreationsDataList;
-            _spawnPositions = spawnPositions;
+            _spawner = spawner;
+
+            _unitCreationDataList = _spawner.SpawnSettings.UnitsCreationData;
+            
             _nextSpawnPositionsIndex = 0;
         }
 
@@ -32,19 +31,15 @@ namespace BattleSystem
         {
             UnitCreationData creationData =
                 _unitCreationDataList.Find(ucd => ucd.UnitSettings.StatsData.Type == unitType);
+            
             if (creationData == null) return;
 
             GameObject prefab = creationData.UnitPrefab;
-            GameObject instance = GameObject.Instantiate(prefab);
+            GameObject instance = UnityEngine.Object.Instantiate(prefab);
             IUnitView view = instance.GetComponent<IUnitView>();
 
-            var unitStats = new UnitStatsModel(creationData.UnitSettings.StatsData);
-            var unitDefence = new UnitDefenceModel(creationData.UnitSettings.DefenceData);
-            var unitOffence = new UnitOffenceModel(creationData.UnitSettings.OffenceData);
-            var navigation = new UnitNavigationModel(view.UnitNavigation, view.SelfTransform.position);
-            var priorities = new UnitPriorityModel(creationData.UnitSettings.UnitPriorities);
-            var unitHandler = new UnitHandler(view, unitStats, unitDefence, unitOffence, navigation, priorities);
-            
+            var unitHandler = new UnitHandler(view, creationData.UnitSettings);
+
             unitHandler.SetStartPosition(SelectSpawnPosition());
             
             OnUnitSpawned?.Invoke(unitHandler);
@@ -52,14 +47,21 @@ namespace BattleSystem
 
         private Vector3 SelectSpawnPosition()
         {
-            if (_nextSpawnPositionsIndex >= _spawnPositions.Count)
+            if (_nextSpawnPositionsIndex >= _spawner.SpawnPoints.Count)
             {
                 _nextSpawnPositionsIndex = 0;
             }
 
-            Vector3 spawnPosition = _spawnPositions[_nextSpawnPositionsIndex];
+            Vector3 spawnPosition 
+                = _spawner.SpawnPoints[_nextSpawnPositionsIndex].position;
+            
             _nextSpawnPositionsIndex++;
             return spawnPosition;
+        }
+
+        public void OnUpdate(float deltaTime) 
+        {
+
         }
     }
 }

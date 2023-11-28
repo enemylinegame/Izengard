@@ -6,7 +6,7 @@ namespace SpawnSystem
 {
     public class EnemySpawnHandler
     {
-        private readonly EnemySpawnController _spawnController;
+        private readonly ISpawnController _spawnController;
         private readonly IReadOnlyList<WaveData> _waves;
        
         private WaveData _currentWave;
@@ -18,7 +18,7 @@ namespace SpawnSystem
         public WaveData CurrentWave => _currentWave;
         public event Action OnWavesEnd;
 
-        public EnemySpawnHandler(EnemySpawnController spawnController, WaveSettings waveSettings)
+        public EnemySpawnHandler(ISpawnController spawnController, WaveSettings waveSettings)
         {
             _spawnController = spawnController;
             _waves = waveSettings.Waves;

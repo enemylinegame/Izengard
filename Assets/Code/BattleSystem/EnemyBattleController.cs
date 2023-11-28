@@ -1,6 +1,6 @@
-using System;
 using Abstraction;
 using Configs;
+using SpawnSystem;
 using UnitSystem;
 using UnitSystem.Enum;
 using UnityEngine;
@@ -9,12 +9,15 @@ namespace BattleSystem
 {
     public class EnemyBattleController : BaseBattleController
     {
+        private readonly ISpawnController _enemySpawner;
+
         public EnemyBattleController(
             BattleSystemData data,
             TargetFinder targetFinder,
-            UnitsContainer unitsContainer) : base(data, targetFinder, unitsContainer)
+            UnitsContainer unitsContainer,
+            ISpawnController enemySpawner) : base(data, targetFinder, unitsContainer)
         {
-            
+            _enemySpawner = enemySpawner;
         }
 
         protected override void ExecuteOnUpdate(float deltaTime)
@@ -74,35 +77,37 @@ namespace BattleSystem
         protected override void UnitIdleState(IUnit unit, float deltaTime)
         {
             var target = targetFinder.GetTarget(unit);
+
             if(target is not NoneTarget) 
             {
                 unit.Target.SetTarget(target);
-                MoveUnitToTarget(unit, unit.Target.CurrentTarget);
+                unit.MoveTo(target.Position);
                 unit.ChangeState(UnitStateType.Move);
             }
             else
             {
-                StopUnit(unit);
+                unit.Stop();
                 unit.ChangeState(UnitStateType.None);
             }
         }
 
         protected override void UnitMoveState(IUnit unit, float deltaTime)
         {
-            if (unit.Target.CurrentTarget is not NoneTarget) 
+            var target = unit.Target.CurrentTarget;
+
+            if (target is not NoneTarget)
             {
-                var targetPos = unit.Target.CurrentTarget.Position;
-                float distanceSqr = (unit.GetPosition() - targetPos).sqrMagnitude;
+                float distanceSqr = (unit.GetPosition() - target.Position).sqrMagnitude;
                 if (distanceSqr <= unit.Offence.MaxRange * unit.Offence.MaxRange)
                 {
-                    StopUnit(unit);
+                    unit.Stop();
                     unit.ChangeState(UnitStateType.Attack);
                 }
                 else
                 {
                     if (unit.Target.IsTargetChangePosition())
                     {
-                        MoveUnitToTarget(unit, unit.Target.CurrentTarget);
+                        unit.MoveTo(target.Position);
                     }
                 }
             }
@@ -110,8 +115,8 @@ namespace BattleSystem
             {
                 if (CheckIsOnDestinationPosition(unit))
                 {
-                    StopUnit(unit);
-                    unit.Navigation.Stop();
+                    unit.ChangeState(UnitStateType.Idle);
+                    unit.Stop();
                 }
             }
         }
@@ -185,20 +190,5 @@ namespace BattleSystem
                 animView.StartCast();
             }
         }
-
- 
-        #region Enemy moving logic
-
-        private void MoveUnitToTarget(IUnit unit, IAttackTarget target)
-        {
-            unit.Navigation.MoveTo(target.Position);
-        }
-
-        private void StopUnit(IUnit unit)
-        {
-            unit.Navigation.Stop();
-        }
-
-        #endregion
     }
 }

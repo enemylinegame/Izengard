@@ -28,7 +28,6 @@ namespace UnitSystem
 
         public IUnitOffence Offence => _unitOffence;
 
-        public UnitNavigationModel Navigation => _navigation;
         public UnitStateModel State => _unitState;
         public UnitTargetModel Target => _unitTarget;
         public UnitPriorityModel Priority => _priority;
@@ -42,26 +41,25 @@ namespace UnitSystem
       
         public event Action<IUnit> OnReachedZeroHealth;
 
-        public UnitHandler(
-            IUnitView view, 
-            UnitStatsModel unitStats,
-            IUnitDefence unitDefence,
-            IUnitOffence unitOffence,
-            UnitNavigationModel navigation,
-            UnitPriorityModel priority)
+        public UnitHandler(IUnitView view, IUnitData unitData)
         {
 
             _view = view;
 
-            _unitStats = unitStats;
+            _unitStats 
+                = new UnitStatsModel(unitData.StatsData); 
 
-            _unitDefence = unitDefence;
+            _unitDefence 
+                = new UnitDefenceModel(unitData.DefenceData);
 
-            _unitOffence = unitOffence;
+            _unitOffence 
+                = new UnitOffenceModel(unitData.OffenceData);
 
-            _navigation = navigation;
+            _navigation 
+                = new UnitNavigationModel(view.UnitNavigation, view.SelfTransform.position); ;
 
-            _priority = priority;
+            _priority 
+                = new UnitPriorityModel(unitData.UnitPriorities); ;
 
             _unitState = new UnitStateModel();
             
@@ -191,6 +189,22 @@ namespace UnitSystem
         {
             _damageableTarget = damageableTarget;
             OnAttackProcessEnd?.Invoke(this, _damageableTarget);
+        }
+
+        #endregion
+
+
+        #region IMovable
+
+        public void MoveTo(Vector3 position)
+        {
+            //_navigation.Reset();
+            _navigation.MoveTo(position);
+        }
+
+        public void Stop()
+        {
+            _navigation.Stop();
         }
 
         #endregion

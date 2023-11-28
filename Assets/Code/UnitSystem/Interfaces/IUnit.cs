@@ -7,7 +7,8 @@ using UnityEngine;
 namespace UnitSystem
 {
     public interface IUnit : 
-        IDamageDealer, 
+        IDamageDealer,
+        IMovable,
         IPositioned<Vector3>, 
         IRotated<Vector3>
     {
@@ -15,7 +16,6 @@ namespace UnitSystem
         UnitStatsModel Stats { get; }
         IUnitDefence Defence { get; }
         IUnitOffence Offence { get; }
-        UnitNavigationModel Navigation { get; }
         UnitTargetModel Target { get; }
         UnitStateModel State { get; }
         UnitPriorityModel Priority { get; }

@@ -72,5 +72,9 @@ namespace UnitSystem
         public void StartAttack(IDamageable damageableTarget) { }
 
         public void ChangeState(UnitStateType state) { }
+
+        public void MoveTo(Vector3 position) { }
+
+        public void Stop() { }
     }
 }

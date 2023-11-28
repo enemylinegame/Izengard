@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0561699e1507400ca61f347183af8f25, type: 3}
   m_Name: BattleSystemData
   m_EditorClassIdentifier: 
-  <DestinationPositionError>k__BackingField: 0.4
-  <DeadUnitsDestroyDelay>k__BackingField: 10
+  <DestinationPositionError>k__BackingField: 0.3
+  <DeadUnitsDestroyDelay>k__BackingField: 5

@@ -10,7 +10,7 @@ using Random = UnityEngine.Random;
 
 namespace SpawnSystem
 {
-    public class EnemySpawnController : IOnController, IOnUpdate
+    public class EnemySpawnController : ISpawnController
     {
         private readonly SpawnerView _spawner;
         private readonly EnemyPool _pool;

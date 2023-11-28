@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace UnitSystem.Model
@@ -60,6 +61,11 @@ namespace UnitSystem.Model
             }
 
             return _navMesh.pathStatus == NavMeshPathStatus.PathComplete;
+        }
+
+        internal void Reset()
+        {
+            _navMesh.ResetPath();
         }
     }
 }
