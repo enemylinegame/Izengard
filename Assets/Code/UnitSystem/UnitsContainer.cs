@@ -17,6 +17,9 @@ namespace UnitSystem
 
         public event Action<ITarget> OnUnitDead;
 
+        public event Action OnEnemyAdded;
+        public event Action OnDefenderAdded;
+
         public event Action OnAllEnemyDestroyed;
 
         public event Action OnAllDefenderDestroyed;
@@ -37,6 +40,7 @@ namespace UnitSystem
                         if (!_enemyUnits.Contains(unit))
                         {
                             _enemyUnits.Add(unit);
+                            OnEnemyAdded?.Invoke();
                         }
                         break;
                     }
@@ -45,10 +49,13 @@ namespace UnitSystem
                         if (!_defenderUnits.Contains(unit))
                         {
                             _defenderUnits.Add(unit);
+                            OnDefenderAdded?.Invoke();
                         }
                         break;
                     }
             }
+
+           
         }
 
         public void RemoveUnit(IUnit unit)

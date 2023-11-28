@@ -18,6 +18,18 @@ namespace BattleSystem
             ISpawnController enemySpawner) : base(data, targetFinder, unitsContainer)
         {
             _enemySpawner = enemySpawner;
+
+            unitsContainer.OnDefenderAdded += ResetUnitState;
+        }
+
+        private void ResetUnitState()
+        {
+            for (int i = 0; i < unitsContainer.EnemyUnits.Count; i++)
+            {
+                var unit = unitsContainer.EnemyUnits[i];
+
+                unit.ChangeState(UnitStateType.Idle);
+            }
         }
 
         protected override void ExecuteOnUpdate(float deltaTime)
@@ -58,7 +70,7 @@ namespace BattleSystem
 
         protected override void UpdateTargetExistance(ITarget target)
         {
-            var linkedUnits 
+            var linkedUnits
                 = unitsContainer.EnemyUnits.FindAll(e => e.Target.CurrentTarget.Id == target.Id);
 
             if (linkedUnits == null)
@@ -78,7 +90,7 @@ namespace BattleSystem
         {
             var target = targetFinder.GetTarget(unit);
 
-            if(target is not NoneTarget) 
+            if (target is not NoneTarget)
             {
                 unit.Target.SetTarget(target);
                 unit.MoveTo(target.Position);
@@ -155,11 +167,11 @@ namespace BattleSystem
                             }
 
                             break;
-                        case AttackPhase.Attack: 
+                        case AttackPhase.Attack:
                             {
                                 Debug.Log($"Unit - {unit.Stats.Faction} in Attack phase");
                                 break;
-                            } 
+                            }
                     }
                 }
                 else
