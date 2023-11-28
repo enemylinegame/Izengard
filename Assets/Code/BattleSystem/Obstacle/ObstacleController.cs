@@ -1,9 +1,8 @@
-﻿using BattleSystem.Buildings.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Tools.Navigation;
 
-namespace BattleSystem.Buildings
+namespace BattleSystem.Obstacle
 {
     public class ObstacleController: IOnStart
     {

@@ -1,7 +1,7 @@
 ﻿using Abstraction;
 using System;
 
-namespace BattleSystem.Buildings.Interfaces
+namespace BattleSystem.Obstacle
 {
     public interface IObstacle : IDamageable
     {

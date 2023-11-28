@@ -1,22 +1,16 @@
 ﻿using Abstraction;
-using BattleSystem.Buildings.Configs;
-using BattleSystem.Buildings.Interfaces;
 using System;
 using UnityEngine;
 
-namespace BattleSystem.Buildings.View
+namespace BattleSystem.MainTower
 {
-    public class DefendWallObstacleView : MonoBehaviour, IObstacleView
+    public class MainTowerView : MonoBehaviour, IAttackTarget
     {
-        [SerializeField] private DefenWallConfig _config;
-
-        private int _id;
-
-        public DefenWallConfig Config => _config;
+        [SerializeField] private int _id;
 
         public int Id => _id;
 
-        public Vector3 Position => transform.localPosition;
+        public Vector3 Position => transform.position;
         
         public event Action<IDamage> OnTakeDamage;
 
@@ -37,7 +31,7 @@ namespace BattleSystem.Buildings.View
 
         public void ChangeHealth(int hpValue)
         {
-            Debug.Log("DefendWallObstacleView->ChangeHealth: hpValue = " + hpValue.ToString());
+            Debug.Log("WarBuildingView->ChangeHealth: hpValue = " + hpValue.ToString());
         }
 
         public void TakeDamage(IDamage damage)

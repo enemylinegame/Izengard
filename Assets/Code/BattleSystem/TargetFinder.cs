@@ -1,28 +1,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Abstraction;
-using BattleSystem.Buildings.Interfaces;
 using UnitSystem;
 using UnitSystem.Enum;
-
+using BattleSystem.MainTower;
 
 namespace BattleSystem
 {
     public class TargetFinder
     {
 
-        private IWarBuildingsContainer _warBuildingsContainer;
+        private MainTowerController _warBuildingsContainer;
         private IUnitsContainer _unitsContainer;
         private readonly IAttackTarget _defaultTarget;
         
         
-        public TargetFinder(IWarBuildingsContainer container)
+        public TargetFinder(MainTowerController container)
         {
             _warBuildingsContainer = container;
             _defaultTarget = new NoneTarget();
         }
         
-        public TargetFinder(IWarBuildingsContainer warBuildingsContainer, IUnitsContainer unitsContainer)
+        public TargetFinder(MainTowerController warBuildingsContainer, IUnitsContainer unitsContainer)
         {
             _warBuildingsContainer = warBuildingsContainer;
             _unitsContainer = unitsContainer;

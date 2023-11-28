@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using BattleSystem;
-using BattleSystem.Buildings;
+using BattleSystem.MainTower;
 using Code.GlobalGameState;
 using Code.SceneConfigs;
 using Configs;
@@ -26,7 +26,7 @@ namespace Code.MVC_System
 
             var enemySpawner = new EnemySpawnController(sceneObjectsHolder.EnemySpawner);
 
-            var warBuildingController = new WarBuildingsController(sceneObjectsHolder.MainTower, configs.MainTowerSettings);
+            var warBuildingController = new MainTowerController(sceneObjectsHolder.MainTower, configs.MainTowerSettings);
 
             var unitsContainer = new UnitsContainer();
             var targetFinder = new TargetFinder(warBuildingController, unitsContainer);

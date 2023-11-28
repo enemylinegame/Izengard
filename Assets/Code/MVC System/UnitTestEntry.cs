@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using BattleSystem;
-using BattleSystem.Buildings;
+using BattleSystem.MainTower;
 using Code.SceneConfigs;
 using Configs;
 using SpawnSystem;
@@ -23,7 +23,7 @@ public class UnitTestEntry : MonoBehaviour
 
     private UnitsContainer _unitsContainer;
 
-    private WarBuildingsController _mainTowerController;
+    private MainTowerController _mainTowerController;
 
     private ISpawnController _enemySpawnController;
     private ISpawnController _defenderSpawnController;
@@ -48,7 +48,7 @@ public class UnitTestEntry : MonoBehaviour
         _navigationUpdater = new NavigationUpdater();
         _surfaceId = _navigationUpdater.AddNavigationSurface(_sceneObjects.GroundSurface);
        
-        _mainTowerController = new WarBuildingsController(_sceneObjects.MainTower, _configsHolder.MainTowerSettings);
+        _mainTowerController = new MainTowerController(_sceneObjects.MainTower, _configsHolder.MainTowerSettings);
 
         _unitsContainer = new UnitsContainer();
 

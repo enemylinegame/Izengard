@@ -1,5 +1,5 @@
-﻿using SpawnSystem;
-using BattleSystem.Buildings.View;
+﻿using BattleSystem.MainTower;
+using SpawnSystem;
 using Tools.Navigation;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +10,7 @@ namespace Code.SceneConfigs
     {
         [field: SerializeField] public SpawnerView EnemySpawner { get; private set; }
         [field: SerializeField] public SpawnerView DefendersSpawner { get; private set; }
-        [field: SerializeField] public WarBuildingView MainTower { get; private set; }
+        [field: SerializeField] public MainTowerView MainTower { get; private set; }
         [field: SerializeField] public NavigationSurfaceView GroundSurface { get; private set; }
 
         [field: SerializeField] public Button DefenderSpawnButton { get; private set; }

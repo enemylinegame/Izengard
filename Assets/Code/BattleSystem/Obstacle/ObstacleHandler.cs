@@ -1,9 +1,8 @@
 ﻿using Abstraction;
-using BattleSystem.Buildings.Interfaces;
 using System;
 using Tools;
 
-namespace BattleSystem.Buildings
+namespace BattleSystem.Obstacle
 {
     public class ObstacleHandler : IObstacle
     {

@@ -1,29 +1,25 @@
 ﻿using System;
 using Abstraction;
-using BattleSystem.Buildings.Configs;
-using BattleSystem.Buildings.Interfaces;
-using BattleSystem.Buildings.View;
 using UnitSystem.Model;
 
 
-namespace BattleSystem.Buildings
+namespace BattleSystem.MainTower
 {
-    public class WarBuildingsController : IWarBuildingsContainer, IOnController, IOnStart
+    public class MainTowerController : IOnController, IOnStart
     {     
-        private WarBuildingHandler _mainTower;
-        private WarBuildingConfig _mainTowerConfig;
+        private MainTowerHandler _mainTower;
+        private MainTowerConfig _mainTowerConfig;
         private UnitDefenceModel _towerDefenceModel;
         private IAttackTarget _mainTowerAsTarget;
 
         public event Action OnMainTowerDestroyed; 
             
-            
-
-        public WarBuildingsController(WarBuildingView mainTowerView, WarBuildingConfig mainTowerConfig)
+           
+        public MainTowerController(MainTowerView mainTowerView, MainTowerConfig mainTowerConfig)
         {
             _mainTowerConfig = mainTowerConfig;
             _towerDefenceModel = new UnitDefenceModel(_mainTowerConfig.DefenceData);
-            _mainTower = new WarBuildingHandler(mainTowerView, _towerDefenceModel, (int)_mainTowerConfig.Durability);
+            _mainTower = new MainTowerHandler(mainTowerView, _towerDefenceModel, (int)_mainTowerConfig.Durability);
             _mainTower.OnReachedZeroHealth += BuildingDestroyed;
         }
         
@@ -36,7 +32,7 @@ namespace BattleSystem.Buildings
         public IAttackTarget GetMainTower() => _mainTower.View;
 
 
-        private void BuildingDestroyed(IWarBuilding building)
+        private void BuildingDestroyed(IMainTower building)
         {
             building.OnReachedZeroHealth -= BuildingDestroyed;
 

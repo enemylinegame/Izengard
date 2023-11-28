@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BattleSystem.Buildings.Configs
+namespace BattleSystem.Obstacle
 {
     [CreateAssetMenu(fileName = nameof(DefenWallConfig), menuName = "Building/" + nameof(DefenWallConfig))]
     public class DefenWallConfig : ScriptableObject

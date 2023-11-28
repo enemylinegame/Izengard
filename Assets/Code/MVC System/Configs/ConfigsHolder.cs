@@ -1,4 +1,4 @@
-using BattleSystem.Buildings.Configs;
+using BattleSystem.MainTower;
 using SpawnSystem;
 using UnityEngine;
 
@@ -9,7 +9,7 @@ namespace Configs
     {
         [field: SerializeField] public PrefabsHolder PrefabsHolder { get; set; }
         [field: SerializeField] public WaveSettings EnemyWaveSettings { get; set; }
-        [field: SerializeField] public WarBuildingConfig MainTowerSettings { get; private set; }
+        [field: SerializeField] public MainTowerConfig MainTowerSettings { get; private set; }
         [field: SerializeField] public BattleSystemData BattleSystemConst { get; private set; }
     }
 }

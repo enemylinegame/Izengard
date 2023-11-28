@@ -1,14 +1,13 @@
 ﻿using System;
 using Abstraction;
-using BattleSystem.Buildings.Interfaces;
 using Tools;
 using UnitSystem;
 
-namespace BattleSystem.Buildings
+namespace BattleSystem.MainTower
 {
-    public class WarBuildingHandler : IWarBuilding
+    public class MainTowerHandler : IMainTower
     {
-        private readonly IWarBuildingView _view;
+        private readonly MainTowerView _view;
         private readonly IUnitDefence _defence;
         private readonly IParametr<int> _health;
 
@@ -16,11 +15,11 @@ namespace BattleSystem.Buildings
         private int _id;
 
         public int Id => _id;
-        public IWarBuildingView View => _view;
+        public MainTowerView View => _view;
         
-        public event Action<IWarBuilding> OnReachedZeroHealth;
+        public event Action<IMainTower> OnReachedZeroHealth;
 
-        public WarBuildingHandler(IWarBuildingView view, IUnitDefence defence, int durability)
+        public MainTowerHandler(MainTowerView view, IUnitDefence defence, int durability)
         {        
             _view = view;
             _defence = defence;
@@ -62,7 +61,6 @@ namespace BattleSystem.Buildings
         }
 
 
- 
         private void ReachedZeroHealth(int value)
         {
             OnReachedZeroHealth?.Invoke(this);
