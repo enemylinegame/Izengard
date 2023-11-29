@@ -1,21 +1,20 @@
-﻿using Tools;
+﻿using UI;
 using UnitSystem.Enum;
-using UnityEngine.UI;
 
 namespace SpawnSystem
 {
     public class DefenderSpawnHandler
     {
         private readonly ISpawnController _spawnController;
-        private readonly Button _spawnButton;
+        private readonly BattleSceneUI _battleUI;
 
-        public DefenderSpawnHandler(ISpawnController defendersSpawnController, Button spawnButton) 
+        public DefenderSpawnHandler(ISpawnController defendersSpawnController, BattleSceneUI battleUI) 
         {
             _spawnController = defendersSpawnController;
 
-            _spawnButton = spawnButton;
+            _battleUI = battleUI;
 
-            _spawnButton.onClick.AddListener(() => SpawnPack());
+            _battleUI.DefenderSpawnButton.onClick.AddListener(() => SpawnPack());
         }
 
 

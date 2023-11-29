@@ -62,8 +62,8 @@ public class UnitTestEntry : MonoBehaviour
             = new EnemyBattleController(_configsHolder.BattleSystemConst, _targetFinder, _unitsContainer, _enemySpawnController);
         _onUpdates.Add(_enemyBattleController);
         
-        _enemySpawnHandler = new EnemySpawnHandler(_enemySpawnController, _configsHolder.EnemyWaveSettings);
-        _enemySpawnHandler.OnWavesEnd += OnEnemySpawnEnd;
+        _enemySpawnHandler 
+            = new EnemySpawnHandler(_enemySpawnController, _configsHolder.EnemyWaveSettings, _sceneObjects.BattleUI);
 
         if (_enableDefenders)
         {
@@ -76,12 +76,10 @@ public class UnitTestEntry : MonoBehaviour
             _onUpdates.Add(_defenderBattleController);
 
             _defenderSpawnHandler 
-                = new DefenderSpawnHandler(_defenderSpawnController, _sceneObjects.DefenderSpawnButton);
+                = new DefenderSpawnHandler(_defenderSpawnController, _sceneObjects.BattleUI);
         }
 
         _mainTowerController.OnStart();
-
-        _enemySpawnHandler.StartSpawn();
     }
 
 
@@ -104,10 +102,5 @@ public class UnitTestEntry : MonoBehaviour
     private void OnCreatedUnit(IUnit unit) 
     {
         _unitsContainer.AddUnit(unit);
-    }
-
-    private void OnEnemySpawnEnd()
-    {
-        Debug.Log("enemy spawn ends!");
     }
 }

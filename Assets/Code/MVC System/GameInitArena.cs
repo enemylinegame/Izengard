@@ -38,8 +38,8 @@ namespace Code.MVC_System
             
             var battleController = new DefenderBattleController(configs.BattleSystemConst, targetFinder, unitsContainer);
                   
-            var enemySpawnLogic = new EnemySpawnHandler(enemySpawner, configs.EnemyWaveSettings);
-            var defendersSpawnLogic = new DefenderSpawnHandler(defendersSpawner, sceneObjectsHolder.DefenderSpawnButton);
+            var enemySpawnLogic = new EnemySpawnHandler(enemySpawner, configs.EnemyWaveSettings, sceneObjectsHolder.BattleUI);
+            var defendersSpawnLogic = new DefenderSpawnHandler(defendersSpawner, sceneObjectsHolder.BattleUI);
 
             var peaceStateManager = new PeaceStateManager();
             var battleStateManager = new BattleStateManager(defendersSpawnLogic, enemySpawnLogic);
