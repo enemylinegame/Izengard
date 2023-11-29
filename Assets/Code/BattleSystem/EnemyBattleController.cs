@@ -1,4 +1,5 @@
 using Abstraction;
+using BattleSystem.MainTower;
 using Configs;
 using SpawnSystem;
 using UnitSystem;
@@ -10,16 +11,19 @@ namespace BattleSystem
     public class EnemyBattleController : BaseBattleController
     {
         private readonly ISpawnController _enemySpawner;
+        private readonly MainTowerController _mainTower;
 
         public EnemyBattleController(
             BattleSystemData data,
             TargetFinder targetFinder,
             UnitsContainer unitsContainer,
-            ISpawnController enemySpawner) : base(data, targetFinder, unitsContainer)
+            MainTowerController mainTower,
+            ISpawnController enemySpawner) : base(data, targetFinder, unitsContainer, mainTower)
         {
             _enemySpawner = enemySpawner;
+            _mainTower = mainTower;
 
-            unitsContainer.OnDefenderAdded += ResetUnitState;
+            this.unitsContainer.OnDefenderAdded += ResetUnitState;
         }
 
         private void ResetUnitState()
@@ -29,6 +33,17 @@ namespace BattleSystem
                 var unit = unitsContainer.EnemyUnits[i];
 
                 unit.ChangeState(UnitStateType.Idle);
+            }
+        }
+
+        protected override void MainTowerDestroyed()
+        {
+            for (int i = 0; i < unitsContainer.EnemyUnits.Count; i++)
+            {
+                var unit = unitsContainer.EnemyUnits[i];
+
+                unit.Stop();
+                unit.ChangeState(UnitStateType.None);
             }
         }
 

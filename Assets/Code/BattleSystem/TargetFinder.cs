@@ -9,33 +9,35 @@ namespace BattleSystem
 {
     public class TargetFinder
     {
-
-        private MainTowerController _warBuildingsContainer;
+        private MainTowerController _mainTower;
         private IUnitsContainer _unitsContainer;
         private readonly IAttackTarget _defaultTarget;
-        
-        
-        public TargetFinder(MainTowerController container)
+
+        private bool _isMainTowerDestroyed;
+
+        public TargetFinder(MainTowerController mainTower, IUnitsContainer unitsContainer)
         {
-            _warBuildingsContainer = container;
-            _defaultTarget = new NoneTarget();
-        }
-        
-        public TargetFinder(MainTowerController warBuildingsContainer, IUnitsContainer unitsContainer)
-        {
-            _warBuildingsContainer = warBuildingsContainer;
+            _mainTower = mainTower;
             _unitsContainer = unitsContainer;
+
+            _mainTower.OnMainTowerDestroyed += MainToweDestroyed;
+
             _defaultTarget = new NoneTarget();
         }
+
+        private void MainToweDestroyed() => _isMainTowerDestroyed = false;
 
         public IAttackTarget GetMainTower()
         {
-            return _warBuildingsContainer.GetMainTower();
+            if (_isMainTowerDestroyed)
+                return _defaultTarget;
+
+            return _mainTower.GetMainTower();
         }
 
         public IAttackTarget GetTarget(IUnit unit)
         {
-            IAttackTarget result = new NoneTarget();
+            IAttackTarget result = _defaultTarget;
 
             while (unit.Priority.GetNext())
             {

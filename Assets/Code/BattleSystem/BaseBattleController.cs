@@ -1,4 +1,5 @@
 ﻿using Abstraction;
+using BattleSystem.MainTower;
 using Configs;
 using UnitSystem;
 
@@ -12,24 +13,32 @@ namespace BattleSystem
         protected readonly float destinationPositionErrorSqr;
         protected readonly float deadUnitsDestroyDelay;
 
+        private readonly MainTowerController _mainTower;
+
         public BaseBattleController(
             BattleSystemData data,
             TargetFinder targetFinder, 
-            UnitsContainer unitsContainer)
+            UnitsContainer unitsContainer,
+            MainTowerController mainTower)
         {
             destinationPositionErrorSqr = data.DestinationPositionError * data.DestinationPositionError;
             deadUnitsDestroyDelay = data.UnitsDestroyDelay;
 
             this.targetFinder = targetFinder;
             this.unitsContainer = unitsContainer;
-
             this.unitsContainer.OnUnitDead += UpdateTargetExistance;
+
+            _mainTower = mainTower;
+            _mainTower.OnMainTowerDestroyed += MainTowerDestroyed;
         }
 
+   
         public void OnUpdate(float deltaTime) 
         {
             ExecuteOnUpdate(deltaTime);
         }
+
+        protected abstract void MainTowerDestroyed();
 
         protected abstract void ExecuteOnUpdate(float deltaTime);
         protected abstract void UpdateTargetExistance(ITarget target);

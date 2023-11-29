@@ -35,9 +35,9 @@ namespace Code.MVC_System
                 = new DefendersSpawnController(sceneObjectsHolder.DefendersSpawner, unitsContainer);
             
             var enemyBattleController 
-                = new EnemyBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, enemySpawner);
+                = new EnemyBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, mainTower, enemySpawner);
             var defenderBattleController 
-                = new DefenderBattleController(configs.BattleSystemConst, targetFinder, unitsContainer);
+                = new DefenderBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, mainTower);
                   
             var enemySpawnHandler 
                 = new EnemySpawnHandler(enemySpawner, configs.EnemyWaveSettings, sceneObjectsHolder.BattleUI);

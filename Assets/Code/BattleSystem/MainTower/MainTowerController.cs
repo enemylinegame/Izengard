@@ -13,7 +13,7 @@ namespace BattleSystem.MainTower
 
         public event Action OnMainTowerDestroyed; 
             
-           
+          
         public MainTowerController(MainTowerView mainTowerView, MainTowerConfig mainTowerConfig)
         {
             _mainTowerConfig = mainTowerConfig;

@@ -1,5 +1,5 @@
-using System;
 using Abstraction;
+using BattleSystem.MainTower;
 using Configs;
 using UnitSystem;
 using UnitSystem.Enum;
@@ -13,9 +13,20 @@ namespace BattleSystem
         public DefenderBattleController(
             BattleSystemData data, 
             TargetFinder targetFinder, 
-            UnitsContainer unitsContainer) : base(data, targetFinder, unitsContainer)
+            UnitsContainer unitsContainer, 
+            MainTowerController mainTower) : base(data, targetFinder, unitsContainer, mainTower)
         {
+        }
 
+        protected override void MainTowerDestroyed()
+        {
+            for (int i = 0; i < unitsContainer.DefenderUnits.Count; i++)
+            {
+                var unit = unitsContainer.DefenderUnits[i];
+
+                unit.Stop();
+                unit.ChangeState(UnitStateType.None);
+            }
         }
 
         protected override void ExecuteOnUpdate(float deltaTime)
