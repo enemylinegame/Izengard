@@ -55,11 +55,13 @@ namespace SpawnSystem
         {
             if (_isTiming)
             {
-                TimersHolder.RemoveTimer(_timer);
                 _isTiming = false;
 
+                TimersHolder.RemoveTimer(_timer);
+              
                 _waveIndex = 0;
                 _currentWave = _waves[_waveIndex];
+                _timer = new TimeRemaining(ExecuteWaveLogic, _currentWave.WaveDuration, true);
 
                 Debug.Log("Enemy wave stoped!");
             }          
@@ -83,7 +85,6 @@ namespace SpawnSystem
             {
                 StopSpawn();
                 OnWavesEnd?.Invoke();
-                Debug.Log("Enemy wave ends!");
                 return;
             }
 
