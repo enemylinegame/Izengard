@@ -98,6 +98,7 @@ namespace UnitSystem
         {
             Unsubscribe();
 
+            _unitTarget.ResetTarget();
             _navigation.Disable();
             _unitState.ChangeState(UnitStateType.None);
 
@@ -154,11 +155,6 @@ namespace UnitSystem
                         break;
                     case UnitStateType.Die:
                         {
-                            Target.ResetTarget();
-                            TimeProgress = 0.0f;
-                            _view.SetCollisionEnabled(false);
-                            _navigation.Disable();
-
                             animView.StartDead();
                         }
                         break;
@@ -171,6 +167,14 @@ namespace UnitSystem
 
         private void ReachedZeroHealth(int value)
         {
+            Target.ResetTarget();
+            TimeProgress = 0.0f;
+            _navigation.Disable();
+
+            _view.SetCollisionEnabled(false);
+
+            ChangeState(UnitStateType.Die);
+            
             OnReachedZeroHealth?.Invoke(this);
         }
 

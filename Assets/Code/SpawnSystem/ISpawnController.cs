@@ -8,5 +8,6 @@ namespace SpawnSystem
     {
         public event Action<IUnit> OnUnitSpawned;
         void SpawnUnit(UnitType unitType);
+        void DespawnUnit(IUnit unit);
     }
 }

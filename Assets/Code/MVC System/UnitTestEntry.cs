@@ -7,6 +7,7 @@ using SpawnSystem;
 using Tools;
 using Tools.Navigation;
 using UnitSystem;
+using UnitSystem.Enum;
 using UnityEngine;
 
 public class UnitTestEntry : MonoBehaviour
@@ -50,7 +51,9 @@ public class UnitTestEntry : MonoBehaviour
        
         _mainTowerController = new MainTowerController(_sceneObjects.MainTower, _configsHolder.MainTowerSettings);
 
-        _unitsContainer = new UnitsContainer();
+        _unitsContainer = new UnitsContainer(_configsHolder.BattleSystemConst);
+        _unitsContainer.OnUnitRemoved += OnUnitRemoved;
+        _onUpdates.Add(_unitsContainer);
 
         _targetFinder = new TargetFinder(_mainTowerController, _unitsContainer);
 
@@ -102,5 +105,21 @@ public class UnitTestEntry : MonoBehaviour
     private void OnCreatedUnit(IUnit unit) 
     {
         _unitsContainer.AddUnit(unit);
+    }
+
+    private void OnUnitRemoved(IUnit unit)
+    {
+        switch (unit.Stats.Faction)
+        {
+            case UnitFactionType.Enemy: 
+                {
+                    _enemySpawnController.DespawnUnit(unit);
+                    break;
+                }
+            case UnitFactionType.Defender:
+                {
+                    break;
+                }
+        }
     }
 }

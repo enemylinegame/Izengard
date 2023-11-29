@@ -51,13 +51,6 @@ namespace BattleSystem
                         }
                 }
             }
-
-            for (int i = 0; i < unitsContainer.DeadUnits.Count; i++)
-            {
-                IUnit unit = unitsContainer.DeadUnits[i];
-
-                UnitDeadState(unit, deltaTime);
-            }
         }
 
         protected override void UpdateTargetExistance(ITarget target)

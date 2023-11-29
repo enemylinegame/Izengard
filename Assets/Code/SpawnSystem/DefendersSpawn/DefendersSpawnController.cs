@@ -58,10 +58,14 @@ namespace SpawnSystem
             _nextSpawnPositionsIndex++;
             return spawnPosition;
         }
+        public void DespawnUnit(IUnit unit)
+        {
+
+        }
 
         public void OnUpdate(float deltaTime) 
         {
 
-        }
+        }    
     }
 }

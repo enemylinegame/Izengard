@@ -28,7 +28,7 @@ namespace Code.MVC_System
 
             var warBuildingController = new MainTowerController(sceneObjectsHolder.MainTower, configs.MainTowerSettings);
 
-            var unitsContainer = new UnitsContainer();
+            var unitsContainer = new UnitsContainer(configs.BattleSystemConst);
             var targetFinder = new TargetFinder(warBuildingController, unitsContainer);
             var navigationUpdater = new NavigationUpdater();
 

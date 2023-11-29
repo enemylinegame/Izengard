@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: BattleSystemData
   m_EditorClassIdentifier: 
   <DestinationPositionError>k__BackingField: 0.3
-  <DeadUnitsDestroyDelay>k__BackingField: 5
+  <UnitsDestroyDelay>k__BackingField: 5

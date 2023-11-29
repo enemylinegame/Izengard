@@ -1,21 +1,28 @@
 ﻿using Abstraction;
+using Configs;
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using UnitSystem.Enum;
 
 namespace UnitSystem
 {
-    public class UnitsContainer : IUnitsContainer
-    {       
+    public class UnitsContainer : IUnitsContainer, IOnUpdate
+    {
+        private readonly float unitsDestroyDelay;
+
         private List<IUnit> _enemyUnits = new();
         private List<IUnit> _defenderUnits = new();
-        private List<IUnit> _deadUnits = new();
+
+        private List<IUnit> toRemoveUnitsCollection = new();
 
         public List<IUnit> EnemyUnits => _enemyUnits;
         public List<IUnit> DefenderUnits => _defenderUnits;
-        public List<IUnit> DeadUnits => _deadUnits;
 
         public event Action<ITarget> OnUnitDead;
+        
+        public event Action<IUnit> OnUnitRemoved;
 
         public event Action OnEnemyAdded;
         public event Action OnDefenderAdded;
@@ -23,6 +30,11 @@ namespace UnitSystem
         public event Action OnAllEnemyDestroyed;
 
         public event Action OnAllDefenderDestroyed;
+ 
+        public UnitsContainer(BattleSystemData data)
+        {
+            unitsDestroyDelay = data.UnitsDestroyDelay;
+        }
 
         public void AddUnit(IUnit unit)
         {
@@ -63,7 +75,7 @@ namespace UnitSystem
             if (unit.State.Current == UnitStateType.Die)
             {
                 unit.Disable();
-                _deadUnits.Remove(unit);
+                toRemoveUnitsCollection.Remove(unit);       
             }
             else
             {
@@ -74,9 +86,7 @@ namespace UnitSystem
                     default:
                         break;
                     case UnitFactionType.Enemy:
-                        {
-                            unit.Target.ResetTarget();
-                            unit.Disable();
+                        {    
                             _enemyUnits.Remove(unit);
 
                             if(_enemyUnits.Count == 0)
@@ -88,7 +98,6 @@ namespace UnitSystem
                         }
                     case UnitFactionType.Defender:
                         {
-                            unit.Target.ResetTarget();
                             unit.Disable();
                             _defenderUnits.Remove(unit);
 
@@ -101,14 +110,13 @@ namespace UnitSystem
                         }
                 }
             }
+
+            OnUnitRemoved?.Invoke(unit);
         }
 
         private void UnitReachedZeroHealth(IUnit unit)
         {
             unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
-
-            unit.ChangeState(UnitStateType.Die);
-
 
             if (unit.Stats.Faction == UnitFactionType.Enemy)
             {
@@ -118,10 +126,36 @@ namespace UnitSystem
             {
                 _defenderUnits.Remove(unit);
             }
-
-            _deadUnits.Add(unit);
-
+            
             OnUnitDead?.Invoke(unit.View);
+
+            toRemoveUnitsCollection.Add(unit);
+        }
+
+        public void OnUpdate(float deltaTime)
+        {
+            UpdateToBeRemovedUnits(toRemoveUnitsCollection, deltaTime);
+        }
+
+        private void UpdateToBeRemovedUnits(List<IUnit> toRemoveUnits, float deltaTime)
+        {
+            if (toRemoveUnits.Count == 0)
+                return;
+
+            for (int i = (toRemoveUnits.Count - 1); i >= 0; i--)
+            {
+                var unit = toRemoveUnits[i];
+                
+                unit.TimeProgress += deltaTime;
+                
+                if(unit.TimeProgress >= unitsDestroyDelay)
+                {
+                    unit.Disable();
+                    OnUnitRemoved?.Invoke(unit);
+                    
+                    toRemoveUnitsCollection.Remove(unit);
+                }
+            }
         }
     }
 }

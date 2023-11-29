@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _waves:
   - WaveName: wave0
-    WaveDuration: 5
+    WaveDuration: 0
     InWaveUnits: 040000000400000004000000
   - WaveName: wave1
     WaveDuration: 5

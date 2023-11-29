@@ -10,6 +10,6 @@ namespace Configs
         public float DestinationPositionError { get; private set; } = 0.3f;
         
         [field: SerializeField] 
-        public float DeadUnitsDestroyDelay { get; private set; } = 10.0f;
+        public float UnitsDestroyDelay { get; private set; } = 10.0f;
     }
 }

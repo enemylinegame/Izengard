@@ -18,7 +18,7 @@ namespace BattleSystem
             UnitsContainer unitsContainer)
         {
             destinationPositionErrorSqr = data.DestinationPositionError * data.DestinationPositionError;
-            deadUnitsDestroyDelay = data.DeadUnitsDestroyDelay;
+            deadUnitsDestroyDelay = data.UnitsDestroyDelay;
 
             this.targetFinder = targetFinder;
             this.unitsContainer = unitsContainer;
@@ -39,15 +39,8 @@ namespace BattleSystem
         protected virtual void UnitMoveState(IUnit unit, float deltaTime) { }
         
         protected virtual void UnitAttackState(IUnit unit, float deltaTime) { }
-        
-        protected virtual void UnitDeadState(IUnit unit, float deltaTime) 
-        {
-            unit.TimeProgress += deltaTime;
-            if (unit.TimeProgress >= deadUnitsDestroyDelay)
-            {
-                unitsContainer.RemoveUnit(unit);
-            }
-        }
+
+        protected virtual void UnitDeadState(IUnit unit, float deltaTime) { }
 
         protected bool IsAttackDistanceSuitable(IUnit attacker)
         {

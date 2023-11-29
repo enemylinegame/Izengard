@@ -45,6 +45,10 @@ namespace SpawnSystem
             OnUnitSpawned?.Invoke(unit);
         }
 
+        public void DespawnUnit(IUnit unit)
+        {
+            _pool.ReturnToPool(unit);
+        }
 
         public void OnUpdate(float deltaTime)
         {
