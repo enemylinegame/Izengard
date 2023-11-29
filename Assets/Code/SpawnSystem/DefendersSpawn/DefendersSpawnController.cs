@@ -11,6 +11,7 @@ namespace SpawnSystem
     public class DefendersSpawnController : ISpawnController
     {
         private readonly SpawnerView _spawner;
+        private readonly IUnitsContainer _unitsContainer;
 
         private List<UnitCreationData> _unitCreationDataList;
 
@@ -18,13 +19,16 @@ namespace SpawnSystem
 
         public event Action<IUnit> OnUnitSpawned;
 
-        public DefendersSpawnController(SpawnerView spawner)
+        public DefendersSpawnController(SpawnerView spawner, IUnitsContainer unitsContainer)
         {
             _spawner = spawner;
+            _unitsContainer = unitsContainer;
 
             _unitCreationDataList = _spawner.SpawnSettings.UnitsCreationData;
             
             _nextSpawnPositionsIndex = 0;
+
+            _unitsContainer.OnUnitRemoved += DespawnUnit;
         }
 
         public void SpawnUnit(UnitType unitType)
@@ -38,11 +42,12 @@ namespace SpawnSystem
             GameObject instance = UnityEngine.Object.Instantiate(prefab);
             IUnitView view = instance.GetComponent<IUnitView>();
 
-            var unitHandler = new UnitHandler(view, creationData.UnitSettings);
+            var unit = new UnitHandler(view, creationData.UnitSettings);
 
-            unitHandler.SetStartPosition(SelectSpawnPosition());
-            
-            OnUnitSpawned?.Invoke(unitHandler);
+            unit.SetStartPosition(SelectSpawnPosition());
+
+            _unitsContainer.AddUnit(unit);
+            OnUnitSpawned?.Invoke(unit);
         }
 
         private Vector3 SelectSpawnPosition()
@@ -58,14 +63,11 @@ namespace SpawnSystem
             _nextSpawnPositionsIndex++;
             return spawnPosition;
         }
+
         public void DespawnUnit(IUnit unit)
         {
-
+            if (unit.Stats.Faction != UnitFactionType.Defender)
+                return;
         }
-
-        public void OnUpdate(float deltaTime) 
-        {
-
-        }    
     }
 }

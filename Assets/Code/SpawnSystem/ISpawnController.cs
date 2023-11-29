@@ -1,12 +1,10 @@
-﻿using System;
-using UnitSystem;
+﻿using UnitSystem;
 using UnitSystem.Enum;
 
 namespace SpawnSystem
 {
-    public interface ISpawnController : IOnController, IOnUpdate
+    public interface ISpawnController : IOnController
     {
-        public event Action<IUnit> OnUnitSpawned;
         void SpawnUnit(UnitType unitType);
         void DespawnUnit(IUnit unit);
     }

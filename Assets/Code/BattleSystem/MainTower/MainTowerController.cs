@@ -10,7 +10,6 @@ namespace BattleSystem.MainTower
         private MainTowerHandler _mainTower;
         private MainTowerConfig _mainTowerConfig;
         private UnitDefenceModel _towerDefenceModel;
-        private IAttackTarget _mainTowerAsTarget;
 
         public event Action OnMainTowerDestroyed; 
             
@@ -20,7 +19,7 @@ namespace BattleSystem.MainTower
             _mainTowerConfig = mainTowerConfig;
             _towerDefenceModel = new UnitDefenceModel(_mainTowerConfig.DefenceData);
             _mainTower = new MainTowerHandler(mainTowerView, _towerDefenceModel, (int)_mainTowerConfig.Durability);
-            _mainTower.OnReachedZeroHealth += BuildingDestroyed;
+            _mainTower.OnReachedZeroHealth += mainTowerDestroyed;
         }
         
         public void OnStart()
@@ -28,19 +27,15 @@ namespace BattleSystem.MainTower
             _mainTower.Enable();
         }
 
-
         public IAttackTarget GetMainTower() => _mainTower.View;
 
 
-        private void BuildingDestroyed(IMainTower building)
+        private void mainTowerDestroyed(IMainTower building)
         {
-            building.OnReachedZeroHealth -= BuildingDestroyed;
+            building.OnReachedZeroHealth -= mainTowerDestroyed;
 
-            if (building.Id == _mainTower.Id)
-            {
-                OnMainTowerDestroyed?.Invoke();
-            }
-            
+            building.Disable();
+            OnMainTowerDestroyed?.Invoke();
         }
         
     }

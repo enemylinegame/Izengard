@@ -2,13 +2,11 @@
 using Configs;
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using UnitSystem.Enum;
 
 namespace UnitSystem
 {
-    public class UnitsContainer : IUnitsContainer, IOnUpdate
+    public class UnitsContainer : IUnitsContainer, IOnController, IOnUpdate
     {
         private readonly float unitsDestroyDelay;
 

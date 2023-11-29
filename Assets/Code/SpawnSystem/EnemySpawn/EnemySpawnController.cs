@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Abstraction;
-using EnemySystem;
-using Tools;
+﻿using EnemySystem;
 using UnitSystem;
 using UnitSystem.Enum;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace SpawnSystem
@@ -13,24 +8,22 @@ namespace SpawnSystem
     public class EnemySpawnController : ISpawnController
     {
         private readonly SpawnerView _spawner;
+        private readonly IUnitsContainer _unitsContainer;
+
         private readonly EnemyPool _pool;
 
-        private readonly List<Transform> _spawnPoints = new List<Transform>();
-        
-        private TimeRemaining _timer;
-        private bool _isTiming;
-
-        public event Action<IUnit> OnUnitSpawned;
-
-        public EnemySpawnController(SpawnerView spawner)
+        public EnemySpawnController(SpawnerView spawner, IUnitsContainer unitsContainer)
         {
             _spawner = spawner;
+            _unitsContainer = unitsContainer;
 
             var unitsCreationData = _spawner.SpawnSettings.UnitsCreationData;
 
             var factory = new EnemyUnitFactory(unitsCreationData);
             
             _pool = new EnemyPool(spawner.PoolHolder, factory, unitsCreationData);
+
+            _unitsContainer.OnUnitRemoved += DespawnUnit;
         }
 
         public void SpawnUnit(UnitType unitType)
@@ -42,17 +35,15 @@ namespace SpawnSystem
 
             unit.SetStartPosition(spawnPosition);
 
-            OnUnitSpawned?.Invoke(unit);
+            _unitsContainer.AddUnit(unit);
         }
 
         public void DespawnUnit(IUnit unit)
         {
+            if (unit.Stats.Faction != UnitFactionType.Enemy)
+                return;
+
             _pool.ReturnToPool(unit);
-        }
-
-        public void OnUpdate(float deltaTime)
-        {
-
         }
     }
 }
