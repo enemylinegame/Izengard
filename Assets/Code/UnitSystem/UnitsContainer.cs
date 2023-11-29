@@ -68,63 +68,38 @@ namespace UnitSystem
            
         }
 
-        public void RemoveUnit(IUnit unit)
-        {
-            if (unit.State.Current == UnitStateType.Die)
-            {
-                unit.Disable();
-                toRemoveUnitsCollection.Remove(unit);       
-            }
-            else
-            {
-                unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
-
-                switch (unit.Stats.Faction)
-                {
-                    default:
-                        break;
-                    case UnitFactionType.Enemy:
-                        {    
-                            _enemyUnits.Remove(unit);
-
-                            if(_enemyUnits.Count == 0)
-                            {
-                                OnAllEnemyDestroyed?.Invoke();
-                            }
-
-                            break;
-                        }
-                    case UnitFactionType.Defender:
-                        {
-                            unit.Disable();
-                            _defenderUnits.Remove(unit);
-
-                            if (_defenderUnits.Count == 0)
-                            {
-                                OnAllDefenderDestroyed?.Invoke();
-                            }
-
-                            break;
-                        }
-                }
-            }
-
-            OnUnitRemoved?.Invoke(unit);
-        }
-
         private void UnitReachedZeroHealth(IUnit unit)
         {
             unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
 
-            if (unit.Stats.Faction == UnitFactionType.Enemy)
+            switch (unit.Stats.Faction)
             {
-                _enemyUnits.Remove(unit);
+                default:
+                    break;
+                case UnitFactionType.Enemy:
+                    {
+                        _enemyUnits.Remove(unit);
+
+                        if (_enemyUnits.Count == 0)
+                        {
+                            OnAllEnemyDestroyed?.Invoke();
+                        }
+
+                        break;
+                    }
+                case UnitFactionType.Defender:
+                    {
+                        _defenderUnits.Remove(unit);
+
+                        if (_defenderUnits.Count == 0)
+                        {
+                            OnAllDefenderDestroyed?.Invoke();
+                        }
+
+                        break;
+                    }
             }
-            else if (unit.Stats.Faction == UnitFactionType.Defender)
-            {
-                _defenderUnits.Remove(unit);
-            }
-            
+
             OnUnitDead?.Invoke(unit.View);
 
             toRemoveUnitsCollection.Add(unit);
