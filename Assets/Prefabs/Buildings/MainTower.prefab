@@ -697,7 +697,7 @@ GameObject:
   - component: {fileID: -7814335830452997286}
   - component: {fileID: 1831737973244403283}
   - component: {fileID: 4977917654534155612}
-  - component: {fileID: -1743502538154517619}
+  - component: {fileID: 7179972615514550580}
   m_Layer: 7
   m_Name: MainTower
   m_TagString: Building
@@ -769,7 +769,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-1743502538154517619
+--- !u!114 &7179972615514550580
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

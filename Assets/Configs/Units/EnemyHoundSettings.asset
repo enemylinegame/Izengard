@@ -16,7 +16,7 @@ MonoBehaviour:
     _faction: 2
     _type: 5
     _role: 5
-    _healthPoints: 30
+    _healthPoints: 50
     _size: 0.5
     _speed: 3
     _detectionRange: 10
@@ -36,6 +36,7 @@ MonoBehaviour:
       _coldDamageResist: 0
   _offenceData:
     _attackType: 2
+    _abilityType: 0
     _minRange: 1
     _maxRange: 5
     _castingTime: 1

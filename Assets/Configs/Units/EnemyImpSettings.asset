@@ -38,15 +38,16 @@ MonoBehaviour:
       _coldDamageResist: 0
   _offenceData:
     _attackType: 1
+    _abilityType: 5
     _minRange: 0
     _maxRange: 2
-    _castingTime: 1
+    _castingTime: 0.8
     _attackTime: 1
     _criticalChance: 10
     _critScale: 2
     _failChance: 0
     _onFailDamage: 1
     _damageData:
-      _baseDamage: 30
+      _baseDamage: 25
       _fireDamage: 0
       _coldDamage: 0

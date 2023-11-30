@@ -1,4 +1,4 @@
-﻿using UnitSystem.Enum;
+using UnitSystem.Enum;
 
 namespace UnitSystem
 {

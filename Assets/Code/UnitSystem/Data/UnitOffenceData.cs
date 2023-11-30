@@ -1,4 +1,4 @@
-﻿using UnitSystem.Enum;
+using UnitSystem.Enum;
 using UnityEngine;
 
 namespace UnitSystem.Data

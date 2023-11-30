@@ -1,4 +1,4 @@
-﻿using Abstraction;
+using Abstraction;
 using System;
 using UnitSystem.Enum;
 using UnitSystem.Model;

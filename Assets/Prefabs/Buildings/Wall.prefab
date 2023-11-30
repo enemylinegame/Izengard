@@ -95,7 +95,8 @@ GameObject:
   - component: {fileID: 3634649476590817471}
   - component: {fileID: 7755953964095894173}
   - component: {fileID: 6127675036024295103}
-  m_Layer: 0
+  - component: {fileID: 2016527728239464833}
+  m_Layer: 7
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -160,6 +161,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_OverrideArea: 1
-  m_Area: 0
-  m_IgnoreFromBuild: 1
-  m_AffectedAgents: 00000000
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
+--- !u!114 &2016527728239464833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8422491546466636350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b948884c5cd24b4fbb2dc318d4d7f6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _config: {fileID: 11400000, guid: e758dd56346a7c345b99d7d11132d2a4, type: 2}
