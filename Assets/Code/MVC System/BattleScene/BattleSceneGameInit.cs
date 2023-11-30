@@ -44,9 +44,9 @@ namespace Code.MVC_System
             var defendersSpawnHandler
                 = new DefenderSpawnHandler(defendersSpawner, sceneObjectsHolder.BattleUI);
 
-            var peaceStateManager = new PeaceStateManager();
+            var peaceStateManager = new PeacePhaseConttoller();
             var battleStateManager 
-                = new BattleStateManager(defendersSpawnHandler, enemySpawnHandler, mainTower, unitsContainer);
+                = new BattlePhaseController(defendersSpawnHandler, enemySpawnHandler, mainTower, unitsContainer);
             
             var gameStateManager = new GameStateManager(peaceStateManager, battleStateManager);
             

@@ -1,4 +1,5 @@
 ﻿using BattleSystem.MainTower;
+using GlobalGameState;
 using SpawnSystem;
 using System;
 using UnitSystem;
@@ -6,14 +7,16 @@ using UnityEngine;
 
 namespace Code.GlobalGameState
 {
-    public class BattleStateManager
+    public class BattlePhaseController : IPhaseController
     {
         private readonly DefenderSpawnHandler _defendersSpawnHandler;
         private readonly EnemySpawnHandler _enemySpawnHandler;
         private readonly IUnitsContainer _unitsContainer;
         private readonly MainTowerController _mainTower;
 
-        public BattleStateManager(
+        public event Action OnPhaseEnd;
+
+        public BattlePhaseController(
             DefenderSpawnHandler defendersSpawnHandler,
             EnemySpawnHandler enemySpawnHandler,
             MainTowerController mainTower,
@@ -36,6 +39,8 @@ namespace Code.GlobalGameState
         {
             _mainTower.OnMainTowerDestroyed -= MainToweWasDestroyed;
             _unitsContainer.OnAllEnemyDestroyed -= EnemiesWasKilled;
+
+            OnPhaseEnd?.Invoke();
         }
 
         private void MainToweWasDestroyed()
@@ -51,6 +56,5 @@ namespace Code.GlobalGameState
 
             Debug.Log("You Win!");
         }
-
     }
 }
