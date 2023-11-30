@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4fbb77787a664f7c9863acc443cef5c1, type: 3}
-  m_Name: ArenaMainTowerConfig
+  m_Name: MainTowerConfig
   m_EditorClassIdentifier: 
   <Durability>k__BackingField: 1000
   <DefenceData>k__BackingField:

@@ -9,16 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a4350ccd0dd2af41a35b90f163858f7, type: 3}
+  m_Script: {fileID: 11500000, guid: 18dea48bd010e2743875c29ae78f9950, type: 3}
   m_Name: EnemyWaveSettings
   m_EditorClassIdentifier: 
   _waves:
-  - WaveName: wave0
-    WaveDuration: 5
+  - WaveName: 1
+    WaveDuration: 0
     InWaveUnits: 040000000400000004000000
-  - WaveName: wave1
-    WaveDuration: 5
-    InWaveUnits: 050000000500000004000000
-  - WaveName: wave2
-    WaveDuration: 8
-    InWaveUnits: 0500000004000000
+  - WaveName: 2
+    WaveDuration: 0
+    InWaveUnits: 0500000005000000040000000400000004000000
