@@ -1,30 +1,56 @@
-﻿using BattleSystem;
+﻿using BattleSystem.MainTower;
+using SpawnSystem;
+using System;
+using UnitSystem;
+using UnityEngine;
 
 namespace Code.GlobalGameState
 {
     public class BattleStateManager
     {
+        private readonly DefenderSpawnHandler _defendersSpawnHandler;
+        private readonly EnemySpawnHandler _enemySpawnHandler;
+        private readonly IUnitsContainer _unitsContainer;
+        private readonly MainTowerController _mainTower;
 
-        private DefendersSpawnLogicMock _defendersSpawnLogic;
-        private EnemySpawnLogicMock _enemySpawnLogic;
-
-        public BattleStateManager(DefendersSpawnLogicMock defendersSpawnLogic, EnemySpawnLogicMock enemySpawnLogic)
+        public BattleStateManager(
+            DefenderSpawnHandler defendersSpawnHandler,
+            EnemySpawnHandler enemySpawnHandler,
+            MainTowerController mainTower,
+            IUnitsContainer unitsContainer)
         {
-            _defendersSpawnLogic = defendersSpawnLogic;
-            _enemySpawnLogic = enemySpawnLogic;
+            _defendersSpawnHandler = defendersSpawnHandler;
+            _enemySpawnHandler = enemySpawnHandler;
+            _mainTower = mainTower;
+            _unitsContainer = unitsContainer;
         }
 
         public void StartPhase()
         {
-            _enemySpawnLogic.StartSpawn();
-            _defendersSpawnLogic.StartSpawn();
+            _mainTower.OnMainTowerDestroyed += MainToweWasDestroyed;
+            _unitsContainer.OnAllEnemyDestroyed += EnemiesWasKilled;
         }
+
 
         public void EndPhase()
         {
-            _enemySpawnLogic.StopSpawn();
+            _mainTower.OnMainTowerDestroyed -= MainToweWasDestroyed;
+            _unitsContainer.OnAllEnemyDestroyed -= EnemiesWasKilled;
         }
-        
-        
+
+        private void MainToweWasDestroyed()
+        {
+            _enemySpawnHandler.StopSpawn();
+
+            Debug.Log("You Lose!");
+        }
+
+        private void EnemiesWasKilled()
+        {
+            _enemySpawnHandler.StopSpawn();
+
+            Debug.Log("You Win!");
+        }
+
     }
 }

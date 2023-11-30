@@ -1,8 +1,11 @@
-﻿namespace Abstraction
+﻿using System;
+
+namespace Abstraction
 {
     public interface IDamageable
     {
-        bool IsAlive { get; }
+        event Action<IDamage> OnTakeDamage;
+
         void TakeDamage(IDamage damage);
     }
 }

@@ -1,45 +1,43 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
-
 using Abstraction;
-using BattleSystem.Buildings;
-using BattleSystem.Buildings.Interfaces;
-using BattleSystem.Models;
 using UnitSystem;
 using UnitSystem.Enum;
-
+using BattleSystem.MainTower;
 
 namespace BattleSystem
 {
     public class TargetFinder
     {
-
-        private IWarBuildingsContainer _warBuildingsContainer;
+        private MainTowerController _mainTower;
         private IUnitsContainer _unitsContainer;
         private readonly IAttackTarget _defaultTarget;
-        
-        
-        public TargetFinder(IWarBuildingsContainer container)
+
+        private bool _isMainTowerDestroyed;
+
+        public TargetFinder(MainTowerController mainTower, IUnitsContainer unitsContainer)
         {
-            _warBuildingsContainer = container;
-            _defaultTarget = new NoneTarget();
-        }
-        
-        public TargetFinder(IWarBuildingsContainer warBuildingsContainer, IUnitsContainer unitsContainer)
-        {
-            _warBuildingsContainer = warBuildingsContainer;
+            _mainTower = mainTower;
             _unitsContainer = unitsContainer;
+
+            _mainTower.OnMainTowerDestroyed += MainToweDestroyed;
+
             _defaultTarget = new NoneTarget();
         }
+
+        private void MainToweDestroyed() => _isMainTowerDestroyed = false;
 
         public IAttackTarget GetMainTower()
         {
-            return _warBuildingsContainer.GetMainTowerAsAttackTarget();
+            if (_isMainTowerDestroyed)
+                return _defaultTarget;
+
+            return _mainTower.GetMainTower();
         }
 
         public IAttackTarget GetTarget(IUnit unit)
         {
-            IAttackTarget result = new NoneTarget();
+            IAttackTarget result = _defaultTarget;
 
             while (unit.Priority.GetNext())
             {
@@ -91,7 +89,7 @@ namespace BattleSystem
             {
                 IUnit foeUnit = foeUnitList[i];
 
-                if( (targetType != UnitType.None && foeUnit.Stats.Type != targetType) || !foeUnit.IsAlive )
+                if( (targetType != UnitType.None && foeUnit.Stats.Type != targetType) || foeUnit is NoneTarget )
                     continue;
 
                 Vector3 defenderPos = foeUnit.GetPosition();
@@ -100,9 +98,8 @@ namespace BattleSystem
                 if (distance < minDist)
                 {
                     minDist = distance;
-                    
-                    
-                    target = new TargetModel(foeUnit, foeUnit.View);
+
+                    target = foeUnit.View;
                 }
             }
 

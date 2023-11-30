@@ -2,7 +2,6 @@
 {
     public class GameStateManager : IOnController, IOnStart
     {
-
         private enum GameState
         {
             None   = 0,
@@ -16,22 +15,15 @@
 
         private GameState _state;
         
-
         public GameStateManager(PeaceStateManager peace, BattleStateManager battle)
         {
             _peaceState = peace;
             _battleState = battle;
         }
 
-
         public void OnStart()
         {
             _battleState.StartPhase();
-        }
-        
-        
-        
-        
-        
+        }   
     }
 }

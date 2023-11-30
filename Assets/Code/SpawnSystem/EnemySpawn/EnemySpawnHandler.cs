@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using Tools;
+using UI;
+using UnityEngine;
 
 namespace SpawnSystem
 {
     public class EnemySpawnHandler
     {
-        private readonly EnemySpawnController _spawnController;
+        private readonly ISpawnController _spawnController;
         private readonly IReadOnlyList<WaveData> _waves;
-       
+        private readonly BattleSceneUI _battleUI;
+
         private WaveData _currentWave;
         private int _waveIndex;
         private TimeRemaining _timer;
@@ -18,16 +21,23 @@ namespace SpawnSystem
         public WaveData CurrentWave => _currentWave;
         public event Action OnWavesEnd;
 
-        public EnemySpawnHandler(EnemySpawnController spawnController, WaveSettings waveSettings)
+        public EnemySpawnHandler(
+            ISpawnController spawnController, 
+            WaveSettings waveSettings, 
+            BattleSceneUI battleUI)
         {
             _spawnController = spawnController;
             _waves = waveSettings.Waves;
+            _battleUI = battleUI;
 
             _waveIndex = 0;
             
             _currentWave = _waves[_waveIndex];
 
             _timer = new TimeRemaining(ExecuteWaveLogic, _currentWave.WaveDuration, true);
+
+            _battleUI.EnemyWaveStartButton.onClick.AddListener(() => StartSpawn());
+            _battleUI.EnemyWaveStopButton.onClick.AddListener(() => StopSpawn());
         }
 
         public void StartSpawn()
@@ -36,28 +46,26 @@ namespace SpawnSystem
             {
                 TimersHolder.AddTimer(_timer);
                 _isTiming = true;
-            }
+
+                Debug.Log("Enemy wave started!");
+            }          
         }
 
         public void StopSpawn()
         {
             if (_isTiming)
             {
-                TimersHolder.RemoveTimer(_timer);
                 _isTiming = false;
+
+                TimersHolder.RemoveTimer(_timer);
+              
                 _waveIndex = 0;
-            }
-        }
+                _currentWave = _waves[_waveIndex];
+                _timer = new TimeRemaining(ExecuteWaveLogic, _currentWave.WaveDuration, true);
 
-        public void PauseSpawn()
-        {
-            if (_isTiming)
-            {
-                TimersHolder.RemoveTimer(_timer);
-                _isTiming = false;
-            }
+                Debug.Log("Enemy wave stoped!");
+            }          
         }
-
 
         private void ExecuteWaveLogic()
         {
@@ -66,7 +74,6 @@ namespace SpawnSystem
                 _currentWave = _waves[_waveIndex];
             }
             
-
             for (int i = 0; i < _currentWave.InWaveUnits.Length; i++)
             {
                 _spawnController.SpawnUnit(_currentWave.InWaveUnits[i]);

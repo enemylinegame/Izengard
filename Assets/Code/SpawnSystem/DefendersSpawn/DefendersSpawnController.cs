@@ -1,74 +1,73 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-
-using Abstraction;
-using EnemySystem;
 using UnitSystem;
 using UnitSystem.Data;
 using UnitSystem.Enum;
-using UnitSystem.Model;
 
 
-namespace BattleSystem
+namespace SpawnSystem
 {
-    public class DefendersSpawnController
+    public class DefendersSpawnController : ISpawnController
     {
+        private readonly SpawnerView _spawner;
+        private readonly IUnitsContainer _unitsContainer;
 
-        private readonly IIdGenerator _idGenerator;
-        
         private List<UnitCreationData> _unitCreationDataList;
-        private List<Vector3> _spawnPositions;
-
-        public event Action<IUnit> OnUnitSpawned;
 
         private int _nextSpawnPositionsIndex;
 
-        
-        public DefendersSpawnController(List<UnitCreationData> unitCreationsDataList, List<Vector3> spawnPositions,
-            IIdGenerator idGenerator)
+        public event Action<IUnit> OnUnitSpawned;
+
+        public DefendersSpawnController(SpawnerView spawner, IUnitsContainer unitsContainer)
         {
-            _unitCreationDataList = unitCreationsDataList;
-            _spawnPositions = spawnPositions;
+            _spawner = spawner;
+            _unitsContainer = unitsContainer;
+
+            _unitCreationDataList = _spawner.SpawnSettings.UnitsCreationData;
+            
             _nextSpawnPositionsIndex = 0;
-            _idGenerator = idGenerator;
+
+            _unitsContainer.OnUnitRemoved += DespawnUnit;
         }
 
         public void SpawnUnit(UnitType unitType)
         {
             UnitCreationData creationData =
                 _unitCreationDataList.Find(ucd => ucd.UnitSettings.StatsData.Type == unitType);
+            
             if (creationData == null) return;
 
             GameObject prefab = creationData.UnitPrefab;
-            GameObject instance = GameObject.Instantiate(prefab);
-            int id = _idGenerator.GetNext();
-            instance.name = unitType.ToString() + "_" + id.ToString(); 
+            GameObject instance = UnityEngine.Object.Instantiate(prefab);
             IUnitView view = instance.GetComponent<IUnitView>();
 
-            var unitStats = new UnitStatsModel(creationData.UnitSettings.StatsData);
-            var unitDefence = new UnitDefenceModel(creationData.UnitSettings.DefenceData);
-            var unitOffence = new UnitOffenceModel(creationData.UnitSettings.OffenceData);
-            var navigation = new EnemyNavigationModel(view.UnitNavigation, view.SelfTransform.position);
-            var priorities = new UnitPriorityModel(creationData.UnitSettings.UnitPriorities);
-            var unitHandler = 
-                new UnitHandler(id, view, unitStats, unitDefence, unitOffence, navigation, priorities);
-            
-            unitHandler.SetStartPosition(SelectSpawnPosition());
-            
-            OnUnitSpawned?.Invoke(unitHandler);
+            var unit = new UnitHandler(view, creationData.UnitSettings);
+
+            unit.SetStartPosition(SelectSpawnPosition());
+
+            _unitsContainer.AddUnit(unit);
+            OnUnitSpawned?.Invoke(unit);
         }
 
         private Vector3 SelectSpawnPosition()
         {
-            if (_nextSpawnPositionsIndex >= _spawnPositions.Count)
+            if (_nextSpawnPositionsIndex >= _spawner.SpawnPoints.Count)
             {
                 _nextSpawnPositionsIndex = 0;
             }
 
-            Vector3 spawnPosition = _spawnPositions[_nextSpawnPositionsIndex];
+            Vector3 spawnPosition 
+                = _spawner.SpawnPoints[_nextSpawnPositionsIndex].position;
+            
             _nextSpawnPositionsIndex++;
             return spawnPosition;
+        }
+
+        public void DespawnUnit(IUnit unit)
+        {
+            if (unit.Stats.Faction != UnitFactionType.Defender)
+                return;
         }
     }
 }

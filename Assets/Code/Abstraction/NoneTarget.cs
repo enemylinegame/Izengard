@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Abstraction
 {
@@ -9,7 +10,9 @@ namespace Abstraction
         public bool IsAlive => false;
 
         public Vector3 Position => Vector3.zero;
-        
+
+        public event Action<IDamage> OnTakeDamage;
+
         public void TakeDamage(IDamage damage) { }
     }
 }

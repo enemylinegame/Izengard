@@ -1,7 +1,7 @@
-﻿using SpawnSystem;
-using System.Collections.Generic;
-using BattleSystem.Buildings.View;
+﻿using BattleSystem.MainTower;
+using SpawnSystem;
 using Tools.Navigation;
+using UI;
 using UnityEngine;
 
 namespace Code.SceneConfigs
@@ -9,8 +9,9 @@ namespace Code.SceneConfigs
     public class SceneObjectsHolder : MonoBehaviour
     {
         [field: SerializeField] public SpawnerView EnemySpawner { get; private set; }
-        [field: SerializeField] public List<Transform> DefendersSpawnPoints { get; private set; }
-        [field: SerializeField] public WarBuildingView MainTower { get; private set; }
+        [field: SerializeField] public SpawnerView DefendersSpawner { get; private set; }
+        [field: SerializeField] public MainTowerView MainTower { get; private set; }
         [field: SerializeField] public NavigationSurfaceView GroundSurface { get; private set; }
+        [field: SerializeField] public BattleSceneUI BattleUI { get; private set; }
     }
 }
