@@ -36,11 +36,11 @@ namespace SpawnSystem
 
             _timer = new TimeRemaining(ExecuteWaveLogic, _currentWave.WaveDuration, true);
 
-            _battleUI.EnemyWaveStartButton.onClick.AddListener(() => StartSpawn());
-            _battleUI.EnemyWaveStopButton.onClick.AddListener(() => StopSpawn());
+            _battleUI.EnemyWaveStartButton.onClick.AddListener(() => StartWave());
+            _battleUI.EnemyWaveStopButton.onClick.AddListener(() => StopWave());
         }
 
-        public void StartSpawn()
+        public void StartWave()
         {
             if (!_isTiming)
             {
@@ -51,7 +51,7 @@ namespace SpawnSystem
             }          
         }
 
-        public void StopSpawn()
+        public void StopWave()
         {
             if (_isTiming)
             {
@@ -83,7 +83,7 @@ namespace SpawnSystem
    
             if (_waveIndex >= _waves.Count)
             {
-                StopSpawn();
+                StopWave();
                 OnWavesEnd?.Invoke();
                 return;
             }

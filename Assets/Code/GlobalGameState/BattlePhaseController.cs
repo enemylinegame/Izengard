@@ -45,14 +45,14 @@ namespace Code.GlobalGameState
 
         private void MainToweWasDestroyed()
         {
-            _enemySpawnHandler.StopSpawn();
+            _enemySpawnHandler.StopWave();
 
             Debug.Log("You Lose!");
         }
 
         private void EnemiesWasKilled()
         {
-            _enemySpawnHandler.StopSpawn();
+            _enemySpawnHandler.StopWave();
 
             Debug.Log("You Win!");
         }
