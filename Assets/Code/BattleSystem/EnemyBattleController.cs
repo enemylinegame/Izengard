@@ -140,11 +140,7 @@ namespace BattleSystem
             }
             else
             {
-                if (CheckIsOnDestinationPosition(unit))
-                {
-                    unit.ChangeState(UnitStateType.Idle);
-                    unit.Stop();
-                }
+                unit.ChangeState(UnitStateType.Idle);               
             }
         }
 

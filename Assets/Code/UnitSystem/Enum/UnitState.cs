@@ -5,7 +5,6 @@
         None,
         Idle,
         Move,
-        Search,
         Attack,
         Die
     }

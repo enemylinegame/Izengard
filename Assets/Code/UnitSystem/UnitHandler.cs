@@ -148,8 +148,6 @@ namespace UnitSystem
                     case UnitStateType.Move:
                         animView.IsMoving = true;
                         break;
-                    case UnitStateType.Search:
-                        break;
                     case UnitStateType.Attack:
                         animView.IsMoving = false;
                         break;
@@ -196,7 +194,6 @@ namespace UnitSystem
         }
 
         #endregion
-
 
         #region IMovable
 
