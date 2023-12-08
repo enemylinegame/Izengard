@@ -1,6 +1,6 @@
-﻿namespace UnitSystem
+﻿namespace Abstraction
 {
-    public interface IUnitResistanceData
+    public interface IResistanceData
     {
         float BaseDamageResist { get; }
         float FireDamageResist { get; }

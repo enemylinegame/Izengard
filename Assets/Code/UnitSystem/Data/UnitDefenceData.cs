@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Abstraction;
+using UnityEngine;
 
 namespace UnitSystem.Data
 {
@@ -22,9 +23,9 @@ namespace UnitSystem.Data
         public float EvadeChance => _evadeChance;
         public float ArmorPoints => _armorPoints;
 
-        public IUnitShieldData ShieldData => _shieldData;
+        public IShieldData ShieldData => _shieldData;
 
-        public IUnitResistanceData ResistData => _resistanceData;
+        public IResistanceData ResistData => _resistanceData;
 
         #endregion
     }

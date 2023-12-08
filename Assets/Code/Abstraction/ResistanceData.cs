@@ -1,10 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-namespace UnitSystem.Data
+namespace Abstraction
 {
     [Serializable]
-    public class ResistanceData : IUnitResistanceData
+    public class ResistanceData : IResistanceData
     {
         [Range(0, 100)]
         [SerializeField] private float _baseDamageResist = 25f;
@@ -15,11 +15,11 @@ namespace UnitSystem.Data
 
         #region IUnitResistanceData
 
-        float IUnitResistanceData.BaseDamageResist => _baseDamageResist;
+        float IResistanceData.BaseDamageResist => _baseDamageResist;
 
-        float IUnitResistanceData.FireDamageResist => _fireDamageResist;
+        float IResistanceData.FireDamageResist => _fireDamageResist;
 
-        float IUnitResistanceData.ColdDamageResist => _coldDamageResist;
+        float IResistanceData.ColdDamageResist => _coldDamageResist;
 
         #endregion
     }

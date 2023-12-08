@@ -1,10 +1,8 @@
 ﻿using Abstraction;
 using Tools;
-using UnityEngine;
-
-namespace UnitSystem.Model
+namespace BattleSystem.MainTower
 {
-    public class UnitDefenceModel : IUnitDefence
+    public class MainTowerDefenceModel
     {
         #region Consts
 
@@ -13,7 +11,7 @@ namespace UnitSystem.Model
 
         #endregion
 
-        private readonly IUnitDefenceData _defenceData;
+        private readonly ToweDefenceData _defenceData;
 
         private readonly IParametr<float> _armorPoints;
 
@@ -21,10 +19,11 @@ namespace UnitSystem.Model
         private readonly IParametr<float> _fireShieldPoints;
         private readonly IParametr<float> _coldShieldPoints;
 
-        private readonly float _evadeChance;
         private readonly IResistanceData _resistanceData;
 
-        public IUnitDefenceData DefenceData => _defenceData;
+        public ToweDefenceData DefenceData => _defenceData;
+
+        public IParametr<float> ArmorPoints => _armorPoints;
 
         public IParametr<float> BaseShieldPoints => _baseShieldPoints;
 
@@ -32,17 +31,14 @@ namespace UnitSystem.Model
 
         public IParametr<float> ColdShieldPoints => _coldShieldPoints;
 
-        public IParametr<float> ArmorPoints => _armorPoints;
-
-        public UnitDefenceModel(IUnitDefenceData defenceData)
+     
+        public MainTowerDefenceModel(ToweDefenceData defenceData)
         {
             _defenceData = defenceData;
 
-            _evadeChance = _defenceData.EvadeChance;
-
-            _armorPoints = 
-                new ParametrModel<float>(_defenceData.ArmorPoints, 0, float.MaxValue);
-            _baseShieldPoints = 
+            _armorPoints =
+               new ParametrModel<float>(_defenceData.ArmorPoints, 0, float.MaxValue);
+            _baseShieldPoints =
                 new ParametrModel<float>(_defenceData.ShieldData.BaseShieldPoints, 0, float.MaxValue);
             _fireShieldPoints =
                   new ParametrModel<float>(_defenceData.ShieldData.FireShieldPoints, 0, float.MaxValue);
@@ -56,20 +52,9 @@ namespace UnitSystem.Model
         {
             float resultDamage = 0;
 
-            if (IsEvaded() == false)
-            {
-                resultDamage = ApplyDefence(damageData);
-
-                return resultDamage;             
-            }
+            resultDamage = ApplyDefence(damageData);
 
             return resultDamage;
-        }
-
-        private bool IsEvaded()
-        {
-            var gainedChance = Random.value * 100f;
-            return gainedChance < _evadeChance;
         }
 
         private float ApplyDefence(IDamage damageData)
@@ -102,7 +87,7 @@ namespace UnitSystem.Model
         private bool CheckShield(IParametr<float> shield)
         {
             var shieldPoints = shield.GetValue();
-            if(shieldPoints > 0)
+            if (shieldPoints > 0)
             {
                 shield.SetValue(--shieldPoints);
                 return true;

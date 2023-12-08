@@ -1,5 +1,4 @@
-﻿using UnitSystem.Data;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace BattleSystem.MainTower
 {
@@ -7,6 +6,6 @@ namespace BattleSystem.MainTower
     public class MainTowerConfig : ScriptableObject
     {
         [field: SerializeField] public uint Durability { get; private set; }
-        [field: SerializeField] public UnitDefenceData DefenceData { get; private set; }
+        [field: SerializeField] public ToweDefenceData DefenceData { get; private set; }
     }
 }

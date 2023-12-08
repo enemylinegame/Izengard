@@ -1,10 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-namespace UnitSystem.Data
+namespace Abstraction
+
 {
     [Serializable]
-    public class ShieldData : IUnitShieldData
+    public class ShieldData : IShieldData
     {
         [SerializeField] 
         [Min(0.0f)]

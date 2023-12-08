@@ -1,6 +1,6 @@
-﻿namespace UnitSystem
+﻿namespace Abstraction
 {
-    public interface IUnitShieldData
+    public interface IShieldData
     {
         float BaseShieldPoints { get; }
         float FireShieldPoints { get; }

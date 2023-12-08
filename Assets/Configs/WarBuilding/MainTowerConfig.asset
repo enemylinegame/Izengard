@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Durability>k__BackingField: 1000
   <DefenceData>k__BackingField:
-    _evadeChance: 0
     _armorPoints: 0
     _shieldData:
       _baseShieldPoints: 0

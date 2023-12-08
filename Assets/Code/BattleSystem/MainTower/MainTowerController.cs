@@ -1,6 +1,5 @@
 ﻿using System;
 using Abstraction;
-using UnitSystem.Model;
 
 
 namespace BattleSystem.MainTower
@@ -9,7 +8,7 @@ namespace BattleSystem.MainTower
     {     
         private MainTowerHandler _mainTower;
         private MainTowerConfig _mainTowerConfig;
-        private UnitDefenceModel _towerDefenceModel;
+        private MainTowerDefenceModel _towerDefenceModel;
 
         public event Action OnMainTowerDestroyed; 
             
@@ -17,7 +16,7 @@ namespace BattleSystem.MainTower
         public MainTowerController(MainTowerView mainTowerView, MainTowerConfig mainTowerConfig)
         {
             _mainTowerConfig = mainTowerConfig;
-            _towerDefenceModel = new UnitDefenceModel(_mainTowerConfig.DefenceData);
+            _towerDefenceModel = new MainTowerDefenceModel(_mainTowerConfig.DefenceData);
             _mainTower = new MainTowerHandler(mainTowerView, _towerDefenceModel, (int)_mainTowerConfig.Durability);
             _mainTower.OnReachedZeroHealth += mainTowerDestroyed;
         }

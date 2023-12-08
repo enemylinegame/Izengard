@@ -1,14 +1,13 @@
 ﻿using System;
 using Abstraction;
 using Tools;
-using UnitSystem;
 
 namespace BattleSystem.MainTower
 {
     public class MainTowerHandler : IMainTower
     {
         private readonly MainTowerView _view;
-        private readonly IUnitDefence _defence;
+        private readonly MainTowerDefenceModel _defence;
         private readonly IParametr<int> _health;
 
         private int _maxHealth;
@@ -19,7 +18,7 @@ namespace BattleSystem.MainTower
         
         public event Action<IMainTower> OnReachedZeroHealth;
 
-        public MainTowerHandler(MainTowerView view, IUnitDefence defence, int durability)
+        public MainTowerHandler(MainTowerView view, MainTowerDefenceModel defence, int durability)
         {        
             _view = view;
             _defence = defence;
