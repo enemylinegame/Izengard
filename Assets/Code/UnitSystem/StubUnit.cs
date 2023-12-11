@@ -36,7 +36,6 @@ namespace UnitSystem
         }
 
         public event Action<IUnit> OnReachedZeroHealth = default;
-        public event Action<IDamageDealer, IDamageable> OnAttackProcessEnd = default;
 
         public void Disable() { }
 

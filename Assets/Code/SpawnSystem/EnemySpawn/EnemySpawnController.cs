@@ -12,6 +12,8 @@ namespace SpawnSystem
 
         private readonly EnemyPool _pool;
 
+        public event System.Action<IUnit> OnUnitSpawned;
+
         public EnemySpawnController(SpawnerView spawner, IUnitsContainer unitsContainer)
         {
             _spawner = spawner;
@@ -36,6 +38,8 @@ namespace SpawnSystem
             unit.SetStartPosition(spawnPosition);
 
             _unitsContainer.AddUnit(unit);
+
+            OnUnitSpawned?.Invoke(unit);
         }
 
         public void DespawnUnit(IUnit unit)

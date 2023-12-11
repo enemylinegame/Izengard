@@ -178,8 +178,6 @@ namespace UnitSystem
 
         #region IDamageDealer
 
-        public event Action<IDamageDealer, IDamageable> OnAttackProcessEnd;
-
         private IDamageable _damageableTarget;
 
         public IDamage GetAttackDamage()
@@ -190,7 +188,6 @@ namespace UnitSystem
         public void StartAttack(IDamageable damageableTarget)
         {
             _damageableTarget = damageableTarget;
-            OnAttackProcessEnd?.Invoke(this, _damageableTarget);
         }
 
         #endregion
