@@ -1,4 +1,4 @@
-using Code.UI;
+using UI;
 using Configs;
 using NewBuildingSystem;
 using UnityEngine;

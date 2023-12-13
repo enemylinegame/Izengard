@@ -1,7 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace Code.UI
+namespace UI
 {
     public class InfoPanelController
     {

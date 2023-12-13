@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Code.UI
+namespace UI
 {
     public class FunctionPanelController : IDisposable
     {

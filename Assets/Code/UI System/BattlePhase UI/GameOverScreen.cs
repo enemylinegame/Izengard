@@ -2,12 +2,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-
 namespace UI
 {
     public class GameOverScreen : MonoBehaviour
     {
-
         public event Action OnQuitButton;
         public event Action OnRestartButton;
         

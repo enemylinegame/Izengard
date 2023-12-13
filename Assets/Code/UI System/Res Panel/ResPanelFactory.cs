@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Code.UI
+namespace UI
 {
     public class ResPanelFactory : UIViewFactory<ResPanel>
     {

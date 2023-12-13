@@ -4,7 +4,7 @@ using NewBuildingSystem;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Code.UI
+namespace UI
 {
     public class BuildingPanelController
     {
