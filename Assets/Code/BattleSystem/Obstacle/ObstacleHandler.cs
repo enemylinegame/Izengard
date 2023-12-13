@@ -10,7 +10,7 @@ namespace BattleSystem.Obstacle
         private readonly IParametr<int> _health;
         private readonly IObstacleView _view;
 
-        public event Action<int> OnReacheZeroHealth;
+        public event Action<int> OnReachedZeroHealth;
         public event Action<IDamage> OnTakeDamage;
 
         public int Id => _id;
@@ -57,7 +57,7 @@ namespace BattleSystem.Obstacle
 
         private void ReachedZeroHealth(int value)
         {
-            OnReacheZeroHealth?.Invoke(Id);
+            OnReachedZeroHealth?.Invoke(Id);
         }
     }
 }

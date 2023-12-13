@@ -13,7 +13,7 @@ namespace UnitSystem.Model
 
         public IAttackTarget CurrentTarget => _currentTarget;
 
-        public Action<IAttackTarget> OnTargetChange;
+        public event Action<IAttackTarget> OnTargetChange;
 
         public UnitTargetModel() 
         {

@@ -38,7 +38,7 @@ namespace BattleSystem.Obstacle
             {
                 var obstacle = _obstaclesCollection[i];
                 
-                obstacle.OnReacheZeroHealth += ObstacleReachedZeroHealth;
+                obstacle.OnReachedZeroHealth += ObstacleReachedZeroHealth;
 
                 obstacle.Enable();
             }
@@ -48,7 +48,7 @@ namespace BattleSystem.Obstacle
         {
             var obstacle = _obstaclesCollection.Find(obst => obst.Id == obstacleId);
 
-            obstacle.OnReacheZeroHealth -= ObstacleReachedZeroHealth;
+            obstacle.OnReachedZeroHealth -= ObstacleReachedZeroHealth;
 
             obstacle.Disable();
 

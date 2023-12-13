@@ -1,5 +1,4 @@
 ﻿using Abstraction;
-using System;
 using UnitSystem.Enum;
 using UnitSystem.Model;
 using UnityEngine;
@@ -10,7 +9,8 @@ namespace UnitSystem
         IDamageDealer,
         IMovable,
         IPositioned<Vector3>, 
-        IRotated<Vector3>
+        IRotated<Vector3>,
+        IKillable<IUnit>
     {
         IUnitView View { get; }
         UnitStatsModel Stats { get; }
@@ -19,8 +19,6 @@ namespace UnitSystem
         UnitTargetModel Target { get; }
         UnitStateModel State { get; }
         UnitPriorityModel Priority { get; }
-
-        event Action<IUnit> OnReachedZeroHealth;
 
         int Id { get; }
 

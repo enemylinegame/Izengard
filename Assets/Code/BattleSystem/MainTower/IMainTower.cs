@@ -1,15 +1,12 @@
-﻿using System;
+﻿using Abstraction;
 
 
 namespace BattleSystem.MainTower
 {
-    public interface IMainTower
+    public interface IMainTower : IKillable<IMainTower>
     {
         int Id { get; }
         
-       // IWarBuildingView View { get; }
-        
-        event Action<IMainTower> OnReachedZeroHealth;
         
         void Enable();
 
