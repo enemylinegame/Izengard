@@ -30,31 +30,35 @@ namespace Code.GlobalGameState
 
         public void StartPhase()
         {
-            _mainTower.OnMainTowerDestroyed += MainToweWasDestroyed;
-            _unitsContainer.OnAllEnemyDestroyed += EnemiesWasKilled;
+            _mainTower.OnMainTowerDestroyed += MainTowerWasDestroyed;
+            _unitsContainer.OnAllEnemyDestroyed += AllEnemiesWasKilled;
         }
 
 
         public void EndPhase()
         {
-            _mainTower.OnMainTowerDestroyed -= MainToweWasDestroyed;
-            _unitsContainer.OnAllEnemyDestroyed -= EnemiesWasKilled;
+            _mainTower.OnMainTowerDestroyed -= MainTowerWasDestroyed;
+            _unitsContainer.OnAllEnemyDestroyed -= AllEnemiesWasKilled;
 
             OnPhaseEnd?.Invoke();
         }
 
-        private void MainToweWasDestroyed()
+        private void MainTowerWasDestroyed()
         {
-            _enemySpawnHandler.StopWave();
-
+            _enemySpawnHandler.StopWave(); 
+            
             Debug.Log("You Lose!");
+
+            EndPhase();
         }
 
-        private void EnemiesWasKilled()
+        private void AllEnemiesWasKilled()
         {
             _enemySpawnHandler.StopWave();
 
             Debug.Log("You Win!");
+
+            EndPhase();
         }
     }
 }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.43667555, g: 0.48427176, b: 0.56452405, a: 1}
+  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427194, b: 0.5645252, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5565,7 +5565,7 @@ GameObject:
   - component: {fileID: 421820612}
   - component: {fileID: 421820611}
   m_Layer: 5
-  m_Name: EnemyStopWaveButton (2)
+  m_Name: EnemyStopWaveButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11918,7 +11918,7 @@ GameObject:
   - component: {fileID: 884105733}
   - component: {fileID: 884105732}
   m_Layer: 5
-  m_Name: EnemyStartWaveButton (1)
+  m_Name: EnemyStartWaveButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17266,9 +17266,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6dde12a87aaca745a0f6349889193fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <EnemyWaveStartButton>k__BackingField: {fileID: 884105732}
-  <EnemyWaveStopButton>k__BackingField: {fileID: 421820611}
-  <DefenderSpawnButton>k__BackingField: {fileID: 644433566}
+  _enemyWaveStartButton: {fileID: 884105732}
+  _enemyWaveStopButton: {fileID: 421820611}
+  _defenderSpawnButton: {fileID: 644433566}
 --- !u!1 &1301011039
 GameObject:
   m_ObjectHideFlags: 0

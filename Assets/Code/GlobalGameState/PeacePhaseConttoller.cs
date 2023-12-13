@@ -14,7 +14,7 @@ namespace Code.GlobalGameState
 
         public void EndPhase()
         {
-            
+            OnPhaseEnd?.Invoke();
         }        
     }
 }
