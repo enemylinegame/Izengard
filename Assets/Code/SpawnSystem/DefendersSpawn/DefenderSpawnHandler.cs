@@ -14,7 +14,7 @@ namespace SpawnSystem
 
             _battleUI = battleUI;
 
-            _battleUI.OnDefenderSpawnClick += SpawnPack;
+            _battleUI.DefenderSettings.OnSpawn += SpawnPack;
         }
 
 
