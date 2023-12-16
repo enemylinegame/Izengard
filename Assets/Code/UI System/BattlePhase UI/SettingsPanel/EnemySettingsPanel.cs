@@ -45,7 +45,7 @@ namespace UI
         {
             base.ClosePanel();
 
-            panelRootTransform.DOMoveX(-300, 0.2f, true);
+            panelRootTransform.DOMoveX(-400, 0.2f, true);
         }
     }
 }

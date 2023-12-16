@@ -33,7 +33,7 @@ namespace UI
         {
             base.ClosePanel();
 
-            panelRootTransform.DOMoveX(Screen.width + 300, 0.2f, true);
+            panelRootTransform.DOMoveX(Screen.width + 400, 0.2f, true);
         }
     }
 }
