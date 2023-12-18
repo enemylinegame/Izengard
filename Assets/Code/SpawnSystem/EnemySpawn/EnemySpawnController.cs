@@ -1,4 +1,5 @@
 ﻿using EnemySystem;
+using System;
 using UnitSystem;
 using UnitSystem.Enum;
 using Random = UnityEngine.Random;
@@ -26,6 +27,11 @@ namespace SpawnSystem
             _pool = new EnemyPool(spawner.PoolHolder, factory, unitsCreationData);
 
             _unitsContainer.OnUnitRemoved += DespawnUnit;
+        }
+
+        public void SpawnUnit(IUnitData unitData)
+        {
+            
         }
 
         public void SpawnUnit(UnitType unitType)

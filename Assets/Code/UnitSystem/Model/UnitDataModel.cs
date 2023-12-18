@@ -4,7 +4,7 @@ using UnitSystem.Enum;
 
 namespace UnitSystem.Model
 {
-    public class UnitDataModel
+    public class UnitDataModel : IUnitData
     {
         public UnitFactionType Faction { get; set; }
         public UnitType Type { get; set; }

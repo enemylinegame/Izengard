@@ -1,4 +1,5 @@
 ﻿using UI;
+using UnitSystem;
 using UnitSystem.Enum;
 
 namespace SpawnSystem
@@ -6,17 +7,23 @@ namespace SpawnSystem
     public class DefenderSpawnHandler
     {
         private readonly ISpawnController _spawnController;
-        private readonly BattleSceneUI _battleUI;
+        private readonly BattleUIController _battleSceneUIController;
 
-        public DefenderSpawnHandler(ISpawnController defendersSpawnController, BattleSceneUI battleUI) 
+        public DefenderSpawnHandler(ISpawnController defendersSpawnController, BattleUIController  battleSceneUIController) 
         {
             _spawnController = defendersSpawnController;
 
-            _battleUI = battleUI;
+            _battleSceneUIController = battleSceneUIController;
 
-            _battleUI.UnitSettings.OnSpawn += SpawnPack;
+            _battleSceneUIController.OnDefenderSpawn += SpawnPack;
+
+            _battleSceneUIController.OnSpawNewUnit += SpawnUnit;
         }
 
+        private void SpawnUnit(IUnitData unitData)
+        {
+            _spawnController.SpawnUnit(unitData);
+        }
 
         private void SpawnPack()
         {    

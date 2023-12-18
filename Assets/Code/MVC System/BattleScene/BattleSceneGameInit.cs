@@ -6,6 +6,7 @@ using Configs;
 using SpawnSystem;
 using Tools;
 using Tools.Navigation;
+using UI;
 using UnitSystem;
 using UnityEngine;
 
@@ -38,11 +39,13 @@ namespace Code.MVC_System
                 = new EnemyBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, mainTower, enemySpawner);
             var defenderBattleController 
                 = new DefenderBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, mainTower);
-                  
+
+            var battleUIController = new BattleUIController(sceneObjectsHolder.BattleUI);
+
             var enemySpawnHandler 
                 = new EnemySpawnHandler(enemySpawner, configs.EnemyWaveSettings, sceneObjectsHolder.BattleUI);
             var defendersSpawnHandler
-                = new DefenderSpawnHandler(defendersSpawner, sceneObjectsHolder.BattleUI);
+                = new DefenderSpawnHandler(defendersSpawner, battleUIController);
 
             var peaceStateManager = new PeacePhaseConttoller();
             var battleStateManager 

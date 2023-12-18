@@ -31,6 +31,25 @@ namespace SpawnSystem
             _unitsContainer.OnUnitRemoved += DespawnUnit;
         }
 
+        public void SpawnUnit(IUnitData unitData)
+        {
+            var creationData =
+                _unitCreationDataList.Find(ucd => ucd.UnitSettings.Type == unitData.Type);
+
+            if (creationData == null) return;
+
+            GameObject prefab = creationData.UnitPrefab;
+            GameObject instance = UnityEngine.Object.Instantiate(prefab);
+            IUnitView view = instance.GetComponent<IUnitView>();
+
+            var unit = new UnitHandler(view, unitData);
+
+            unit.SetStartPosition(SelectSpawnPosition());
+
+            _unitsContainer.AddUnit(unit);
+            OnUnitSpawned?.Invoke(unit);
+        }
+
         public void SpawnUnit(UnitType unitType)
         {
             UnitCreationData creationData =
@@ -69,5 +88,7 @@ namespace SpawnSystem
             if (unit.Stats.Faction != UnitFactionType.Defender)
                 return;
         }
+
+  
     }
 }

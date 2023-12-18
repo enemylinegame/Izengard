@@ -74,9 +74,9 @@ namespace UI
 
         private void Init(IUnitData data)
         {
-            InitFactionDropDown();
-            InitTypeDropDown();
-            InitRoleDropDown();
+            InitFactionDropDown(data);
+            InitTypeDropDown(data);
+            InitRoleDropDown(data);
 
             _healthField.text = data.HealthPoints.ToString();
             _sizeField.text = data.Size.ToString();
@@ -105,7 +105,7 @@ namespace UI
             _coldDamageField.text = data.ColdDamage.ToString();
         }
 
-        private void InitFactionDropDown()
+        private void InitFactionDropDown(IUnitData data)
         {
             _factionDropDown.ClearOptions();
 
@@ -117,9 +117,11 @@ namespace UI
                 };
 
             _factionDropDown.AddOptions(optData);
+
+            _factionDropDown.value = (int)data.Faction;
         }
 
-        private void InitTypeDropDown()
+        private void InitTypeDropDown(IUnitData data)
         {
             _typeDropDown.ClearOptions();
 
@@ -135,9 +137,11 @@ namespace UI
                 };
 
             _typeDropDown.AddOptions(optData);
+
+            _typeDropDown.value = (int)data.Type;
         }
 
-        private void InitRoleDropDown()
+        private void InitRoleDropDown(IUnitData data)
         {
             _roleDropDown.ClearOptions();
 
@@ -152,9 +156,11 @@ namespace UI
                 };
 
             _roleDropDown.AddOptions(optData);
+
+            _roleDropDown.value = (int)data.Role;
         }
 
-        public void GetData()
+        public IUnitData GetData()
         {
             var unitData = new UnitDataModel
             {
@@ -192,6 +198,8 @@ namespace UI
                 FireDamage = float.Parse(_fireDamageField.text),
                 ColdDamage = float.Parse(_coldDamageField.text),
             };
+
+            return unitData;
         }
 
     }
