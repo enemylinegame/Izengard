@@ -1,13 +1,17 @@
+using System.Collections.Generic;
 using TMPro;
 using UnitSystem;
 using UnitSystem.Data;
+using UnitSystem.Enum;
 using UnityEngine;
 
-namespace UI 
+namespace UI
 {
     public class UnitParametrs : MonoBehaviour
     {
         [SerializeField] private UnitSettings _unitData;
+
+        [SerializeField] private TMP_Dropdown _factionDropDown;
 
         [Header("Main Stats")]
         [SerializeField]
@@ -67,6 +71,19 @@ namespace UI
 
         private void Init(IUnitData data)
         {
+            if (_factionDropDown != null)
+            {
+                _factionDropDown.ClearOptions();
+
+                var factionOptData 
+                    = new List<string> { 
+                        nameof(UnitFactionType.None), 
+                        nameof(UnitFactionType.Defender), 
+                        nameof(UnitFactionType.Enemy)};
+
+                _factionDropDown.AddOptions(factionOptData);
+            }
+
             _healthField.text = data.StatsData.HealthPoints.ToString();
             _sizeField.text = data.StatsData.Size.ToString();
             _speedField.text = data.StatsData.Speed.ToString();

@@ -1,17 +1,21 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
 {
-    public abstract class UnitSettingsPanel : MonoBehaviour
+    public class UnitSettingsPanel : MonoBehaviour
     {
-        [SerializeField]
-        protected Transform panelRootTransform;
-
         [SerializeField]
         protected Button openButton;
         [SerializeField]
         protected Button closeButton;
+
+        [SerializeField]
+        private Button _spawnButton;
+
+        public event Action OnSpawn;
 
         protected void Awake()
         {
@@ -21,7 +25,7 @@ namespace UI
             openButton.gameObject.SetActive(false);
             closeButton.gameObject.SetActive(true);
 
-            PanelAwake();
+            _spawnButton.onClick.AddListener(() => OnSpawn?.Invoke());
         }
 
         private void OnDestroy()
@@ -29,22 +33,23 @@ namespace UI
             openButton.onClick.AddListener(OpenPanel);
             closeButton.onClick.AddListener(ClosePanel);
 
-            PanelDestroy();
+            _spawnButton.onClick.RemoveAllListeners();
         }
 
-        protected abstract void PanelAwake();
-        protected abstract void PanelDestroy();
-
-        protected virtual void OpenPanel()
+        private void OpenPanel()
         {
             openButton.gameObject.SetActive(false);
             closeButton.gameObject.SetActive(true);
+
+            transform.DOLocalMoveX(-10, 0.2f, true);
         }
 
-        protected virtual void ClosePanel()
+        private void ClosePanel()
         {
             openButton.gameObject.SetActive(true);
             closeButton.gameObject.SetActive(false);
+
+            transform.DOLocalMoveX(400, 0.2f, true);
         }
     }
 }

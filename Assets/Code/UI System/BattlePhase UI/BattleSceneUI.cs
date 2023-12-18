@@ -1,15 +1,35 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI
 {
     public class BattleSceneUI : MonoBehaviour
     {
         [SerializeField]
-        private EnemySettingsPanel _enemySettings;
+        private UnitSettingsPanel _unitSettings;
         [SerializeField]
-        private DefenderSettingsPanel _defenderSettings;
+        private Button _waveStartButton;
+        [SerializeField]
+        public Button _waveStopButton;
 
-        public EnemySettingsPanel EnemySettings => _enemySettings;
-        public DefenderSettingsPanel DefenderSettings => _defenderSettings;
+
+        public event Action OnWaveStart;
+        public event Action OnWaveStop;
+
+        public UnitSettingsPanel UnitSettings => _unitSettings;
+
+        private void Awake()
+        {
+            _waveStartButton.onClick.AddListener(() => OnWaveStart?.Invoke());
+            _waveStopButton.onClick.AddListener(() => OnWaveStop?.Invoke());
+        }
+
+        private void OnDestroy()
+        {
+            _waveStartButton.onClick.RemoveAllListeners();
+            _waveStopButton.onClick.RemoveAllListeners();
+        }
+
     }
 }

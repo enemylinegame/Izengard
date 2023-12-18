@@ -2,8 +2,8 @@
 {
     public enum UnitFactionType
     {
-        None,
-        Defender,
-        Enemy
+        None = 0,
+        Defender = 1,
+        Enemy = 2,
     }
 }
