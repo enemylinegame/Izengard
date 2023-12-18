@@ -34,7 +34,7 @@ namespace SpawnSystem
         public void SpawnUnit(UnitType unitType)
         {
             UnitCreationData creationData =
-                _unitCreationDataList.Find(ucd => ucd.UnitSettings.StatsData.Type == unitType);
+                _unitCreationDataList.Find(ucd => ucd.UnitSettings.Type == unitType);
             
             if (creationData == null) return;
 

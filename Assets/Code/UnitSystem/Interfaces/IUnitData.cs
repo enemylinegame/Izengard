@@ -6,11 +6,37 @@ namespace UnitSystem
 {
     public interface IUnitData
     {
-        IUnitStatsData StatsData { get; }
+        public UnitFactionType Faction { get; }
+        public UnitType Type { get; }
+        public UnitRoleType Role { get; }
+        public int HealthPoints { get; }
+        public float Size { get; }
+        public float Speed { get; }
+        public float DetectionRange { get; }
 
-        IReadOnlyList<UnitPriorityData> UnitPriorities { get; }
-        
-        IUnitDefenceData DefenceData { get; }
-        IUnitOffenceData OffenceData { get; }
+        public IList<UnitPriorityData> UnitPriorities { get; }
+
+        public float EvadeChance { get; }
+        public float ArmorPoints { get; }
+        public float BaseShieldPoints { get; }
+        public float FireShieldPoints { get; }
+        public float ColdShieldPoints { get; }
+        public float BaseDamageResist { get; }
+        public float FireDamageResist { get; }
+        public float ColdDamageResist { get; }
+
+        public UnitAttackType AttackType { get; }
+        public UnitAbilityType AbilityType { get; }
+        public float MinRange { get; }
+        public float MaxRange { get; }
+        public float CastingTime { get; }
+        public float AttackTime { get; }
+        public float CriticalChance { get; }
+        public float CritScale { get; }
+        public float FailChance { get; }
+        public float OnFailDamage { get; }
+        public float BaseDamage { get; }
+        public float FireDamage { get; }
+        public float ColdDamage { get; }
     }
 }

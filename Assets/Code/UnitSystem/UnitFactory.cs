@@ -15,14 +15,14 @@ namespace UnitSystem
 
             for (int i = 0; i < unitCreationDatas.Count; i++) 
             {
-                var unitType = unitCreationDatas[i].UnitSettings.StatsData.Type;
+                var unitType = unitCreationDatas[i].UnitSettings.Type;
                 unitObjectsData[unitType] = unitCreationDatas[i].UnitPrefab;
             }
         }
 
         public IUnit CreateUnit(IUnitData unitData) 
         {
-            var unit = unitData.StatsData.Type switch
+            var unit = unitData.Type switch
             {
                 UnitType.Militiaman => CreateMilitiaman(unitData),
                 UnitType.Hunter => CreateHunter(unitData),

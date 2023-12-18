@@ -6,57 +6,54 @@ namespace UnitSystem.Model
 {
     public class UnitOffenceModel : IUnitOffence
     {
-        private readonly IUnitOffenceData _offenceData;
+        private readonly IUnitData _data;
         
-        public UnitAttackType AttackType => _offenceData.AttackType;
+        public UnitAttackType AttackType => _data.AttackType;
 
-        public UnitAbilityType AbilityType => _offenceData.AbilityType;
+        public UnitAbilityType AbilityType => _data.AbilityType;
 
-        public float MinRange => _offenceData.MinRange;
-        public float MaxRange => _offenceData.MaxRange;
+        public float MinRange => _data.MinRange;
+        public float MaxRange => _data.MaxRange;
 
-        public float CastingTime => _offenceData.CastingTime;
-        public float AttackTime => _offenceData.AttackTime;
+        public float CastingTime => _data.CastingTime;
+        public float AttackTime => _data.AttackTime;
 
         public float LastAttackTime { get; set; }
 
-        public UnitOffenceModel(IUnitOffenceData offenceData)
+        public UnitOffenceModel(IUnitData data)
         {
-            _offenceData = offenceData;
-
-            LastAttackTime = _offenceData.AttackTime;
+            _data = data;
+            LastAttackTime = _data.AttackTime;
         }
 
         public IDamage GetDamage()
         {
-            if (CheckChance(_offenceData.FailChance))
+            if (CheckChance(_data.FailChance))
             {
                 return new DamageStructure
                 {
-                    BaseDamage = _offenceData.OnFailDamage,
-                    FireDamage = _offenceData.OnFailDamage,
-                    ColdDamage = _offenceData.OnFailDamage
+                    BaseDamage = _data.OnFailDamage,
+                    FireDamage = _data.OnFailDamage,
+                    ColdDamage = _data.OnFailDamage
                 };
 
             }
 
-            var unitDamage = _offenceData.DamageData;
-
-            if (CheckChance(_offenceData.CriticalChance))
+            if (CheckChance(_data.CriticalChance))
             {
                 return new DamageStructure
                 {
-                    BaseDamage = unitDamage.BaseDamage * _offenceData.CritScale,
-                    FireDamage = unitDamage.FireDamage * _offenceData.CritScale,
-                    ColdDamage = unitDamage.ColdDamage * _offenceData.CritScale
+                    BaseDamage = _data.BaseDamage * _data.CritScale,
+                    FireDamage = _data.FireDamage * _data.CritScale,
+                    ColdDamage = _data.ColdDamage * _data.CritScale
                 };
             }
 
             return new DamageStructure
             {
-                BaseDamage = unitDamage.BaseDamage,
-                FireDamage = unitDamage.FireDamage,
-                ColdDamage = unitDamage.ColdDamage
+                BaseDamage = _data.BaseDamage,
+                FireDamage = _data.FireDamage,
+                ColdDamage = _data.ColdDamage
             };
         } 
 

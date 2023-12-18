@@ -2,7 +2,7 @@
 {
     public interface IDefence<TData, TValue>
     {
-        TData DefenceData { get; }
+        TData Data { get; }
 
         float GetAfterDefDamage(TValue value);
     }

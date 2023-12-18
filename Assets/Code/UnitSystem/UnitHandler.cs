@@ -46,14 +46,11 @@ namespace UnitSystem
 
             _view = view;
 
-            _unitStats 
-                = new UnitStatsModel(unitData.StatsData); 
+            _unitStats = new UnitStatsModel(unitData); 
 
-            _unitDefence 
-                = new UnitDefenceModel(unitData.DefenceData);
+            _unitDefence = new UnitDefenceModel(unitData);
 
-            _unitOffence 
-                = new UnitOffenceModel(unitData.OffenceData);
+            _unitOffence = new UnitOffenceModel(unitData);
 
             _navigation 
                 = new UnitNavigationModel(view.UnitNavigation, view.SelfTransform.position); ;

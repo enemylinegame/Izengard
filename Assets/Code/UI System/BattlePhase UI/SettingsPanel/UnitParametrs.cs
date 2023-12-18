@@ -3,6 +3,7 @@ using TMPro;
 using UnitSystem;
 using UnitSystem.Data;
 using UnitSystem.Enum;
+using UnitSystem.Model;
 using UnityEngine;
 
 namespace UI
@@ -12,6 +13,8 @@ namespace UI
         [SerializeField] private UnitSettings _unitData;
 
         [SerializeField] private TMP_Dropdown _factionDropDown;
+        [SerializeField] private TMP_Dropdown _typeDropDown;
+        [SerializeField] private TMP_Dropdown _roleDropDown;
 
         [Header("Main Stats")]
         [SerializeField]
@@ -71,45 +74,126 @@ namespace UI
 
         private void Init(IUnitData data)
         {
-            if (_factionDropDown != null)
-            {
-                _factionDropDown.ClearOptions();
+            InitFactionDropDown();
+            InitTypeDropDown();
+            InitRoleDropDown();
 
-                var factionOptData 
-                    = new List<string> { 
-                        nameof(UnitFactionType.None), 
-                        nameof(UnitFactionType.Defender), 
-                        nameof(UnitFactionType.Enemy)};
+            _healthField.text = data.HealthPoints.ToString();
+            _sizeField.text = data.Size.ToString();
+            _speedField.text = data.Speed.ToString();
+            _detectRangeField.text = data.DetectionRange.ToString();
 
-                _factionDropDown.AddOptions(factionOptData);
-            }
-
-            _healthField.text = data.StatsData.HealthPoints.ToString();
-            _sizeField.text = data.StatsData.Size.ToString();
-            _speedField.text = data.StatsData.Speed.ToString();
-            _detectRangeField.text = data.StatsData.DetectionRange.ToString();
-
-            _evadeChanceField.text = data.DefenceData.EvadeChance.ToString();
-            _armorPointsField.text = data.DefenceData.ArmorPoints.ToString();
-            _baseShieldField.text = data.DefenceData.ShieldData.BaseShieldPoints.ToString();
-            _fireShieldField.text = data.DefenceData.ShieldData.FireShieldPoints.ToString();
-            _coldShieldField.text = data.DefenceData.ShieldData.ColdShieldPoints.ToString();
-            _baseDamageResistField.text = data.DefenceData.ResistData.BaseDamageResist.ToString();
-            _fireDamageResistField.text = data.DefenceData.ResistData.FireDamageResist.ToString();
-            _coldDamageResistField.text = data.DefenceData.ResistData.ColdDamageResist.ToString();
+            _evadeChanceField.text = data.EvadeChance.ToString();
+            _armorPointsField.text = data.ArmorPoints.ToString();
+            _baseShieldField.text = data.BaseShieldPoints.ToString();
+            _fireShieldField.text = data.FireShieldPoints.ToString();
+            _coldShieldField.text = data.ColdShieldPoints.ToString();
+            _baseDamageResistField.text = data.BaseDamageResist.ToString();
+            _fireDamageResistField.text = data.FireDamageResist.ToString();
+            _coldDamageResistField.text = data.ColdDamageResist.ToString();
 
 
-            _minRangeField.text = data.OffenceData.MinRange.ToString();
-            _maxRangeField.text = data.OffenceData.MaxRange.ToString();
-            _castingTimeField.text = data.OffenceData.CastingTime.ToString();
-            _attackTimeField.text = data.OffenceData.AttackTime.ToString();
-            _criticalChanceField.text = data.OffenceData.CriticalChance.ToString();
-            _critScaleField.text = data.OffenceData.CritScale.ToString();
+            _minRangeField.text = data.MinRange.ToString();
+            _maxRangeField.text = data.MaxRange.ToString();
+            _castingTimeField.text = data.CastingTime.ToString();
+            _attackTimeField.text = data.AttackTime.ToString();
+            _criticalChanceField.text = data.CriticalChance.ToString();
+            _critScaleField.text = data.CritScale.ToString();
 
-            _baseDamageField.text = data.OffenceData.DamageData.BaseDamage.ToString();
-            _fireDamageField.text = data.OffenceData.DamageData.FireDamage.ToString();
-            _coldDamageField.text = data.OffenceData.DamageData.ColdDamage.ToString();
+            _baseDamageField.text = data.BaseDamage.ToString();
+            _fireDamageField.text = data.FireDamage.ToString();
+            _coldDamageField.text = data.ColdDamage.ToString();
         }
+
+        private void InitFactionDropDown()
+        {
+            _factionDropDown.ClearOptions();
+
+            var optData
+                = new List<string> {
+                        nameof(UnitFactionType.None),
+                        nameof(UnitFactionType.Defender),
+                        nameof(UnitFactionType.Enemy)
+                };
+
+            _factionDropDown.AddOptions(optData);
+        }
+
+        private void InitTypeDropDown()
+        {
+            _typeDropDown.ClearOptions();
+
+            var optData
+                = new List<string> {
+                        nameof(UnitType.None),
+                        nameof(UnitType.Militiaman),
+                        nameof(UnitType.Hunter),
+                        nameof(UnitType.Mage),
+                        nameof(UnitType.Imp),
+                        nameof(UnitType.Hound),
+                        nameof(UnitType.Fiend)
+                };
+
+            _typeDropDown.AddOptions(optData);
+        }
+
+        private void InitRoleDropDown()
+        {
+            _roleDropDown.ClearOptions();
+
+            var optData
+                = new List<string> {
+                        nameof(UnitRoleType.None),
+                        nameof(UnitRoleType.Fodder),
+                        nameof(UnitRoleType.Fighter),
+                        nameof(UnitRoleType.Gunner),
+                        nameof(UnitRoleType.Caster),
+                        nameof(UnitRoleType.Tank),
+                };
+
+            _roleDropDown.AddOptions(optData);
+        }
+
+        public void GetData()
+        {
+            var unitData = new UnitDataModel
+            {
+                Faction = (UnitFactionType)_factionDropDown.value,
+                Type = (UnitType)_typeDropDown.value,
+                Role = (UnitRoleType)_roleDropDown.value,
+
+                HealthPoints = int.Parse(_healthField.text),
+                Size = float.Parse(_sizeField.text),
+                Speed = float.Parse(_speedField.text),
+                DetectionRange = float.Parse(_detectRangeField.text),
+
+                UnitPriorities = _unitData.UnitPriorities,
+
+                EvadeChance = float.Parse(_evadeChanceField.text),
+                ArmorPoints = float.Parse(_armorPointsField.text),
+                BaseShieldPoints = float.Parse(_baseShieldField.text),
+                FireShieldPoints = float.Parse(_fireShieldField.text),
+                ColdShieldPoints = float.Parse(_coldShieldField.text),
+                BaseDamageResist = float.Parse(_baseDamageResistField.text),
+                FireDamageResist = float.Parse(_fireDamageResistField.text),
+                ColdDamageResist = float.Parse(_coldDamageResistField.text),
+
+                AttackType = _unitData.AttackType,
+                AbilityType = _unitData.AbilityType,
+                MinRange = float.Parse(_minRangeField.text),
+                MaxRange = float.Parse(_maxRangeField.text),
+                CastingTime = float.Parse(_castingTimeField.text),
+                AttackTime = float.Parse(_attackTimeField.text),
+                CriticalChance = float.Parse(_criticalChanceField.text),
+                CritScale = float.Parse(_critScaleField.text),
+                FailChance = _unitData.FailChance,
+                OnFailDamage = _unitData.OnFailDamage,
+                BaseDamage = float.Parse(_baseDamageField.text),
+                FireDamage = float.Parse(_fireDamageField.text),
+                ColdDamage = float.Parse(_coldDamageField.text),
+            };
+        }
+
     }
 }
 

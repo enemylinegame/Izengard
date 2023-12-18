@@ -13,7 +13,7 @@ namespace UnitSystem.Model
 
         #endregion
 
-        private readonly IUnitDefenceData _defenceData;
+        private readonly IUnitData _data;
 
         private readonly IParametr<float> _armorPoints;
 
@@ -22,9 +22,8 @@ namespace UnitSystem.Model
         private readonly IParametr<float> _coldShieldPoints;
 
         private readonly float _evadeChance;
-        private readonly IResistanceData _resistanceData;
 
-        public IUnitDefenceData DefenceData => _defenceData;
+        public IUnitData Data => _data;
 
         public IParametr<float> BaseShieldPoints => _baseShieldPoints;
 
@@ -34,22 +33,20 @@ namespace UnitSystem.Model
 
         public IParametr<float> ArmorPoints => _armorPoints;
 
-        public UnitDefenceModel(IUnitDefenceData defenceData)
+        public UnitDefenceModel(IUnitData data)
         {
-            _defenceData = defenceData;
+            _data = data;
 
-            _evadeChance = _defenceData.EvadeChance;
+            _evadeChance = _data.EvadeChance;
 
             _armorPoints = 
-                new ParametrModel<float>(_defenceData.ArmorPoints, 0, float.MaxValue);
+                new ParametrModel<float>(_data.ArmorPoints, 0, float.MaxValue);
             _baseShieldPoints = 
-                new ParametrModel<float>(_defenceData.ShieldData.BaseShieldPoints, 0, float.MaxValue);
+                new ParametrModel<float>(_data.BaseShieldPoints, 0, float.MaxValue);
             _fireShieldPoints =
-                  new ParametrModel<float>(_defenceData.ShieldData.FireShieldPoints, 0, float.MaxValue);
+                  new ParametrModel<float>(_data.FireShieldPoints, 0, float.MaxValue);
             _coldShieldPoints =
-                new ParametrModel<float>(_defenceData.ShieldData.ColdShieldPoints, 0, float.MaxValue);
-
-            _resistanceData = _defenceData.ResistData;
+                new ParametrModel<float>(_data.ColdShieldPoints, 0, float.MaxValue);
         }
 
         public float GetAfterDefDamage(IDamage damageData)
@@ -78,19 +75,19 @@ namespace UnitSystem.Model
 
             if (CheckShield(_baseShieldPoints) == false)
             {
-                var damageAfterResist = UseResist(damageData.BaseDamage, _resistanceData.BaseDamageResist);
+                var damageAfterResist = UseResist(damageData.BaseDamage, _data.BaseDamageResist);
                 resultDamage += damageAfterResist;
             }
 
             if (CheckShield(_fireShieldPoints) == false)
             {
-                var damageAfterResist = UseResist(damageData.FireDamage, _resistanceData.FireDamageResist);
+                var damageAfterResist = UseResist(damageData.FireDamage, _data.FireDamageResist);
                 resultDamage += damageAfterResist;
             }
 
             if (CheckShield(_coldShieldPoints) == false)
             {
-                var damageAfterResist = UseResist(damageData.ColdDamage, _resistanceData.ColdDamageResist);
+                var damageAfterResist = UseResist(damageData.ColdDamage, _data.ColdDamageResist);
                 resultDamage += damageAfterResist;
             }
 

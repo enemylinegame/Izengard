@@ -9,7 +9,6 @@ namespace UnitSystem
         UnitAbilityType AbilityType { get; }
         float MinRange { get; }
         float MaxRange { get; }
-
         float CastingTime { get; }
         float AttackTime { get; }
 

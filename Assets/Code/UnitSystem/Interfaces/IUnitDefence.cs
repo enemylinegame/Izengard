@@ -2,7 +2,7 @@
 
 namespace UnitSystem
 {
-    public interface IUnitDefence : IDefence<IUnitDefenceData, IDamage>
+    public interface IUnitDefence : IDefence<IUnitData, IDamage>
     {
         IParametr<float> ArmorPoints { get; }
 

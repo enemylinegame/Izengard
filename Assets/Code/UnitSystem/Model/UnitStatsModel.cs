@@ -35,16 +35,16 @@ namespace UnitSystem.Model
 
         #endregion
 
-        public UnitStatsModel(IUnitStatsData stats) 
+        public UnitStatsModel(IUnitData data) 
         {       
-            _faction = stats.Faction;
-            _type = stats.Type;
-            _role = stats.Role;
+            _faction = data.Faction;
+            _type = data.Type;
+            _role = data.Role;
 
-            _health = new ParametrModel<int>(stats.HealthPoints, 0, stats.HealthPoints);
-            _size = new ParametrModel<float>(stats.Size, 0, float.MaxValue);
-            _speed = new ParametrModel<float>(stats.Speed, 0, float.MaxValue);
-            _detectionRange = new ParametrModel<float>(stats.DetectionRange, 0, float.MaxValue);
+            _health = new ParametrModel<int>(data.HealthPoints, 0, data.HealthPoints);
+            _size = new ParametrModel<float>(data.Size, 0, float.MaxValue);
+            _speed = new ParametrModel<float>(data.Speed, 0, float.MaxValue);
+            _detectionRange = new ParametrModel<float>(data.DetectionRange, 0, float.MaxValue);
         }
     }
 }

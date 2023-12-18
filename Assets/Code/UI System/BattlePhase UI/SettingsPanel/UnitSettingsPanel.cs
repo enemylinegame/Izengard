@@ -8,12 +8,16 @@ namespace UI
     public class UnitSettingsPanel : MonoBehaviour
     {
         [SerializeField]
+        private UnitParametrs _parametrs;
+        [SerializeField]
         protected Button openButton;
         [SerializeField]
         protected Button closeButton;
 
         [SerializeField]
         private Button _spawnButton;
+
+        public UnitParametrs Parametrs => _parametrs;
 
         public event Action OnSpawn;
 
@@ -51,5 +55,6 @@ namespace UI
 
             transform.DOLocalMoveX(400, 0.2f, true);
         }
+        
     }
 }

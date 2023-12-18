@@ -15,7 +15,7 @@ namespace UnitSystem.Model
 
         public (UnitPriorityType Priority, UnitType Type) Current => _currentPriority;
 
-        public UnitPriorityModel(IReadOnlyList<UnitPriorityData> unitPriorities)
+        public UnitPriorityModel(IList<UnitPriorityData> unitPriorities)
         {
             _priorities = new List<UnitPriorityData>();
 
