@@ -16,12 +16,14 @@ namespace SpawnSystem
             _battleSceneUIController = battleSceneUIController;
 
             _battleSceneUIController.OnDefenderSpawn += SpawnPack;
-
-            _battleSceneUIController.OnSpawNewUnit += SpawnUnit;
+            _battleSceneUIController.OnSpawnNewUnit += SpawnUnit;
         }
 
         private void SpawnUnit(IUnitData unitData)
         {
+            if (unitData.Faction != UnitFactionType.Defender)
+                return;
+
             _spawnController.SpawnUnit(unitData);
         }
 

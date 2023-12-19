@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Tools;
 using UI;
+using UnitSystem.Enum;
+using UnitSystem;
 using UnityEngine;
 
 namespace SpawnSystem
@@ -10,7 +12,7 @@ namespace SpawnSystem
     {
         private readonly ISpawnController _spawnController;
         private readonly IReadOnlyList<WaveData> _waves;
-        private readonly BattleSceneUI _battleUI;
+        private readonly BattleUIController _battleUIController;
 
         private WaveData _currentWave;
         private int _waveIndex;
@@ -23,22 +25,32 @@ namespace SpawnSystem
 
         public EnemySpawnHandler(
             ISpawnController spawnController, 
-            WaveSettings waveSettings, 
-            BattleSceneUI battleUI)
+            WaveSettings waveSettings,
+            BattleUIController battleUIController)
         {
             _spawnController = spawnController;
             _waves = waveSettings.Waves;
-            _battleUI = battleUI;
+            _battleUIController = battleUIController;
+ 
+            _battleUIController.OnStartWave += StartWave;
+            _battleUIController.OnStopWave += StopWave;
+            _battleUIController.OnSpawnNewUnit += SpawnUnit;
 
             _waveIndex = 0;
             
             _currentWave = _waves[_waveIndex];
 
-            _timer = new TimeRemaining(ExecuteWaveLogic, _currentWave.WaveDuration, true);
-
-            _battleUI.OnWaveStart += StartWave;
-            _battleUI.OnWaveStop += StopWave;
+            _timer = new TimeRemaining(ExecuteWaveLogic, _currentWave.WaveDuration, true); 
         }
+
+        public void SpawnUnit(IUnitData unitData)
+        {
+            if (unitData.Faction != UnitFactionType.Enemy)
+                return;
+
+            _spawnController.SpawnUnit(unitData);
+        }
+
 
         public void StartWave()
         {

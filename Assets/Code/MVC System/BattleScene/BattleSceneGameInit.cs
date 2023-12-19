@@ -43,7 +43,7 @@ namespace Code.MVC_System
             var battleUIController = new BattleUIController(sceneObjectsHolder.BattleUI);
 
             var enemySpawnHandler 
-                = new EnemySpawnHandler(enemySpawner, configs.EnemyWaveSettings, sceneObjectsHolder.BattleUI);
+                = new EnemySpawnHandler(enemySpawner, configs.EnemyWaveSettings, battleUIController);
             var defendersSpawnHandler
                 = new DefenderSpawnHandler(defendersSpawner, battleUIController);
 

@@ -3,25 +3,25 @@ using UnitSystem;
 
 namespace UI
 {
-    public class BattleUIController 
+    public class BattleUIController :  IOnController, IDisposable
     {
         private readonly BattleSceneUI _battleSceneUI;
-       
+
+        public event Action OnStartWave;
+        public event Action OnStopWave;
         public event Action OnDefenderSpawn;
-        public event Action<IUnitData> OnSpawNewUnit;
+
+        public event Action<IUnitData> OnSpawnNewUnit;
 
         public BattleUIController(BattleSceneUI battleSceneUI)
         {
             _battleSceneUI = battleSceneUI;
 
-            _battleSceneUI.OnDefenderSpawn += SpawnDefender;
+            _battleSceneUI.WaveStartButton.onClick.AddListener(() => OnStartWave?.Invoke());
+            _battleSceneUI.WaveStopButton.onClick.AddListener(() => OnStopWave?.Invoke());
+            _battleSceneUI.DefenderSpawnButton.onClick.AddListener(() => OnDefenderSpawn?.Invoke());
 
             _battleSceneUI.UnitSettings.OnSpawn += SpawnUnits;
-        }
-
-        private void SpawnDefender()
-        {
-            OnDefenderSpawn?.Invoke();
         }
 
         private void SpawnUnits(int quantity)
@@ -30,8 +30,15 @@ namespace UI
 
             for(int i=0; i < quantity; i++)
             {
-                OnSpawNewUnit?.Invoke(unitCreateData);
+                OnSpawnNewUnit?.Invoke(unitCreateData);
             }
+        }
+
+        public void Dispose()
+        {
+            _battleSceneUI.WaveStartButton.onClick.RemoveAllListeners();
+            _battleSceneUI.WaveStopButton.onClick.RemoveAllListeners();
+            _battleSceneUI.DefenderSpawnButton.onClick.RemoveAllListeners();
         }
     }
 }
