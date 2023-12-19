@@ -15,5 +15,11 @@ namespace UnitSystem.Data
 
         public UnitPriorityType UnitPriority => _unitPriority;
         public UnitType UnitType => _unitType;
+
+        public UnitPriorityData(UnitPriorityType unitPriority, UnitType unitType)
+        {
+            _unitPriority = unitPriority;
+            _unitType = unitType;
+        }
     }
 }

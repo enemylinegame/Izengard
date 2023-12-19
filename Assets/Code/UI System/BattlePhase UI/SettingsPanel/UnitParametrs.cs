@@ -12,11 +12,14 @@ namespace UI
     {
         [SerializeField] private UnitSettings _unitData;
 
+        [SerializeField] private UnitPriorityListUI _unitPriorityList;
+
+        [Header("Main Stats")]
+        
         [SerializeField] private TMP_Dropdown _factionDropDown;
         [SerializeField] private TMP_Dropdown _typeDropDown;
         [SerializeField] private TMP_Dropdown _roleDropDown;
 
-        [Header("Main Stats")]
         [SerializeField]
         private TMP_InputField _healthField;
         [SerializeField]
@@ -67,7 +70,7 @@ namespace UI
         private TMP_InputField _coldDamageField;
 
 
-        private void Awake()
+        private void Start()
         {
             Init(_unitData);
         }
@@ -77,6 +80,8 @@ namespace UI
             InitFactionDropDown(data);
             InitTypeDropDown(data);
             InitRoleDropDown(data);
+
+            _unitPriorityList.Init(data.UnitPriorities);
 
             _healthField.text = data.HealthPoints.ToString();
             _sizeField.text = data.Size.ToString();
@@ -173,7 +178,7 @@ namespace UI
                 Speed = float.Parse(_speedField.text),
                 DetectionRange = float.Parse(_detectRangeField.text),
 
-                UnitPriorities = _unitData.UnitPriorities,
+                UnitPriorities = _unitPriorityList.GetPriorityData(),
 
                 EvadeChance = float.Parse(_evadeChanceField.text),
                 ArmorPoints = float.Parse(_armorPointsField.text),

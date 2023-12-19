@@ -23,6 +23,8 @@ MonoBehaviour:
   _unitPriorities:
   - _unitPriority: 2
     _unitType: 0
+  - _unitPriority: 1
+    _unitType: 0
   _defenceData:
     _evadeChance: 0
     _armorPoints: 0
