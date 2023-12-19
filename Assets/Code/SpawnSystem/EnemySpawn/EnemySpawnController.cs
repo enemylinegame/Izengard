@@ -13,7 +13,7 @@ namespace SpawnSystem
 
         private readonly EnemyPool _pool;
 
-        public event System.Action<IUnit> OnUnitSpawned;
+        public event Action<IUnit> OnUnitSpawned;
 
         public EnemySpawnController(SpawnerView spawner, IUnitsContainer unitsContainer)
         {
