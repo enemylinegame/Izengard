@@ -15,11 +15,12 @@ namespace UI
         [SerializeField] private UnitPriorityListUI _unitPriorityList;
 
         [Header("Main Stats")]
-        
-        [SerializeField] private TMP_Dropdown _factionDropDown;
-        [SerializeField] private TMP_Dropdown _typeDropDown;
-        [SerializeField] private TMP_Dropdown _roleDropDown;
-
+        [SerializeField] 
+        private TMP_Dropdown _factionDropDown;
+        [SerializeField] 
+        private TMP_Dropdown _typeDropDown;
+        [SerializeField] 
+        private TMP_Dropdown _roleDropDown;
         [SerializeField]
         private TMP_InputField _healthField;
         [SerializeField]
@@ -51,6 +52,10 @@ namespace UI
         [Space(10)]
         [Header("Offence Stats")]
         [SerializeField]
+        private TMP_Dropdown _attackTypeDropDown;
+        [SerializeField]
+        private TMP_Dropdown _abilityTypeDropDown;
+        [SerializeField]
         private TMP_InputField _minRangeField;
         [SerializeField]
         private TMP_InputField _maxRangeField;
@@ -69,13 +74,49 @@ namespace UI
         [SerializeField]
         private TMP_InputField _coldDamageField;
 
-
-        private void Start()
+        public IUnitData GetData()
         {
-            Init(_unitData);
-        }
+            var unitData = new UnitDataModel
+            {
+                Faction = (UnitFactionType)_factionDropDown.value,
+                Type = (UnitType)_typeDropDown.value,
+                Role = (UnitRoleType)_roleDropDown.value,
 
-        private void Init(IUnitData data)
+                HealthPoints = int.Parse(_healthField.text),
+                Size = float.Parse(_sizeField.text),
+                Speed = float.Parse(_speedField.text),
+                DetectionRange = float.Parse(_detectRangeField.text),
+
+                UnitPriorities = _unitPriorityList.GetPriorityData(),
+
+                EvadeChance = float.Parse(_evadeChanceField.text),
+                ArmorPoints = float.Parse(_armorPointsField.text),
+                BaseShieldPoints = float.Parse(_baseShieldField.text),
+                FireShieldPoints = float.Parse(_fireShieldField.text),
+                ColdShieldPoints = float.Parse(_coldShieldField.text),
+                BaseDamageResist = float.Parse(_baseDamageResistField.text),
+                FireDamageResist = float.Parse(_fireDamageResistField.text),
+                ColdDamageResist = float.Parse(_coldDamageResistField.text),
+
+                AttackType = (UnitAttackType)_attackTypeDropDown.value,
+                AbilityType = (UnitAbilityType)_abilityTypeDropDown.value,
+
+                MinRange = float.Parse(_minRangeField.text),
+                MaxRange = float.Parse(_maxRangeField.text),
+                CastingTime = float.Parse(_castingTimeField.text),
+                AttackTime = float.Parse(_attackTimeField.text),
+                CriticalChance = float.Parse(_criticalChanceField.text),
+                CritScale = float.Parse(_critScaleField.text),
+                FailChance = _unitData.FailChance,
+                OnFailDamage = _unitData.OnFailDamage,
+                BaseDamage = float.Parse(_baseDamageField.text),
+                FireDamage = float.Parse(_fireDamageField.text),
+                ColdDamage = float.Parse(_coldDamageField.text),
+            };
+
+            return unitData;
+        }
+        public void Init(IUnitData data)
         {
             InitFactionDropDown(data);
             InitTypeDropDown(data);
@@ -97,6 +138,8 @@ namespace UI
             _fireDamageResistField.text = data.FireDamageResist.ToString();
             _coldDamageResistField.text = data.ColdDamageResist.ToString();
 
+            InitAttackTypeDropDown(data);
+            InitAbilityTypeDropDown(data);
 
             _minRangeField.text = data.MinRange.ToString();
             _maxRangeField.text = data.MaxRange.ToString();
@@ -109,7 +152,7 @@ namespace UI
             _fireDamageField.text = data.FireDamage.ToString();
             _coldDamageField.text = data.ColdDamage.ToString();
         }
-
+ 
         private void InitFactionDropDown(IUnitData data)
         {
             _factionDropDown.ClearOptions();
@@ -165,46 +208,49 @@ namespace UI
             _roleDropDown.value = (int)data.Role;
         }
 
-        public IUnitData GetData()
+        private void InitAttackTypeDropDown(IUnitData data)
         {
-            var unitData = new UnitDataModel
-            {
-                Faction = (UnitFactionType)_factionDropDown.value,
-                Type = (UnitType)_typeDropDown.value,
-                Role = (UnitRoleType)_roleDropDown.value,
+            _attackTypeDropDown.ClearOptions();
 
-                HealthPoints = int.Parse(_healthField.text),
-                Size = float.Parse(_sizeField.text),
-                Speed = float.Parse(_speedField.text),
-                DetectionRange = float.Parse(_detectRangeField.text),
+            var optData
+                = new List<string> {
+                        nameof(UnitAttackType.None),
+                        nameof(UnitAttackType.Melee),
+                        nameof(UnitAttackType.Range)
+                };
 
-                UnitPriorities = _unitPriorityList.GetPriorityData(),
+            _attackTypeDropDown.AddOptions(optData);
 
-                EvadeChance = float.Parse(_evadeChanceField.text),
-                ArmorPoints = float.Parse(_armorPointsField.text),
-                BaseShieldPoints = float.Parse(_baseShieldField.text),
-                FireShieldPoints = float.Parse(_fireShieldField.text),
-                ColdShieldPoints = float.Parse(_coldShieldField.text),
-                BaseDamageResist = float.Parse(_baseDamageResistField.text),
-                FireDamageResist = float.Parse(_fireDamageResistField.text),
-                ColdDamageResist = float.Parse(_coldDamageResistField.text),
+            _attackTypeDropDown.value = (int)data.AttackType;
+        }
 
-                AttackType = _unitData.AttackType,
-                AbilityType = _unitData.AbilityType,
-                MinRange = float.Parse(_minRangeField.text),
-                MaxRange = float.Parse(_maxRangeField.text),
-                CastingTime = float.Parse(_castingTimeField.text),
-                AttackTime = float.Parse(_attackTimeField.text),
-                CriticalChance = float.Parse(_criticalChanceField.text),
-                CritScale = float.Parse(_critScaleField.text),
-                FailChance = _unitData.FailChance,
-                OnFailDamage = _unitData.OnFailDamage,
-                BaseDamage = float.Parse(_baseDamageField.text),
-                FireDamage = float.Parse(_fireDamageField.text),
-                ColdDamage = float.Parse(_coldDamageField.text),
-            };
+        private void InitAbilityTypeDropDown(IUnitData data)
+        {
+            _abilityTypeDropDown.ClearOptions();
 
-            return unitData;
+            var optData
+                = new List<string> {
+                        nameof(UnitAbilityType.None),
+                        nameof(UnitAbilityType.SelfShield),
+                        nameof(UnitAbilityType.AllyShield),
+                        nameof(UnitAbilityType.ShortRangedAttack),
+                        nameof(UnitAbilityType.RangedAOE),
+                        nameof(UnitAbilityType.ClosedAOE),
+                        nameof(UnitAbilityType.LinedAOE),
+                        nameof(UnitAbilityType.SpearDash),
+                };
+
+            _abilityTypeDropDown.AddOptions(optData);
+
+            _abilityTypeDropDown.value = (int)data.AbilityType;
+        }
+
+        private void Start()
+        {
+            if (_unitData == null)
+                return;
+
+            Init(_unitData);
         }
 
     }
