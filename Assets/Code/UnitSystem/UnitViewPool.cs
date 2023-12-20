@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
-using UnitSystem;
 using UnitSystem.Data;
 using UnitSystem.Enum;
 using UnityEngine;
 
-namespace EnemySystem
+namespace UnitSystem
 {
-    public class EnemyViewPool
+    public class UnitViewPool
     {
         private readonly Dictionary<UnitType, Queue<IUnitView>> _pool = new();
         private readonly Dictionary<UnitType, Transform> _poolHolders = new();
         private readonly List<UnitCreationData> creationDataList = new();
         private Transform _root;
 
-        public EnemyViewPool(Transform root, List<UnitCreationData> enemyDataList)
+        public UnitViewPool(Transform root, List<UnitCreationData> enemyDataList)
         {
             _root = root;
             foreach (var enemydata in enemyDataList)

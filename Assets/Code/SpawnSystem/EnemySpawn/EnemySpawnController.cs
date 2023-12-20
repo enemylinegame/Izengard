@@ -1,5 +1,4 @@
-﻿using EnemySystem;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnitSystem;
 using UnitSystem.Data;
@@ -14,7 +13,7 @@ namespace SpawnSystem
         private readonly IUnitsContainer _unitsContainer;
         private readonly List<UnitCreationData> _unitCreationDataList;
 
-        private readonly EnemyViewPool _viewPool;
+        private readonly UnitViewPool _viewPool;
 
         public event Action<IUnit> OnUnitSpawned;
 
@@ -25,7 +24,7 @@ namespace SpawnSystem
 
             _unitCreationDataList = _spawner.SpawnSettings.UnitsCreationData;
 
-            _viewPool = new EnemyViewPool(spawner.PoolHolder, _unitCreationDataList);
+            _viewPool = new UnitViewPool(spawner.PoolHolder, _unitCreationDataList);
 
             _unitsContainer.OnUnitRemoved += DespawnUnit;
         }
