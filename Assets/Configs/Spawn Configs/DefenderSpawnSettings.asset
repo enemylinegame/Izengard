@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <SpawnFaction>k__BackingField: 1
   <UnitsCreationData>k__BackingField:
-  - _poolCopacity: 2
+  - _poolCopacity: 5
     _type: 1
     _unitSettings: {fileID: 11400000, guid: c66ebf9d6d72c6b4bb35f003cd31a8e8, type: 2}
     _unitPrefab: {fileID: 162708, guid: c3b34ac9b23323d49afdb0e81d9db5d1, type: 3}

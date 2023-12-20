@@ -5,15 +5,15 @@ using UnitSystem;
 using UnitSystem.Data;
 using UnitSystem.Enum;
 
-
 namespace SpawnSystem
 {
     public class DefendersSpawnController : ISpawnController
     {
         private readonly SpawnerView _spawner;
         private readonly IUnitsContainer _unitsContainer;
+        private readonly List<UnitCreationData> _unitCreationDataList;
 
-        private List<UnitCreationData> _unitCreationDataList;
+        private readonly UnitViewPool _viewPool;
 
         private int _nextSpawnPositionsIndex;
 
@@ -25,7 +25,9 @@ namespace SpawnSystem
             _unitsContainer = unitsContainer;
 
             _unitCreationDataList = _spawner.SpawnSettings.UnitsCreationData;
-            
+
+            _viewPool = new UnitViewPool(spawner.PoolHolder, _unitCreationDataList);
+
             _nextSpawnPositionsIndex = 0;
 
             _unitsContainer.OnUnitRemoved += DespawnUnit;
@@ -33,16 +35,9 @@ namespace SpawnSystem
 
         public void SpawnUnit(IUnitData unitData)
         {
-            var creationData =
-                _unitCreationDataList.Find(ucd => ucd.UnitSettings.Type == unitData.Type);
+            var unitView = _viewPool.GetFromPool(unitData.Type);
 
-            if (creationData == null) return;
-
-            GameObject prefab = creationData.UnitPrefab;
-            GameObject instance = UnityEngine.Object.Instantiate(prefab);
-            IUnitView view = instance.GetComponent<IUnitView>();
-
-            var unit = new UnitHandler(view, unitData);
+            var unit = new UnitHandler(unitView, unitData);
 
             unit.SetStartPosition(SelectSpawnPosition());
 
@@ -52,16 +47,12 @@ namespace SpawnSystem
 
         public void SpawnUnit(UnitType type)
         {
-            UnitCreationData creationData =
-                _unitCreationDataList.Find(ucd => ucd.UnitSettings.Type == type);
-            
-            if (creationData == null) return;
+            var unitView = _viewPool.GetFromPool(type);
 
-            GameObject prefab = creationData.UnitPrefab;
-            GameObject instance = UnityEngine.Object.Instantiate(prefab);
-            IUnitView view = instance.GetComponent<IUnitView>();
+            var unitData
+                = _unitCreationDataList.Find(ucd => ucd.Type == type).UnitSettings;
 
-            var unit = new UnitHandler(view, creationData.UnitSettings);
+            var unit = new UnitHandler(unitView, unitData);
 
             unit.SetStartPosition(SelectSpawnPosition());
 
@@ -87,8 +78,8 @@ namespace SpawnSystem
         {
             if (unit.Stats.Faction != UnitFactionType.Defender)
                 return;
-        }
 
-  
+            _viewPool.ReturnToPool(unit.View);
+        }
     }
 }
