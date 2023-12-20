@@ -8,9 +8,9 @@ namespace SpawnSystem
     {
         event Action<IUnit> OnUnitSpawned;
 
-        void SpawnUnit(UnitType unitType);
-
         void SpawnUnit(IUnitData unitData);
+        
+        void SpawnUnit(UnitType type);
 
         void DespawnUnit(IUnit unit);
     }

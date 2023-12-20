@@ -53,6 +53,8 @@ namespace EnemySystem
             var obj = Object.Instantiate(creationData.UnitPrefab);
             var unitView = obj.GetComponent<IUnitView>();
 
+            unitView.Init(creationData.Type);
+
             unitView.SelfTransform.parent
                 = _poolHolders[creationData.Type];
 
@@ -79,14 +81,14 @@ namespace EnemySystem
             }
         }
 
-        public void ReturnToPool(IUnitView enemy, UnitType type)
+        public void ReturnToPool(IUnitView unitView)
         {
-            enemy.SelfTransform.localPosition
-                = _poolHolders[type].localPosition;
+            unitView.SelfTransform.position
+                = _poolHolders[unitView.Type].localPosition;
 
-            enemy.Hide();
+            unitView.Hide();
 
-            _pool[type].Enqueue(enemy);
+            _pool[unitView.Type].Enqueue(unitView);
         }
 
         public void Dispose()

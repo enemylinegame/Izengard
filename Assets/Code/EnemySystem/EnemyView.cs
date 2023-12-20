@@ -1,4 +1,4 @@
-﻿using UnitSystem;
+﻿
 using UnitSystem.View;
 using UnityEngine;
 using UnityEngine.AI;
@@ -32,22 +32,23 @@ namespace EnemySystem
 
         protected override void SetTransform()
         {
-            _selfTransform ??= transform;
+            selfTransform ??= transform;
         }
 
         protected override void SetUnitAnimator()
         {
-            _unitAnimation ??= _animationView;
+            unitAnimation ??= _animationView;
         }
 
         protected override void SetUnitNavigation()
         {
-            _unitNavigation ??= _enemyNavMesh;
+            unitNavigation ??= _enemyNavMesh;
         }
 
         protected override void SetCollision()
         {
-            _unitCollider ??= _collider;
+            unitCollider ??= _collider;
         }
+
     }
 }

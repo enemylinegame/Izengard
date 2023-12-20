@@ -50,10 +50,10 @@ namespace SpawnSystem
             OnUnitSpawned?.Invoke(unit);
         }
 
-        public void SpawnUnit(UnitType unitType)
+        public void SpawnUnit(UnitType type)
         {
             UnitCreationData creationData =
-                _unitCreationDataList.Find(ucd => ucd.UnitSettings.Type == unitType);
+                _unitCreationDataList.Find(ucd => ucd.UnitSettings.Type == type);
             
             if (creationData == null) return;
 

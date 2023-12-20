@@ -1,5 +1,6 @@
 using Abstraction;
 using System;
+using UnitSystem.Enum;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,25 +8,32 @@ namespace UnitSystem.View
 {
     public abstract class BaseUnitView : MonoBehaviour, IUnitView
     {
-        protected Transform _selfTransform;
-        protected NavMeshAgent _unitNavigation;
-        protected Collider _unitCollider;
-        protected IUnitAnimationView _unitAnimation;
-        
-        [SerializeField] private int _id;
-        
+        private int _id;
+        private UnitType _type;
+
+        protected Transform selfTransform;
+        protected NavMeshAgent unitNavigation;
+        protected Collider unitCollider;
+        protected IUnitAnimationView unitAnimation;
+
         public int Id => _id;
+        public UnitType Type => _type;
 
-        public Vector3 Position => _selfTransform.position;
-
-        public Transform SelfTransform => _selfTransform;
-        public NavMeshAgent UnitNavigation => _unitNavigation;
-        public IUnitAnimationView UnitAnimation => _unitAnimation;
-
+        public Vector3 Position => selfTransform.position;
+        public Transform SelfTransform => selfTransform;
+        public NavMeshAgent UnitNavigation => unitNavigation;
+        public IUnitAnimationView UnitAnimation => unitAnimation;
+ 
         public event Action<IDamage> OnTakeDamage;
+
+        public virtual void Init(UnitType type)
+        {
+            _type = type;
+        }
 
         public void Show() => 
             gameObject.SetActive(true);
+
         public void Hide() => 
             gameObject.SetActive(false);
         
@@ -35,7 +43,7 @@ namespace UnitSystem.View
 
         public void SetCollisionEnabled(bool isEnabled)
         {
-            _unitCollider.enabled = isEnabled;
+            unitCollider.enabled = isEnabled;
         }
         
         private void Awake()

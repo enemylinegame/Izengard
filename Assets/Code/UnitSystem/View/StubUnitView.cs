@@ -2,12 +2,6 @@
 {
     public class StubUnitView : BaseUnitView
     {
-
-        private void Start()
-        {
-            
-        }
-
         public override void ChangeHealth(int hpValue) { }
 
         public override void ChangeSize(float sizeValue) { }
@@ -23,5 +17,6 @@
         protected override void SetUnitNavigation() { }
 
         protected override void SetCollision() { }
+
     }
 }
