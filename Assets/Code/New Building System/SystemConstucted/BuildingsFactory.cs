@@ -44,17 +44,18 @@ namespace NewBuildingSystem
             _buildingsHolder = buildingsHolder;
             
             _previewMaterial = Object.Instantiate(objects.PreveiwMaterial);
-            
-           /* var scale = _plane.transform.localScale;
-            
-            var x = Mathf.RoundToInt(_checkForBorders.TheRestOfTheSpaceMap().x  + scale.x * 10);
-            var y = Mathf.RoundToInt(_checkForBorders.TheRestOfTheSpaceMap().y + scale.z * 10);
-            //_buildings = new Building[x, y];*/
-            
-           
-            controller.BuildingPanelController.NewBuilds(_dataBase.objectsData[0], ()=>PlaceBuilding(1));
-            controller.BuildingPanelController.NewBuilds(_dataBase.objectsData[1], ()=>PlaceBuilding(2));
-            controller.BuildingPanelController.NewBuilds(_dataBase.objectsData[2], ()=>PlaceBuilding(3));
+
+            /* var scale = _plane.transform.localScale;
+
+             var x = Mathf.RoundToInt(_checkForBorders.TheRestOfTheSpaceMap().x  + scale.x * 10);
+             var y = Mathf.RoundToInt(_checkForBorders.TheRestOfTheSpaceMap().y + scale.z * 10);
+             //_buildings = new Building[x, y];*/
+
+            for (int i = 0; i < dataBase.objectsData.Count; i++) 
+            {
+                var placeId = i + 1;
+                controller.BuildingPanelController.NewBuilds(_dataBase.objectsData[i], () => PlaceBuilding(placeId));
+            }
             rayCastController.KeyDownOne += () => PlaceBuilding(1);
             rayCastController.KeyDownTwo += () => PlaceBuilding(2);
             _rayCastController.RightClick += SelectBuild;

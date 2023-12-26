@@ -12,6 +12,8 @@ namespace SpawnSystem
 {
     public class SpawnCreationController : IOnController
     {
+        private readonly CheckForBorders _checkForBorders;
+
         private readonly SpawnPanelUI _spawnUI;
         private readonly GameObject _spawnerPrefab;
         private readonly RayCastController _rayCastController;
@@ -33,6 +35,8 @@ namespace SpawnSystem
             GameObject plane, 
             Grid grid)
         {
+            _checkForBorders = new CheckForBorders(plane);
+
             _spawnUI = spawnUI;
             _spawnerPrefab = spawnerPrefab;
             
@@ -65,6 +69,10 @@ namespace SpawnSystem
             _selectedSpawner.Name = $"Spawner[{_spawnerCount - 1}]";
             _selectedSpawner.Size = new Vector2Int(1, 1);
 
+            InstallInCenterTile(_selectedSpawner);
+
+            _selectedSpawner.OnTriggered += _checkForBorders.CheckPlaneForBuilding;
+
             _selectedSpawner.ObjectBuild.transform.position = _plane.transform.position;
 
             ChangeMaterial(_selectedSpawner);
@@ -80,11 +88,26 @@ namespace SpawnSystem
             
             ChangeMaterial(_selectedSpawner, false);
 
+            _selectedSpawner.OnTriggered -= _checkForBorders.CheckPlaneForBuilding;
+
             _rayCastController.LeftClick -= PlaceSpawner;
             _rayCastController.MousePosition -= RayCastControllerOnMousePosition;
       
             Object.Destroy(_selectedSpawner.ObjectBuild);
             _selectedSpawner = null;
+        }
+
+        private void InstallInCenterTile(Spawner spawner)
+        {
+            var size = spawner.Size;
+
+            spawner.Size = size;
+            var sizeX = size.x / 2f;
+            var sizeY = size.y / 2f;
+
+            spawner.PositionBuild.position = new Vector3(sizeX, 0, sizeY);
+            spawner.Collider.center = new Vector3(sizeX, .2f, sizeY);
+            spawner.Collider.size = new Vector3(size.x - .5f, .2f, size.y - .5f);
         }
 
         private void ChangeMaterial(Spawner spawner, bool mode = true)
@@ -115,6 +138,8 @@ namespace SpawnSystem
 
             ChangeMaterial(_selectedSpawner, false);
             _selectedSpawner.ID = GUID.Generate().ToString();
+
+            _selectedSpawner.OnTriggered -= _checkForBorders.CheckPlaneForBuilding;
 
             _rayCastController.LeftClick -= PlaceSpawner;
             _rayCastController.MousePosition -= RayCastControllerOnMousePosition;
