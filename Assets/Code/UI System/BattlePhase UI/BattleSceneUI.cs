@@ -9,6 +9,8 @@ namespace UI
         [SerializeField]
         private UnitSettingsPanel _unitSettings;
         [SerializeField]
+        private SpawnPanelUI _spawnPanel;
+        [SerializeField]
         private Button _waveStartButton;
         [SerializeField]
         private Button _waveStopButton;
@@ -16,9 +18,11 @@ namespace UI
         private Button _defenderSpawnButton;
 
         public UnitSettingsPanel UnitSettings => _unitSettings;
-
+        public SpawnPanelUI SpawnPanel => _spawnPanel;
         public Button WaveStartButton => _waveStartButton;
         public Button WaveStopButton => _waveStopButton;
         public Button DefenderSpawnButton => _defenderSpawnButton;
+
+        
     }
 }

@@ -71,6 +71,7 @@ namespace NewBuildingSystem
             _plane.SetActive(true);
             _rayCastController.LeftClick += PlaceFlyingBuilding;
         }
+
         private void PlaceStructure(int ID)
         {
             var build = Object.Instantiate(_dataBase.objectsData[ID].Prefab, _buildingsHolder.transform).GetComponent<Building>();

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2853e716454404296aed0a5de3fbe01, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  <MapSize>k__BackingField: {x: 12, y: 12}
+  <MapSize>k__BackingField: {x: 20, y: 12}
   <MouseLayerMask>k__BackingField:
     serializedVersion: 2
     m_Bits: 384

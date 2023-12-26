@@ -3,23 +3,35 @@ using BattleSystem.MainTower;
 using Code.GlobalGameState;
 using Code.SceneConfigs;
 using Configs;
+using NewBuildingSystem;
 using SpawnSystem;
 using Tools;
 using Tools.Navigation;
 using UI;
 using UnitSystem;
 using UnityEngine;
+using UserInputSystem;
 
 namespace Code.MVC_System
 {
     public class BattleSceneGameInit
-    {     
+    {
+
+        private UserInput _userInput;
+
         public BattleSceneGameInit( 
             Controller controller, 
             ConfigsHolder configs, 
             Canvas canvas, 
-            SceneObjectsHolder sceneObjectsHolder)
+            SceneObjectsHolder sceneObjectsHolder,
+            GameObject spawnerPrefab,
+            GameObject plane,
+            Grid grid,
+            Map map)
         {
+            var userInputController = new UserInputController();
+            _userInput = userInputController.UserInput;
+
             var timeRemainingService = new TimeRemainingController();
             var navigationUpdater = new NavigationUpdater();
             navigationUpdater.AddNavigationSurface(sceneObjectsHolder.GroundSurface);
@@ -39,8 +51,18 @@ namespace Code.MVC_System
                 = new EnemyBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, mainTower, enemySpawner);
             var defenderBattleController 
                 = new DefenderBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, mainTower);
+            
+            var rayCastController = new RayCastController(_userInput, configs.GameConfig);
 
             var battleUIController = new BattleUIController(sceneObjectsHolder.BattleUI);
+
+            var spawnerCreationController
+                = new SpawnCreationController(
+                    sceneObjectsHolder.BattleUI.SpawnPanel,
+                    spawnerPrefab,
+                    rayCastController,
+                    configs.ObjectsHolder,
+                    plane, grid);
 
             var enemySpawnHandler 
                 = new EnemySpawnHandler(enemySpawner, configs.EnemyWaveSettings, battleUIController);
@@ -52,11 +74,13 @@ namespace Code.MVC_System
                 = new BattlePhaseController(defendersSpawnHandler, enemySpawnHandler, mainTower, unitsContainer);
             
             var gameStateManager = new GameStateManager(peaceStateManager, battleStateManager);
-            
+
+            var MapController = new MapController(map, configs.GameConfig);
 
             controller.Add(timeRemainingService);
             controller.Add(unitsContainer);
 
+            controller.Add(spawnerCreationController);
             controller.Add(enemySpawner);
             controller.Add(defendersSpawner);
 
