@@ -28,7 +28,8 @@ namespace UnitSystem
         public Vector3 StartPosition => Vector3.zero;
 
         public float TimeProgress { get; set; }
-        
+        public bool IsInFight { get; set; } = false;
+
         public StubUnit(string logMessage)
         {
             View = new StubUnitView();
@@ -41,6 +42,7 @@ namespace UnitSystem
 
         public void Enable() { }
         public bool IsAlive => true;
+
         public void TakeDamage(IDamage damageValue) { }
 
         public IDamage GetAttackDamage()

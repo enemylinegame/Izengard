@@ -24,7 +24,9 @@ namespace UnitSystem
 
         Vector3 StartPosition { get; }
         
-        public float TimeProgress { get; set; }
+        float TimeProgress { get; set; }
+
+        bool IsInFight { get; set; }
 
         void Enable();
 

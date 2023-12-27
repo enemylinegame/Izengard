@@ -38,6 +38,7 @@ namespace UnitSystem
         
         public float TimeProgress { get; set; }
 
+        public bool IsInFight { get; set; }
       
         public event Action<IUnit> OnReachedZeroHealth;
 
@@ -63,6 +64,8 @@ namespace UnitSystem
             _unitTarget = new UnitTargetModel();
 
             _id = _view.Id;
+
+            IsInFight = false;
         }
 
         public void Enable()
@@ -137,19 +140,32 @@ namespace UnitSystem
                 switch (state)
                 {
                     case UnitStateType.None:
-                        animView.Reset();
-                        break;
+                        {
+                            IsInFight = false;
+                            animView.Reset();
+                            break;
+                        }
                     case UnitStateType.Idle:
-                        animView.IsMoving = false;
-                        break;
+                        {
+                            IsInFight = false;
+                            animView.IsMoving = false;
+                            break;
+                        }
                     case UnitStateType.Move:
-                        animView.IsMoving = true;
-                        break;
+                        {
+                            IsInFight = false;
+                            animView.IsMoving = true;
+                            break;
+                        }
                     case UnitStateType.Attack:
-                        animView.IsMoving = false;
-                        break;
+                        {
+                            IsInFight = true;
+                            animView.IsMoving = false;
+                            break;
+                        }
                     case UnitStateType.Die:
                         {
+                            IsInFight = false;
                             animView.StartDead();
                         }
                         break;
