@@ -1,37 +1,21 @@
 ﻿namespace Code.GlobalGameState
 {
-    public class GameStateManager : IOnController, IOnStart
+    public partial class GameStateManager : IOnController, IOnStart
     {
-
-        private enum GameState
-        {
-            None   = 0,
-            Menu,
-            Peace,
-            Battle
-        }
-
-        private PeaceStateManager _peaceState;
-        private BattleStateManager _battleState;
+        private PeacePhaseConttoller _peacePhase;
+        private BattlePhaseController _battlePhase;
 
         private GameState _state;
         
-
-        public GameStateManager(PeaceStateManager peace, BattleStateManager battle)
+        public GameStateManager(PeacePhaseConttoller peacePhase, BattlePhaseController battlePhase)
         {
-            _peaceState = peace;
-            _battleState = battle;
+            _peacePhase = peacePhase;
+            _battlePhase = battlePhase;
         }
-
 
         public void OnStart()
         {
-            _battleState.StartPhase();
-        }
-        
-        
-        
-        
-        
+            _battlePhase.StartPhase();
+        }   
     }
 }

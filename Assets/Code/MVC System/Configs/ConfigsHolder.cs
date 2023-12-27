@@ -1,6 +1,5 @@
-using System.Collections.Generic;
-using BattleSystem.Buildings.Configs;
-using Code.UI;
+using BattleSystem.MainTower;
+using UI;
 using Izengard;
 using NewBuildingSystem;
 using SpawnSystem;
@@ -15,9 +14,8 @@ namespace Configs
         [field: SerializeField] public UIElementsConfig UIElementsConfig { get; set; }
         [field: SerializeField] public GameConfig GameConfig { get; set; }
         [field: SerializeField] public BuildingsSettings BuildingsSettings { get; set; }
-        [field: SerializeField] public SpawnSettings EnemySpawnSettings { get; private set; }
-        [field: SerializeField] public SpawnSettings DefendersSpawnSettings { get; private set; }
-        [field: SerializeField] public WarBuildingConfig MainTowerSettings { get; private set; }
-        [field: SerializeField] public BattleSystemConstants BattleSystemConst { get; private set; }
+        [field: SerializeField] public WaveSettings EnemyWaveSettings { get; set; }
+        [field: SerializeField] public MainTowerConfig MainTowerSettings { get; private set; }
+        [field: SerializeField] public BattleSystemData BattleSystemConst { get; private set; }
     }
 }

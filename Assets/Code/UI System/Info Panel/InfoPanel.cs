@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Code.UI
+namespace UI
 {
     public class InfoPanel : MonoBehaviour
     {

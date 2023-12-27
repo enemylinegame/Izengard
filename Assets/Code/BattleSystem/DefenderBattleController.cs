@@ -1,260 +1,211 @@
-﻿using System;
-using System.Collections.Generic;
 using Abstraction;
-using UnityEngine;
+using BattleSystem.MainTower;
+using Configs;
 using UnitSystem;
 using UnitSystem.Enum;
-using UnitSystem.Model;
+using UnityEngine;
+
 
 namespace BattleSystem
 {
     public class DefenderBattleController : BaseBattleController
     {        
-        private class UnitData
+        public DefenderBattleController(
+            BattleSystemData data, 
+            TargetFinder targetFinder, 
+            UnitsContainer unitsContainer, 
+            MainTowerController mainTower) : base(data, targetFinder, unitsContainer, mainTower)
         {
-            public readonly UnitAttackerModel AttackerModel;
-            public readonly IUnit Unit;
-            public Vector3 DefendPosition;
-            public bool HaveDefendPosition;
+        }
 
-            public UnitData(IUnit unit)
+        protected override void MainTowerDestroyed()
+        {
+            for (int i = 0; i < unitsContainer.DefenderUnits.Count; i++)
             {
-                Unit = unit;
-                AttackerModel = new UnitAttackerModel(unit);
+                var unit = unitsContainer.DefenderUnits[i];
+
+                unit.Stop();
+                unit.ChangeState(UnitStateType.None);
             }
         }
-        
-        private class TargetData : IAttackTarget
-        {
-            public IUnit Unit;
 
-            public bool IsAlive => Unit.IsAlive;
-            
-            public void TakeDamage(IDamage damage)
+        protected override void ExecuteOnUpdate(float deltaTime)
+        {
+            for (int i = 0; i < unitsContainer.DefenderUnits.Count; i++)
             {
-                Unit.TakeDamage(damage);
-            }
+                var unit = unitsContainer.DefenderUnits[i];
 
-            public int Id => 0;
-            public Vector3 Position => Unit.View.SelfTransform.position;
-        }
-
-        private const float MAX_DEFEND_POSITION_ERROR_SQR = 0.1f * 0.1f;
-
-        private List<UnitData> _defenders = new();
-        private List<TargetData> _enemies = new();
-
-
-        public DefenderBattleController(TargetFinder targetFinder) 
-            : base(targetFinder)
-        {
-            
-        }
-
-        public override void OnUpdate(float deltaTime)
-        {
-            for (int i = 0; i < _defenders.Count; i++)
-            {
-                UnitData currentUnit = _defenders[i];
-                UnitState state = currentUnit.Unit.UnitState.CurrentState;
-                switch (state)
+                switch (unit.State.Current)
                 {
-                    case UnitState.None:
-                        break;
-                    case UnitState.Idle:
-                        ExecuteIdleState(currentUnit, deltaTime);
-                        break;
-                    case UnitState.Move:
-                        ExecuteMoveState(currentUnit, deltaTime);
-                        break;
-                    case UnitState.Search:
-                        break;
-                    case UnitState.Attack:
-                        ExecuteAttackState(currentUnit, deltaTime);
-                        break;
-                    case UnitState.Die:
-                        break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        break;
+
+                    case UnitStateType.Idle:
+                        {
+                            UnitIdleState(unit, deltaTime);
+                            break;
+                        }
+                    case UnitStateType.Move:
+                        {
+                            UnitMoveState(unit, deltaTime);
+                            break;
+                        }
+                    case UnitStateType.Attack:
+                        {
+                            UnitAttackState(unit, deltaTime);
+                            break;
+                        }
+                    case UnitStateType.Die:
+                        {
+                            UnitDeadState(unit, deltaTime);
+                            break;
+                        }
                 }
             }
         }
 
-        public override void OnFixedUpdate(float fixedDeltaTime)
+        protected override void UpdateTargetExistance(ITarget target)
         {
-            
-        }
+            var linkedUnits
+                = unitsContainer.DefenderUnits.FindAll(e => e.Target.CurrentTarget.Id == target.Id);
 
-        public override void AddUnit(IUnit unit)
-        {
-            if (unit != null)
+            if (linkedUnits == null)
+                return;
+
+            for (int i = 0; i < linkedUnits.Count; i++)
             {
-                if (unit.Stats.Faction == UnitFactionType.Defender)
-                {
-                    if (!_defenders.Exists(unitData => unitData.Unit == unit))
-                    {
-                        _defenders.Add( new UnitData(unit));
-                        unit.Enable();
-                        unit.Navigation.Enable();
-                        unit.OnReachedZeroHealth += UnitReachedZeroHealth;
-                        Debug.Log("DefenderBattleController->AddUnit: " + unit.View.SelfTransform.gameObject.name + 
-                                  " UnitState = " + unit.UnitState.CurrentState.ToString());
-                    }
-                }
-                else if (unit.Stats.Faction == UnitFactionType.Enemy)
-                {
-                    if (!_enemies.Exists(data => data.Unit == unit))
-                    {
-                        _enemies.Add( new TargetData() {Unit = unit} );
-                        unit.OnReachedZeroHealth += UnitReachedZeroHealth;
-                    }
-                }
+                var unit = linkedUnits[i];
 
+                unit.Target.ResetTarget();
+
+                unit.IsInFight = false;
+
+                unit.ChangeState(UnitStateType.Idle);
             }
         }
 
-        private void ExecuteIdleState(UnitData unit, float deltaTime)
+        protected override void UnitIdleState(IUnit unit, float deltaTime)
         {
-            // IAttackTarget foundTarget = targetFinder.GetClosestUnit(unit.Unit);
-            // if (foundTarget is not NoneTarget)
-            // {
-            //     //IUnit target = GetUnitByView(foundTarget);
-            //
-            //     if (foundTarget.Id > 0)
-            //     {
-            //         unit.Unit.Target.SetTarget(foundTarget);
-            //
-            //         TargetData target = _enemies.Find(u => u.Unit.Id == foundTarget.Id);
-            //         unit.AttackerModel.SetTarget(target);
-            //         ChangeState(unit, UnitState.Move);
-            //     }
-            //     
-            // }
-        }
+            var target = targetFinder.GetTarget(unit);
 
-        private void ExecuteMoveState(UnitData unitData, float deltaTime)
-        {
-            IAttackTarget target = unitData.Unit.Target.CurrentTarget;
-            IUnit defender = unitData.Unit;
             if (target is not NoneTarget)
             {
-                Vector3 currentTargetPosition = target.Position;
-                float maxAttackRange = defender.Offence.MaxRange;
+                unit.Target.SetTarget(target);
                 
-                if ( (defender.GetPosition() - currentTargetPosition).sqrMagnitude <= maxAttackRange * maxAttackRange )
+                unit.ChangeState(UnitStateType.Move);
+
+                unit.MoveTo(target.Position);
+            }
+            else 
+            {
+                if (!CheckIsOnDestinationPosition(unit))
                 {
-                    defender.Navigation.Stop();
-                    ChangeState(unitData, UnitState.Attack);
+                    unit.ChangeState(UnitStateType.Move);
+                    unit.MoveTo(unit.StartPosition);
+                }
+            }
+
+        }
+
+        protected override void UnitMoveState(IUnit unit, float deltaTime)
+        {
+            var target = unit.Target.CurrentTarget;
+
+            if (target is not NoneTarget)
+            {
+                float distanceSqr = (unit.GetPosition() - target.Position).sqrMagnitude;
+                if (distanceSqr <= unit.Offence.MaxRange * unit.Offence.MaxRange)
+                {
+                    unit.Stop();
+                    unit.ChangeState(UnitStateType.Attack);
                 }
                 else
                 {
-                    defender.Navigation.MoveTo(currentTargetPosition);
+                    if (unit.Target.IsTargetChangePosition())
+                    {
+                        unit.MoveTo(target.Position);
+                    }
+                }
+            }
+            else 
+            {
+                if (CheckIsOnDestinationPosition(unit))
+                {
+                    unit.ChangeState(UnitStateType.Idle);
+                    unit.Stop();
+                }
+            }
+        }
+
+
+        protected override void UnitAttackState(IUnit unit, float deltaTime)
+        {
+            IAttackTarget target = unit.Target.CurrentTarget;
+            
+            if (target is not NoneTarget) 
+            {
+                if (IsAttackDistanceSuitable(unit))
+                {
+                    switch (unit.State.CurrentAttackPhase)
+                    {
+                        default:
+                            break;
+
+                        case AttackPhase.None:
+                            unit.TimeProgress = deltaTime;
+                            unit.State.CurrentAttackPhase = AttackPhase.Cast;
+
+                            var dir = unit.Target.CurrentTarget.Position - unit.GetPosition();
+                            unit.SetRotation(dir);
+
+                            break;
+                        case AttackPhase.Cast:
+                            unit.TimeProgress += deltaTime;
+                            if (unit.TimeProgress >= unit.Offence.CastingTime)
+                            {
+
+                                target.TakeDamage(unit.Offence.GetDamage());
+                                unit.State.CurrentAttackPhase = AttackPhase.None;
+                                unit.TimeProgress = 0.0f;
+
+                                StartAttackAnimation(unit);
+                                //StartTakeDamageAnimation(unitTarget);
+                            }
+
+                            break;
+                        case AttackPhase.Attack: 
+                            {
+                                Debug.Log($"Unit - {unit.Stats.Faction} in Attack phase");
+                                break;
+                            }
+                    }
+                }
+                else
+                {
+                    unit.State.CurrentAttackPhase = AttackPhase.None;
+                    unit.ChangeState(UnitStateType.Move);
                 }
 
             }
             else
             {
-                if (unitData.HaveDefendPosition)
-                {
-                    if ((defender.GetPosition() - unitData.DefendPosition).sqrMagnitude <=
-                        MAX_DEFEND_POSITION_ERROR_SQR)
-                    {
-                        ChangeState(unitData, UnitState.Idle);
-                    }
-                }
-                else
-                {
-                    ChangeState(unitData, UnitState.Idle);
-                }
+                unit.Target.ResetTarget();
+                unit.ChangeState(UnitStateType.Idle);
             }
         }
-        
-        private void ExecuteAttackState(UnitData unit, float deltaTime)
-        {
 
+        protected override void UnitDeadState(IUnit unit, float deltaTime)
+        {
+            base.UnitDeadState(unit, deltaTime);
         }
 
-        // private IUnit GetUnitByView(BaseUnitView targetView)
-        // {
-        //     IUnit target = null;
-        //     IUnitView view = targetView;
-        //
-        //     if (targetView != null)
-        //     {
-        //         for (int i = 0; i < _enemies.Count; i++)
-        //         {
-        //             IUnitView current = _enemies[i].View;
-        //             if ( current == view)
-        //             {
-        //                 target = _enemies[i];
-        //                 break;
-        //             }
-        //         }
-        //     }
-        //
-        //     return target;
-        // }
-
-        public void SetDefendPosition(IUnit unit, Vector3 position)
+        private void StartAttackAnimation(IUnit unit)
         {
-            UnitData data = _defenders.Find(unitData => unitData.Unit == unit);
-            if (data != null)
+            IUnitAnimationView animView = unit.View.UnitAnimation;
+            if (animView != null)
             {
-                data.DefendPosition = position;
-                data.HaveDefendPosition = true;
+                animView.StartCast();
             }
         }
-
-        private void ChangeState(UnitData unit, UnitState newState)
-        {
-            if (unit.Unit.UnitState.CurrentState != newState)
-            {
-                Debug.Log("DefenderBattleController->ChangeState: " + unit.Unit.View.SelfTransform.gameObject.name +  
-                    " newState = " + newState.ToString() );
-                unit.Unit.UnitState.ChangeState(newState);
-                if (newState == UnitState.Move && 
-                    unit.Unit.Target.CurrentTarget is NoneTarget && 
-                    unit.HaveDefendPosition) 
-                {
-                    unit.Unit.Navigation.MoveTo(unit.DefendPosition);
-                }
-            }
-        }
-
-        private void UnitReachedZeroHealth(IUnit unit)
-        {
-            RemoveUnit(unit);
-        }
-
-        public void RemoveUnit(IUnit unit)
-        {
-            unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
-            if (unit.Stats.Faction == UnitFactionType.Defender)
-            {
-                UnitData unitData = _defenders.Find(u => u.Unit == unit);
-                if (unitData != null)
-                {
-                    //unit.Navigation.Stop();
-                    unit.Target.ResetTarget();
-                    unit.Disable();
-                    _defenders.Remove(unitData);
-                    //Debug.Log("DefenderBattleController->RemoveUnit: " + unit.View.SelfTransform.gameObject.name);
-                }
-            }
-            else if (unit.Stats.Faction == UnitFactionType.Enemy)
-            {
-                _defenders.ForEach(defenderUnitData =>
-                {
-                    if ( defenderUnitData.Unit.Target.CurrentTarget.Id  == unit.Id)
-                    {
-                        defenderUnitData.Unit.Target.ResetTarget();
-                    }
-                });
-                
-                int index = _enemies.FindIndex(data=> data.Unit == unit);
-                _enemies.RemoveAt(index);
-            }
-        }
-        
     }
 }

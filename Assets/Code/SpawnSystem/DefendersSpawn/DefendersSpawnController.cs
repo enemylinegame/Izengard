@@ -1,74 +1,85 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-
-using Abstraction;
-using EnemySystem;
 using UnitSystem;
 using UnitSystem.Data;
 using UnitSystem.Enum;
-using UnitSystem.Model;
 
-
-namespace BattleSystem
+namespace SpawnSystem
 {
-    public class DefendersSpawnController
+    public class DefendersSpawnController : ISpawnController
     {
+        private readonly SpawnerView _spawner;
+        private readonly IUnitsContainer _unitsContainer;
+        private readonly List<UnitCreationData> _unitCreationDataList;
 
-        private readonly IIdGenerator _idGenerator;
-        
-        private List<UnitCreationData> _unitCreationDataList;
-        private List<Vector3> _spawnPositions;
-
-        public event Action<IUnit> OnUnitSpawned;
+        private readonly UnitViewPool _viewPool;
 
         private int _nextSpawnPositionsIndex;
 
-        
-        public DefendersSpawnController(List<UnitCreationData> unitCreationsDataList, List<Vector3> spawnPositions,
-            IIdGenerator idGenerator)
+        public event Action<IUnit> OnUnitSpawned;
+
+        public DefendersSpawnController(SpawnerView spawner, IUnitsContainer unitsContainer)
         {
-            _unitCreationDataList = unitCreationsDataList;
-            _spawnPositions = spawnPositions;
+            _spawner = spawner;
+            _unitsContainer = unitsContainer;
+
+            _unitCreationDataList = _spawner.SpawnSettings.UnitsCreationData;
+
+            _viewPool = new UnitViewPool(spawner.PoolHolder, _unitCreationDataList);
+
             _nextSpawnPositionsIndex = 0;
-            _idGenerator = idGenerator;
+
+            _unitsContainer.OnUnitRemoved += DespawnUnit;
         }
 
-        public void SpawnUnit(UnitType unitType)
+        public void SpawnUnit(IUnitData unitData)
         {
-            UnitCreationData creationData =
-                _unitCreationDataList.Find(ucd => ucd.UnitSettings.StatsData.Type == unitType);
-            if (creationData == null) return;
+            var unitView = _viewPool.GetFromPool(unitData.Type);
 
-            GameObject prefab = creationData.UnitPrefab;
-            GameObject instance = GameObject.Instantiate(prefab);
-            int id = _idGenerator.GetNext();
-            instance.name = unitType.ToString() + "_" + id.ToString(); 
-            IUnitView view = instance.GetComponent<IUnitView>();
+            var unit = new UnitHandler(unitView, unitData);
 
-            var unitStats = new UnitStatsModel(creationData.UnitSettings.StatsData);
-            var unitDefence = new UnitDefenceModel(creationData.UnitSettings.DefenceData);
-            var unitOffence = new UnitOffenceModel(creationData.UnitSettings.OffenceData);
-            var navigation = new EnemyNavigationModel(view.UnitNavigation, view.SelfTransform.position);
-            var priorities = new UnitPriorityModel(creationData.UnitSettings.UnitPriorities);
-            var unitHandler = 
-                new UnitHandler(id, view, unitStats, unitDefence, unitOffence, navigation, priorities);
-            
-            unitHandler.SetStartPosition(SelectSpawnPosition());
-            
-            OnUnitSpawned?.Invoke(unitHandler);
+            unit.SetStartPosition(SelectSpawnPosition());
+
+            _unitsContainer.AddUnit(unit);
+            OnUnitSpawned?.Invoke(unit);
+        }
+
+        public void SpawnUnit(UnitType type)
+        {
+            var unitView = _viewPool.GetFromPool(type);
+
+            var unitData
+                = _unitCreationDataList.Find(ucd => ucd.Type == type).UnitSettings;
+
+            var unit = new UnitHandler(unitView, unitData);
+
+            unit.SetStartPosition(SelectSpawnPosition());
+
+            _unitsContainer.AddUnit(unit);
+            OnUnitSpawned?.Invoke(unit);
         }
 
         private Vector3 SelectSpawnPosition()
         {
-            if (_nextSpawnPositionsIndex >= _spawnPositions.Count)
+            if (_nextSpawnPositionsIndex >= _spawner.SpawnPoints.Count)
             {
                 _nextSpawnPositionsIndex = 0;
             }
 
-            Vector3 spawnPosition = _spawnPositions[_nextSpawnPositionsIndex];
+            Vector3 spawnPosition 
+                = _spawner.SpawnPoints[_nextSpawnPositionsIndex].position;
+            
             _nextSpawnPositionsIndex++;
             return spawnPosition;
+        }
+
+        public void DespawnUnit(IUnit unit)
+        {
+            if (unit.Stats.Faction != UnitFactionType.Defender)
+                return;
+
+            _viewPool.ReturnToPool(unit.View);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Code.UI;
+using UI;
 using UnityEngine;
 using UserInputSystem;
 using Object = UnityEngine.Object;

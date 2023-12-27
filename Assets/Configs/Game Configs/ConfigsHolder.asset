@@ -16,7 +16,6 @@ MonoBehaviour:
   <UIElementsConfig>k__BackingField: {fileID: 11400000, guid: 377bfbcff70c51842917b6316875a2fe, type: 2}
   <GameConfig>k__BackingField: {fileID: 11400000, guid: 20d3170ef349c654b937b8321c00b600, type: 2}
   <BuildingsSettings>k__BackingField: {fileID: 11400000, guid: fad81096ca26b3046b90e2fc57db4a17, type: 2}
-  <EnemySpawnSettings>k__BackingField: {fileID: 11400000, guid: b526b66d7bbebbb4ca21a33cd981d162, type: 2}
-  <DefendersSpawnSettings>k__BackingField: {fileID: 11400000, guid: 4adfce0bea1ba074f9cae3a049a55818, type: 2}
-  <MainTowerSettings>k__BackingField: {fileID: 0}
+  <EnemyWaveSettings>k__BackingField: {fileID: 11400000, guid: dfcbe4ef25efae242907bc033371ac4b, type: 2}
+  <MainTowerSettings>k__BackingField: {fileID: 11400000, guid: 641eae55f537fb84b87d02a60107a2f2, type: 2}
   <BattleSystemConst>k__BackingField: {fileID: 11400000, guid: b3db18a81090ca741bc2a9eb72a85453, type: 2}

@@ -1,6 +1,6 @@
 using ResourceSystem;
 
-namespace Code.UI
+namespace UI
 {
     public class ResPanelController
     {

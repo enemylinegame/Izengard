@@ -1,54 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
-using Abstraction;
-using EnemySystem;
-using Tools;
 using UnitSystem;
+using UnitSystem.Data;
 using UnitSystem.Enum;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace SpawnSystem
 {
-    public class EnemySpawnController : IOnController, IOnUpdate
+    public class EnemySpawnController : ISpawnController
     {
         private readonly SpawnerView _spawner;
-        private readonly EnemyPool _pool;
+        private readonly IUnitsContainer _unitsContainer;
+        private readonly List<UnitCreationData> _unitCreationDataList;
 
-        private readonly List<Transform> _spawnPoints = new List<Transform>();
-        
-        private TimeRemaining _timer;
-        private bool _isTiming;
+        private readonly UnitViewPool _viewPool;
 
         public event Action<IUnit> OnUnitSpawned;
 
-        public EnemySpawnController(SpawnerView spawner, IIdGenerator idGenerator)
+        public EnemySpawnController(SpawnerView spawner, IUnitsContainer unitsContainer)
         {
             _spawner = spawner;
+            _unitsContainer = unitsContainer;
 
-            var unitsCreationData = _spawner.SpawnSettings.UnitsCreationData;
+            _unitCreationDataList = _spawner.SpawnSettings.UnitsCreationData;
 
-            var factory = new EnemyUnitFactory(unitsCreationData, idGenerator);
-            
-            _pool = new EnemyPool(spawner.PoolHolder, factory, unitsCreationData);
+            _viewPool = new UnitViewPool(spawner.PoolHolder, _unitCreationDataList);
+
+            _unitsContainer.OnUnitRemoved += DespawnUnit;
         }
 
-        public void SpawnUnit(UnitType unitType)
+        public void SpawnUnit(IUnitData unitData)
         {
-            var unit = _pool.GetFromPool(unitType);
+            var unitView = _viewPool.GetFromPool(unitData.Type);
+
+            var unit = new UnitHandler(unitView, unitData);
 
             var spawnIndex = Random.Range(0, _spawner.SpawnPoints.Count);
             var spawnPosition = _spawner.SpawnPoints[spawnIndex].position;
 
             unit.SetStartPosition(spawnPosition);
 
+            _unitsContainer.AddUnit(unit);
+
             OnUnitSpawned?.Invoke(unit);
         }
 
-
-        public void OnUpdate(float deltaTime)
+        public void SpawnUnit(UnitType type)
         {
+            var unitView = _viewPool.GetFromPool(type);
 
+            var unitData 
+                = _unitCreationDataList.Find(ucd => ucd.Type == type).UnitSettings;
+
+            var unit = new UnitHandler(unitView, unitData);
+
+            var spawnIndex = Random.Range(0, _spawner.SpawnPoints.Count);
+            var spawnPosition = _spawner.SpawnPoints[spawnIndex].position;
+
+            unit.SetStartPosition(spawnPosition);
+
+            _unitsContainer.AddUnit(unit);
+
+            OnUnitSpawned?.Invoke(unit);
+        }
+
+        public void DespawnUnit(IUnit unit)
+        {
+            if (unit.Stats.Faction != UnitFactionType.Enemy)
+                return;
+
+            _viewPool.ReturnToPool(unit.View);
         }
     }
 }

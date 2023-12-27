@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Code.UI
+namespace UI
 {
     public class FunctionPanel : MonoBehaviour
     {
