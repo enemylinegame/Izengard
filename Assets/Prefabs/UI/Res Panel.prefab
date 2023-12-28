@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3522359963687103421}
   - component: {fileID: 3522359963687103423}
   - component: {fileID: 3522359963687103420}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Res Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,7 +87,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3522359964718521905}
   - component: {fileID: 3522359964718521904}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}

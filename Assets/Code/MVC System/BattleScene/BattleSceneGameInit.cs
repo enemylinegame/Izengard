@@ -75,10 +75,11 @@ namespace Code.MVC_System
             
             var gameStateManager = new GameStateManager(peaceStateManager, battleStateManager);
 
-            var MapController = new MapController(map, configs.GameConfig);
+            var MapController = new MapController(map, configs.GameConfig.BattleStageMapSize);
 
             controller.Add(timeRemainingService);
             controller.Add(unitsContainer);
+            controller.Add(rayCastController);
 
             controller.Add(spawnerCreationController);
             controller.Add(enemySpawner);

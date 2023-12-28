@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5675874369190241426}
   - component: {fileID: 5675874369190241429}
   - component: {fileID: 5046082492381700235}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Building Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8698648326699602506}
   - component: {fileID: 3777885969909427882}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BuildingHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,7 +170,7 @@ GameObject:
   - component: {fileID: 1641492262932429540}
   - component: {fileID: 3641629749524015312}
   - component: {fileID: 3401514384650690775}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Open Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -291,7 +291,7 @@ GameObject:
   - component: {fileID: 8540326646332778411}
   - component: {fileID: 819915742840764713}
   - component: {fileID: 8733029030947723664}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Close Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 
 namespace UserInputSystem
 {
-    public class RayCastController
+    public class RayCastController : IOnController, IOnUpdate
     {
         public event Action<String> LeftClick;
         public event Action<String> RightClick;
@@ -21,6 +21,8 @@ namespace UserInputSystem
         private LayerMask _groundMask;
         private InputAction _pointerPosition;
         private EventSystem _eventSystem;
+
+        private bool _pointerOverUI;
 
         public RayCastController(UserInput input, GameConfig gameConfig)
         {
@@ -39,10 +41,10 @@ namespace UserInputSystem
 
         private void Click(InputAction.CallbackContext context, bool isClick)
         {
+            if (_pointerOverUI) return;
+
             var screenPosition = _pointerPosition.ReadValue<Vector2>();
             var ray = _camera.ScreenPointToRay(screenPosition);
-
-            if (_eventSystem.IsPointerOverGameObject()) return;
 
             if (Physics.Raycast(ray, out var hit, 100, _groundMask))
             {
@@ -63,7 +65,7 @@ namespace UserInputSystem
             }
         }
 
-        public bool IsPointerOverUI() => _eventSystem.IsPointerOverGameObject();
+        public bool IsPointerOverUI() => _pointerOverUI;
 
         private void GetSelectedMapPosition(InputAction.CallbackContext context)
         {
@@ -72,6 +74,11 @@ namespace UserInputSystem
             var ray = _camera.ScreenPointToRay(mousePos);
             if (Physics.Raycast(ray, out var hit, 100, _groundMask))
                 MousePosition?.Invoke(hit.point);
+        }
+
+        public void OnUpdate(float deltaTime)
+        {
+            _pointerOverUI = _eventSystem.IsPointerOverGameObject();
         }
     }
 }

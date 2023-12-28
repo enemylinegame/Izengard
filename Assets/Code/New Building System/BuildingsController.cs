@@ -49,6 +49,9 @@ namespace NewBuildingSystem
 
         private void SelectedBuild(string ID)
         {
+            if (_currentBuilding == null)
+                return;
+
             if (_currentBuilding.BuildingsType == EnumBuildings.Res)
             {
                 _currentBuilding.OnResources -= SearchRes;
