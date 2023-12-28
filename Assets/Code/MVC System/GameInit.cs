@@ -19,7 +19,7 @@ public class GameInit
         var rayCastController = new RayCastController(_userInput, configs.GameConfig);
         var buildingFactory = new BuildingsFactory(configs.BuildingsSettings, rayCastController, configs.ObjectsHolder, plane, grid, 
             buildings, UIPanelInit);
-        var MapController = new MapController(map, configs.GameConfig);
+        var MapController = new MapController(map, configs.GameConfig.BuildingStageMapSize);
 
         controller.Add(rayCastController);
     }
