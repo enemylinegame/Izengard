@@ -79,6 +79,7 @@ namespace Code.MVC_System
 
             controller.Add(timeRemainingService);
             controller.Add(unitsContainer);
+            controller.Add(rayCastController);
 
             controller.Add(spawnerCreationController);
             controller.Add(enemySpawner);
