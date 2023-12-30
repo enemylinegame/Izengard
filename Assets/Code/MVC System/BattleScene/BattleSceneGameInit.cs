@@ -35,36 +35,34 @@ namespace Code.MVC_System
             var timeRemainingService = new TimeRemainingController();
             var navigationUpdater = new NavigationUpdater();
             navigationUpdater.AddNavigationSurface(sceneObjectsHolder.GroundSurface);
-                       
+
+            var rayCastController = new RayCastController(_userInput, configs.GameConfig);
+
+            var battleUIController = new BattleUIController(sceneObjectsHolder.BattleUI);
+
             var mainTower 
                 = new MainTowerController(sceneObjectsHolder.MainTower, configs.MainTowerSettings);
 
             var unitsContainer = new UnitsContainer(configs.BattleSystemConst);
             var targetFinder = new TargetFinder(mainTower, unitsContainer);
 
+            var spawnerCreationController
+                = new SpawnCreationController(
+                    sceneObjectsHolder, spawnerPrefab, 
+                    rayCastController, 
+                    configs.ObjectsHolder, 
+                    plane, grid);
+
             var enemySpawner 
-                = new EnemySpawnController(sceneObjectsHolder.EnemySpawner, unitsContainer);
+                = new EnemySpawnController(sceneObjectsHolder.EnemySpawner, spawnerCreationController, unitsContainer);
             var defendersSpawner 
-                = new DefendersSpawnController(sceneObjectsHolder.DefendersSpawner, unitsContainer);
+                = new DefendersSpawnController(sceneObjectsHolder.DefendersSpawner, spawnerCreationController, unitsContainer);
             
             var enemyBattleController 
                 = new EnemyBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, mainTower, enemySpawner);
             var defenderBattleController 
                 = new DefenderBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, mainTower);
             
-            var rayCastController = new RayCastController(_userInput, configs.GameConfig);
-
-            var battleUIController = new BattleUIController(sceneObjectsHolder.BattleUI);
-
-            var spawnerCreationController
-                = new SpawnCreationController(
-                    sceneObjectsHolder.BattleUI.SpawnPanel,
-                    sceneObjectsHolder.BattleUI.SpawnerTypeSelection,
-                    spawnerPrefab,
-                    rayCastController,
-                    configs.ObjectsHolder,
-                    plane, grid);
-
             var enemySpawnHandler 
                 = new EnemySpawnHandler(enemySpawner, configs.EnemyWaveSettings, battleUIController);
             var defendersSpawnHandler

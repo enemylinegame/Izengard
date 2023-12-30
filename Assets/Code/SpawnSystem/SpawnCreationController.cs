@@ -1,5 +1,7 @@
-﻿using Configs;
+﻿using Code.SceneConfigs;
+using Configs;
 using NewBuildingSystem;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UI;
@@ -17,6 +19,10 @@ namespace SpawnSystem
 
         private readonly SpawnPanelUI _spawnUI;
         private readonly SpawnerTypeSelectionPanel _typeSelectionPanel;
+
+        private readonly SpawnerView _enemySpawners;
+        private readonly SpawnerView _defenderSpawners;
+
         private readonly GameObject _spawnerPrefab;
         private readonly RayCastController _rayCastController;
         private readonly Material _previewMaterial;
@@ -32,9 +38,11 @@ namespace SpawnSystem
 
         private int _spawnerCount;
 
+        public event Action<Spawner> OnSpawnerCreated;
+        public event Action<Spawner> OnSpawnerRemoved;
+
         public SpawnCreationController(
-            SpawnPanelUI spawnUI,
-            SpawnerTypeSelectionPanel typeSelectionPanel,
+            SceneObjectsHolder sceneObjects,
             GameObject spawnerPrefab,
             RayCastController rayCastController,
             ObjectsHolder objects,
@@ -43,8 +51,12 @@ namespace SpawnSystem
         {
             _checkForBorders = new CheckForBorders(plane);
 
-            _spawnUI = spawnUI;
-            _typeSelectionPanel = typeSelectionPanel;
+            _spawnUI = sceneObjects.BattleUI.SpawnPanel;
+            _typeSelectionPanel = sceneObjects.BattleUI.SpawnerTypeSelection;
+
+            _enemySpawners = sceneObjects.EnemySpawner;
+            _defenderSpawners = sceneObjects.DefendersSpawner;
+
             _spawnerPrefab = spawnerPrefab;
 
             _rayCastController = rayCastController;
@@ -136,6 +148,8 @@ namespace SpawnSystem
             spawner.PositionBuild.position = new Vector3(sizeX, 0, sizeY);
             spawner.Collider.center = new Vector3(sizeX, .2f, sizeY);
             spawner.Collider.size = new Vector3(size.x - .5f, .2f, size.y - .5f);
+
+            spawner.SpawnLocation.position = new Vector3(sizeX, 0, sizeY);
         }
 
         private void ChangeMaterial(Spawner spawner, bool mode = true)
@@ -172,16 +186,30 @@ namespace SpawnSystem
         {
             _typeSelectionPanel.Disable();
 
+            _plane.SetActive(false);
+
             ChangeMaterial(_buildingSpawner, false);
 
             _createdSpawnersCollection.Add(_buildingSpawner);
             _spawnUI.AddHUD(_buildingSpawner.ID, faction);
 
+            _buildingSpawner.SetFaction(faction);
+
+            switch (faction)
+            {
+                case UnitFactionType.Enemy:
+                    _buildingSpawner.ObjectBuild.transform.SetParent(_enemySpawners.SpawnersContainer);
+                    break;
+                case UnitFactionType.Defender:
+                    _buildingSpawner.ObjectBuild.transform.SetParent(_defenderSpawners.SpawnersContainer);
+                    break;
+            }
+
+            OnSpawnerCreated?.Invoke(_buildingSpawner);
+
             _buildingSpawner.OnTriggered -= _checkForBorders.CheckPlaneForBuilding;
 
             _buildingSpawner = null;
-
-            _plane.SetActive(false);
         }
 
         private void RayCastControllerOnMousePosition(Vector3 vector3)
@@ -210,6 +238,8 @@ namespace SpawnSystem
             _spawnUI.RemoveHUD(_selectedSpawner.ID);
 
             _createdSpawnersCollection.Remove(_selectedSpawner);
+
+            OnSpawnerRemoved?.Invoke(_selectedSpawner);
 
             Object.Destroy(_selectedSpawner.ObjectBuild);
 
