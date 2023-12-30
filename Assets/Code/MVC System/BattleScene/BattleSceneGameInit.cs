@@ -43,7 +43,12 @@ namespace Code.MVC_System
             var mainTower 
                 = new MainTowerController(sceneObjectsHolder.MainTower, configs.MainTowerSettings);
 
-            var unitsContainer = new UnitsContainer(configs.BattleSystemConst);
+            var unitsContainer 
+                = new UnitsContainer(
+                    configs.BattleSystemConst, 
+                    sceneObjectsHolder.BattleUI.UnitStatsPanel, 
+                    rayCastController);
+            
             var targetFinder = new TargetFinder(mainTower, unitsContainer);
 
             var spawnerCreationController

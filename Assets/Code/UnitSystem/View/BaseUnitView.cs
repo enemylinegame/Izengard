@@ -1,14 +1,15 @@
 using Abstraction;
 using System;
 using UnitSystem.Enum;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace UnitSystem.View
 {
-    public abstract class BaseUnitView : MonoBehaviour, IUnitView
+    public abstract class BaseUnitView : BaseGameObject, IUnitView
     {
-        private int _id;
+        private string _id;
         private UnitType _type;
 
         protected Transform selfTransform;
@@ -16,7 +17,7 @@ namespace UnitSystem.View
         protected Collider unitCollider;
         protected IUnitAnimationView unitAnimation;
 
-        public int Id => _id;
+        public string Id => _id;
         public UnitType Type => _type;
 
         public Vector3 Position => selfTransform.position;
@@ -25,7 +26,7 @@ namespace UnitSystem.View
         public IUnitAnimationView UnitAnimation => unitAnimation;
  
         public event Action<IDamage> OnTakeDamage;
-
+      
         public virtual void Init(UnitType type)
         {
             _type = type;
@@ -36,7 +37,7 @@ namespace UnitSystem.View
 
         public void Hide() => 
             gameObject.SetActive(false);
-        
+
         public abstract void ChangeHealth(int hpValue);
         public abstract void ChangeSize(float sizeValue);
         public abstract void ChangeSpeed(float speedValue);
@@ -48,7 +49,7 @@ namespace UnitSystem.View
         
         private void Awake()
         {
-            _id = Math.Abs(gameObject.GetInstanceID());
+            _id = GUID.Generate().ToString();
 
             SetTransform();
             SetUnitNavigation();

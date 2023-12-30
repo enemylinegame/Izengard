@@ -5,7 +5,7 @@ namespace Abstraction
 {
     public class NoneTarget : IAttackTarget
     {
-        public int Id => -1;
+        public string Id { get; }
 
         public bool IsAlive => false;
 

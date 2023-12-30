@@ -2,18 +2,26 @@
 using Configs;
 using System;
 using System.Collections.Generic;
+using UI;
 using UnitSystem.Enum;
+using UserInputSystem;
 
 namespace UnitSystem
 {
     public class UnitsContainer : IUnitsContainer, IOnController, IOnUpdate
     {
         private readonly float unitsDestroyDelay;
+        private readonly UnitStatsPanel _unitStatsPanel;
+        private readonly RayCastController _rayCastController;
+
+        private List<IUnit> _createdUnits = new();
 
         private List<IUnit> _enemyUnits = new();
         private List<IUnit> _defenderUnits = new();
 
         private List<IUnit> toRemoveUnitsCollection = new();
+
+        private IUnit _selectedUnit;
 
         public List<IUnit> EnemyUnits => _enemyUnits;
         public List<IUnit> DefenderUnits => _defenderUnits;
@@ -29,9 +37,18 @@ namespace UnitSystem
 
         public event Action OnAllDefenderDestroyed;
  
-        public UnitsContainer(BattleSystemData data)
+        public UnitsContainer(
+            BattleSystemData data, 
+            UnitStatsPanel unitStatsPanel,
+            RayCastController rayCastController)
         {
             unitsDestroyDelay = data.UnitsDestroyDelay;
+            _unitStatsPanel = unitStatsPanel;
+
+            _rayCastController = rayCastController;
+
+            _rayCastController.LeftClick += SelectUnit;
+            _rayCastController.RightClick += RemoveSelection;
         }
 
         public void AddUnit(IUnit unit)
@@ -65,7 +82,7 @@ namespace UnitSystem
                     }
             }
 
-           
+            _createdUnits.Add(unit);
         }
 
         private void UnitReachedZeroHealth(IUnit unit)
@@ -102,7 +119,39 @@ namespace UnitSystem
 
             OnUnitDead?.Invoke(unit.View);
 
+            _createdUnits.Remove(unit);
+
             toRemoveUnitsCollection.Add(unit);
+        }
+
+        private void SelectUnit(string Id)
+        {
+            if (Id == null)
+                return;
+
+            if(_selectedUnit != null)
+            {
+                _unitStatsPanel.Dispose();
+            }
+
+            var unit = _createdUnits.Find(u => u.Id == Id);
+
+            if (unit == null)
+                return;
+
+            _selectedUnit = unit;
+
+            _unitStatsPanel.SetUnit(_selectedUnit);
+        }
+
+        public void RemoveSelection(string Id)
+        {
+            if (_selectedUnit != null)
+            {
+                _unitStatsPanel.Dispose();
+            }
+
+            _selectedUnit = null;
         }
 
         public void OnUpdate(float deltaTime)

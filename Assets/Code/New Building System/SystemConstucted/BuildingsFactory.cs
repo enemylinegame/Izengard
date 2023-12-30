@@ -113,7 +113,9 @@ namespace NewBuildingSystem
             }*/
             
             ChangeMaterial(false);
-            _flyingBuilding.ID = GUID.Generate().ToString();
+            
+            _flyingBuilding.Init(GUID.Generate().ToString());
+
             _buildings.Add(_flyingBuilding);
                 
             _flyingBuilding.OnTriggered -= _checkForBorders.CheckPlaneForBuilding;
@@ -163,7 +165,7 @@ namespace NewBuildingSystem
         {
             _plane.SetActive(true);
 
-            var build = _buildings.Find(x => ID == x.ID);
+            var build = _buildings.Find(x => ID == x.Id);
             if(build == null) return;
             
             var materials = build.BuildingRenderer.materials.ToList();

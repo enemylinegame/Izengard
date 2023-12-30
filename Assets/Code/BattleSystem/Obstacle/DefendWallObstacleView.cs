@@ -1,5 +1,6 @@
 ﻿using Abstraction;
 using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace BattleSystem.Obstacle
@@ -8,11 +9,11 @@ namespace BattleSystem.Obstacle
     {
         [SerializeField] private DefenWallConfig _config;
 
-        private int _id;
+        private string _id;
 
         public DefenWallConfig Config => _config;
 
-        public int Id => _id;
+        public string Id => _id;
 
         public Vector3 Position => transform.localPosition;
         
@@ -20,7 +21,7 @@ namespace BattleSystem.Obstacle
 
         private void Awake()
         {
-            _id = Math.Abs(gameObject.GetInstanceID());
+            _id = GUID.Generate().ToString();
         }
 
         public void Show()

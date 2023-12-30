@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Abstraction;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace NewBuildingSystem
 {
-    public class Building : MonoBehaviour
+    public class Building : BaseGameObject, ITarget
     {
         [Header("Colliders")]
         public BoxCollider Collider;
@@ -16,16 +17,25 @@ namespace NewBuildingSystem
         public GameObject ObjectBuild;
         
         [Space, Header("Info")] 
-        public string ID;
+        public string _id;
         public string Name;
         public Image Image;
         public EnumBuildings BuildingsType;
         public int CurrentCountWorkers;
         public int MaxCountWorkers;
         public Vector2Int Size;
+
+        public string Id => _id;
+        public Vector3 Position => transform.position;
+
         public event Action<bool, Building> OnTriggered; //TODO : 1 option
         public event Action<Building> OnResources;
         
+        public void Init(string buildingId)
+        {
+            _id = buildingId;
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Building"))

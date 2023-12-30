@@ -9,7 +9,7 @@ namespace UnitSystem
 {
     public class StubUnit : IUnit
     {
-        public int Id => -1;
+        public string Id { get; }
 
         public IUnitView View { get; private set; }
 

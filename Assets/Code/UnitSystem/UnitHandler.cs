@@ -17,7 +17,7 @@ namespace UnitSystem
         private readonly UnitTargetModel _unitTarget;
         private readonly UnitPriorityModel _priority;
 
-        private int _id;
+        private string _id;
         private Vector3 _startPosition;
 
         public IUnitView View => _view;
@@ -32,7 +32,7 @@ namespace UnitSystem
         public UnitTargetModel Target => _unitTarget;
         public UnitPriorityModel Priority => _priority;
 
-        public int Id => _id;
+        public string Id => _id;
 
         public Vector3 StartPosition => _startPosition;
         

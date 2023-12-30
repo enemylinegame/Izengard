@@ -1,14 +1,15 @@
 ﻿using Abstraction;
 using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace BattleSystem.MainTower
 {
     public class MainTowerView : MonoBehaviour, IAttackTarget
     {
-        [SerializeField] private int _id;
+        [SerializeField] private string _id;
 
-        public int Id => _id;
+        public string Id => _id;
 
         public Vector3 Position => transform.position;
         
@@ -16,7 +17,7 @@ namespace BattleSystem.MainTower
 
         private void Awake()
         {
-            _id = Math.Abs(gameObject.GetInstanceID());
+            _id = GUID.Generate().ToString();
         }
 
         public void Show()

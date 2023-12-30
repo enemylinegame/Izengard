@@ -20,7 +20,7 @@ namespace UnitSystem
         UnitStateModel State { get; }
         UnitPriorityModel Priority { get; }
 
-        int Id { get; }
+        string Id { get; }
 
         Vector3 StartPosition { get; }
         

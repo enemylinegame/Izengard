@@ -62,7 +62,7 @@ namespace NewBuildingSystem
             _buildingInfoPanel.ChangeUnitsCount(0, 0);
             _buildingInfoPanel.ActivationErrorPanel(false);
             
-            var build = _buildings.Find(x => ID == x.ID);
+            var build = _buildings.Find(x => ID == x.Id);
             if(build == null) return;
             _currentBuilding = build;
 

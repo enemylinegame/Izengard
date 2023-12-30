@@ -16,4 +16,4 @@ MonoBehaviour:
   <BattleStageMapSize>k__BackingField: {x: 20, y: 12}
   <MouseLayerMask>k__BackingField:
     serializedVersion: 2
-    m_Bits: 384
+    m_Bits: 896

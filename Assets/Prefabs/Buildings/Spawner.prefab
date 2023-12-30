@@ -167,7 +167,7 @@ MonoBehaviour:
   BuildingRenderer: {fileID: 5192074600210680312}
   PositionBuild: {fileID: 5192074600210680314}
   ObjectBuild: {fileID: 5192074600866563378}
-  ID: 
+  _id: 
   Name: 
   Image: {fileID: 0}
   BuildingsType: 0

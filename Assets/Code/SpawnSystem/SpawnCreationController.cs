@@ -82,7 +82,7 @@ namespace SpawnSystem
                 ChangeMaterial(_selectedSpawner, false);
             }
 
-            _selectedSpawner = _createdSpawnersCollection.Find(spw => spw.ID == spawnerId);
+            _selectedSpawner = _createdSpawnersCollection.Find(spw => spw.Id == spawnerId);
 
             ChangeMaterial(_selectedSpawner);
         }
@@ -101,7 +101,8 @@ namespace SpawnSystem
 
             var spawner = Object.Instantiate(_spawnerPrefab).GetComponent<Spawner>();
 
-            spawner.ID = GUID.Generate().ToString();
+            spawner.Init(GUID.Generate().ToString());
+
             spawner.BuildingsType = EnumBuildings.None;
             spawner.Name = $"Spawner[{_spawnerCount - 1}]";
             spawner.Size = new Vector2Int(1, 1);
@@ -191,7 +192,7 @@ namespace SpawnSystem
             ChangeMaterial(_buildingSpawner, false);
 
             _createdSpawnersCollection.Add(_buildingSpawner);
-            _spawnUI.AddHUD(_buildingSpawner.ID, faction);
+            _spawnUI.AddHUD(_buildingSpawner.Id, faction);
 
             _buildingSpawner.SetFaction(faction);
 
@@ -235,7 +236,7 @@ namespace SpawnSystem
 
             ChangeMaterial(_selectedSpawner, false);
 
-            _spawnUI.RemoveHUD(_selectedSpawner.ID);
+            _spawnUI.RemoveHUD(_selectedSpawner.Id);
 
             _createdSpawnersCollection.Remove(_selectedSpawner);
 
