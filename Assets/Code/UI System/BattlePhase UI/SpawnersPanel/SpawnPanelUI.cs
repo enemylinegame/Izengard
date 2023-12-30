@@ -1,5 +1,7 @@
 ﻿using DG.Tweening;
 using System;
+using System.Collections.Generic;
+using UnitSystem.Enum;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +20,11 @@ namespace UI
         private Button _removeSpawnerButton;
         [SerializeField]
         private Button _moveSpawnerButton;
+
+        [Space(10)]
+        [SerializeField]
+        private SpawnerTypeSelectionPanel _spawnerTypeSelectionPanel;
+
         [Space(20)]
         [SerializeField]
         private RectTransform _spawnGridPanel;
@@ -28,10 +35,58 @@ namespace UI
         public event Action OnRemoveSpawnerClick;
         public event Action OnMoveSpawnerClick;
 
-        public void AddHUD(int index) 
+        public SpawnerTypeSelectionPanel SpawnerTypeSelectionPanel => _spawnerTypeSelectionPanel;
+
+        public event Action<string> OnSpawnerSelectAction;
+
+        private List<SpawnerHUD> _spawnerHUDCollection = new();
+      
+        public void AddHUD(string spawnerId, UnitFactionType unitFaction) 
         {
             var hud = Instantiate(_spawnerHUD, _spawnGridPanel).GetComponent<SpawnerHUD>();
-            hud.Init(index);
+
+            string name = null;
+
+            switch (unitFaction)
+            {
+                case UnitFactionType.Enemy:
+                    {
+                        name = $"E";
+                        break;
+                    }
+                case UnitFactionType.Defender: 
+                    {
+                        name = $"D";                   
+                        break;
+                    }
+            }
+
+            hud.Init(spawnerId, name);
+
+            hud.OnSelectAction += SpawnerSelected;
+
+            _spawnerHUDCollection.Add(hud);
+        }
+
+        public void RemoveHUD(string spawnerId) 
+        {
+            var hud = _spawnerHUDCollection.Find(spw => spw.Id == spawnerId);
+            
+            if (hud == null)
+                return;
+            
+            hud.OnSelectAction -= SpawnerSelected;
+
+            hud.Deinit();
+
+            Destroy(hud.gameObject);
+
+            _spawnerHUDCollection.Remove(hud);
+        }
+
+        private void SpawnerSelected(string spawnerId)
+        {
+            OnSpawnerSelectAction?.Invoke(spawnerId);
         }
 
 

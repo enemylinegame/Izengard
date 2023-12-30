@@ -59,6 +59,7 @@ namespace Code.MVC_System
             var spawnerCreationController
                 = new SpawnCreationController(
                     sceneObjectsHolder.BattleUI.SpawnPanel,
+                    sceneObjectsHolder.BattleUI.SpawnerTypeSelection,
                     spawnerPrefab,
                     rayCastController,
                     configs.ObjectsHolder,

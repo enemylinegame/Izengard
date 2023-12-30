@@ -3,6 +3,7 @@ using NewBuildingSystem;
 using System.Collections.Generic;
 using System.Linq;
 using UI;
+using UnitSystem.Enum;
 using UnityEditor;
 using UnityEngine;
 using UserInputSystem;
@@ -15,13 +16,17 @@ namespace SpawnSystem
         private readonly CheckForBorders _checkForBorders;
 
         private readonly SpawnPanelUI _spawnUI;
+        private readonly SpawnerTypeSelectionPanel _typeSelectionPanel;
         private readonly GameObject _spawnerPrefab;
         private readonly RayCastController _rayCastController;
         private readonly Material _previewMaterial;
         private readonly GameObject _plane;
         private readonly Grid _grid;
 
+        private List<Spawner> _createdSpawnersCollection = new();
+
         private List<Material> _oldMaterials = new();
+        private Spawner _buildingSpawner;
         private Spawner _selectedSpawner;
         private Vector2Int _mousePos;
 
@@ -29,17 +34,19 @@ namespace SpawnSystem
 
         public SpawnCreationController(
             SpawnPanelUI spawnUI,
+            SpawnerTypeSelectionPanel typeSelectionPanel,
             GameObject spawnerPrefab,
             RayCastController rayCastController,
             ObjectsHolder objects,
-            GameObject plane, 
+            GameObject plane,
             Grid grid)
         {
             _checkForBorders = new CheckForBorders(plane);
 
             _spawnUI = spawnUI;
+            _typeSelectionPanel = typeSelectionPanel;
             _spawnerPrefab = spawnerPrefab;
-            
+
             _rayCastController = rayCastController;
 
             _previewMaterial = Object.Instantiate(objects.PreveiwMaterial);
@@ -47,35 +54,53 @@ namespace SpawnSystem
             _plane = plane;
             _grid = grid;
 
+            _spawnUI.OnSpawnerSelectAction += SelectSpawner;
             _spawnUI.OnCreateSpawnerClick += CreateSpawner;
+            _spawnUI.OnRemoveSpawnerClick += RemoveSpawner;
+
+            _typeSelectionPanel.Hide();
 
             _spawnerCount = 0;
         }
 
+        private void SelectSpawner(string spawnerId)
+        {
+            if (_selectedSpawner != null)
+            {
+                ChangeMaterial(_selectedSpawner, false);
+            }
+
+            _selectedSpawner = _createdSpawnersCollection.Find(spw => spw.ID == spawnerId);
+
+            ChangeMaterial(_selectedSpawner);
+        }
 
         private void CreateSpawner()
         {
             _plane.SetActive(true);
             _spawnerCount++;
 
-            CancelCurrentPlacement();
+            if (_selectedSpawner != null)
+            {
+                ChangeMaterial(_selectedSpawner, false);
+            }
 
-            _spawnUI.AddHUD(_spawnerCount);
+            CancelCurrentPlacement();
 
             var spawner = Object.Instantiate(_spawnerPrefab).GetComponent<Spawner>();
 
-            _selectedSpawner = spawner;
-            _selectedSpawner.BuildingsType = EnumBuildings.None;
-            _selectedSpawner.Name = $"Spawner[{_spawnerCount - 1}]";
-            _selectedSpawner.Size = new Vector2Int(1, 1);
+            spawner.ID = GUID.Generate().ToString();
+            spawner.BuildingsType = EnumBuildings.None;
+            spawner.Name = $"Spawner[{_spawnerCount - 1}]";
+            spawner.Size = new Vector2Int(1, 1);
 
-            InstallInCenterTile(_selectedSpawner);
+            _buildingSpawner = spawner;
 
-            _selectedSpawner.OnTriggered += _checkForBorders.CheckPlaneForBuilding;
+            InstallInCenterTile(_buildingSpawner);
+            ChangeMaterial(_buildingSpawner);
 
-            _selectedSpawner.ObjectBuild.transform.position = _plane.transform.position;
-
-            ChangeMaterial(_selectedSpawner);
+            _buildingSpawner.OnTriggered += _checkForBorders.CheckPlaneForBuilding;
+            _buildingSpawner.ObjectBuild.transform.position = _plane.transform.position;
 
             _rayCastController.LeftClick += PlaceSpawner;
             _rayCastController.MousePosition += RayCastControllerOnMousePosition;
@@ -84,17 +109,20 @@ namespace SpawnSystem
 
         private void CancelCurrentPlacement()
         {
-            if (_selectedSpawner == null) return;
-            
-            ChangeMaterial(_selectedSpawner, false);
+            if (_buildingSpawner == null) return;
 
-            _selectedSpawner.OnTriggered -= _checkForBorders.CheckPlaneForBuilding;
+            ChangeMaterial(_buildingSpawner, false);
+
+            _buildingSpawner.OnTriggered -= _checkForBorders.CheckPlaneForBuilding;
 
             _rayCastController.LeftClick -= PlaceSpawner;
             _rayCastController.MousePosition -= RayCastControllerOnMousePosition;
-      
-            Object.Destroy(_selectedSpawner.ObjectBuild);
-            _selectedSpawner = null;
+
+            _createdSpawnersCollection.Remove(_buildingSpawner);
+
+            Object.Destroy(_buildingSpawner.ObjectBuild);
+
+            _buildingSpawner = null;
         }
 
         private void InstallInCenterTile(Spawner spawner)
@@ -131,35 +159,61 @@ namespace SpawnSystem
 
         private void PlaceSpawner(string ID)
         {
-            if (_selectedSpawner == null) 
+            if (_buildingSpawner == null)
                 return;
-
-            _plane.SetActive(false);
-
-            ChangeMaterial(_selectedSpawner, false);
-            _selectedSpawner.ID = GUID.Generate().ToString();
-
-            _selectedSpawner.OnTriggered -= _checkForBorders.CheckPlaneForBuilding;
-
+  
             _rayCastController.LeftClick -= PlaceSpawner;
             _rayCastController.MousePosition -= RayCastControllerOnMousePosition;
-         
-            _selectedSpawner = null;
+            
+            _typeSelectionPanel.Enable(SpawnerFinalizePlacment);           
+        }
+
+        private void SpawnerFinalizePlacment(UnitFactionType faction) 
+        {
+            _typeSelectionPanel.Disable();
+
+            ChangeMaterial(_buildingSpawner, false);
+
+            _createdSpawnersCollection.Add(_buildingSpawner);
+            _spawnUI.AddHUD(_buildingSpawner.ID, faction);
+
+            _buildingSpawner.OnTriggered -= _checkForBorders.CheckPlaneForBuilding;
+
+            _buildingSpawner = null;
+
+            _plane.SetActive(false);
         }
 
         private void RayCastControllerOnMousePosition(Vector3 vector3)
-{
+        {
             Vector3Int gridPosCell = _grid.WorldToCell(vector3);
-            
-            if (gridPosCell.z != 0) 
+
+            if (gridPosCell.z != 0)
                 return;
-            
+
             var gridPos = _grid.CellToWorld(gridPosCell);
 
             _mousePos.x = Mathf.RoundToInt(gridPos.x);
             _mousePos.y = Mathf.RoundToInt(gridPos.z);
 
-            _selectedSpawner.ObjectBuild.transform.position = gridPos;
+            _buildingSpawner.ObjectBuild.transform.position = gridPos;
+        }
+
+
+        private void RemoveSpawner()
+        {
+            if (_selectedSpawner == null)
+                return;
+
+            ChangeMaterial(_selectedSpawner, false);
+
+            _spawnUI.RemoveHUD(_selectedSpawner.ID);
+
+            _createdSpawnersCollection.Remove(_selectedSpawner);
+
+            Object.Destroy(_selectedSpawner.ObjectBuild);
+
+            _selectedSpawner = null;
         }
     }
 }
