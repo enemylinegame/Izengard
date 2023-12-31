@@ -4,6 +4,7 @@ using UnityEngine;
 using UnitSystem;
 using UnitSystem.Data;
 using UnitSystem.Enum;
+using Random = UnityEngine.Random;
 
 namespace SpawnSystem
 {
@@ -17,7 +18,6 @@ namespace SpawnSystem
         private readonly UnitViewPool _viewPool;
 
         private List<Spawner> _spawnersCollection;
-        private int _nextSpawnPositionsIndex;
 
         public event Action<IUnit> OnUnitSpawned;
 
@@ -38,8 +38,6 @@ namespace SpawnSystem
 
             _spawnCreationController.OnSpawnerCreated += SpawnerCreated;
             _spawnCreationController.OnSpawnerRemoved += SpawnerRemoved;
-
-            _nextSpawnPositionsIndex = 0;
 
             _unitsContainer.OnUnitRemoved += DespawnUnit;
         }
@@ -102,15 +100,9 @@ namespace SpawnSystem
                 return spawner.SpawnLocation.position;
             }
 
-            if (_nextSpawnPositionsIndex >= _spawnersCollection.Count)
-            {
-                _nextSpawnPositionsIndex = 0;
-            }
+            var spawnIndex = Random.Range(0, _spawnersCollection.Count);
+            var spawnPosition = _spawnersCollection[spawnIndex].SpawnLocation.position;
 
-            Vector3 spawnPosition 
-                = _spawnersCollection[_nextSpawnPositionsIndex].SpawnLocation.position;
-
-            _nextSpawnPositionsIndex++;
             return spawnPosition;
         }
 
