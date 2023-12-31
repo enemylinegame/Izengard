@@ -38,6 +38,8 @@ namespace SpawnSystem
 
         private int _spawnerCount;
 
+        public Spawner SelectedSpawner => _selectedSpawner;
+
         public event Action<Spawner> OnSpawnerCreated;
         public event Action<Spawner> OnSpawnerRemoved;
 
@@ -70,32 +72,34 @@ namespace SpawnSystem
             _spawnUI.OnCreateSpawnerClick += CreateSpawner;
             _spawnUI.OnRemoveSpawnerClick += RemoveSpawner;
 
+            _spawnUI.UnselectAll();
+
             _typeSelectionPanel.Hide();
+
+            _rayCastController.RightClick += RemoveSelection;
 
             _spawnerCount = 0;
         }
 
+
         private void SelectSpawner(string spawnerId)
         {
-            if (_selectedSpawner != null)
-            {
-                ChangeMaterial(_selectedSpawner, false);
-            }
+            UnselectCurrentSpawner();
 
             _selectedSpawner = _createdSpawnersCollection.Find(spw => spw.Id == spawnerId);
 
             ChangeMaterial(_selectedSpawner);
         }
 
+ 
         private void CreateSpawner()
         {
             _plane.SetActive(true);
             _spawnerCount++;
 
-            if (_selectedSpawner != null)
-            {
-                ChangeMaterial(_selectedSpawner, false);
-            }
+            _spawnUI.UnselectAll();
+
+            UnselectCurrentSpawner();
 
             CancelCurrentPlacement();
 
@@ -118,7 +122,6 @@ namespace SpawnSystem
             _rayCastController.LeftClick += PlaceSpawner;
             _rayCastController.MousePosition += RayCastControllerOnMousePosition;
         }
-
 
         private void CancelCurrentPlacement()
         {
@@ -245,6 +248,25 @@ namespace SpawnSystem
             Object.Destroy(_selectedSpawner.ObjectBuild);
 
             _selectedSpawner = null;
+        }
+
+
+        private void RemoveSelection(string spawnerId)
+        {
+            _spawnUI.UnselectAll();
+
+            UnselectCurrentSpawner();
+        }
+
+
+        private void UnselectCurrentSpawner()
+        {
+            if (_selectedSpawner != null)
+            {
+                ChangeMaterial(_selectedSpawner, false);
+
+                _selectedSpawner = null;
+            }
         }
     }
 }

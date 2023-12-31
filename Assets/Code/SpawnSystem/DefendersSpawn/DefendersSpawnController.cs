@@ -95,6 +95,13 @@ namespace SpawnSystem
 
         private Vector3 SelectSpawnPosition()
         {
+            if(_spawnCreationController.SelectedSpawner != null)
+            {
+                var spawner = _spawnCreationController.SelectedSpawner;
+              
+                return spawner.SpawnLocation.position;
+            }
+
             if (_nextSpawnPositionsIndex >= _spawnersCollection.Count)
             {
                 _nextSpawnPositionsIndex = 0;

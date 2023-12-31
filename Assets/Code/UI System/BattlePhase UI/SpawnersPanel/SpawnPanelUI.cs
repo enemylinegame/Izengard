@@ -86,7 +86,24 @@ namespace UI
 
         private void SpawnerSelected(string spawnerId)
         {
+            var spawnerHUD = _spawnerHUDCollection.Find(spwn => spwn.Id == spawnerId);
+
+            for(int i =0; i < _spawnerHUDCollection.Count; i++)
+            {
+                _spawnerHUDCollection[i].Unselect();
+            }
+
+            spawnerHUD.Select();
+
             OnSpawnerSelectAction?.Invoke(spawnerId);
+        }
+
+        public void UnselectAll()
+        {
+            for (int i = 0; i < _spawnerHUDCollection.Count; i++)
+            {
+                _spawnerHUDCollection[i].Unselect();
+            }
         }
 
 

@@ -11,31 +11,36 @@ namespace UI
         [SerializeField]
         private TMP_Text _spawnerIndexText;
         [SerializeField]
-        private Button _selectButton;
-        
+        private Button _button;
+
+        [SerializeField]
+        private GameObject _selectedBackground;
+        [SerializeField]
+        private GameObject _unselectedBackground;
+
         public string Id { get; private set; }
 
         public event Action<string> OnSelectAction;
 
-        public void Init(string spawnerId, string name) 
+        public void Init(string spawnerId, string name)
         {
             Id = spawnerId;
             _spawnerIndexText.text = name;
 
-            _selectButton.onClick.AddListener(SpawnerHUDSelection);
+            _button.onClick.AddListener(SpawnerHUDSelection);
 
             Show();
         }
 
         public void Deinit()
         {
-            _selectButton.onClick.RemoveListener(SpawnerHUDSelection);
+            _button.onClick.RemoveListener(SpawnerHUDSelection);
 
             Hide();
         }
 
         private void SpawnerHUDSelection()
-{
+        {
             OnSelectAction?.Invoke(Id);
         }
 
@@ -44,9 +49,18 @@ namespace UI
             gameObject.SetActive(true);
         }
 
-        public void Hide() 
-        {       
+        public void Hide()
+        {
             gameObject.SetActive(false);
+        }
+
+        public void Select() => SetSelected(true);
+        public void Unselect() => SetSelected(false);
+
+        private void SetSelected(bool isSelected)
+        {
+            _selectedBackground.SetActive(isSelected);
+            _unselectedBackground.SetActive(!isSelected);
         }
 
         private void Awake()

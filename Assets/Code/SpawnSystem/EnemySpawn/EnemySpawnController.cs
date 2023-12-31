@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnitSystem;
 using UnitSystem.Data;
 using UnitSystem.Enum;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace SpawnSystem
@@ -66,10 +67,7 @@ namespace SpawnSystem
 
             var unit = new UnitHandler(unitView, unitData);
 
-            var spawnIndex = Random.Range(0, _spawnersCollection.Count);
-            var spawnPosition = _spawnersCollection[spawnIndex].SpawnLocation.position;
-
-            unit.SetStartPosition(spawnPosition);
+            unit.SetStartPosition(SelectSpawnPosition());
 
             _unitsContainer.AddUnit(unit);
 
@@ -88,14 +86,26 @@ namespace SpawnSystem
 
             var unit = new UnitHandler(unitView, unitData);
 
-            var spawnIndex = Random.Range(0, _spawnersCollection.Count);
-            var spawnPosition = _spawnersCollection[spawnIndex].SpawnLocation.position;
-
-            unit.SetStartPosition(spawnPosition);
+            unit.SetStartPosition(SelectSpawnPosition());
 
             _unitsContainer.AddUnit(unit);
 
             OnUnitSpawned?.Invoke(unit);
+        }
+
+        private Vector3 SelectSpawnPosition()
+        {
+            if (_spawnCreationController.SelectedSpawner != null)
+            {
+                var spawner = _spawnCreationController.SelectedSpawner;
+
+                return spawner.SpawnLocation.position;
+            }
+
+            var spawnIndex = Random.Range(0, _spawnersCollection.Count);
+            var spawnPosition = _spawnersCollection[spawnIndex].SpawnLocation.position;
+
+            return spawnPosition;
         }
 
         public void DespawnUnit(IUnit unit)
