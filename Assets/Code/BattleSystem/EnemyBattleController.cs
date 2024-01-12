@@ -97,8 +97,6 @@ namespace BattleSystem
 
                 unit.Target.ResetTarget();
 
-                unit.IsInFight = false;
-
                 unit.ChangeState(UnitStateType.Idle);
             }
         }

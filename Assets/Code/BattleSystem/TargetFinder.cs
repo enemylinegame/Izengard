@@ -89,9 +89,6 @@ namespace BattleSystem
             {
                 IUnit foeUnit = foeUnitList[i];
 
-                if (foeUnit.IsInFight)
-                    continue;
-
                 if( (targetType != UnitType.None && foeUnit.Stats.Type != targetType) || foeUnit is NoneTarget )
                     continue;
 

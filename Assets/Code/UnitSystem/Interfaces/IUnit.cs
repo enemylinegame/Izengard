@@ -26,8 +26,6 @@ namespace UnitSystem
         
         float TimeProgress { get; set; }
 
-        bool IsInFight { get; set; }
-
         void Enable();
 
         void Disable();
