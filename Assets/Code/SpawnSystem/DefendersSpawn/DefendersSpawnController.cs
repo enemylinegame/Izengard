@@ -17,6 +17,8 @@ namespace SpawnSystem
         private readonly List<UnitCreationData> _unitCreationDataList;
         private readonly UnitViewPool _viewPool;
 
+        private readonly float _maxSpawnRadius;
+
         private List<Spawner> _spawnersCollection;
 
         public event Action<IUnit> OnUnitSpawned;
@@ -32,6 +34,7 @@ namespace SpawnSystem
 
             _spawnersCollection = new List<Spawner>();
 
+            _maxSpawnRadius = _spawner.SpawnSettings.MaxSpawnRadius;
             _unitCreationDataList = _spawner.SpawnSettings.UnitsCreationData;
 
             _viewPool = new UnitViewPool(spawner.PoolHolder, _unitCreationDataList);
@@ -93,17 +96,23 @@ namespace SpawnSystem
 
         private Vector3 SelectSpawnPosition()
         {
-            if(_spawnCreationController.SelectedSpawner != null)
+            if (_spawnCreationController.SelectedSpawner != null)
             {
                 var spawner = _spawnCreationController.SelectedSpawner;
-              
-                return spawner.SpawnLocation.position;
+
+                return GetPositionInsideRadius(spawner.SpawnLocation.position, _maxSpawnRadius);
             }
 
             var spawnIndex = Random.Range(0, _spawnersCollection.Count);
             var spawnPosition = _spawnersCollection[spawnIndex].SpawnLocation.position;
 
-            return spawnPosition;
+            return GetPositionInsideRadius(spawnPosition, _maxSpawnRadius);
+        }
+
+        private Vector3 GetPositionInsideRadius(Vector3 spawnRootPos, float radius)
+        {
+            var radiusPos = Random.insideUnitCircle * radius;
+            return spawnRootPos + new Vector3(radiusPos.x, 0, radiusPos.y);
         }
 
         public void DespawnUnit(IUnit unit)
