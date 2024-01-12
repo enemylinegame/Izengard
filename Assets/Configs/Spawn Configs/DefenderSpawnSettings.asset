@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bd08b763f86518479e34dbbfa04d95a, type: 3}
   m_Name: DefenderSpawnSettings
   m_EditorClassIdentifier: 
+  <MaxSpawnRadius>k__BackingField: 1
   <SpawnFaction>k__BackingField: 1
   <UnitsCreationData>k__BackingField:
   - _poolCopacity: 5

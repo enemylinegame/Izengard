@@ -10,6 +10,8 @@ namespace SpawnSystem
 {
     public class EnemySpawnController : ISpawnController
     {
+        private readonly UnitFactionType _faction;
+
         private readonly SpawnerView _spawner;
         private readonly SpawnCreationController _spawnCreationController;
         private readonly IUnitsContainer _unitsContainer;
@@ -28,6 +30,8 @@ namespace SpawnSystem
             SpawnCreationController spawnCreationController,
             IUnitsContainer unitsContainer)
         {
+            _faction = UnitFactionType.Enemy;
+
             _spawner = spawner;
             _spawnCreationController = spawnCreationController;
             _unitsContainer = unitsContainer;
@@ -63,14 +67,19 @@ namespace SpawnSystem
 
         public void SpawnUnit(IUnitData unitData)
         {
-            if (_spawnersCollection.Count == 0)
+            if (_spawnCreationController.SelectedSpawner == null)
+                return;
+
+            if (_spawnCreationController.SelectedSpawner.FactionType != _faction)
                 return;
 
             var unitView = _viewPool.GetFromPool(unitData.Type);
 
             var unit = new UnitHandler(unitView, unitData);
+            
+            var spawnPos = GetSpawnPosition(_spawnCreationController.SelectedSpawner);
 
-            unit.SetStartPosition(SelectSpawnPosition());
+            unit.SetStartPosition(spawnPos);
 
             _unitsContainer.AddUnit(unit);
 
@@ -89,24 +98,20 @@ namespace SpawnSystem
 
             var unit = new UnitHandler(unitView, unitData);
 
-            unit.SetStartPosition(SelectSpawnPosition());
+            var spawnerIndex = Random.Range(0, _spawnersCollection.Count);
+
+            var spawnPos = GetSpawnPosition(_spawnersCollection[spawnerIndex]);
+
+            unit.SetStartPosition(spawnPos);
 
             _unitsContainer.AddUnit(unit);
 
             OnUnitSpawned?.Invoke(unit);
         }
 
-        private Vector3 SelectSpawnPosition()
+        private Vector3 GetSpawnPosition(Spawner spawner)
         {
-            if (_spawnCreationController.SelectedSpawner != null)
-            {
-                var spawner = _spawnCreationController.SelectedSpawner;
-
-                return GetPositionInsideRadius(spawner.SpawnLocation.position, _maxSpawnRadius);
-            }
-
-            var spawnIndex = Random.Range(0, _spawnersCollection.Count);
-            var spawnPosition = _spawnersCollection[spawnIndex].SpawnLocation.position;
+            var spawnPosition = spawner.SpawnLocation.position;
 
             return GetPositionInsideRadius(spawnPosition, _maxSpawnRadius);
         }
