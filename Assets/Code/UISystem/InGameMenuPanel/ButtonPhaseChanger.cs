@@ -5,12 +5,12 @@ using System.Collections;
 using UI;
 using System;
 using ResourceSystem;
-
+/*
 namespace InGameMenuPanel
 {
-    public class ButtonPhaseChanger : MonoBehaviour
+    public class ButtonPhaseChanger1 : MonoBehaviour
     {
-
+        
         //Юайки
         [Header("Юайки")]
         [SerializeField] private GameObject battleUI;
@@ -52,13 +52,10 @@ namespace InGameMenuPanel
         //Таймер
         [Header("Таймер")]
         [SerializeField] private TMP_Text timerText;
-        [SerializeField] private int messageDurationTime = _messageDurationTime;
-        private static int _sec = 6;
-        private int sec = _sec;
-        private static int _min = 0;
-        private int min = _min;
-        private int deltaSec = 1;    
-        private static int _messageDurationTime = 4;  
+        private int messageDurationTime = 4;
+        private int sec = 6;
+        private int min = 6;
+        private int deltaSec = 1;      
 
         //Кнопка
         [Header("Кнопка")]
@@ -77,7 +74,7 @@ namespace InGameMenuPanel
         
 
         private void Start()
-        {     
+        {
             timerText.GetComponent<TMP_Text>();
             inputField.GetComponent<InputField>();
             globalStock = new GlobalStock(resList);
@@ -205,3 +202,4 @@ namespace InGameMenuPanel
         }
     }
 }
+        */
