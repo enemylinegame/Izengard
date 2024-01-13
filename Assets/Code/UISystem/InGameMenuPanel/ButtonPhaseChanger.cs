@@ -5,7 +5,7 @@ using System.Collections;
 using UI;
 using System;
 using ResourceSystem;
-/*
+
 namespace InGameMenuPanel
 {
     public class ButtonPhaseChanger1 : MonoBehaviour
@@ -91,8 +91,8 @@ namespace InGameMenuPanel
             //Условие перехода из боевой фазы в мирную
             if (sec == 0 && min == 0)
             {
-                sec = _sec;
-                min = _min;
+                sec = 6;
+                min = 0;
                 peacePhaseBegin();
             }
         }
@@ -178,7 +178,7 @@ namespace InGameMenuPanel
 
         IEnumerator messageDuration()
         {
-            messageDurationTime = _messageDurationTime;
+            messageDurationTime = 4;
             while (messageDurationTime != 0)
             {
                 messageDurationTime -= deltaSec;
@@ -202,4 +202,4 @@ namespace InGameMenuPanel
         }
     }
 }
-        */
+        

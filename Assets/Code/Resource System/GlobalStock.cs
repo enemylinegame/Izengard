@@ -21,6 +21,13 @@ namespace ResourceSystem
             InitHolders(resourcesData);
         }
 
+        public GlobalStock(ResourceList resourcesData)
+        {
+            _resourceHolders = new List<ResourceHolder>();
+
+            InitHolders(resourcesData);
+        }
+
 
         private void InitHolders(ResourceList resourcesData)
         {
