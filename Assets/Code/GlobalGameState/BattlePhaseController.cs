@@ -25,6 +25,8 @@ namespace Code.GlobalGameState
 
         public event Action OnPhaseEnd;
 
+        private bool _isBattleWork;
+
         public BattlePhaseController(
             SceneObjectsHolder sceneObjectsHolder,
             ConfigsHolder configs,
@@ -55,6 +57,28 @@ namespace Code.GlobalGameState
                 = new EnemyBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, mainTower, enemySpawner);
             _defenderBattleController
                 = new DefenderBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, mainTower);
+
+            _battleUIController.OnStartBattle += StartBattle;
+            _battleUIController.OnPauseBattle += PauseBattle;
+            _battleUIController.OnResetBattle += ResetBattle;
+
+            _isBattleWork = false;
+        }
+
+
+        private void StartBattle()
+        {
+            _isBattleWork = true;
+        }
+
+        private void PauseBattle()
+        {
+           
+        }
+
+        private void ResetBattle()
+        {
+            _isBattleWork = false;
         }
 
         public void StartPhase()
@@ -92,13 +116,18 @@ namespace Code.GlobalGameState
 
         public void OnUpdate(float deltaTime)
         {
+            if (_isBattleWork == false)
+                return;
+
             _enemyBattleController.OnUpdate(deltaTime);
             _defenderBattleController.OnUpdate(deltaTime);         
         }
 
         public void OnFixedUpdate(float fixedDeltaTime)
         {
-            
+            if (_isBattleWork == false)
+                return;
+
         }
     }
 }

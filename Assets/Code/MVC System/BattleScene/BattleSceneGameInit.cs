@@ -38,8 +38,6 @@ namespace Code.MVC_System
 
             var rayCastController = new RayCastController(_userInput, configs.GameConfig);
 
-            var battleUIController = new BattleUIController(sceneObjectsHolder.BattleUI);
-
             var mainTower 
                 = new MainTowerController(sceneObjectsHolder.MainTower, configs.MainTowerSettings);
 
