@@ -16,7 +16,7 @@ namespace BattleSystem
         public EnemyBattleController(
             BattleSystemData data,
             TargetFinder targetFinder,
-            UnitsContainer unitsContainer,
+            IUnitsContainer unitsContainer,
             MainTowerController mainTower,
             ISpawnController enemySpawner) : base(data, targetFinder, unitsContainer, mainTower)
         {

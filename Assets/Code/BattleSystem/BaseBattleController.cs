@@ -8,7 +8,7 @@ namespace BattleSystem
     public abstract class BaseBattleController : IOnController, IOnUpdate
     {
         protected readonly TargetFinder targetFinder;
-        protected readonly UnitsContainer unitsContainer;
+        protected readonly IUnitsContainer unitsContainer;
         
         protected readonly float destinationPositionErrorSqr;
         protected readonly float deadUnitsDestroyDelay;
@@ -18,7 +18,7 @@ namespace BattleSystem
         public BaseBattleController(
             BattleSystemData data,
             TargetFinder targetFinder, 
-            UnitsContainer unitsContainer,
+            IUnitsContainer unitsContainer,
             MainTowerController mainTower)
         {
             destinationPositionErrorSqr = data.DestinationPositionError * data.DestinationPositionError;

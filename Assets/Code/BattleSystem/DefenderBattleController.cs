@@ -12,8 +12,8 @@ namespace BattleSystem
     {        
         public DefenderBattleController(
             BattleSystemData data, 
-            TargetFinder targetFinder, 
-            UnitsContainer unitsContainer, 
+            TargetFinder targetFinder,
+            IUnitsContainer unitsContainer, 
             MainTowerController mainTower) : base(data, targetFinder, unitsContainer, mainTower)
         {
         }

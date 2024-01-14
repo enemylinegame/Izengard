@@ -49,8 +49,6 @@ namespace Code.MVC_System
                     sceneObjectsHolder.BattleUI.UnitStatsPanel, 
                     rayCastController);
             
-            var targetFinder = new TargetFinder(mainTower, unitsContainer);
-
             var spawnerCreationController
                 = new SpawnCreationController(
                     sceneObjectsHolder, spawnerPrefab, 
@@ -58,24 +56,15 @@ namespace Code.MVC_System
                     configs.ObjectsHolder, 
                     plane, grid);
 
-            var enemySpawner 
-                = new EnemySpawnController(sceneObjectsHolder.EnemySpawner, spawnerCreationController, unitsContainer);
-            var defendersSpawner 
-                = new DefendersSpawnController(sceneObjectsHolder.DefendersSpawner, spawnerCreationController, unitsContainer);
-            
-            var enemyBattleController 
-                = new EnemyBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, mainTower, enemySpawner);
-            var defenderBattleController 
-                = new DefenderBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, mainTower);
-            
-            var enemySpawnHandler 
-                = new EnemySpawnHandler(enemySpawner, configs.EnemyWaveSettings, battleUIController);
-            var defendersSpawnHandler
-                = new DefenderSpawnHandler(defendersSpawner, battleUIController);
+            var battleStateManager 
+                = new BattlePhaseController(
+                    sceneObjectsHolder, 
+                    configs, 
+                    spawnerCreationController, 
+                    mainTower, 
+                    unitsContainer);
 
             var peaceStateManager = new PeacePhaseConttoller();
-            var battleStateManager 
-                = new BattlePhaseController(defendersSpawnHandler, enemySpawnHandler, mainTower, unitsContainer);
             
             var gameStateManager = new GameStateManager(peaceStateManager, battleStateManager);
 
@@ -86,12 +75,8 @@ namespace Code.MVC_System
             controller.Add(rayCastController);
 
             controller.Add(spawnerCreationController);
-            controller.Add(enemySpawner);
-            controller.Add(defendersSpawner);
 
             controller.Add(mainTower);
-            controller.Add(enemyBattleController);
-            controller.Add(defenderBattleController);
 
             controller.Add(gameStateManager);
         }
