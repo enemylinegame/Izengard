@@ -7,9 +7,9 @@ namespace UI
     {
         private readonly BattleSceneUI _battleSceneUI;
 
-        public event Action OnStartWave;
-        public event Action OnStopWave;
-        public event Action OnDefenderSpawn;
+        public event Action OnStartBattle;
+        public event Action OnPauseBattle;
+        public event Action OnResetBattle;
 
         public event Action<IUnitData> OnSpawnNewUnit;
 
@@ -17,9 +17,9 @@ namespace UI
         {
             _battleSceneUI = battleSceneUI;
 
-            _battleSceneUI.WaveStartButton.onClick.AddListener(() => OnStartWave?.Invoke());
-            _battleSceneUI.WaveStopButton.onClick.AddListener(() => OnStopWave?.Invoke());
-            _battleSceneUI.DefenderSpawnButton.onClick.AddListener(() => OnDefenderSpawn?.Invoke());
+            _battleSceneUI.StartButton.onClick.AddListener(() => OnStartBattle?.Invoke());
+            _battleSceneUI.PauseButton.onClick.AddListener(() => OnPauseBattle?.Invoke());
+            _battleSceneUI.ResetButton.onClick.AddListener(() => OnResetBattle?.Invoke());
 
             _battleSceneUI.UnitSettings.OnSpawn += SpawnUnits;
         }
@@ -36,9 +36,9 @@ namespace UI
 
         public void Dispose()
         {
-            _battleSceneUI.WaveStartButton.onClick.RemoveAllListeners();
-            _battleSceneUI.WaveStopButton.onClick.RemoveAllListeners();
-            _battleSceneUI.DefenderSpawnButton.onClick.RemoveAllListeners();
+            _battleSceneUI.StartButton.onClick.RemoveAllListeners();
+            _battleSceneUI.PauseButton.onClick.RemoveAllListeners();
+            _battleSceneUI.ResetButton.onClick.RemoveAllListeners();
         }
     }
 }

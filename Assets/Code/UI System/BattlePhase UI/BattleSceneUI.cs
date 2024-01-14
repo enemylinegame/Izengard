@@ -15,19 +15,19 @@ namespace UI
         [SerializeField]
         private UnitStatsPanel _unitStatsPanel;
         [SerializeField]
-        private Button _waveStartButton;
+        private Button _startButton;
         [SerializeField]
-        private Button _waveStopButton;
+        private Button _pauseButton;
         [SerializeField]
-        private Button _defenderSpawnButton;
+        private Button _resetButton;
 
         public UnitSettingsPanel UnitSettings => _unitSettings;
         public SpawnPanelUI SpawnPanel => _spawnPanel;
         public SpawnerTypeSelectionPanel SpawnerTypeSelection => _spawnerTypeSelection;
         public UnitStatsPanel UnitStatsPanel => _unitStatsPanel;
-        public Button WaveStartButton => _waveStartButton;
-        public Button WaveStopButton => _waveStopButton;
-        public Button DefenderSpawnButton => _defenderSpawnButton;
+        public Button StartButton => _startButton;
+        public Button PauseButton => _pauseButton;
+        public Button ResetButton => _resetButton;
 
         
     }

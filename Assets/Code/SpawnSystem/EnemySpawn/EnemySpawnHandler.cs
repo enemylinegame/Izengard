@@ -32,8 +32,6 @@ namespace SpawnSystem
             _waves = waveSettings.Waves;
             _battleUIController = battleUIController;
  
-            _battleUIController.OnStartWave += StartWave;
-            _battleUIController.OnStopWave += StopWave;
             _battleUIController.OnSpawnNewUnit += SpawnUnit;
 
             _waveIndex = 0;

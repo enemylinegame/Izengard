@@ -15,7 +15,6 @@ namespace SpawnSystem
 
             _battleSceneUIController = battleSceneUIController;
 
-            _battleSceneUIController.OnDefenderSpawn += SpawnPack;
             _battleSceneUIController.OnSpawnNewUnit += SpawnUnit;
         }
 
@@ -26,11 +25,5 @@ namespace SpawnSystem
 
             _spawnController.SpawnUnit(unitData);
         }
-
-        private void SpawnPack()
-        {    
-            _spawnController.SpawnUnit(UnitType.Militiaman);  
-        }
-
     }
 }
