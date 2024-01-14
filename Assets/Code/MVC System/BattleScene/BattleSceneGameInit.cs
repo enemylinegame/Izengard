@@ -1,4 +1,3 @@
-using BattleSystem;
 using BattleSystem.MainTower;
 using Code.GlobalGameState;
 using Code.SceneConfigs;
@@ -7,7 +6,6 @@ using NewBuildingSystem;
 using SpawnSystem;
 using Tools;
 using Tools.Navigation;
-using UI;
 using UnitSystem;
 using UnityEngine;
 using UserInputSystem;
@@ -36,6 +34,9 @@ namespace Code.MVC_System
             var navigationUpdater = new NavigationUpdater();
             navigationUpdater.AddNavigationSurface(sceneObjectsHolder.GroundSurface);
 
+
+            var pasueController = new PauseController();
+
             var rayCastController = new RayCastController(_userInput, configs.GameConfig);
 
             var mainTower 
@@ -58,6 +59,7 @@ namespace Code.MVC_System
                 = new BattlePhaseController(
                     sceneObjectsHolder, 
                     configs, 
+                    pasueController,
                     spawnerCreationController, 
                     mainTower, 
                     unitsContainer);
@@ -68,7 +70,12 @@ namespace Code.MVC_System
 
             var MapController = new MapController(map, configs.GameConfig.BattleStageMapSize);
 
+
+            pasueController.Add(unitsContainer);
+
             controller.Add(timeRemainingService);
+            controller.Add(pasueController);
+
             controller.Add(unitsContainer);
             controller.Add(rayCastController);
 

@@ -26,6 +26,19 @@ namespace BattleSystem
             this.unitsContainer.OnDefenderAdded += ResetUnitState;
         }
 
+        public override void OnPause()
+        {
+            base.OnPause();
+
+            for (int i = 0; i < unitsContainer.EnemyUnits.Count; i++)
+            {
+                var unit = unitsContainer.EnemyUnits[i];
+
+                unit.Stop();
+                unit.ChangeState(UnitStateType.Idle);
+            }
+        }
+
         private void ResetUnitState()
         {
             for (int i = 0; i < unitsContainer.EnemyUnits.Count; i++)

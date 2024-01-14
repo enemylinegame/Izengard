@@ -8,7 +8,7 @@ using UserInputSystem;
 
 namespace UnitSystem
 {
-    public class UnitsContainer : IUnitsContainer, IOnController, IOnUpdate
+    public class UnitsContainer : IUnitsContainer, IOnController, IOnUpdate, IPaused
     {
         private readonly float unitsDestroyDelay;
         private readonly UnitStatsPanel _unitStatsPanel;
@@ -156,6 +156,9 @@ namespace UnitSystem
 
         public void OnUpdate(float deltaTime)
         {
+            if (IsPaused)
+                return;
+
             UpdateToBeRemovedUnits(toRemoveUnitsCollection, deltaTime);
         }
 
@@ -179,5 +182,21 @@ namespace UnitSystem
                 }
             }
         }
+
+        #region IPaused
+
+        public bool IsPaused { get; private set; }
+        
+        public void OnPause()
+        {
+            IsPaused = true;
+        }
+
+        public void OnRelease()
+        {
+            IsPaused = false;
+        }
+
+        #endregion
     }
 }

@@ -5,6 +5,7 @@ using Configs;
 using GlobalGameState;
 using SpawnSystem;
 using System;
+using Tools;
 using UI;
 using UnitSystem;
 using UnityEngine;
@@ -14,6 +15,9 @@ namespace Code.GlobalGameState
     public class BattlePhaseController : IPhaseController, IOnUpdate, IOnFixedUpdate
     {
         private readonly BattleUIController _battleUIController;
+
+        private readonly PauseController _pauseController;
+
         private readonly MainTowerController _mainTower;
         private readonly IUnitsContainer _unitsContainer;
 
@@ -30,11 +34,14 @@ namespace Code.GlobalGameState
         public BattlePhaseController(
             SceneObjectsHolder sceneObjectsHolder,
             ConfigsHolder configs,
+            PauseController pauseController,
             SpawnCreationController spawnCreation,
             MainTowerController mainTower,
             IUnitsContainer unitsContainer) 
         {
             _battleUIController = new BattleUIController(sceneObjectsHolder.BattleUI);
+
+            _pauseController = pauseController;
 
             _mainTower = mainTower;
 
@@ -58,6 +65,9 @@ namespace Code.GlobalGameState
             _defenderBattleController
                 = new DefenderBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, mainTower);
 
+            _pauseController.Add(_enemyBattleController);
+            _pauseController.Add(_defenderBattleController);
+
             _battleUIController.OnStartBattle += StartBattle;
             _battleUIController.OnPauseBattle += PauseBattle;
             _battleUIController.OnResetBattle += ResetBattle;
@@ -73,7 +83,16 @@ namespace Code.GlobalGameState
 
         private void PauseBattle()
         {
-           
+            if (_isBattleWork)
+            {
+                _pauseController.Pause();
+                _isBattleWork = false;
+            }
+            else
+            {
+                _pauseController.Release();
+                _isBattleWork = true;
+            }
         }
 
         private void ResetBattle()

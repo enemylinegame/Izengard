@@ -5,11 +5,11 @@ using UnitSystem;
 
 namespace BattleSystem
 {
-    public abstract class BaseBattleController : IOnController, IOnUpdate
+    public abstract class BaseBattleController : IOnController, IOnUpdate, IPaused
     {
         protected readonly TargetFinder targetFinder;
         protected readonly IUnitsContainer unitsContainer;
-        
+
         protected readonly float destinationPositionErrorSqr;
         protected readonly float deadUnitsDestroyDelay;
 
@@ -17,7 +17,7 @@ namespace BattleSystem
 
         public BaseBattleController(
             BattleSystemData data,
-            TargetFinder targetFinder, 
+            TargetFinder targetFinder,
             IUnitsContainer unitsContainer,
             MainTowerController mainTower)
         {
@@ -32,9 +32,12 @@ namespace BattleSystem
             _mainTower.OnMainTowerDestroyed += MainTowerDestroyed;
         }
 
-   
-        public void OnUpdate(float deltaTime) 
+
+        public void OnUpdate(float deltaTime)
         {
+            if (IsPaused)
+                return;
+
             ExecuteOnUpdate(deltaTime);
         }
 
@@ -44,9 +47,9 @@ namespace BattleSystem
         protected abstract void UpdateTargetExistance(ITarget target);
 
         protected virtual void UnitIdleState(IUnit unit, float deltaTime) { }
-        
+
         protected virtual void UnitMoveState(IUnit unit, float deltaTime) { }
-        
+
         protected virtual void UnitAttackState(IUnit unit, float deltaTime) { }
 
         protected virtual void UnitDeadState(IUnit unit, float deltaTime) { }
@@ -69,5 +72,20 @@ namespace BattleSystem
             return (position - destination).sqrMagnitude <= destinationPositionErrorSqr;
         }
 
+        #region IPaused
+        
+        public bool IsPaused { get; private set; }
+
+        public virtual void OnPause()
+        {
+            IsPaused = true;
+        }
+
+        public virtual void OnRelease()
+        {
+            IsPaused = false;
+        }
+
+        #endregion
     }
 }

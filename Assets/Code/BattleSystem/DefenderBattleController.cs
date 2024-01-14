@@ -18,6 +18,19 @@ namespace BattleSystem
         {
         }
 
+        public override void OnPause()
+        {
+            base.OnPause();
+
+            for (int i = 0; i < unitsContainer.DefenderUnits.Count; i++)
+            {
+                var unit = unitsContainer.DefenderUnits[i];
+
+                unit.Stop();
+                unit.ChangeState(UnitStateType.Idle);
+            }
+        }
+
         protected override void MainTowerDestroyed()
         {
             for (int i = 0; i < unitsContainer.DefenderUnits.Count; i++)
