@@ -4,6 +4,8 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Abstraction;
+using UnitSystem.Enum;
+using System.Collections.Generic;
 
 namespace UI
 {
@@ -93,6 +95,9 @@ namespace UI
 
         public void SetFaction(FactionType faction) 
             => _parametrs.SetFaction(faction);
+
+        public void SetUnitTypes(IList<UnitType> unitTypes)
+            => _parametrs.FillUnitTypeDropDown(unitTypes);
 
         public void ResetPanel()
         {

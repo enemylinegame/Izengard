@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UI;
+using UnitSystem.Enum;
 using UnityEditor;
 using UnityEngine;
 using UserInputSystem;
@@ -93,12 +94,48 @@ namespace SpawnSystem
             _selectedSpawner = _createdSpawnersCollection.Find(spw => spw.Id == spawnerId);
 
             ChangeMaterial(_selectedSpawner);
-           
-            _unitSettingsPanel.Show();
-            _unitSettingsPanel.SetFaction(_selectedSpawner.FactionType);
+
+            UpdateUnitSettingsPanel(_selectedSpawner);
+
         }
 
- 
+        private void UpdateUnitSettingsPanel(Spawner selectedSpawner)
+        {
+            _unitSettingsPanel.Show();
+            
+            _unitSettingsPanel.SetFaction(selectedSpawner.FactionType);
+
+            switch (selectedSpawner.FactionType)
+            {
+                case FactionType.Defender:
+                    {
+                        var availableUnitTypes = GetAvailableUnitTypes(_defenderSpawners);
+                        _unitSettingsPanel.SetUnitTypes(availableUnitTypes);
+                        break;
+                    }
+                case FactionType.Enemy:
+                    {
+                        var availableUnitTypes = GetAvailableUnitTypes(_enemySpawners);
+                        _unitSettingsPanel.SetUnitTypes(availableUnitTypes);
+                        break;
+                    }
+            }
+        }
+
+        private IList<UnitType> GetAvailableUnitTypes(SpawnerView spawnerView)
+        {
+            var result = new List<UnitType>();
+
+            var unitsCreationData = spawnerView.SpawnSettings.UnitsCreationData;
+            
+            for (int i = 0; i < unitsCreationData.Count; i++)
+            {
+                result.Add(unitsCreationData[i].Type);
+            }
+
+            return result;
+        }
+
         private void CreateSpawner()
         {
             _plane.SetActive(true);

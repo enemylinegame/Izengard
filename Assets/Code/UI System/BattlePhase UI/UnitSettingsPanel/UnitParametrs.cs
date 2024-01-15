@@ -1,4 +1,5 @@
 using Abstraction;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using Tools;
@@ -83,20 +84,30 @@ namespace UI
 
         private FactionType _faction;
 
+        public Action<UnitType> OnUnitTypeChange;
+
         public void Init()
         {
             if (_defaultUnitData == null)
                 return;
 
             _faction = FactionType.None;
+
+            _typeDropDown.onValueChanged.AddListener(UnitTypeChanged);
+
             SetUnitData(_defaultUnitData);
+        }
+
+        private void UnitTypeChanged(int value)
+        {
+            var unitType = (UnitType)value;
+            OnUnitTypeChange?.Invoke(unitType);
         }
 
         public void SetUnitData(IUnitData data)
         {
             _factionTypeText.text = _faction.GetDescription();
 
-            InitTypeDropDown(data);
             InitRoleDropDown(data);
 
             _unitPriorityList.Init(data.UnitPriorities);
@@ -128,26 +139,6 @@ namespace UI
             _baseDamageField.text = data.BaseDamage.ToString();
             _fireDamageField.text = data.FireDamage.ToString();
             _coldDamageField.text = data.ColdDamage.ToString();
-        }
-
-        private void InitTypeDropDown(IUnitData data)
-        {
-            _typeDropDown.ClearOptions();
-
-            var optData
-                = new List<string> {
-                        nameof(UnitType.None),
-                        nameof(UnitType.Militiaman),
-                        nameof(UnitType.Hunter),
-                        nameof(UnitType.Mage),
-                        nameof(UnitType.Imp),
-                        nameof(UnitType.Hound),
-                        nameof(UnitType.Fiend)
-                };
-
-            _typeDropDown.AddOptions(optData);
-
-            _typeDropDown.value = (int)data.Type;
         }
 
         private void InitRoleDropDown(IUnitData data)
@@ -210,6 +201,20 @@ namespace UI
         {
             _faction = faction;
             _factionTypeText.text = _faction.GetDescription();
+        }
+
+        public void FillUnitTypeDropDown(IList<UnitType> unitTypes)
+        {
+            _typeDropDown.ClearOptions();
+            var optData = new List<string>();
+            for (int i = 0; i < unitTypes.Count; i++)
+            {
+                optData.Add(unitTypes[i].GetDescription());
+            }
+
+            _typeDropDown.AddOptions(optData);
+
+            _typeDropDown.value = 0;
         }
 
         public IUnitData GetData()
