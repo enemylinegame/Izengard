@@ -94,6 +94,8 @@ namespace UnitSystem
         {
             Unsubscribe();
 
+            TimeProgress = 0;
+
             _unitTarget.ResetTarget();
             _navigation.Disable();
             _unitState.ChangeState(UnitStateType.None);

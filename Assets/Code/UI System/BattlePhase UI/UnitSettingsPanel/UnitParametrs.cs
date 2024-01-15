@@ -116,6 +116,14 @@ namespace UI
 
             return unitData;
         }
+
+        public void ResetData()
+        {
+            _unitPriorityList.ResetData();
+
+            Init(_unitData);
+        }
+
         public void Init(IUnitData data)
         {
             InitFactionDropDown(data);

@@ -19,9 +19,15 @@ namespace UI
 
             _battleSceneUI.StartButton.onClick.AddListener(() => OnStartBattle?.Invoke());
             _battleSceneUI.PauseButton.onClick.AddListener(() => OnPauseBattle?.Invoke());
-            _battleSceneUI.ResetButton.onClick.AddListener(() => OnResetBattle?.Invoke());
+            _battleSceneUI.ResetButton.onClick.AddListener(OnReseted);
 
             _battleSceneUI.UnitSettings.OnSpawn += SpawnUnits;
+        }
+
+        private void OnReseted()
+        {
+            _battleSceneUI.UnitSettings.ResetPanel();
+            OnResetBattle?.Invoke();
         }
 
         private void SpawnUnits(int quantity)

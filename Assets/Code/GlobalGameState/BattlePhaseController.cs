@@ -100,7 +100,10 @@ namespace Code.GlobalGameState
         private void ResetBattle()
         {
             _isBattleWork = false;
+            
             _spawnCreation.ClearSpawnres();
+            _unitsContainer.ClearData();
+
         }
 
         public void StartPhase()

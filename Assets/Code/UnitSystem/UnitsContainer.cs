@@ -183,6 +183,42 @@ namespace UnitSystem
             }
         }
 
+        public void ClearData()
+        {
+            if (_selectedUnit != null)
+            {
+                _unitStatsPanel.Dispose();
+            }
+
+            _selectedUnit = null;
+
+            for (int i = 0; i < toRemoveUnitsCollection.Count; i++)
+            {
+                var unit = toRemoveUnitsCollection[i];
+
+                unit.Disable();
+
+                OnUnitRemoved?.Invoke(unit);
+            }
+
+            for (int i =0; i < _createdUnits.Count; i++)
+            {
+                var unit = _createdUnits[i];
+
+                unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
+
+                unit.Disable();
+                
+                OnUnitRemoved?.Invoke(unit);
+            }
+
+            _createdUnits.Clear();
+            _enemyUnits.Clear();
+            _defenderUnits.Clear();
+            toRemoveUnitsCollection.Clear();
+
+        }
+
         #region IPaused
 
         public bool IsPaused { get; private set; }

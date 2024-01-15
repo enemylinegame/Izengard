@@ -76,6 +76,11 @@ namespace UI
             OnSpawn?.Invoke(int.Parse(_spawnQuantityField.text));
         }
 
+        public void ResetPanel()
+        {
+            _parametrs.ResetData();
+            _spawnQuantityField.text = "1";
+        }
 
         private void OnDestroy()
         {

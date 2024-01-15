@@ -19,6 +19,8 @@ namespace UI
         [SerializeField]
         private Button _minusButton;
 
+        private IList<UnitPriorityData> _defaultPriorities;
+
         private List<UnitPriorityUI> unitPriorityUIList;
         private int _itemsCount;
         
@@ -37,6 +39,25 @@ namespace UI
 
                 _itemsCount++;
             }
+
+            if (_defaultPriorities == null)
+            {
+                _defaultPriorities = unitPriorities;
+            } 
+        }
+
+        public void ResetData()
+        {
+            _itemsCount = 0;
+
+            for (int i =0; i < unitPriorityUIList.Count; i++)
+            {
+                var priority = unitPriorityUIList[i];
+                priority.ResetUI();
+                priority.SetActive(false);    
+            }
+
+            Init(_defaultPriorities);
         }
 
         public List<UnitPriorityData> GetPriorityData()
