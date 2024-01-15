@@ -1,7 +1,7 @@
-﻿using DG.Tweening;
+﻿using Abstraction;
+using DG.Tweening;
 using System;
 using System.Collections.Generic;
-using UnitSystem.Enum;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,7 +41,7 @@ namespace UI
 
         private List<SpawnerHUD> _spawnerHUDCollection = new();
       
-        public void AddHUD(string spawnerId, UnitFactionType unitFaction) 
+        public void AddHUD(string spawnerId, FactionType unitFaction) 
         {
             var hud = Instantiate(_spawnerHUD, _spawnGridPanel).GetComponent<SpawnerHUD>();
 
@@ -49,12 +49,12 @@ namespace UI
 
             switch (unitFaction)
             {
-                case UnitFactionType.Enemy:
+                case FactionType.Enemy:
                     {
                         name = $"E";
                         break;
                     }
-                case UnitFactionType.Defender: 
+                case FactionType.Defender: 
                     {
                         name = $"D";                   
                         break;

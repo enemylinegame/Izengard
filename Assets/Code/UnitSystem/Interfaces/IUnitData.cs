@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Abstraction;
+using System.Collections.Generic;
 using UnitSystem.Data;
 using UnitSystem.Enum;
 
@@ -6,7 +7,7 @@ namespace UnitSystem
 {
     public interface IUnitData
     {
-        public UnitFactionType Faction { get; }
+        public FactionType Faction { get; }
         public UnitType Type { get; }
         public UnitRoleType Role { get; }
         public int HealthPoints { get; }

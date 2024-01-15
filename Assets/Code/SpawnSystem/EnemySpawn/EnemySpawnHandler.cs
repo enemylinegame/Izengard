@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Tools;
 using UI;
-using UnitSystem.Enum;
 using UnitSystem;
 using UnityEngine;
+using Abstraction;
 
 namespace SpawnSystem
 {
@@ -43,7 +43,7 @@ namespace SpawnSystem
 
         public void SpawnUnit(IUnitData unitData)
         {
-            if (unitData.Faction != UnitFactionType.Enemy)
+            if (unitData.Faction != FactionType.Enemy)
                 return;
 
             _spawnController.SpawnUnit(unitData);

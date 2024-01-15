@@ -1,5 +1,5 @@
-﻿using System;
-using UnitSystem.Enum;
+﻿using Abstraction;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,9 +12,9 @@ namespace UI
         [SerializeField]
         private Button _defenderTypeSelectButton;
 
-        private Action<UnitFactionType> _callBackAction;
+        private Action<FactionType> _callBackAction;
 
-        public void Enable(Action<UnitFactionType> callBackAction)
+        public void Enable(Action<FactionType> callBackAction)
         {
             _callBackAction = callBackAction;
             _enemyTypeSelectButton.onClick.AddListener(EnemyTypeSelected);
@@ -35,12 +35,12 @@ namespace UI
 
         private void EnemyTypeSelected()
         {
-            _callBackAction?.Invoke(UnitFactionType.Enemy);
+            _callBackAction?.Invoke(FactionType.Enemy);
         }
 
         private void DefenderTypeSelected()
         {
-            _callBackAction?.Invoke(UnitFactionType.Defender);
+            _callBackAction?.Invoke(FactionType.Defender);
         }
 
         public void Show()

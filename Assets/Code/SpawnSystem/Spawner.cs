@@ -1,5 +1,5 @@
-﻿using NewBuildingSystem;
-using UnitSystem.Enum;
+﻿using Abstraction;
+using NewBuildingSystem;
 using UnityEngine;
 
 namespace SpawnSystem
@@ -11,9 +11,9 @@ namespace SpawnSystem
 
         public Transform SpawnLocation => _spawnlocation;
 
-        public UnitFactionType FactionType { get; private set; }
+        public FactionType FactionType { get; private set; }
 
-        public void SetFaction(UnitFactionType factionType)
+        public void SetFaction(FactionType factionType)
         {
             FactionType = factionType;
         }

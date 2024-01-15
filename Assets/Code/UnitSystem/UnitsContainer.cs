@@ -62,7 +62,7 @@ namespace UnitSystem
             {
                 default:
                     break;
-                case UnitFactionType.Enemy:
+                case FactionType.Enemy:
                     {
                         if (!_enemyUnits.Contains(unit))
                         {
@@ -71,7 +71,7 @@ namespace UnitSystem
                         }
                         break;
                     }
-                case UnitFactionType.Defender:
+                case FactionType.Defender:
                     {
                         if (!_defenderUnits.Contains(unit))
                         {
@@ -93,7 +93,7 @@ namespace UnitSystem
             {
                 default:
                     break;
-                case UnitFactionType.Enemy:
+                case FactionType.Enemy:
                     {
                         _enemyUnits.Remove(unit);
 
@@ -104,7 +104,7 @@ namespace UnitSystem
 
                         break;
                     }
-                case UnitFactionType.Defender:
+                case FactionType.Defender:
                     {
                         _defenderUnits.Remove(unit);
 

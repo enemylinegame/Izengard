@@ -1,3 +1,4 @@
+using Abstraction;
 using System.Collections.Generic;
 using TMPro;
 using UnitSystem;
@@ -78,7 +79,7 @@ namespace UI
         {
             var unitData = new UnitDataModel
             {
-                Faction = (UnitFactionType)_factionDropDown.value,
+                Faction = (FactionType)_factionDropDown.value,
                 Type = (UnitType)_typeDropDown.value,
                 Role = (UnitRoleType)_roleDropDown.value,
 
@@ -167,9 +168,9 @@ namespace UI
 
             var optData
                 = new List<string> {
-                        nameof(UnitFactionType.None),
-                        nameof(UnitFactionType.Defender),
-                        nameof(UnitFactionType.Enemy)
+                        nameof(FactionType.None),
+                        nameof(FactionType.Defender),
+                        nameof(FactionType.Enemy)
                 };
 
             _factionDropDown.AddOptions(optData);

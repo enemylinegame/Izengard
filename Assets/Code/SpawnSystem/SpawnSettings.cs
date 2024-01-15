@@ -1,7 +1,7 @@
 ﻿using UnitSystem.Data;
-using UnitSystem.Enum;
 using System.Collections.Generic;
 using UnityEngine;
+using Abstraction;
 
 namespace SpawnSystem
 {
@@ -9,7 +9,7 @@ namespace SpawnSystem
     public class SpawnSettings : ScriptableObject
     {
         [field: SerializeField] public float MaxSpawnRadius { get; private set; } = 2f;
-        [field: SerializeField] public UnitFactionType SpawnFaction { get; private set; }
+        [field: SerializeField] public FactionType SpawnFaction { get; private set; }
         [field: SerializeField] public List<UnitCreationData> UnitsCreationData { get; private set; }
     }
 }

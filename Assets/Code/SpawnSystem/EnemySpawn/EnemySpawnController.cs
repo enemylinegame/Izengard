@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Abstraction;
+using System;
 using System.Collections.Generic;
 using UnitSystem;
 using UnitSystem.Data;
@@ -10,7 +11,7 @@ namespace SpawnSystem
 {
     public class EnemySpawnController : ISpawnController
     {
-        private readonly UnitFactionType _faction;
+        private readonly FactionType _faction;
 
         private readonly SpawnerView _spawner;
         private readonly SpawnCreationController _spawnCreationController;
@@ -30,7 +31,7 @@ namespace SpawnSystem
             SpawnCreationController spawnCreationController,
             IUnitsContainer unitsContainer)
         {
-            _faction = UnitFactionType.Enemy;
+            _faction = FactionType.Enemy;
 
             _spawner = spawner;
             _spawnCreationController = spawnCreationController;
@@ -51,7 +52,7 @@ namespace SpawnSystem
 
         private void SpawnerCreated(Spawner spawner)
         {
-            if (spawner.FactionType != UnitFactionType.Enemy)
+            if (spawner.FactionType != FactionType.Enemy)
                 return;
 
             _spawnersCollection.Add(spawner);
@@ -59,7 +60,7 @@ namespace SpawnSystem
 
         private void SpawnerRemoved(Spawner spawner)
         {
-            if (spawner.FactionType != UnitFactionType.Enemy)
+            if (spawner.FactionType != FactionType.Enemy)
                 return;
 
             _spawnersCollection.Remove(spawner);
@@ -124,7 +125,7 @@ namespace SpawnSystem
 
         public void DespawnUnit(IUnit unit)
         {
-            if (unit.Stats.Faction != UnitFactionType.Enemy)
+            if (unit.Stats.Faction != FactionType.Enemy)
                 return;
 
             _viewPool.ReturnToPool(unit.View);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Abstraction;
+using System;
 using UnitSystem.Enum;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ namespace UnitSystem.Data
     [Serializable]
     public class UnitMainStatsData : IUnitStatsData
     {
-        [SerializeField] private UnitFactionType _faction;
+        [SerializeField] private FactionType _faction;
         [SerializeField] private UnitType _type;
         [SerializeField] private UnitRoleType _role;
         [SerializeField] private int _healthPoints = 100;
@@ -16,7 +17,7 @@ namespace UnitSystem.Data
         [SerializeField] private float _detectionRange = 5f;
 
 
-        public UnitFactionType Faction => _faction;
+        public FactionType Faction => _faction;
         public UnitType Type => _type;
         public UnitRoleType Role => _role;
 

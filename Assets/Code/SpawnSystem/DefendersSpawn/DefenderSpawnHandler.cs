@@ -1,6 +1,6 @@
-﻿using UI;
+﻿using Abstraction;
+using UI;
 using UnitSystem;
-using UnitSystem.Enum;
 
 namespace SpawnSystem
 {
@@ -20,7 +20,7 @@ namespace SpawnSystem
 
         private void SpawnUnit(IUnitData unitData)
         {
-            if (unitData.Faction != UnitFactionType.Defender)
+            if (unitData.Faction != FactionType.Defender)
                 return;
 
             _spawnController.SpawnUnit(unitData);

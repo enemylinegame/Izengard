@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Abstraction;
+using System.Collections.Generic;
 using UnitSystem.Enum;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace UnitSystem.Data
         
         #region IUnitData
 
-        public UnitFactionType Faction => _mainStats.Faction;
+        public FactionType Faction => _mainStats.Faction;
         public UnitType Type => _mainStats.Type;
         public UnitRoleType Role => _mainStats.Role;
         public int HealthPoints => _mainStats.HealthPoints;

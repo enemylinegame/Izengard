@@ -5,12 +5,13 @@ using UnitSystem;
 using UnitSystem.Data;
 using UnitSystem.Enum;
 using Random = UnityEngine.Random;
+using Abstraction;
 
 namespace SpawnSystem
 {
     public class DefendersSpawnController : ISpawnController
     {
-        private readonly UnitFactionType _faction;
+        private readonly FactionType _faction;
 
         private readonly SpawnerView _spawner;
         private readonly SpawnCreationController _spawnCreationController;
@@ -30,7 +31,7 @@ namespace SpawnSystem
             SpawnCreationController spawnCreationController,
             IUnitsContainer unitsContainer)
         {
-            _faction = UnitFactionType.Defender;
+            _faction = FactionType.Defender;
 
             _spawner = spawner;
             _spawnCreationController = spawnCreationController;
@@ -51,7 +52,7 @@ namespace SpawnSystem
 
         private void SpawnerCreated(Spawner spawner)
         {
-            if (spawner.FactionType != UnitFactionType.Defender)
+            if (spawner.FactionType != FactionType.Defender)
                 return;
 
             _spawnersCollection.Add(spawner);
@@ -59,7 +60,7 @@ namespace SpawnSystem
 
         private void SpawnerRemoved(Spawner spawner)
         {
-            if (spawner.FactionType != UnitFactionType.Defender)
+            if (spawner.FactionType != FactionType.Defender)
                 return;
 
             _spawnersCollection.Remove(spawner);
@@ -124,7 +125,7 @@ namespace SpawnSystem
 
         public void DespawnUnit(IUnit unit)
         {
-            if (unit.Stats.Faction != UnitFactionType.Defender)
+            if (unit.Stats.Faction != FactionType.Defender)
                 return;
 
             _viewPool.ReturnToPool(unit.View);

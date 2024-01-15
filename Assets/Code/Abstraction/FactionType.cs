@@ -1,6 +1,6 @@
-﻿namespace UnitSystem.Enum
+﻿namespace Abstraction
 {
-    public enum UnitFactionType
+    public enum FactionType
     {
         None = 0,
         Defender = 1,

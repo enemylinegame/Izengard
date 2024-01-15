@@ -1,11 +1,11 @@
-﻿using Code.SceneConfigs;
+﻿using Abstraction;
+using Code.SceneConfigs;
 using Configs;
 using NewBuildingSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UI;
-using UnitSystem.Enum;
 using UnityEditor;
 using UnityEngine;
 using UserInputSystem;
@@ -186,7 +186,7 @@ namespace SpawnSystem
             _typeSelectionPanel.Enable(SpawnerFinalizePlacment);           
         }
 
-        private void SpawnerFinalizePlacment(UnitFactionType faction) 
+        private void SpawnerFinalizePlacment(FactionType faction) 
         {
             _typeSelectionPanel.Disable();
 
@@ -201,10 +201,10 @@ namespace SpawnSystem
 
             switch (faction)
             {
-                case UnitFactionType.Enemy:
+                case FactionType.Enemy:
                     _buildingSpawner.ObjectBuild.transform.SetParent(_enemySpawners.SpawnersContainer);
                     break;
-                case UnitFactionType.Defender:
+                case FactionType.Defender:
                     _buildingSpawner.ObjectBuild.transform.SetParent(_defenderSpawners.SpawnersContainer);
                     break;
             }
