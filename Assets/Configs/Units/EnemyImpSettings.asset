@@ -21,7 +21,7 @@ MonoBehaviour:
     _speed: 2
     _detectionRange: 5
   _unitPriorities:
-  - _unitPriority: 4
+  - _unitPriority: 2
     _unitType: 1
   - _unitPriority: 1
     _unitType: 0

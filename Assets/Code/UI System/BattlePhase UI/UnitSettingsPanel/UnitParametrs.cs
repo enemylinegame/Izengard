@@ -84,7 +84,7 @@ namespace UI
 
         private FactionType _faction;
 
-        public Action<UnitType> OnUnitTypeChange;
+        public event Action<int> OnUnitTypeChange;
 
         public void Init()
         {
@@ -100,8 +100,7 @@ namespace UI
 
         private void UnitTypeChanged(int value)
         {
-            var unitType = (UnitType)value;
-            OnUnitTypeChange?.Invoke(unitType);
+            OnUnitTypeChange?.Invoke(value);
         }
 
         public void SetUnitData(IUnitData data)

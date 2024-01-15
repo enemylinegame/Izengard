@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Abstraction;
 using UnitSystem.Enum;
 using System.Collections.Generic;
+using UnitSystem;
 
 namespace UI
 {
@@ -98,6 +99,9 @@ namespace UI
 
         public void SetUnitTypes(IList<UnitType> unitTypes)
             => _parametrs.FillUnitTypeDropDown(unitTypes);
+
+        public void ChangeData(IUnitData data) 
+            => _parametrs.SetUnitData(data);
 
         public void ResetPanel()
         {

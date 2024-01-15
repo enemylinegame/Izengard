@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UI;
+using UnitSystem;
 using UnitSystem.Enum;
 using UnityEditor;
 using UnityEngine;
@@ -77,6 +78,8 @@ namespace SpawnSystem
             _spawnUI.OnCreateSpawnerClick += CreateSpawner;
             _spawnUI.OnRemoveSpawnerClick += RemoveSpawner;
 
+            _unitSettingsPanel.Parametrs.OnUnitTypeChange += UnitTypeChanged;
+
             _spawnUI.UnselectAll();
 
             _typeSelectionPanel.Hide();
@@ -85,7 +88,6 @@ namespace SpawnSystem
 
             _spawnerCount = 0;
         }
-
 
         private void SelectSpawner(string spawnerId)
         {
@@ -109,28 +111,48 @@ namespace SpawnSystem
             {
                 case FactionType.Defender:
                     {
-                        var availableUnitTypes = GetAvailableUnitTypes(_defenderSpawners);
+                        var availableUnitTypes = GetAvailableUnitTypes(_defenderSpawners.SpawnSettings);
                         _unitSettingsPanel.SetUnitTypes(availableUnitTypes);
+
+                        var availableUnitData = GetAvailableUnitData(_defenderSpawners.SpawnSettings);
+                        _unitSettingsPanel.ChangeData(availableUnitData[0]);
                         break;
                     }
                 case FactionType.Enemy:
                     {
-                        var availableUnitTypes = GetAvailableUnitTypes(_enemySpawners);
+                        var availableUnitTypes = GetAvailableUnitTypes(_enemySpawners.SpawnSettings);
                         _unitSettingsPanel.SetUnitTypes(availableUnitTypes);
+
+                        var availableUnitData = GetAvailableUnitData(_enemySpawners.SpawnSettings);
+                        _unitSettingsPanel.ChangeData(availableUnitData[0]);
                         break;
                     }
             }
         }
 
-        private IList<UnitType> GetAvailableUnitTypes(SpawnerView spawnerView)
+        private IList<UnitType> GetAvailableUnitTypes(SpawnSettings settings)
         {
             var result = new List<UnitType>();
 
-            var unitsCreationData = spawnerView.SpawnSettings.UnitsCreationData;
+            var unitsCreationData = settings.UnitsCreationData;
             
             for (int i = 0; i < unitsCreationData.Count; i++)
             {
                 result.Add(unitsCreationData[i].Type);
+            }
+
+            return result;
+        }
+
+        public IList<IUnitData> GetAvailableUnitData(SpawnSettings settings)
+        {
+            var result = new List<IUnitData>();
+
+            var unitsCreationData = settings.UnitsCreationData;
+
+            for (int i = 0; i < unitsCreationData.Count; i++)
+            {
+                result.Add(unitsCreationData[i].UnitSettings);
             }
 
             return result;
@@ -321,6 +343,29 @@ namespace SpawnSystem
                 _selectedSpawner = null;
             }
         }
+
+        private void UnitTypeChanged(int index)
+        {
+            if (_selectedSpawner == null)
+                return;
+
+            switch (_selectedSpawner.FactionType)
+            {
+                case FactionType.Defender:
+                    {
+                        var availableUnitData = GetAvailableUnitData(_defenderSpawners.SpawnSettings);
+                        _unitSettingsPanel.ChangeData(availableUnitData[index]);
+                        break;
+                    }
+                case FactionType.Enemy:
+                    {
+                        var availableUnitData = GetAvailableUnitData(_enemySpawners.SpawnSettings);
+                        _unitSettingsPanel.ChangeData(availableUnitData[index]);
+                        break;
+                    }
+            }
+        }
+
 
         public void Reset()
         {

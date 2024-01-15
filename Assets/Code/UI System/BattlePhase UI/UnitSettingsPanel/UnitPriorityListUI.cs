@@ -32,6 +32,8 @@ namespace UI
 
             _itemsCount = 0;
 
+            ResetUI();
+
             CreatePriorityItems(_containerItems);
 
             for (int i = 0; i < unitPriorities.Count; i++)
@@ -72,14 +74,19 @@ namespace UI
 
         public void ResetData()
         {
-            for (int i =0; i < _unitPriorityUIList.Count; i++)
+            ResetUI();
+
+            Init(_defaultPriorities);
+        }
+
+        private void ResetUI()
+        {
+            for (int i = 0; i < _unitPriorityUIList.Count; i++)
             {
                 var priority = _unitPriorityUIList[i];
                 priority.ResetUI();
-                priority.SetActive(false);    
+                priority.SetActive(false);
             }
-
-            Init(_defaultPriorities);
         }
 
         public List<UnitPriorityData> GetPriorityData()
