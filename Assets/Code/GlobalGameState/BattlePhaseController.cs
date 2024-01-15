@@ -24,13 +24,13 @@ namespace Code.GlobalGameState
 
         private readonly DefenderSpawnHandler _defendersSpawnHandler;
         private readonly EnemySpawnHandler _enemySpawnHandler;
-        
+
         private readonly BaseBattleController _enemyBattleController;
         private readonly BaseBattleController _defenderBattleController;
 
         public event Action OnPhaseEnd;
 
-        private bool _isBattleWork;
+        private BattlePhaseState _state;
 
         public BattlePhaseController(
             SceneObjectsHolder sceneObjectsHolder,
@@ -38,7 +38,7 @@ namespace Code.GlobalGameState
             PauseController pauseController,
             SpawnCreationController spawnCreation,
             MainTowerController mainTower,
-            IUnitsContainer unitsContainer) 
+            IUnitsContainer unitsContainer)
         {
             _battleUIController = new BattleUIController(sceneObjectsHolder.BattleUI);
 
@@ -51,18 +51,18 @@ namespace Code.GlobalGameState
 
             var enemySpawner
              = new EnemySpawnController(sceneObjectsHolder.EnemySpawner, spawnCreation, unitsContainer);
-            
+
             var defendersSpawner
                 = new DefendersSpawnController(sceneObjectsHolder.DefendersSpawner, spawnCreation, unitsContainer);
 
             _enemySpawnHandler
                 = new EnemySpawnHandler(enemySpawner, configs.EnemyWaveSettings, _battleUIController);
-            _defendersSpawnHandler 
+            _defendersSpawnHandler
                 = new DefenderSpawnHandler(defendersSpawner, _battleUIController);
 
             var targetFinder = new TargetFinder(mainTower, unitsContainer);
 
-            _enemyBattleController 
+            _enemyBattleController
                 = new EnemyBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, mainTower, enemySpawner);
             _defenderBattleController
                 = new DefenderBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, mainTower);
@@ -72,45 +72,68 @@ namespace Code.GlobalGameState
 
             _battleUIController.OnStartBattle += StartBattle;
             _battleUIController.OnPauseBattle += PauseBattle;
+            _battleUIController.OnResumeBattle += ResumeBattle;
             _battleUIController.OnResetBattle += ResetBattle;
 
-            _isBattleWork = false;
+            _state = BattlePhaseState.None;
         }
-
 
         private void StartBattle()
         {
-            _isBattleWork = true;
+            if (_unitsContainer.DefenderUnits.Count == 0
+                && _unitsContainer.EnemyUnits.Count == 0) 
+            {
+                return;
+            }
+
+            _state = BattlePhaseState.Proceed;
+            _battleUIController.BlockStartButton(true);
         }
 
         private void PauseBattle()
         {
-            if (_isBattleWork)
-            {
-                _pauseController.Pause();
-                _isBattleWork = false;
-            }
-            else
-            {
-                _pauseController.Release();
-                _isBattleWork = true;
-            }
+            if (_state != BattlePhaseState.Proceed)
+                return;
+
+            _battleUIController.SwitchPauseUI(false);
+
+            _pauseController.Pause();
+
+            _state = BattlePhaseState.Pause;
+        }
+
+        private void ResumeBattle()
+        {
+            if (_state != BattlePhaseState.Pause)
+                return;
+
+            _battleUIController.SwitchPauseUI(true);
+
+            _pauseController.Release();
+
+            _state = BattlePhaseState.Proceed;
         }
 
         private void ResetBattle()
         {
-            _isBattleWork = false;
-            
             _spawnCreation.ClearSpawnres();
             _unitsContainer.ClearData();
 
             _mainTowerController.Reset();
+
+            ResumeBattle();
+
+            StartPhase();
         }
 
         public void StartPhase()
         {
             _mainTowerController.OnMainTowerDestroyed += MainTowerWasDestroyed;
             _unitsContainer.OnAllEnemyDestroyed += AllEnemiesWasKilled;
+
+            _battleUIController.BlockStartButton(false);
+
+            _state = BattlePhaseState.Start;
         }
 
 
@@ -119,13 +142,15 @@ namespace Code.GlobalGameState
             _mainTowerController.OnMainTowerDestroyed -= MainTowerWasDestroyed;
             _unitsContainer.OnAllEnemyDestroyed -= AllEnemiesWasKilled;
 
+            _state = BattlePhaseState.End;
+
             OnPhaseEnd?.Invoke();
         }
 
         private void MainTowerWasDestroyed()
         {
-            _enemySpawnHandler.StopWave(); 
-            
+            _enemySpawnHandler.StopWave();
+
             Debug.Log("You Lose!");
 
             EndPhase();
@@ -142,16 +167,16 @@ namespace Code.GlobalGameState
 
         public void OnUpdate(float deltaTime)
         {
-            if (_isBattleWork == false)
+            if (_state != BattlePhaseState.Proceed)
                 return;
 
             _enemyBattleController.OnUpdate(deltaTime);
-            _defenderBattleController.OnUpdate(deltaTime);         
+            _defenderBattleController.OnUpdate(deltaTime);
         }
 
         public void OnFixedUpdate(float fixedDeltaTime)
         {
-            if (_isBattleWork == false)
+            if (_state != BattlePhaseState.Proceed)
                 return;
 
         }

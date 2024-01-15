@@ -9,6 +9,7 @@ namespace UI
 
         public event Action OnStartBattle;
         public event Action OnPauseBattle;
+        public event Action OnResumeBattle;
         public event Action OnResetBattle;
 
         public event Action<IUnitData> OnSpawnNewUnit;
@@ -18,10 +19,21 @@ namespace UI
             _battleSceneUI = battleSceneUI;
 
             _battleSceneUI.StartButton.onClick.AddListener(() => OnStartBattle?.Invoke());
-            _battleSceneUI.PauseButton.onClick.AddListener(() => OnPauseBattle?.Invoke());
+            _battleSceneUI.PauseButton.onClick.AddListener(OnPaused);
+            _battleSceneUI.ResumeButton.onClick.AddListener(OnResumed);
             _battleSceneUI.ResetButton.onClick.AddListener(OnReseted);
 
             _battleSceneUI.UnitSettings.OnSpawn += SpawnUnits;
+        }
+
+        private void OnPaused()
+        {
+            OnPauseBattle?.Invoke();
+        }
+
+        private void OnResumed()
+        {
+            OnResumeBattle?.Invoke();
         }
 
         private void OnReseted()
@@ -40,10 +52,22 @@ namespace UI
             }
         }
 
+        public void BlockStartButton(bool state)
+        {
+            _battleSceneUI.StartButton.interactable = !state;
+        }
+
+        public void SwitchPauseUI(bool state)
+        {
+            _battleSceneUI.PauseButton.gameObject.SetActive(state);
+            _battleSceneUI.ResumeButton.gameObject.SetActive(!state);
+        }
+
         public void Dispose()
         {
             _battleSceneUI.StartButton.onClick.RemoveAllListeners();
             _battleSceneUI.PauseButton.onClick.RemoveAllListeners();
+            _battleSceneUI.ResumeButton.onClick.RemoveAllListeners();
             _battleSceneUI.ResetButton.onClick.RemoveAllListeners();
         }
     }

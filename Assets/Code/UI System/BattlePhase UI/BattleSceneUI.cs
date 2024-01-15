@@ -19,6 +19,8 @@ namespace UI
         [SerializeField]
         private Button _pauseButton;
         [SerializeField]
+        private Button _resumeButton;
+        [SerializeField]
         private Button _resetButton;
 
         public UnitSettingsPanel UnitSettings => _unitSettings;
@@ -27,6 +29,7 @@ namespace UI
         public UnitStatsPanel UnitStatsPanel => _unitStatsPanel;
         public Button StartButton => _startButton;
         public Button PauseButton => _pauseButton;
+        public Button ResumeButton => _resumeButton;
         public Button ResetButton => _resetButton;
 
         
