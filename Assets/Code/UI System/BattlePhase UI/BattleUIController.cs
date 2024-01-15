@@ -23,7 +23,9 @@ namespace UI
             _battleSceneUI.ResumeButton.onClick.AddListener(OnResumed);
             _battleSceneUI.ResetButton.onClick.AddListener(OnReseted);
 
-            _battleSceneUI.UnitSettings.OnSpawn += SpawnUnits;
+            _battleSceneUI.UnitSettingsPanel.OnSpawn += SpawnUnits;
+
+            _battleSceneUI.UnitSettingsPanel.InitPanel();
         }
 
         private void OnPaused()
@@ -38,13 +40,13 @@ namespace UI
 
         private void OnReseted()
         {
-            _battleSceneUI.UnitSettings.ResetPanel();
+            _battleSceneUI.UnitSettingsPanel.ResetPanel();
             OnResetBattle?.Invoke();
         }
 
         private void SpawnUnits(int quantity)
         {
-            var unitCreateData = _battleSceneUI.UnitSettings.Parametrs.GetData();
+            var unitCreateData = _battleSceneUI.UnitSettingsPanel.Parametrs.GetData();
 
             for(int i=0; i < quantity; i++)
             {

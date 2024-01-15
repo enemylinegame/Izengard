@@ -18,6 +18,8 @@ namespace SpawnSystem
         private readonly CheckForBorders _checkForBorders;
 
         private readonly SpawnPanelUI _spawnUI;
+        private readonly UnitSettingsPanel _unitSettingsPanel;
+
         private readonly SpawnerTypeSelectionPanel _typeSelectionPanel;
 
         private readonly SpawnerView _enemySpawners;
@@ -54,6 +56,8 @@ namespace SpawnSystem
             _checkForBorders = new CheckForBorders(plane);
 
             _spawnUI = sceneObjects.BattleUI.SpawnPanel;
+            _unitSettingsPanel = sceneObjects.BattleUI.UnitSettingsPanel;
+
             _typeSelectionPanel = sceneObjects.BattleUI.SpawnerTypeSelection;
 
             _enemySpawners = sceneObjects.EnemySpawner;
@@ -89,6 +93,9 @@ namespace SpawnSystem
             _selectedSpawner = _createdSpawnersCollection.Find(spw => spw.Id == spawnerId);
 
             ChangeMaterial(_selectedSpawner);
+           
+            _unitSettingsPanel.Show();
+            _unitSettingsPanel.SetFaction(_selectedSpawner.FactionType);
         }
 
  
@@ -98,6 +105,9 @@ namespace SpawnSystem
             _spawnerCount++;
 
             _spawnUI.UnselectAll();
+
+            _unitSettingsPanel.SetFaction(FactionType.None);
+            _unitSettingsPanel.Hide();
 
             UnselectCurrentSpawner();
 
@@ -240,6 +250,9 @@ namespace SpawnSystem
             ChangeMaterial(_selectedSpawner, false);
 
             _spawnUI.RemoveHUD(_selectedSpawner.Id);
+            
+            _unitSettingsPanel.SetFaction(FactionType.None);
+            _unitSettingsPanel.Hide();
 
             _createdSpawnersCollection.Remove(_selectedSpawner);
 
@@ -256,6 +269,9 @@ namespace SpawnSystem
             _spawnUI.UnselectAll();
 
             UnselectCurrentSpawner();
+
+            _unitSettingsPanel.SetFaction(FactionType.None);
+            _unitSettingsPanel.Hide();
         }
 
 
@@ -269,9 +285,12 @@ namespace SpawnSystem
             }
         }
 
-        public void ClearSpawnres()
+        public void Reset()
         {
             _spawnUI.ClearHUD();
+
+            _unitSettingsPanel.SetFaction(FactionType.None);
+            _unitSettingsPanel.Hide();
 
             if (_buildingSpawner != null)
             {

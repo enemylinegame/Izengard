@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
@@ -7,7 +6,7 @@ namespace UI
     public class BattleSceneUI : MonoBehaviour
     {
         [SerializeField]
-        private UnitSettingsPanel _unitSettings;
+        private UnitSettingsPanel _unitSettingsPanel;
         [SerializeField]
         private SpawnPanelUI _spawnPanel;
         [SerializeField]
@@ -23,7 +22,7 @@ namespace UI
         [SerializeField]
         private Button _resetButton;
 
-        public UnitSettingsPanel UnitSettings => _unitSettings;
+        public UnitSettingsPanel UnitSettingsPanel => _unitSettingsPanel;
         public SpawnPanelUI SpawnPanel => _spawnPanel;
         public SpawnerTypeSelectionPanel SpawnerTypeSelection => _spawnerTypeSelection;
         public UnitStatsPanel UnitStatsPanel => _unitStatsPanel;

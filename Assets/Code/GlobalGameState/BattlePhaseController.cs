@@ -116,7 +116,7 @@ namespace Code.GlobalGameState
 
         private void ResetBattle()
         {
-            _spawnCreation.ClearSpawnres();
+            _spawnCreation.Reset();
             _unitsContainer.ClearData();
 
             _mainTowerController.Reset();

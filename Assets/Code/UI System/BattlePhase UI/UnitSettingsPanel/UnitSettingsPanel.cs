@@ -3,6 +3,7 @@ using TMPro;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Abstraction;
 
 namespace UI
 {
@@ -29,7 +30,7 @@ namespace UI
 
         public event Action<int> OnSpawn;
 
-        protected void Awake()
+        public void InitPanel()
         {
             openButton.onClick.AddListener(OpenPanel);
             closeButton.onClick.AddListener(ClosePanel);
@@ -42,6 +43,10 @@ namespace UI
             _minusButton.onClick.AddListener(() => ChangeQuantityFieldValue(-1));
 
             _spawnButton.onClick.AddListener(SpawnQuantityUnits);
+
+            _parametrs.Init();
+
+            Hide();
         }
 
         private void OpenPanel()
@@ -75,6 +80,19 @@ namespace UI
         {
             OnSpawn?.Invoke(int.Parse(_spawnQuantityField.text));
         }
+
+        public void Show()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
+        }
+
+        public void SetFaction(FactionType faction) 
+            => _parametrs.SetFaction(faction);
 
         public void ResetPanel()
         {
