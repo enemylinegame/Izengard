@@ -19,7 +19,7 @@ namespace Code.GlobalGameState
         private readonly PauseController _pauseController;
         private readonly SpawnCreationController _spawnCreation;
 
-        private readonly MainTowerController _mainTower;
+        private readonly MainTowerController _mainTowerController;
         private readonly IUnitsContainer _unitsContainer;
 
         private readonly DefenderSpawnHandler _defendersSpawnHandler;
@@ -45,7 +45,7 @@ namespace Code.GlobalGameState
             _pauseController = pauseController;
             _spawnCreation = spawnCreation;
 
-            _mainTower = mainTower;
+            _mainTowerController = mainTower;
 
             _unitsContainer = unitsContainer;
 
@@ -104,18 +104,19 @@ namespace Code.GlobalGameState
             _spawnCreation.ClearSpawnres();
             _unitsContainer.ClearData();
 
+            _mainTowerController.Reset();
         }
 
         public void StartPhase()
         {
-            _mainTower.OnMainTowerDestroyed += MainTowerWasDestroyed;
+            _mainTowerController.OnMainTowerDestroyed += MainTowerWasDestroyed;
             _unitsContainer.OnAllEnemyDestroyed += AllEnemiesWasKilled;
         }
 
 
         public void EndPhase()
         {
-            _mainTower.OnMainTowerDestroyed -= MainTowerWasDestroyed;
+            _mainTowerController.OnMainTowerDestroyed -= MainTowerWasDestroyed;
             _unitsContainer.OnAllEnemyDestroyed -= AllEnemiesWasKilled;
 
             OnPhaseEnd?.Invoke();

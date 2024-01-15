@@ -49,7 +49,10 @@ namespace BattleSystem.MainTower
             _view.Hide();
         }
 
-
+        public void Reset()
+        {
+            _health.SetValue(_maxHealth);
+        }
 
         private void TakeDamage(IDamage damage)
         {
