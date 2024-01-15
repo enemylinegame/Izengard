@@ -268,5 +268,35 @@ namespace SpawnSystem
                 _selectedSpawner = null;
             }
         }
+
+        public void ClearSpawnres()
+        {
+            _spawnUI.ClearHUD();
+
+            if (_buildingSpawner != null)
+            {
+                OnSpawnerRemoved?.Invoke(_buildingSpawner);
+
+                Object.Destroy(_buildingSpawner.ObjectBuild);
+                _buildingSpawner = null;
+            }
+
+            if (_selectedSpawner != null)
+            {
+                OnSpawnerRemoved?.Invoke(_selectedSpawner);
+
+                Object.Destroy(_selectedSpawner.ObjectBuild);
+                _selectedSpawner = null;
+            }
+
+            for (int i =0; i< _createdSpawnersCollection.Count; i++)
+            {
+                var spawner = _createdSpawnersCollection[i];
+                OnSpawnerRemoved?.Invoke(spawner);
+                Object.Destroy(spawner.ObjectBuild);
+            }
+
+            _createdSpawnersCollection.Clear();
+        }
     }
 }

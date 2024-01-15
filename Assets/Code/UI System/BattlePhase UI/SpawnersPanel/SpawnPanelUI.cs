@@ -84,6 +84,22 @@ namespace UI
             _spawnerHUDCollection.Remove(hud);
         }
 
+        public void ClearHUD()
+        {
+            for(int i =0; i < _spawnerHUDCollection.Count; i++)
+            {
+                var hud = _spawnerHUDCollection[i];
+                
+                hud.OnSelectAction -= SpawnerSelected;
+
+                hud.Deinit();
+
+                Destroy(hud.gameObject);
+            }
+
+            _spawnerHUDCollection.Clear();
+        }
+
         private void SpawnerSelected(string spawnerId)
         {
             var spawnerHUD = _spawnerHUDCollection.Find(spwn => spwn.Id == spawnerId);

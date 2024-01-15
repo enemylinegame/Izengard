@@ -17,6 +17,7 @@ namespace Code.GlobalGameState
         private readonly BattleUIController _battleUIController;
 
         private readonly PauseController _pauseController;
+        private readonly SpawnCreationController _spawnCreation;
 
         private readonly MainTowerController _mainTower;
         private readonly IUnitsContainer _unitsContainer;
@@ -42,6 +43,7 @@ namespace Code.GlobalGameState
             _battleUIController = new BattleUIController(sceneObjectsHolder.BattleUI);
 
             _pauseController = pauseController;
+            _spawnCreation = spawnCreation;
 
             _mainTower = mainTower;
 
@@ -98,6 +100,7 @@ namespace Code.GlobalGameState
         private void ResetBattle()
         {
             _isBattleWork = false;
+            _spawnCreation.ClearSpawnres();
         }
 
         public void StartPhase()
