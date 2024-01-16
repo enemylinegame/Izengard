@@ -83,6 +83,7 @@ namespace UI
         #endregion
 
         private FactionType _faction;
+        private IList<UnitType> _unitTypes;
 
         public event Action<int> OnUnitTypeChange;
 
@@ -92,7 +93,7 @@ namespace UI
                 return;
 
             _faction = FactionType.None;
-
+            _unitTypes = new List<UnitType>();
             _typeDropDown.onValueChanged.AddListener(UnitTypeChanged);
 
             SetUnitData(_defaultUnitData);
@@ -204,11 +205,18 @@ namespace UI
 
         public void FillUnitTypeDropDown(IList<UnitType> unitTypes)
         {
+            _unitTypes.Clear();
             _typeDropDown.ClearOptions();
+
             var optData = new List<string>();
+            
             for (int i = 0; i < unitTypes.Count; i++)
             {
-                optData.Add(unitTypes[i].GetDescription());
+                var unitType = unitTypes[i];
+
+                optData.Add(unitType.GetDescription());
+
+                _unitTypes.Add(unitType);
             }
 
             _typeDropDown.AddOptions(optData);
@@ -221,7 +229,7 @@ namespace UI
             var unitData = new UnitDataModel
             {
                 Faction = _faction,
-                Type = (UnitType)_typeDropDown.value,
+                Type = GetUnitType(_typeDropDown.value),
                 Role = (UnitRoleType)_roleDropDown.value,
 
                 HealthPoints = int.Parse(_healthField.text),
@@ -257,6 +265,17 @@ namespace UI
             };
 
             return unitData;
+        }
+
+        private UnitType GetUnitType(int index)
+        {
+            if (_unitTypes.Count == 0)
+                return UnitType.None;
+
+            if (index > _unitTypes.Count)
+                return UnitType.None;
+
+            return _unitTypes[index];
         }
 
         public void ResetData()
