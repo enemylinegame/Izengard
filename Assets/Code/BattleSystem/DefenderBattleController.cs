@@ -107,15 +107,6 @@ namespace BattleSystem
 
                 unit.MoveTo(target.Position);
             }
-            else 
-            {
-                if (!CheckIsOnDestinationPosition(unit))
-                {
-                    unit.ChangeState(UnitStateType.Move);
-                    unit.MoveTo(unit.StartPosition);
-                }
-            }
-
         }
 
         protected override void UnitMoveState(IUnit unit, float deltaTime)
