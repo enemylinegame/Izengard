@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd6193985c4196d408402124d7f096c6, type: 3}
-  m_Name: EnemyFiendSettings
+  m_Name: EnemyFiendConfig
   m_EditorClassIdentifier: 
   _mainStats:
     _faction: 2
