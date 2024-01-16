@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427194, b: 0.5645252, a: 1}
+  m_IndirectSpecularColor: {r: 0.43667555, g: 0.48427176, b: 0.56452405, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5184,8 +5184,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1268502935}
   m_HandleRect: {fileID: 1268502934}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.42499998
+  m_Value: 0.9999999
+  m_Size: 0.42500007
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -53147,7 +53147,7 @@ MonoBehaviour:
   _createSpawnerButton: {fileID: 1595132642}
   _removeSpawnerButton: {fileID: 2118926113}
   _moveSpawnerButton: {fileID: 1319439961}
-  _spawnerTypeSelectionPanel: {fileID: 0}
+  _spawnerTypeSelectionPanel: {fileID: 2118605077}
   _spawnGridPanel: {fileID: 1510716414}
   _spawnerHUD: {fileID: 8902189111995411126, guid: 1dfcbcc19eaed5b4d96303f6f7d890df, type: 3}
 --- !u!1 &1917513130

@@ -19,3 +19,11 @@ MonoBehaviour:
     _type: 1
     _unitSettings: {fileID: 11400000, guid: c66ebf9d6d72c6b4bb35f003cd31a8e8, type: 2}
     _unitPrefab: {fileID: 162708, guid: c3b34ac9b23323d49afdb0e81d9db5d1, type: 3}
+  - _poolCopacity: 5
+    _type: 2
+    _unitSettings: {fileID: 11400000, guid: 804eb7bf0d60f3a4097a25845d686e47, type: 2}
+    _unitPrefab: {fileID: 147264, guid: 265a1242c490e4f4392217424aba5fa6, type: 3}
+  - _poolCopacity: 5
+    _type: 3
+    _unitSettings: {fileID: 11400000, guid: 1051cbe7610dda44888cb4caafd3630a, type: 2}
+    _unitPrefab: {fileID: 188376, guid: c88c4162c795e8b4d822a0631f17ebf9, type: 3}

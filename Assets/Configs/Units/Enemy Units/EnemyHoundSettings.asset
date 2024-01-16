@@ -10,19 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd6193985c4196d408402124d7f096c6, type: 3}
-  m_Name: EnemyImpSettings
+  m_Name: EnemyHoundSettings
   m_EditorClassIdentifier: 
   _mainStats:
     _faction: 2
-    _type: 4
-    _role: 4
-    _healthPoints: 100
+    _type: 5
+    _role: 1
+    _healthPoints: 50
     _size: 0.5
-    _speed: 2
-    _detectionRange: 5
+    _speed: 3
+    _detectionRange: 10
   _unitPriorities:
-  - _unitPriority: 2
-    _unitType: 1
   - _unitPriority: 1
     _unitType: 0
   _defenceData:
@@ -37,17 +35,17 @@ MonoBehaviour:
       _fireDamageResist: 0
       _coldDamageResist: 0
   _offenceData:
-    _attackType: 1
-    _abilityType: 5
-    _minRange: 0
-    _maxRange: 2
-    _castingTime: 0.8
+    _attackType: 2
+    _abilityType: 0
+    _minRange: 1
+    _maxRange: 5
+    _castingTime: 1
     _attackTime: 1
     _criticalChance: 10
     _critScale: 2
     _failChance: 0
     _onFailDamage: 1
     _damageData:
-      _baseDamage: 25
+      _baseDamage: 10
       _fireDamage: 0
       _coldDamage: 0
