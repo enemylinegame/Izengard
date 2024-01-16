@@ -15336,7 +15336,7 @@ GameObject:
   - component: {fileID: 394673606}
   - component: {fileID: 394673607}
   m_Layer: 0
-  m_Name: PhaseCtrl
+  m_Name: GameOverCtrl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43300,19 +43300,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1064159196}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 394673607}
-        m_TargetAssemblyTypeName: GameOver, Assembly-CSharp
-        m_MethodName: gameOver
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1064159196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68456,7 +68444,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 394673607}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: InGameMenuPanel.GameOver, Assembly-CSharp
         m_MethodName: restart
         m_Mode: 1
@@ -89040,6 +89028,8 @@ MonoBehaviour:
   currentGoldText: {fileID: 1001164936}
   _maxGoldValue: 99999999
   currentGoldValueText: {fileID: 202047038}
+  _gameOverScreen: {fileID: 394673607}
+  _gameOverButton: {fileID: 1064159195}
   gameOver: {fileID: 77845941}
 --- !u!4 &5922017599429509362
 Transform:

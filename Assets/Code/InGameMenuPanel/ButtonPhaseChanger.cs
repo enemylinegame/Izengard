@@ -5,6 +5,7 @@ using System.Collections;
 using UI;
 using System;
 using ResourceSystem;
+using ResourceSystem.SupportClases;
 
 namespace InGameMenuPanel
 {
@@ -78,52 +79,58 @@ namespace InGameMenuPanel
 
         //GameOver
         [SerializeField] private TMP_Text gameOver;
+        [SerializeField] private GameOverPanel _gameOverScreen;
+        [SerializeField] private Button _gameOverButton;
 
         private void Awake()
         {
-            currentGoldValueText.GetComponent<TMP_Text>();
             currentGoldValueText.text = "0";
         }
 
         private void Start()
         {     
-            inputField.GetComponent<InputField>();
             globalStock = new GlobalStock(resList);
-            peacePhaseBegin();  
+            PeacePhaseBegin();
             gameOver.GetComponent<TMP_Text>();
+
+            _gameOverButton.onClick.AddListener(GameOverPressed);
+            _gameOverScreen.OnRestartPressed += RestartPressed;
+        }
+
+        private void RestartPressed()
+        {
+            globalStock.GetResourceFromStock(ResourceType.Gold, _currentGoldValue);
+            PeacePhaseBegin();
+        }
+
+        private void GameOverPressed()
+        {
+            _gameOverScreen.GameOver();
         }
 
         private void Update()
         {
             if (messageDurationTime == 0)
             {
-                closeMessage();
-            }
-
-            //Условие перехода из боевой фазы в мирную
-            if (sec == 0 && min == 0)
-            {
-                sec = _sec;
-                min = _min;
-                peacePhaseBegin();
+                CloseMessage();
             }
         }
 
-        public void changePhase()
+        public void ChangePhase()
         {
             if (_currentPhase == "Peace")
             {
-                battlePhaseBegin();
+                BattlePhaseBegin();
                 _currentPhase = "Battle";
             }
             else if (_currentPhase == "Battle")
             {
-                peacePhaseBegin();
+                PeacePhaseBegin();
                 _currentPhase = "Peace";
             }
         }
 
-        public void battlePhaseBegin()
+        public void BattlePhaseBegin()
         {
             StopAllCoroutines();
             _currentPhase = "Battle";
@@ -131,15 +138,14 @@ namespace InGameMenuPanel
             phaseBeginMessage.enabled = true;
             phaseBeginMessage.text = messageBattlePhase;
             currentPhaseText.text = battlePhase;
-            //changePhaseButton.interactable = false;
             battleUI.SetActive(true);
             StartCoroutine(messageDuration());
             _camera.transform.position = new Vector3(battlePhaseCameraPosiiotnX, _camera.transform.position.y, battlePhaseCameraPosiiotnZ);
-            PeaceUI.SetActive(false);    
+            PeaceUI.SetActive(false);
 
         }
 
-        public void peacePhaseBegin()
+        public void PeacePhaseBegin()
         {
             StopAllCoroutines();
             _currentPhase = "Peace";
@@ -153,19 +159,19 @@ namespace InGameMenuPanel
             _camera.transform.position = new Vector3(peacePhaseCameraPosiiotnX, _camera.transform.position.y, peacePhaseCameraPosiiotnZ);
             PeaceUI.SetActive(true);
 
-            goldAdder();
+            GoldAdder();
             inputField.text = "0";
 
             gameOver.text = "";
         }
 
-        private void closeMessage()
+        private void CloseMessage()
         {
             StopCoroutine(messageDuration());
             phaseBeginMessage.enabled = false;
         }
 
-        private void goldAdder()
+        private void GoldAdder()
         {
             _currentGoldValue = int.Parse(currentGoldValueText.text);
 
@@ -191,8 +197,9 @@ namespace InGameMenuPanel
                 _currentGoldValue = 0;
             }
 
-            globalStock.AddResourceToStock(ResourceType.Gold, _currentGoldValue);
+            globalStock.AddResourceToStock(ResourceType.Gold, _addGoldValue);
             currentGoldValueText.text = $"{globalStock.GetAvailableResourceAccount(ResourceType.Gold)}";
+            _addGoldValue = 0;
         }
 
         IEnumerator messageDuration()

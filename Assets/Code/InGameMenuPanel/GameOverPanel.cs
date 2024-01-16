@@ -1,22 +1,23 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace InGameMenuPanel
 {
-    public class GameOver : MonoBehaviour
+    public class GameOverPanel : MonoBehaviour
     {
         [SerializeField] private GameObject battleUI;
         [SerializeField] private GameObject gameOverUI;
         [SerializeField] private GameObject phaseInfo;
         [SerializeField] private GameObject inBattleInPeaceButton;
         [SerializeField] private TMP_Text _gameOverMessage;
+        [SerializeField] private Button _restartButton;
+        [SerializeField] private ButtonPhaseChanger _phaseChanger;
         public Button gameOverButton;
         public string _gameOverMessageText = "GAME OVER";
-        ButtonPhaseChanger buttonPhaseChanger;
+
+        public event Action OnRestartPressed;
 
         private void Awake()
         {
@@ -26,9 +27,15 @@ namespace InGameMenuPanel
         private void Start()
         {
             gameOverUI.SetActive(false);
+            _restartButton.onClick.AddListener(RestartPressed);
         }
 
-        public void gameOver() //Добавить падение башни и смерть дефендеров
+        private void RestartPressed()
+        {
+            Restart();
+        }
+
+        public void GameOver() //Добавить падение башни и смерть дефендеров
         {
             _gameOverMessage.text = _gameOverMessageText;
             gameOverUI.SetActive(true);
@@ -38,12 +45,14 @@ namespace InGameMenuPanel
 
         }
 
-        public void restart()
+        public void Restart()
         {
             gameOverUI.SetActive(false);
             phaseInfo.SetActive(true);
             inBattleInPeaceButton.SetActive(true);
-            buttonPhaseChanger.changePhase(); //Исправить обращение к методу из другого скрипта
+            _phaseChanger.PeacePhaseBegin();
+
+            OnRestartPressed?.Invoke();
         }
     }
 }
