@@ -10,6 +10,7 @@ namespace UnitSystem
     public class StubUnit : IUnit
     {
         public string Id { get; }
+        public string Name { get; }
 
         public IUnitView View { get; private set; }
 

@@ -18,6 +18,7 @@ namespace UnitSystem
         private readonly UnitPriorityModel _priority;
 
         private string _id;
+        private string _name;
         private Vector3 _startPosition;
 
         public IUnitView View => _view;
@@ -34,14 +35,17 @@ namespace UnitSystem
 
         public string Id => _id;
 
+        public string Name => _name;
+
         public Vector3 StartPosition => _startPosition;
         
         public float TimeProgress { get; set; }
       
         public event Action<IUnit> OnReachedZeroHealth;
 
-        public UnitHandler(IUnitView view, IUnitData unitData)
+        public UnitHandler(string name, IUnitView view, IUnitData unitData)
         {
+            _name = name;
 
             _view = view;
 

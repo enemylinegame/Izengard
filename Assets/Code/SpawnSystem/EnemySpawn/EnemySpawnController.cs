@@ -76,8 +76,10 @@ namespace SpawnSystem
 
             var unitView = _viewPool.GetFromPool(unitData.Type);
 
-            var unit = new UnitHandler(unitView, unitData);
-            
+            var unitName = $"{unitData.Type}_Enemy[{_unitsContainer.EnemyUnits.Count}]";
+
+            var unit = new UnitHandler(unitName, unitView, unitData);
+
             var spawnPos = GetSpawnPosition(_spawnCreationController.SelectedSpawner);
 
             unit.SetStartPosition(spawnPos);
@@ -97,7 +99,9 @@ namespace SpawnSystem
             var unitData
                 = _unitCreationDataList.Find(ucd => ucd.Type == type).UnitSettings;
 
-            var unit = new UnitHandler(unitView, unitData);
+            var unitName = $"{unitData.Type}_Enemy[{_unitsContainer.EnemyUnits.Count}]";
+
+            var unit = new UnitHandler(unitName, unitView, unitData);
 
             var spawnerIndex = Random.Range(0, _spawnersCollection.Count);
 

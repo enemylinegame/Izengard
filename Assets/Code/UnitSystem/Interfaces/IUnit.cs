@@ -22,6 +22,8 @@ namespace UnitSystem
 
         string Id { get; }
 
+        string Name { get; }
+
         Vector3 StartPosition { get; }
         
         float TimeProgress { get; set; }

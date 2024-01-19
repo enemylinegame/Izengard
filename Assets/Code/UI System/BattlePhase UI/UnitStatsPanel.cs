@@ -8,7 +8,8 @@ namespace UI
     {
         [SerializeField] 
         private GameObject _statsContainer;
-
+        [SerializeField]
+        private TMP_Text _unitName;
         [SerializeField]
         private TMP_Text _unitHealth;
         [SerializeField]
@@ -29,6 +30,8 @@ namespace UI
 
              _currentUnit = unit;
 
+            _unitName.text = unit.Name;
+
             SubscribeUnit(unit);
 
             _statsContainer.SetActive(true);
@@ -46,6 +49,8 @@ namespace UI
 
         private void ResetView()
         {
+            _unitName.text = "Unit Stats";
+
             _unitHealth.text = "0";
             _unitArmor.text = "0";
             _unitBaseShield.text = "0";
