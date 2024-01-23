@@ -38,9 +38,11 @@ namespace UnitSystem.View
         public void Hide() => 
             gameObject.SetActive(false);
 
+        public abstract void SetUnitName(string name);
         public abstract void ChangeHealth(int hpValue);
         public abstract void ChangeSize(float sizeValue);
         public abstract void ChangeSpeed(float speedValue);
+
 
         public void SetCollisionEnabled(bool isEnabled)
         {

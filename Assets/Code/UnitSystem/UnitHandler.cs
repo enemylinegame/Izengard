@@ -66,6 +66,8 @@ namespace UnitSystem
             _unitTarget = new UnitTargetModel();
 
             _id = _view.Id;
+
+            _view.SetUnitName(name);
         }
 
         public void Enable()

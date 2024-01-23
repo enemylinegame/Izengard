@@ -22,5 +22,6 @@ namespace UnitSystem
         void ChangeSize(float sizeValue);
         void ChangeSpeed(float speedValue);
         void SetCollisionEnabled(bool isEnabled);
+        void SetUnitName(string name);
     }
 }

@@ -1,11 +1,10 @@
-﻿
-using UnitSystem.View;
+﻿using Tools;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace EnemySystem
+namespace UnitSystem.View
 {
-    public class EnemyView : BaseUnitView
+    public class UnitView : BaseUnitView
     {
         [SerializeField] private string _name;
         [SerializeField] private NavMeshAgent _enemyNavMesh;
@@ -14,7 +13,7 @@ namespace EnemySystem
 
         public override void ChangeHealth(int hpValue)
         {
-            //Debug.Log($"EnemyView->ChangeHealth: {gameObject.name} hpValue = {hpValue}");
+            DebuGameManager.Log($"{_name} - hpValue = {hpValue}", new string[] {"Unit", "Health"});
         }
 
         public override void ChangeSize(float sizeValue)
@@ -50,5 +49,9 @@ namespace EnemySystem
             unitCollider ??= _collider;
         }
 
+        public override void SetUnitName(string name)
+        {
+            _name = name;
+        }
     }
 }
