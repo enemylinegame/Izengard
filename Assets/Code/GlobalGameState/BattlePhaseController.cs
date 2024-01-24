@@ -151,7 +151,7 @@ namespace Code.GlobalGameState
         {
             _enemySpawnHandler.StopWave();
 
-            Debug.Log("You Lose!");
+            DebugGameManager.Log("You Lose!", new[] { DebugTags.System });
 
             EndPhase();
         }
@@ -160,7 +160,7 @@ namespace Code.GlobalGameState
         {
             _enemySpawnHandler.StopWave();
 
-            Debug.Log("You Win!");
+            DebugGameManager.Log("You Win!", new[] { DebugTags.System });
 
             EndPhase();
         }

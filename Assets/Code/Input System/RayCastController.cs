@@ -1,8 +1,7 @@
 ﻿using System;
 using Abstraction;
-using BuildingSystem;
 using Izengard;
-using NewBuildingSystem;
+using Tools;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -51,14 +50,14 @@ namespace UserInputSystem
             {
                 if (isClick)
                 {
-                    Debug.Log($"<color=aqua> Left Click</color>");
+                    DebugGameManager.Log($"<color=aqua> Left Click</color>");
                     if (hit.collider.GetComponent<BaseGameObject>())
                         LeftClick?.Invoke(hit.collider.GetComponent<ITarget>().Id); //TODO: Add raycast component
                     else LeftClick?.Invoke(null);
                 }
                 else
                 {
-                    Debug.Log($"<color=aqua> Right Click</color>");
+                    DebugGameManager.Log($"<color=aqua> Left Click</color>");
                     if (hit.collider.GetComponent<BaseGameObject>())
                         RightClick?.Invoke(hit.collider.GetComponent<ITarget>().Id); //TODO: Add raycast component
                     else RightClick?.Invoke(null);

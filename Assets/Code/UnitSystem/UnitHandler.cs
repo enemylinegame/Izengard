@@ -1,5 +1,6 @@
 using Abstraction;
 using System;
+using Tools;
 using UnitSystem.Enum;
 using UnitSystem.Model;
 using UnityEngine;
@@ -172,6 +173,9 @@ namespace UnitSystem
                         throw new ArgumentOutOfRangeException();
                 }
             }
+
+            DebugGameManager.Log($"{_name}. Change state. Current State = {state}",
+                new[] { DebugTags.Unit, DebugTags.State });
         }
 
 

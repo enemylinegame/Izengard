@@ -18,7 +18,7 @@ namespace NewBuildingSystem
         
         [Space, Header("Info")] 
         public string _id;
-        public string Name;
+        public string _name;
         public Image Image;
         public EnumBuildings BuildingsType;
         public int CurrentCountWorkers;
@@ -26,6 +26,7 @@ namespace NewBuildingSystem
         public Vector2Int Size;
 
         public string Id => _id;
+        public string Name => _name;
         public Vector3 Position => transform.position;
 
         public event Action<bool, Building> OnTriggered; //TODO : 1 option

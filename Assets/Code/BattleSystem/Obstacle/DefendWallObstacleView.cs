@@ -10,13 +10,15 @@ namespace BattleSystem.Obstacle
         [SerializeField] private DefenWallConfig _config;
 
         private string _id;
+        private string _name;
 
         public DefenWallConfig Config => _config;
 
         public string Id => _id;
-
+        public string Name => _name;
         public Vector3 Position => transform.localPosition;
-        
+
+
         public event Action<IDamage> OnTakeDamage;
 
         private void Awake()

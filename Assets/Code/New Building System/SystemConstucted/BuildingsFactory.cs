@@ -79,7 +79,7 @@ namespace NewBuildingSystem
             
             _flyingBuilding = build;
             _flyingBuilding.BuildingsType = _dataBase.objectsData[ID].BuildingType;
-            _flyingBuilding.Name = _dataBase.objectsData[ID].Name;
+            _flyingBuilding._name = _dataBase.objectsData[ID].Name;
             //_flyingBuilding.Image.sprite = _dataBase.objectsData[ID].Image;
             _flyingBuilding.MaxCountWorkers = _dataBase.objectsData[ID].MaxWorkers;
             _flyingBuilding.Size = _dataBase.objectsData[ID].Size;

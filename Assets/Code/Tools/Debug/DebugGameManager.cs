@@ -2,9 +2,9 @@
 
 namespace Tools
 {
-    public static class DebuGameManager
+    public static class DebugGameManager
     {
-        public static void Log(string logMessage, string[] tags)
+        public static void Log(string logMessage, DebugTags[] tags)
         {
             if (tags.Length == 0)
             {
@@ -21,7 +21,7 @@ namespace Tools
             Debug.Log(logMessage);
         }
 
-        public static void Error(string errorMessage, string[] tags)
+        public static void Error(string errorMessage, DebugTags[] tags)
         {
             if (tags.Length == 0)
             {
@@ -38,7 +38,7 @@ namespace Tools
             Debug.LogError(errorMessage);
         }
 
-        public static void Warning(string warningMessage, string[] tags)
+        public static void Warning(string warningMessage, DebugTags[] tags)
         {
             if (tags.Length == 0)
             {
@@ -55,13 +55,13 @@ namespace Tools
             Debug.LogWarning(warningMessage);
         }
 
-        private static string GetTaggedMessage(string logMessage, string[] tags)
+        private static string GetTaggedMessage(string logMessage, DebugTags[] tags)
         {
             string tagsMessage = null;
 
             for (int i = 0; i < tags.Length; i++)
             {
-                tagsMessage += $"[{tags[i]}]";
+                tagsMessage += $"[{tags[i].GetDescription()}]";
             }
 
             tagsMessage += logMessage;

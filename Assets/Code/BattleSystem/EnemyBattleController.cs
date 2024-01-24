@@ -2,9 +2,9 @@ using Abstraction;
 using BattleSystem.MainTower;
 using Configs;
 using SpawnSystem;
+using Tools;
 using UnitSystem;
 using UnitSystem.Enum;
-using UnityEngine;
 
 namespace BattleSystem
 {
@@ -182,10 +182,13 @@ namespace BattleSystem
                             unit.TimeProgress += deltaTime;
                             if (unit.TimeProgress >= unit.Offence.CastingTime)
                             {
-
                                 target.TakeDamage(unit.Offence.GetDamage());
+                                
                                 unit.State.CurrentAttackPhase = AttackPhase.None;
                                 unit.TimeProgress = 0.0f;
+
+                                DebugGameManager.Log($"{unit.Name} deal damamage to {target.Name}", 
+                                    new[] {DebugTags.Unit, DebugTags.Damage});
 
                                 StartAttackAnimation(unit);
                             }
@@ -193,7 +196,6 @@ namespace BattleSystem
                             break;
                         case AttackPhase.Attack:
                             {
-                                Debug.Log($"Unit - {unit.Stats.Faction} in Attack phase");
                                 break;
                             }
                     }

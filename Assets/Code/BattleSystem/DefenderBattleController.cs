@@ -1,9 +1,9 @@
 using Abstraction;
 using BattleSystem.MainTower;
 using Configs;
+using Tools;
 using UnitSystem;
 using UnitSystem.Enum;
-using UnityEngine;
 
 
 namespace BattleSystem
@@ -139,7 +139,6 @@ namespace BattleSystem
             }
         }
 
-
         protected override void UnitAttackState(IUnit unit, float deltaTime)
         {
             IAttackTarget target = unit.Target.CurrentTarget;
@@ -170,14 +169,15 @@ namespace BattleSystem
                                 unit.State.CurrentAttackPhase = AttackPhase.None;
                                 unit.TimeProgress = 0.0f;
 
+                                DebugGameManager.Log($"{unit.Name} deal damamage to {target.Name}",
+                                    new[] { DebugTags.Unit, DebugTags.Damage });
+
                                 StartAttackAnimation(unit);
-                                //StartTakeDamageAnimation(unitTarget);
                             }
 
                             break;
                         case AttackPhase.Attack: 
                             {
-                                Debug.Log($"Unit - {unit.Stats.Faction} in Attack phase");
                                 break;
                             }
                     }

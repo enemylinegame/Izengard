@@ -10,6 +10,7 @@ namespace UnitSystem.View
     public abstract class BaseUnitView : BaseGameObject, IUnitView
     {
         private string _id;
+        protected string _name;
         private UnitType _type;
 
         protected Transform selfTransform;
@@ -18,6 +19,7 @@ namespace UnitSystem.View
         protected IUnitAnimationView unitAnimation;
 
         public string Id => _id;
+        public string Name => _name;
         public UnitType Type => _type;
 
         public Vector3 Position => selfTransform.position;

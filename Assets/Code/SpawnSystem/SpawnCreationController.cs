@@ -177,7 +177,7 @@ namespace SpawnSystem
             spawner.Init(GUID.Generate().ToString());
 
             spawner.BuildingsType = EnumBuildings.None;
-            spawner.Name = $"Spawner[{_spawnerCount - 1}]";
+            spawner._name = $"Spawner[{_spawnerCount - 1}]";
             spawner.Size = new Vector2Int(1, 1);
 
             _buildingSpawner = spawner;

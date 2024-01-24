@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UI;
 using UnityEngine;
 using UserInputSystem;
@@ -67,7 +66,7 @@ namespace NewBuildingSystem
             _currentBuilding = build;
 
             _buildingInfoPanel.EnabledPanel(true);
-            _buildingInfoPanel.SetBuildingInfo(build.Name);
+            _buildingInfoPanel.SetBuildingInfo(build._name);
             _buildingInfoPanel.SetBuildingImage(build.Image);
             _buildingInfoPanel.ChangeUnitsCount(build.CurrentCountWorkers, build.MaxCountWorkers);
             _buildingInfoPanel.PlusButton += AddWorkers;
