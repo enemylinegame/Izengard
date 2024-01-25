@@ -5,7 +5,7 @@ namespace BattleSystem.MainTower
 {
     public interface IMainTower : IKillable<IMainTower>
     {
-        int Id { get; }
+        string Id { get; }
         
         
         void Enable();

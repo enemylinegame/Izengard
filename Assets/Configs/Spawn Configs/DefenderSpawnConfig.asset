@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bd08b763f86518479e34dbbfa04d95a, type: 3}
+  m_Name: DefenderSpawnConfig
+  m_EditorClassIdentifier: 
+  <MaxSpawnRadius>k__BackingField: 1
+  <SpawnFaction>k__BackingField: 1
+  <UnitsCreationData>k__BackingField:
+  - _poolCopacity: 5
+    _type: 1
+    _unitSettings: {fileID: 11400000, guid: c66ebf9d6d72c6b4bb35f003cd31a8e8, type: 2}
+    _unitPrefab: {fileID: 162708, guid: c3b34ac9b23323d49afdb0e81d9db5d1, type: 3}
+  - _poolCopacity: 5
+    _type: 2
+    _unitSettings: {fileID: 11400000, guid: 804eb7bf0d60f3a4097a25845d686e47, type: 2}
+    _unitPrefab: {fileID: 147264, guid: 265a1242c490e4f4392217424aba5fa6, type: 3}
+  - _poolCopacity: 5
+    _type: 3
+    _unitSettings: {fileID: 11400000, guid: 1051cbe7610dda44888cb4caafd3630a, type: 2}
+    _unitPrefab: {fileID: 100838, guid: 36b15765def4ba442ae9e54a4072539b, type: 3}

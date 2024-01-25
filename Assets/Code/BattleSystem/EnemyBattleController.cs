@@ -2,9 +2,9 @@ using Abstraction;
 using BattleSystem.MainTower;
 using Configs;
 using SpawnSystem;
+using Tools;
 using UnitSystem;
 using UnitSystem.Enum;
-using UnityEngine;
 
 namespace BattleSystem
 {
@@ -16,7 +16,7 @@ namespace BattleSystem
         public EnemyBattleController(
             BattleSystemData data,
             TargetFinder targetFinder,
-            UnitsContainer unitsContainer,
+            IUnitsContainer unitsContainer,
             MainTowerController mainTower,
             ISpawnController enemySpawner) : base(data, targetFinder, unitsContainer, mainTower)
         {
@@ -24,6 +24,19 @@ namespace BattleSystem
             _mainTower = mainTower;
 
             this.unitsContainer.OnDefenderAdded += ResetUnitState;
+        }
+
+        public override void OnPause()
+        {
+            base.OnPause();
+
+            for (int i = 0; i < unitsContainer.EnemyUnits.Count; i++)
+            {
+                var unit = unitsContainer.EnemyUnits[i];
+
+                unit.Stop();
+                unit.ChangeState(UnitStateType.Idle);
+            }
         }
 
         private void ResetUnitState()
@@ -97,8 +110,6 @@ namespace BattleSystem
 
                 unit.Target.ResetTarget();
 
-                unit.IsInFight = false;
-
                 unit.ChangeState(UnitStateType.Idle);
             }
         }
@@ -171,8 +182,13 @@ namespace BattleSystem
                             unit.TimeProgress += deltaTime;
                             if (unit.TimeProgress >= unit.Offence.CastingTime)
                             {
+                                var damage = unit.Offence.GetDamage();
 
-                                target.TakeDamage(unit.Offence.GetDamage());
+                                DebugGameManager.Log($"{unit.Name} deal [{damage.BaseDamage} + {damage.FireDamage} + {damage.ColdDamage}] damamage to {target.Name}",
+                                   new[] { DebugTags.Unit, DebugTags.Damage });
+
+                                target.TakeDamage(damage);
+                                
                                 unit.State.CurrentAttackPhase = AttackPhase.None;
                                 unit.TimeProgress = 0.0f;
 
@@ -182,7 +198,6 @@ namespace BattleSystem
                             break;
                         case AttackPhase.Attack:
                             {
-                                Debug.Log($"Unit - {unit.Stats.Faction} in Attack phase");
                                 break;
                             }
                     }

@@ -19,5 +19,7 @@ namespace UnitSystem
         List<IUnit> DefenderUnits { get; }
         
         void AddUnit(IUnit unit);
+
+        void ClearData();
     }
 }

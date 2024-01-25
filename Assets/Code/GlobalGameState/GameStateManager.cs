@@ -1,6 +1,6 @@
 ﻿namespace Code.GlobalGameState
 {
-    public partial class GameStateManager : IOnController, IOnStart
+    public partial class GameStateManager : IOnController, IOnStart, IOnUpdate, IOnFixedUpdate
     {
         private PeacePhaseConttoller _peacePhase;
         private BattlePhaseController _battlePhase;
@@ -12,10 +12,21 @@
             _peacePhase = peacePhase;
             _battlePhase = battlePhase;
         }
-
+     
         public void OnStart()
         {
             _battlePhase.StartPhase();
-        }   
+        }
+
+        public void OnUpdate(float deltaTime)
+        {
+            _battlePhase.OnUpdate(deltaTime);
+        }
+
+        public void OnFixedUpdate(float fixedDeltaTime)
+        {
+            _battlePhase.OnFixedUpdate(fixedDeltaTime);
+        }
+
     }
 }

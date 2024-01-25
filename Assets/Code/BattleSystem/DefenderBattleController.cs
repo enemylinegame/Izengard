@@ -1,9 +1,9 @@
 using Abstraction;
 using BattleSystem.MainTower;
 using Configs;
+using Tools;
 using UnitSystem;
 using UnitSystem.Enum;
-using UnityEngine;
 
 
 namespace BattleSystem
@@ -12,10 +12,23 @@ namespace BattleSystem
     {        
         public DefenderBattleController(
             BattleSystemData data, 
-            TargetFinder targetFinder, 
-            UnitsContainer unitsContainer, 
+            TargetFinder targetFinder,
+            IUnitsContainer unitsContainer, 
             MainTowerController mainTower) : base(data, targetFinder, unitsContainer, mainTower)
         {
+        }
+
+        public override void OnPause()
+        {
+            base.OnPause();
+
+            for (int i = 0; i < unitsContainer.DefenderUnits.Count; i++)
+            {
+                var unit = unitsContainer.DefenderUnits[i];
+
+                unit.Stop();
+                unit.ChangeState(UnitStateType.Idle);
+            }
         }
 
         protected override void MainTowerDestroyed()
@@ -78,8 +91,6 @@ namespace BattleSystem
 
                 unit.Target.ResetTarget();
 
-                unit.IsInFight = false;
-
                 unit.ChangeState(UnitStateType.Idle);
             }
         }
@@ -96,15 +107,6 @@ namespace BattleSystem
 
                 unit.MoveTo(target.Position);
             }
-            else 
-            {
-                if (!CheckIsOnDestinationPosition(unit))
-                {
-                    unit.ChangeState(UnitStateType.Move);
-                    unit.MoveTo(unit.StartPosition);
-                }
-            }
-
         }
 
         protected override void UnitMoveState(IUnit unit, float deltaTime)
@@ -137,7 +139,6 @@ namespace BattleSystem
             }
         }
 
-
         protected override void UnitAttackState(IUnit unit, float deltaTime)
         {
             IAttackTarget target = unit.Target.CurrentTarget;
@@ -163,19 +164,24 @@ namespace BattleSystem
                             unit.TimeProgress += deltaTime;
                             if (unit.TimeProgress >= unit.Offence.CastingTime)
                             {
+                                var damage = unit.Offence.GetDamage();
 
-                                target.TakeDamage(unit.Offence.GetDamage());
+                                DebugGameManager.Log($"{unit.Name} deal [{damage.BaseDamage} + {damage.FireDamage} + {damage.ColdDamage}] damamage to {target.Name}", 
+                                    new[] { DebugTags.Unit, DebugTags.Damage });
+
+                                target.TakeDamage(damage);
+
                                 unit.State.CurrentAttackPhase = AttackPhase.None;
                                 unit.TimeProgress = 0.0f;
 
+                           
+
                                 StartAttackAnimation(unit);
-                                //StartTakeDamageAnimation(unitTarget);
                             }
 
                             break;
                         case AttackPhase.Attack: 
                             {
-                                Debug.Log($"Unit - {unit.Stats.Faction} in Attack phase");
                                 break;
                             }
                     }

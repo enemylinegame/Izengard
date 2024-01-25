@@ -23,24 +23,21 @@ namespace Tools
 
         public void SetValue(TParam newValue)
         {
-            if(_paramValue.CompareTo(newValue) != 0)
+            if (newValue.CompareTo(_maxValue) > 0)
             {
-                if (newValue.CompareTo(_maxValue) > 0)
-                {
-                    _paramValue = _maxValue;
-                }
-                else if (newValue.CompareTo(_minValue) <= 0)
-                {
-                    _paramValue = _minValue;
-                    OnMinValueSet?.Invoke(_minValue);
-                }
-                else
-                {
-                    _paramValue = newValue;
-                }
-
-                OnValueChange?.Invoke(_paramValue);
+                _paramValue = _maxValue;
             }
+            else if (newValue.CompareTo(_minValue) <= 0)
+            {
+                _paramValue = _minValue;
+                OnMinValueSet?.Invoke(_minValue);
+            }
+            else
+            {
+                _paramValue = newValue;
+            }
+
+            OnValueChange?.Invoke(_paramValue);
         }
     }
 }

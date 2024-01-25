@@ -1,10 +1,11 @@
-﻿using UnitSystem.Enum;
+﻿using Abstraction;
+using UnitSystem.Enum;
 
 namespace UnitSystem
 {
     public interface IUnitStatsData
     {
-        UnitFactionType Faction { get; }
+        FactionType Faction { get; }
         
         UnitType Type { get; }
         UnitRoleType Role { get; }

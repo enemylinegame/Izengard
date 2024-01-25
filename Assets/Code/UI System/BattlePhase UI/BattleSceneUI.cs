@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
@@ -7,21 +6,30 @@ namespace UI
     public class BattleSceneUI : MonoBehaviour
     {
         [SerializeField]
-        private UnitSettingsPanel _unitSettings;
+        private UnitSettingsPanel _unitSettingsPanel;
         [SerializeField]
         private SpawnPanelUI _spawnPanel;
         [SerializeField]
-        private Button _waveStartButton;
+        private SpawnerTypeSelectionPanel _spawnerTypeSelection;
         [SerializeField]
-        private Button _waveStopButton;
+        private UnitStatsPanel _unitStatsPanel;
         [SerializeField]
-        private Button _defenderSpawnButton;
+        private Button _startButton;
+        [SerializeField]
+        private Button _pauseButton;
+        [SerializeField]
+        private Button _resumeButton;
+        [SerializeField]
+        private Button _resetButton;
 
-        public UnitSettingsPanel UnitSettings => _unitSettings;
+        public UnitSettingsPanel UnitSettingsPanel => _unitSettingsPanel;
         public SpawnPanelUI SpawnPanel => _spawnPanel;
-        public Button WaveStartButton => _waveStartButton;
-        public Button WaveStopButton => _waveStopButton;
-        public Button DefenderSpawnButton => _defenderSpawnButton;
+        public SpawnerTypeSelectionPanel SpawnerTypeSelection => _spawnerTypeSelection;
+        public UnitStatsPanel UnitStatsPanel => _unitStatsPanel;
+        public Button StartButton => _startButton;
+        public Button PauseButton => _pauseButton;
+        public Button ResumeButton => _resumeButton;
+        public Button ResetButton => _resetButton;
 
         
     }

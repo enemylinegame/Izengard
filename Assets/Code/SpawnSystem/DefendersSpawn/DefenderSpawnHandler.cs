@@ -1,6 +1,6 @@
-﻿using UI;
+﻿using Abstraction;
+using UI;
 using UnitSystem;
-using UnitSystem.Enum;
 
 namespace SpawnSystem
 {
@@ -15,22 +15,15 @@ namespace SpawnSystem
 
             _battleSceneUIController = battleSceneUIController;
 
-            _battleSceneUIController.OnDefenderSpawn += SpawnPack;
             _battleSceneUIController.OnSpawnNewUnit += SpawnUnit;
         }
 
         private void SpawnUnit(IUnitData unitData)
         {
-            if (unitData.Faction != UnitFactionType.Defender)
+            if (unitData.Faction != FactionType.Defender)
                 return;
 
             _spawnController.SpawnUnit(unitData);
         }
-
-        private void SpawnPack()
-        {    
-            _spawnController.SpawnUnit(UnitType.Militiaman);  
-        }
-
     }
 }

@@ -8,5 +8,8 @@
         void StartAttack();
         void StartDead();
         void TakeDamage();
+
+        void Play();
+        void Stop();
     }
 }

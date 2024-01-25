@@ -1,5 +1,7 @@
-﻿using DG.Tweening;
+﻿using Abstraction;
+using DG.Tweening;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +20,11 @@ namespace UI
         private Button _removeSpawnerButton;
         [SerializeField]
         private Button _moveSpawnerButton;
+
+        [Space(10)]
+        [SerializeField]
+        private SpawnerTypeSelectionPanel _spawnerTypeSelectionPanel;
+
         [Space(20)]
         [SerializeField]
         private RectTransform _spawnGridPanel;
@@ -28,10 +35,91 @@ namespace UI
         public event Action OnRemoveSpawnerClick;
         public event Action OnMoveSpawnerClick;
 
-        public void AddHUD(int index) 
+        public SpawnerTypeSelectionPanel SpawnerTypeSelectionPanel => _spawnerTypeSelectionPanel;
+
+        public event Action<string> OnSpawnerSelectAction;
+
+        private List<SpawnerHUD> _spawnerHUDCollection = new();
+      
+        public void AddHUD(string spawnerId, FactionType unitFaction) 
         {
             var hud = Instantiate(_spawnerHUD, _spawnGridPanel).GetComponent<SpawnerHUD>();
-            hud.Init(index);
+
+            string name = null;
+
+            switch (unitFaction)
+            {
+                case FactionType.Enemy:
+                    {
+                        name = $"E";
+                        break;
+                    }
+                case FactionType.Defender: 
+                    {
+                        name = $"D";                   
+                        break;
+                    }
+            }
+
+            hud.Init(spawnerId, name);
+
+            hud.OnSelectAction += SpawnerSelected;
+
+            _spawnerHUDCollection.Add(hud);
+        }
+
+        public void RemoveHUD(string spawnerId) 
+        {
+            var hud = _spawnerHUDCollection.Find(spw => spw.Id == spawnerId);
+            
+            if (hud == null)
+                return;
+            
+            hud.OnSelectAction -= SpawnerSelected;
+
+            hud.Deinit();
+
+            Destroy(hud.gameObject);
+
+            _spawnerHUDCollection.Remove(hud);
+        }
+
+        public void ClearHUD()
+        {
+            for(int i =0; i < _spawnerHUDCollection.Count; i++)
+            {
+                var hud = _spawnerHUDCollection[i];
+                
+                hud.OnSelectAction -= SpawnerSelected;
+
+                hud.Deinit();
+
+                Destroy(hud.gameObject);
+            }
+
+            _spawnerHUDCollection.Clear();
+        }
+
+        private void SpawnerSelected(string spawnerId)
+        {
+            var spawnerHUD = _spawnerHUDCollection.Find(spwn => spwn.Id == spawnerId);
+
+            for(int i =0; i < _spawnerHUDCollection.Count; i++)
+            {
+                _spawnerHUDCollection[i].Unselect();
+            }
+
+            spawnerHUD.Select();
+
+            OnSpawnerSelectAction?.Invoke(spawnerId);
+        }
+
+        public void UnselectAll()
+        {
+            for (int i = 0; i < _spawnerHUDCollection.Count; i++)
+            {
+                _spawnerHUDCollection[i].Unselect();
+            }
         }
 
 

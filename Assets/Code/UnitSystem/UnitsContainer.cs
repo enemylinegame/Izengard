@@ -2,18 +2,26 @@
 using Configs;
 using System;
 using System.Collections.Generic;
+using UI;
 using UnitSystem.Enum;
+using UserInputSystem;
 
 namespace UnitSystem
 {
-    public class UnitsContainer : IUnitsContainer, IOnController, IOnUpdate
+    public class UnitsContainer : IUnitsContainer, IOnController, IOnUpdate, IPaused
     {
         private readonly float unitsDestroyDelay;
+        private readonly UnitStatsPanel _unitStatsPanel;
+        private readonly RayCastController _rayCastController;
+
+        private List<IUnit> _createdUnits = new();
 
         private List<IUnit> _enemyUnits = new();
         private List<IUnit> _defenderUnits = new();
 
         private List<IUnit> toRemoveUnitsCollection = new();
+
+        private IUnit _selectedUnit;
 
         public List<IUnit> EnemyUnits => _enemyUnits;
         public List<IUnit> DefenderUnits => _defenderUnits;
@@ -29,9 +37,18 @@ namespace UnitSystem
 
         public event Action OnAllDefenderDestroyed;
  
-        public UnitsContainer(BattleSystemData data)
+        public UnitsContainer(
+            BattleSystemData data, 
+            UnitStatsPanel unitStatsPanel,
+            RayCastController rayCastController)
         {
             unitsDestroyDelay = data.UnitsDestroyDelay;
+            _unitStatsPanel = unitStatsPanel;
+
+            _rayCastController = rayCastController;
+
+            _rayCastController.LeftClick += SelectUnit;
+            _rayCastController.RightClick += RemoveSelection;
         }
 
         public void AddUnit(IUnit unit)
@@ -45,7 +62,7 @@ namespace UnitSystem
             {
                 default:
                     break;
-                case UnitFactionType.Enemy:
+                case FactionType.Enemy:
                     {
                         if (!_enemyUnits.Contains(unit))
                         {
@@ -54,7 +71,7 @@ namespace UnitSystem
                         }
                         break;
                     }
-                case UnitFactionType.Defender:
+                case FactionType.Defender:
                     {
                         if (!_defenderUnits.Contains(unit))
                         {
@@ -65,7 +82,7 @@ namespace UnitSystem
                     }
             }
 
-           
+            _createdUnits.Add(unit);
         }
 
         private void UnitReachedZeroHealth(IUnit unit)
@@ -76,7 +93,7 @@ namespace UnitSystem
             {
                 default:
                     break;
-                case UnitFactionType.Enemy:
+                case FactionType.Enemy:
                     {
                         _enemyUnits.Remove(unit);
 
@@ -87,7 +104,7 @@ namespace UnitSystem
 
                         break;
                     }
-                case UnitFactionType.Defender:
+                case FactionType.Defender:
                     {
                         _defenderUnits.Remove(unit);
 
@@ -102,11 +119,46 @@ namespace UnitSystem
 
             OnUnitDead?.Invoke(unit.View);
 
+            _createdUnits.Remove(unit);
+
             toRemoveUnitsCollection.Add(unit);
+        }
+
+        private void SelectUnit(string Id)
+        {
+            if (Id == null)
+                return;
+
+            if(_selectedUnit != null)
+            {
+                _unitStatsPanel.Dispose();
+            }
+
+            var unit = _createdUnits.Find(u => u.Id == Id);
+
+            if (unit == null)
+                return;
+
+            _selectedUnit = unit;
+
+            _unitStatsPanel.SetUnit(_selectedUnit);
+        }
+
+        public void RemoveSelection(string Id)
+        {
+            if (_selectedUnit != null)
+            {
+                _unitStatsPanel.Dispose();
+            }
+
+            _selectedUnit = null;
         }
 
         public void OnUpdate(float deltaTime)
         {
+            if (IsPaused)
+                return;
+
             UpdateToBeRemovedUnits(toRemoveUnitsCollection, deltaTime);
         }
 
@@ -130,5 +182,79 @@ namespace UnitSystem
                 }
             }
         }
+
+        public void ClearData()
+        {
+            if (_selectedUnit != null)
+            {
+                _unitStatsPanel.Dispose();
+            }
+
+            _selectedUnit = null;
+
+            for (int i = 0; i < toRemoveUnitsCollection.Count; i++)
+            {
+                var unit = toRemoveUnitsCollection[i];
+
+                unit.Disable();
+
+                OnUnitRemoved?.Invoke(unit);
+            }
+
+            for (int i =0; i < _createdUnits.Count; i++)
+            {
+                var unit = _createdUnits[i];
+
+                unit.OnReachedZeroHealth -= UnitReachedZeroHealth;
+
+                unit.Disable();
+                
+                OnUnitRemoved?.Invoke(unit);
+            }
+
+            _createdUnits.Clear();
+            _enemyUnits.Clear();
+            _defenderUnits.Clear();
+            toRemoveUnitsCollection.Clear();
+
+        }
+
+        #region IPaused
+
+        public bool IsPaused { get; private set; }
+        
+        public void OnPause()
+        {
+            IsPaused = true;
+
+            for(int i =0; i< _createdUnits.Count; i++)
+            {
+                var unit = _createdUnits[i];
+                unit.View.UnitAnimation.Stop();
+            }
+            for (int i = 0; i < toRemoveUnitsCollection.Count; i++)
+            {
+                var unit = toRemoveUnitsCollection[i];
+                unit.View.UnitAnimation.Stop();
+            }
+        }
+
+        public void OnRelease()
+        {
+            IsPaused = false;
+
+            for (int i = 0; i < _createdUnits.Count; i++)
+            {
+                var unit = _createdUnits[i];
+                unit.View.UnitAnimation.Play();
+            }
+            for (int i = 0; i < toRemoveUnitsCollection.Count; i++)
+            {
+                var unit = toRemoveUnitsCollection[i];
+                unit.View.UnitAnimation.Play();
+            }
+        }
+
+        #endregion
     }
 }

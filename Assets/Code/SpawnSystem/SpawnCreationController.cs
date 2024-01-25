@@ -1,8 +1,13 @@
-﻿using Configs;
+﻿using Abstraction;
+using Code.SceneConfigs;
+using Configs;
 using NewBuildingSystem;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UI;
+using UnitSystem;
+using UnitSystem.Enum;
 using UnityEditor;
 using UnityEngine;
 using UserInputSystem;
@@ -15,31 +20,53 @@ namespace SpawnSystem
         private readonly CheckForBorders _checkForBorders;
 
         private readonly SpawnPanelUI _spawnUI;
+        private readonly UnitSettingsPanel _unitSettingsPanel;
+
+        private readonly SpawnerTypeSelectionPanel _typeSelectionPanel;
+
+        private readonly SpawnerView _enemySpawners;
+        private readonly SpawnerView _defenderSpawners;
+
         private readonly GameObject _spawnerPrefab;
         private readonly RayCastController _rayCastController;
         private readonly Material _previewMaterial;
         private readonly GameObject _plane;
         private readonly Grid _grid;
 
+        private List<Spawner> _createdSpawnersCollection = new();
+
         private List<Material> _oldMaterials = new();
+        private Spawner _buildingSpawner;
         private Spawner _selectedSpawner;
         private Vector2Int _mousePos;
 
         private int _spawnerCount;
 
+        public Spawner SelectedSpawner => _selectedSpawner;
+
+        public event Action<Spawner> OnSpawnerCreated;
+        public event Action<Spawner> OnSpawnerRemoved;
+
         public SpawnCreationController(
-            SpawnPanelUI spawnUI,
+            SceneObjectsHolder sceneObjects,
             GameObject spawnerPrefab,
             RayCastController rayCastController,
             ObjectsHolder objects,
-            GameObject plane, 
+            GameObject plane,
             Grid grid)
         {
             _checkForBorders = new CheckForBorders(plane);
 
-            _spawnUI = spawnUI;
+            _spawnUI = sceneObjects.BattleUI.SpawnPanel;
+            _unitSettingsPanel = sceneObjects.BattleUI.UnitSettingsPanel;
+
+            _typeSelectionPanel = sceneObjects.BattleUI.SpawnerTypeSelection;
+
+            _enemySpawners = sceneObjects.EnemySpawner;
+            _defenderSpawners = sceneObjects.DefendersSpawner;
+
             _spawnerPrefab = spawnerPrefab;
-            
+
             _rayCastController = rayCastController;
 
             _previewMaterial = Object.Instantiate(objects.PreveiwMaterial);
@@ -47,54 +74,140 @@ namespace SpawnSystem
             _plane = plane;
             _grid = grid;
 
+            _spawnUI.OnSpawnerSelectAction += SelectSpawner;
             _spawnUI.OnCreateSpawnerClick += CreateSpawner;
+            _spawnUI.OnRemoveSpawnerClick += RemoveSpawner;
+
+            _unitSettingsPanel.Parametrs.OnUnitTypeChange += UnitTypeChanged;
+
+            _spawnUI.UnselectAll();
+
+            _typeSelectionPanel.Hide();
+
+            _rayCastController.RightClick += RemoveSelection;
 
             _spawnerCount = 0;
         }
 
+        private void SelectSpawner(string spawnerId)
+        {
+            UnselectCurrentSpawner();
+
+            _selectedSpawner = _createdSpawnersCollection.Find(spw => spw.Id == spawnerId);
+
+            ChangeMaterial(_selectedSpawner);
+
+            UpdateUnitSettingsPanel(_selectedSpawner);
+
+        }
+
+        private void UpdateUnitSettingsPanel(Spawner selectedSpawner)
+        {
+            _unitSettingsPanel.Show();
+            
+            _unitSettingsPanel.SetFaction(selectedSpawner.FactionType);
+
+            switch (selectedSpawner.FactionType)
+            {
+                case FactionType.Defender:
+                    {
+                        var availableUnitTypes = GetAvailableUnitTypes(_defenderSpawners.SpawnSettings);
+                        _unitSettingsPanel.SetUnitTypes(availableUnitTypes);
+
+                        var availableUnitData = GetAvailableUnitData(_defenderSpawners.SpawnSettings);
+                        _unitSettingsPanel.ChangeData(availableUnitData[0]);
+                        break;
+                    }
+                case FactionType.Enemy:
+                    {
+                        var availableUnitTypes = GetAvailableUnitTypes(_enemySpawners.SpawnSettings);
+                        _unitSettingsPanel.SetUnitTypes(availableUnitTypes);
+
+                        var availableUnitData = GetAvailableUnitData(_enemySpawners.SpawnSettings);
+                        _unitSettingsPanel.ChangeData(availableUnitData[0]);
+                        break;
+                    }
+            }
+        }
+
+        private IList<UnitType> GetAvailableUnitTypes(SpawnSettings settings)
+        {
+            var result = new List<UnitType>();
+
+            var unitsCreationData = settings.UnitsCreationData;
+            
+            for (int i = 0; i < unitsCreationData.Count; i++)
+            {
+                result.Add(unitsCreationData[i].Type);
+            }
+
+            return result;
+        }
+
+        public IList<IUnitData> GetAvailableUnitData(SpawnSettings settings)
+        {
+            var result = new List<IUnitData>();
+
+            var unitsCreationData = settings.UnitsCreationData;
+
+            for (int i = 0; i < unitsCreationData.Count; i++)
+            {
+                result.Add(unitsCreationData[i].UnitSettings);
+            }
+
+            return result;
+        }
 
         private void CreateSpawner()
         {
             _plane.SetActive(true);
             _spawnerCount++;
 
-            CancelCurrentPlacement();
+            _spawnUI.UnselectAll();
 
-            _spawnUI.AddHUD(_spawnerCount);
+            _unitSettingsPanel.SetFaction(FactionType.None);
+            _unitSettingsPanel.Hide();
+
+            UnselectCurrentSpawner();
+
+            CancelCurrentPlacement();
 
             var spawner = Object.Instantiate(_spawnerPrefab).GetComponent<Spawner>();
 
-            _selectedSpawner = spawner;
-            _selectedSpawner.BuildingsType = EnumBuildings.None;
-            _selectedSpawner.Name = $"Spawner[{_spawnerCount - 1}]";
-            _selectedSpawner.Size = new Vector2Int(1, 1);
+            spawner.Init(GUID.Generate().ToString());
 
-            InstallInCenterTile(_selectedSpawner);
+            spawner.BuildingsType = EnumBuildings.None;
+            spawner._name = $"Spawner[{_spawnerCount - 1}]";
+            spawner.Size = new Vector2Int(1, 1);
 
-            _selectedSpawner.OnTriggered += _checkForBorders.CheckPlaneForBuilding;
+            _buildingSpawner = spawner;
 
-            _selectedSpawner.ObjectBuild.transform.position = _plane.transform.position;
+            InstallInCenterTile(_buildingSpawner);
+            ChangeMaterial(_buildingSpawner);
 
-            ChangeMaterial(_selectedSpawner);
+            _buildingSpawner.OnTriggered += _checkForBorders.CheckPlaneForBuilding;
+            _buildingSpawner.ObjectBuild.transform.position = _plane.transform.position;
 
             _rayCastController.LeftClick += PlaceSpawner;
             _rayCastController.MousePosition += RayCastControllerOnMousePosition;
         }
 
-
         private void CancelCurrentPlacement()
         {
-            if (_selectedSpawner == null) return;
-            
-            ChangeMaterial(_selectedSpawner, false);
+            if (_buildingSpawner == null) return;
 
-            _selectedSpawner.OnTriggered -= _checkForBorders.CheckPlaneForBuilding;
+            ChangeMaterial(_buildingSpawner, false);
+
+            _buildingSpawner.OnTriggered -= _checkForBorders.CheckPlaneForBuilding;
 
             _rayCastController.LeftClick -= PlaceSpawner;
             _rayCastController.MousePosition -= RayCastControllerOnMousePosition;
-      
-            Object.Destroy(_selectedSpawner.ObjectBuild);
-            _selectedSpawner = null;
+
+            _createdSpawnersCollection.Remove(_buildingSpawner);
+
+            Object.Destroy(_buildingSpawner.ObjectBuild);
+
+            _buildingSpawner = null;
         }
 
         private void InstallInCenterTile(Spawner spawner)
@@ -108,6 +221,8 @@ namespace SpawnSystem
             spawner.PositionBuild.position = new Vector3(sizeX, 0, sizeY);
             spawner.Collider.center = new Vector3(sizeX, .2f, sizeY);
             spawner.Collider.size = new Vector3(size.x - .5f, .2f, size.y - .5f);
+
+            spawner.SpawnLocation.position = new Vector3(sizeX, 0, sizeY);
         }
 
         private void ChangeMaterial(Spawner spawner, bool mode = true)
@@ -131,35 +246,158 @@ namespace SpawnSystem
 
         private void PlaceSpawner(string ID)
         {
-            if (_selectedSpawner == null) 
+            if (_buildingSpawner == null)
                 return;
+  
+            _rayCastController.LeftClick -= PlaceSpawner;
+            _rayCastController.MousePosition -= RayCastControllerOnMousePosition;
+            
+            _typeSelectionPanel.Enable(SpawnerFinalizePlacment);           
+        }
+
+        private void SpawnerFinalizePlacment(FactionType faction) 
+        {
+            _typeSelectionPanel.Disable();
 
             _plane.SetActive(false);
 
-            ChangeMaterial(_selectedSpawner, false);
-            _selectedSpawner.ID = GUID.Generate().ToString();
+            ChangeMaterial(_buildingSpawner, false);
 
-            _selectedSpawner.OnTriggered -= _checkForBorders.CheckPlaneForBuilding;
+            _createdSpawnersCollection.Add(_buildingSpawner);
+            _spawnUI.AddHUD(_buildingSpawner.Id, faction);
 
-            _rayCastController.LeftClick -= PlaceSpawner;
-            _rayCastController.MousePosition -= RayCastControllerOnMousePosition;
-         
-            _selectedSpawner = null;
+            _buildingSpawner.SetFaction(faction);
+
+            switch (faction)
+            {
+                case FactionType.Enemy:
+                    _buildingSpawner.ObjectBuild.transform.SetParent(_enemySpawners.SpawnersContainer);
+                    break;
+                case FactionType.Defender:
+                    _buildingSpawner.ObjectBuild.transform.SetParent(_defenderSpawners.SpawnersContainer);
+                    break;
+            }
+
+            OnSpawnerCreated?.Invoke(_buildingSpawner);
+
+            _buildingSpawner.OnTriggered -= _checkForBorders.CheckPlaneForBuilding;
+
+            _buildingSpawner = null;
         }
 
         private void RayCastControllerOnMousePosition(Vector3 vector3)
-{
+        {
             Vector3Int gridPosCell = _grid.WorldToCell(vector3);
-            
-            if (gridPosCell.z != 0) 
+
+            if (gridPosCell.z != 0)
                 return;
-            
+
             var gridPos = _grid.CellToWorld(gridPosCell);
 
             _mousePos.x = Mathf.RoundToInt(gridPos.x);
             _mousePos.y = Mathf.RoundToInt(gridPos.z);
 
-            _selectedSpawner.ObjectBuild.transform.position = gridPos;
+            _buildingSpawner.ObjectBuild.transform.position = gridPos;
+        }
+
+
+        private void RemoveSpawner()
+        {
+            if (_selectedSpawner == null)
+                return;
+
+            ChangeMaterial(_selectedSpawner, false);
+
+            _spawnUI.RemoveHUD(_selectedSpawner.Id);
+            
+            _unitSettingsPanel.SetFaction(FactionType.None);
+            _unitSettingsPanel.Hide();
+
+            _createdSpawnersCollection.Remove(_selectedSpawner);
+
+            OnSpawnerRemoved?.Invoke(_selectedSpawner);
+
+            Object.Destroy(_selectedSpawner.ObjectBuild);
+
+            _selectedSpawner = null;
+        }
+
+
+        private void RemoveSelection(string spawnerId)
+        {
+            _spawnUI.UnselectAll();
+
+            UnselectCurrentSpawner();
+
+            _unitSettingsPanel.SetFaction(FactionType.None);
+            _unitSettingsPanel.Hide();
+        }
+
+
+        private void UnselectCurrentSpawner()
+        {
+            if (_selectedSpawner != null)
+            {
+                ChangeMaterial(_selectedSpawner, false);
+
+                _selectedSpawner = null;
+            }
+        }
+
+        private void UnitTypeChanged(int index)
+        {
+            if (_selectedSpawner == null)
+                return;
+
+            switch (_selectedSpawner.FactionType)
+            {
+                case FactionType.Defender:
+                    {
+                        var availableUnitData = GetAvailableUnitData(_defenderSpawners.SpawnSettings);
+                        _unitSettingsPanel.ChangeData(availableUnitData[index]);
+                        break;
+                    }
+                case FactionType.Enemy:
+                    {
+                        var availableUnitData = GetAvailableUnitData(_enemySpawners.SpawnSettings);
+                        _unitSettingsPanel.ChangeData(availableUnitData[index]);
+                        break;
+                    }
+            }
+        }
+
+
+        public void Reset()
+        {
+            _spawnUI.ClearHUD();
+
+            _unitSettingsPanel.SetFaction(FactionType.None);
+            _unitSettingsPanel.Hide();
+
+            if (_buildingSpawner != null)
+            {
+                OnSpawnerRemoved?.Invoke(_buildingSpawner);
+
+                Object.Destroy(_buildingSpawner.ObjectBuild);
+                _buildingSpawner = null;
+            }
+
+            if (_selectedSpawner != null)
+            {
+                OnSpawnerRemoved?.Invoke(_selectedSpawner);
+
+                Object.Destroy(_selectedSpawner.ObjectBuild);
+                _selectedSpawner = null;
+            }
+
+            for (int i =0; i< _createdSpawnersCollection.Count; i++)
+            {
+                var spawner = _createdSpawnersCollection[i];
+                OnSpawnerRemoved?.Invoke(spawner);
+                Object.Destroy(spawner.ObjectBuild);
+            }
+
+            _createdSpawnersCollection.Clear();
         }
     }
 }

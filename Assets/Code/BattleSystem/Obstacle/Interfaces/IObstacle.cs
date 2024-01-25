@@ -3,9 +3,9 @@ using System;
 
 namespace BattleSystem.Obstacle
 {
-    public interface IObstacle : IDamageable, IKillable<int>
+    public interface IObstacle : IDamageable, IKillable<string>
     {
-        public int Id { get; }
+        public string Id { get; }
 
         public IParametr<int> Health { get; }
 

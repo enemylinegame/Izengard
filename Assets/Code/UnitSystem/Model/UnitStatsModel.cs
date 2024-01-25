@@ -13,7 +13,7 @@ namespace UnitSystem.Model
         private readonly IParametr<float> _speed;
         private readonly IParametr<float> _detectionRange;
         
-        private UnitFactionType _faction;
+        private FactionType _faction;
         private UnitType _type;
         private UnitRoleType _role;
 
@@ -21,7 +21,7 @@ namespace UnitSystem.Model
 
         #region Public Property
     
-        public UnitFactionType Faction => _faction;
+        public FactionType Faction => _faction;
         public UnitType Type => _type;
         public UnitRoleType Role => _role;
 

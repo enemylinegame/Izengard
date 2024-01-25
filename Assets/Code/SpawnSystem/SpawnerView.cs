@@ -6,11 +6,11 @@ namespace SpawnSystem
     public class SpawnerView : MonoBehaviour
     {
         [SerializeField] private Transform _poolHolder;
-        [SerializeField] private SpawnSettings spawnSettings;
-        [SerializeField] private List<Transform> spawnPoints;
+        [SerializeField] private SpawnSettings _spawnSettings;
+        [SerializeField] private Transform _spawnersContainer;
 
         public Transform PoolHolder => _poolHolder;
-        public SpawnSettings SpawnSettings => spawnSettings;
-        public List<Transform> SpawnPoints => spawnPoints; 
+        public SpawnSettings SpawnSettings => _spawnSettings;
+        public Transform SpawnersContainer => _spawnersContainer;
     }
 }

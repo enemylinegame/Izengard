@@ -79,7 +79,7 @@ namespace NewBuildingSystem
             
             _flyingBuilding = build;
             _flyingBuilding.BuildingsType = _dataBase.objectsData[ID].BuildingType;
-            _flyingBuilding.Name = _dataBase.objectsData[ID].Name;
+            _flyingBuilding._name = _dataBase.objectsData[ID].Name;
             //_flyingBuilding.Image.sprite = _dataBase.objectsData[ID].Image;
             _flyingBuilding.MaxCountWorkers = _dataBase.objectsData[ID].MaxWorkers;
             _flyingBuilding.Size = _dataBase.objectsData[ID].Size;
@@ -113,7 +113,9 @@ namespace NewBuildingSystem
             }*/
             
             ChangeMaterial(false);
-            _flyingBuilding.ID = GUID.Generate().ToString();
+            
+            _flyingBuilding.Init(GUID.Generate().ToString());
+
             _buildings.Add(_flyingBuilding);
                 
             _flyingBuilding.OnTriggered -= _checkForBorders.CheckPlaneForBuilding;
@@ -163,7 +165,7 @@ namespace NewBuildingSystem
         {
             _plane.SetActive(true);
 
-            var build = _buildings.Find(x => ID == x.ID);
+            var build = _buildings.Find(x => ID == x.Id);
             if(build == null) return;
             
             var materials = build.BuildingRenderer.materials.ToList();

@@ -6,14 +6,14 @@ namespace BattleSystem.Obstacle
 {
     public class ObstacleHandler : IObstacle
     {
-        private readonly int _id;
+        private readonly string _id;
         private readonly IParametr<int> _health;
         private readonly IObstacleView _view;
 
-        public event Action<int> OnReachedZeroHealth;
+        public event Action<string> OnReachedZeroHealth;
         public event Action<IDamage> OnTakeDamage;
 
-        public int Id => _id;
+        public string Id => _id;
 
         public IParametr<int> Health => _health;
 

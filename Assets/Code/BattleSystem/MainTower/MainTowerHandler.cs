@@ -11,9 +11,9 @@ namespace BattleSystem.MainTower
         private readonly IParametr<int> _health;
 
         private int _maxHealth;
-        private int _id;
+        private string _id;
 
-        public int Id => _id;
+        public string Id => _id;
         public MainTowerView View => _view;
         
         public event Action<IMainTower> OnReachedZeroHealth;
@@ -49,7 +49,10 @@ namespace BattleSystem.MainTower
             _view.Hide();
         }
 
-
+        public void Reset()
+        {
+            _health.SetValue(_maxHealth);
+        }
 
         private void TakeDamage(IDamage damage)
         {

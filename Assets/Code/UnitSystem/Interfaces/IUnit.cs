@@ -20,13 +20,13 @@ namespace UnitSystem
         UnitStateModel State { get; }
         UnitPriorityModel Priority { get; }
 
-        int Id { get; }
+        string Id { get; }
+
+        string Name { get; }
 
         Vector3 StartPosition { get; }
         
         float TimeProgress { get; set; }
-
-        bool IsInFight { get; set; }
 
         void Enable();
 

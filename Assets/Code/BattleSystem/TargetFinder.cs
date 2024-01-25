@@ -78,8 +78,8 @@ namespace BattleSystem
         private IAttackTarget GetClosestFoe(IUnit unit, UnitType targetType = UnitType.None)
         {
             IAttackTarget target = new NoneTarget();
-            
-            List<IUnit> foeUnitList = (unit.Stats.Faction == UnitFactionType.Enemy) ? 
+
+            List<IUnit> foeUnitList = (unit.Stats.Faction == FactionType.Enemy) ?
                 _unitsContainer.DefenderUnits : _unitsContainer.EnemyUnits;
 
             Vector3 unitPos = unit.GetPosition();
@@ -88,9 +88,6 @@ namespace BattleSystem
             for (int i = 0; i < foeUnitList.Count; i++)
             {
                 IUnit foeUnit = foeUnitList[i];
-
-                if (foeUnit.IsInFight)
-                    continue;
 
                 if( (targetType != UnitType.None && foeUnit.Stats.Type != targetType) || foeUnit is NoneTarget )
                     continue;

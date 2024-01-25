@@ -1,5 +1,6 @@
 using Abstraction;
 using System;
+using Tools;
 using UnitSystem.Enum;
 using UnitSystem.Model;
 using UnityEngine;
@@ -17,7 +18,8 @@ namespace UnitSystem
         private readonly UnitTargetModel _unitTarget;
         private readonly UnitPriorityModel _priority;
 
-        private int _id;
+        private string _id;
+        private string _name;
         private Vector3 _startPosition;
 
         public IUnitView View => _view;
@@ -32,18 +34,19 @@ namespace UnitSystem
         public UnitTargetModel Target => _unitTarget;
         public UnitPriorityModel Priority => _priority;
 
-        public int Id => _id;
+        public string Id => _id;
+
+        public string Name => _name;
 
         public Vector3 StartPosition => _startPosition;
         
         public float TimeProgress { get; set; }
-
-        public bool IsInFight { get; set; }
       
         public event Action<IUnit> OnReachedZeroHealth;
 
-        public UnitHandler(IUnitView view, IUnitData unitData)
+        public UnitHandler(string name, IUnitView view, IUnitData unitData)
         {
+            _name = name;
 
             _view = view;
 
@@ -65,7 +68,7 @@ namespace UnitSystem
 
             _id = _view.Id;
 
-            IsInFight = false;
+            _view.SetUnitName(name);
         }
 
         public void Enable()
@@ -97,6 +100,8 @@ namespace UnitSystem
         public void Disable()
         {
             Unsubscribe();
+
+            TimeProgress = 0;
 
             _unitTarget.ResetTarget();
             _navigation.Disable();
@@ -141,31 +146,26 @@ namespace UnitSystem
                 {
                     case UnitStateType.None:
                         {
-                            IsInFight = false;
                             animView.Reset();
                             break;
                         }
                     case UnitStateType.Idle:
                         {
-                            IsInFight = false;
                             animView.IsMoving = false;
                             break;
                         }
                     case UnitStateType.Move:
                         {
-                            IsInFight = false;
                             animView.IsMoving = true;
                             break;
                         }
                     case UnitStateType.Attack:
                         {
-                            IsInFight = true;
                             animView.IsMoving = false;
                             break;
                         }
                     case UnitStateType.Die:
                         {
-                            IsInFight = false;
                             animView.StartDead();
                         }
                         break;
@@ -173,6 +173,9 @@ namespace UnitSystem
                         throw new ArgumentOutOfRangeException();
                 }
             }
+
+            DebugGameManager.Log($"{_name}. Change state. Current State = {state}",
+                new[] { DebugTags.Unit, DebugTags.State });
         }
 
 

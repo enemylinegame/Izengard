@@ -18,5 +18,6 @@
 
         protected override void SetCollision() { }
 
+        public override void SetUnitName(string name) { }
     }
 }

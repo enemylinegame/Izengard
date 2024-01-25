@@ -4,7 +4,8 @@ namespace Abstraction
 {
     public interface ITarget
     {
-        int Id { get; }
+        string Id { get; }
+        string Name { get; }
 
         Vector3 Position { get; }
     }

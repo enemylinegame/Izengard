@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Tools;
 using UI;
-using UnitSystem.Enum;
 using UnitSystem;
 using UnityEngine;
+using Abstraction;
 
 namespace SpawnSystem
 {
@@ -32,8 +32,6 @@ namespace SpawnSystem
             _waves = waveSettings.Waves;
             _battleUIController = battleUIController;
  
-            _battleUIController.OnStartWave += StartWave;
-            _battleUIController.OnStopWave += StopWave;
             _battleUIController.OnSpawnNewUnit += SpawnUnit;
 
             _waveIndex = 0;
@@ -45,7 +43,7 @@ namespace SpawnSystem
 
         public void SpawnUnit(IUnitData unitData)
         {
-            if (unitData.Faction != UnitFactionType.Enemy)
+            if (unitData.Faction != FactionType.Enemy)
                 return;
 
             _spawnController.SpawnUnit(unitData);

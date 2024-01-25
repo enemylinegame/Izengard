@@ -44,7 +44,7 @@ namespace BattleSystem.Obstacle
             }
         }
 
-        private void ObstacleReachedZeroHealth(int obstacleId)
+        private void ObstacleReachedZeroHealth(string obstacleId)
         {
             var obstacle = _obstaclesCollection.Find(obst => obst.Id == obstacleId);
 

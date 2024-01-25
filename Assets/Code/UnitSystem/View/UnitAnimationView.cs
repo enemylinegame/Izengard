@@ -10,9 +10,7 @@ namespace UnitSystem.View
         private readonly int _takeDamageTrigger = Animator.StringToHash("TakeDamage");
         private readonly int _isMovingFlag = Animator.StringToHash("IsMoving");
         private readonly int _unitDeadFlag = Animator.StringToHash("UnitDead");
-        
-        
-        
+                
         public virtual bool IsMoving 
         {
             set
@@ -45,6 +43,16 @@ namespace UnitSystem.View
         public virtual void TakeDamage()
         {
             _animator.SetTrigger(_takeDamageTrigger);
+        }
+
+        public void Stop()
+        {
+            _animator.enabled = false;
+        }
+
+        public void Play()
+        {
+            _animator.enabled = true;
         }
     }
 }
