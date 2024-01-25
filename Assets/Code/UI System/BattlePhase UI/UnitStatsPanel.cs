@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 using UnitSystem;
+using System;
 
 namespace UI
 {
@@ -34,7 +35,18 @@ namespace UI
 
             SubscribeUnit(unit);
 
+            SetValues(unit);
+
             _statsContainer.SetActive(true);
+        }
+
+        private void SetValues(IUnit unit)
+        {
+            ChangeHealth(unit.Stats.Health.GetValue());
+            ChangeArmor(unit.Defence.ArmorPoints.GetValue());
+            ChangeBaseShield(unit.Defence.BaseShieldPoints.GetValue());
+            ChangeFireShield(unit.Defence.FireShieldPoints.GetValue());
+            ChangeColdShield(unit.Defence.ColdShieldPoints.GetValue());
         }
 
         public void Dispose()
@@ -67,12 +79,6 @@ namespace UI
             unit.Defence.BaseShieldPoints.OnValueChange += ChangeBaseShield;
             unit.Defence.FireShieldPoints.OnValueChange += ChangeFireShield;
             unit.Defence.ColdShieldPoints.OnValueChange += ChangeColdShield;
-
-            unit.Stats.Health.SetValue(unit.Stats.Health.GetValue());
-            unit.Defence.ArmorPoints.SetValue(unit.Defence.ArmorPoints.GetValue());
-            unit.Defence.BaseShieldPoints.SetValue(unit.Defence.BaseShieldPoints.GetValue());
-            unit.Defence.FireShieldPoints.SetValue(unit.Defence.FireShieldPoints.GetValue());
-            unit.Defence.ColdShieldPoints.SetValue(unit.Defence.ColdShieldPoints.GetValue());
         }
 
         private void UnsubscribeUnit(IUnit unit)

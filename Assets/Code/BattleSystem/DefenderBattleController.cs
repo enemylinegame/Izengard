@@ -164,13 +164,17 @@ namespace BattleSystem
                             unit.TimeProgress += deltaTime;
                             if (unit.TimeProgress >= unit.Offence.CastingTime)
                             {
+                                var damage = unit.Offence.GetDamage();
 
-                                target.TakeDamage(unit.Offence.GetDamage());
+                                DebugGameManager.Log($"{unit.Name} deal [{damage.BaseDamage} + {damage.FireDamage} + {damage.ColdDamage}] damamage to {target.Name}", 
+                                    new[] { DebugTags.Unit, DebugTags.Damage });
+
+                                target.TakeDamage(damage);
+
                                 unit.State.CurrentAttackPhase = AttackPhase.None;
                                 unit.TimeProgress = 0.0f;
 
-                                DebugGameManager.Log($"{unit.Name} deal damamage to {target.Name}",
-                                    new[] { DebugTags.Unit, DebugTags.Damage });
+                           
 
                                 StartAttackAnimation(unit);
                             }
