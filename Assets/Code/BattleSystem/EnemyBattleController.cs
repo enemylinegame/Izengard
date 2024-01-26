@@ -11,7 +11,6 @@ namespace BattleSystem
     public class EnemyBattleController : BaseBattleController
     {
         private readonly ISpawnController _enemySpawner;
-        private readonly MainTowerController _mainTower;
 
         public EnemyBattleController(
             BattleSystemData data,
@@ -21,7 +20,6 @@ namespace BattleSystem
             ISpawnController enemySpawner) : base(data, targetFinder, unitsContainer, mainTower)
         {
             _enemySpawner = enemySpawner;
-            _mainTower = mainTower;
 
             this.unitsContainer.OnDefenderAdded += ResetUnitState;
         }
@@ -121,13 +119,10 @@ namespace BattleSystem
             if (target is not NoneTarget)
             {
                 unit.Target.SetTarget(target);
+                
                 unit.MoveTo(target.Position);
+                
                 unit.ChangeState(UnitStateType.Move);
-            }
-            else
-            {
-                unit.Stop();
-                unit.ChangeState(UnitStateType.None);
             }
         }
 
@@ -153,6 +148,8 @@ namespace BattleSystem
             }
             else
             {
+                unit.Stop();
+
                 unit.ChangeState(UnitStateType.Idle);               
             }
         }

@@ -103,9 +103,9 @@ namespace BattleSystem
             {
                 unit.Target.SetTarget(target);
                 
-                unit.ChangeState(UnitStateType.Move);
-
                 unit.MoveTo(target.Position);
+         
+                unit.ChangeState(UnitStateType.Move);
             }
         }
 
@@ -119,6 +119,7 @@ namespace BattleSystem
                 if (distanceSqr <= unit.Offence.MaxRange * unit.Offence.MaxRange)
                 {
                     unit.Stop();
+
                     unit.ChangeState(UnitStateType.Attack);
                 }
                 else
@@ -131,11 +132,15 @@ namespace BattleSystem
             }
             else 
             {
-                if (CheckIsOnDestinationPosition(unit))
+                /*if (CheckIsOnDestinationPosition(unit))
                 {
                     unit.ChangeState(UnitStateType.Idle);
                     unit.Stop();
-                }
+                }*/
+
+                unit.Stop();
+
+                unit.ChangeState(UnitStateType.Idle);
             }
         }
 
@@ -173,8 +178,6 @@ namespace BattleSystem
 
                                 unit.State.CurrentAttackPhase = AttackPhase.None;
                                 unit.TimeProgress = 0.0f;
-
-                           
 
                                 StartAttackAnimation(unit);
                             }
