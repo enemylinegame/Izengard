@@ -41,7 +41,7 @@ MonoBehaviour:
     _abilityType: 0
     _minRange: 0
     _maxRange: 2
-    _castingTime: 0.8
+    _castingTime: 0.6
     _attackTime: 1
     _criticalChance: 10
     _critScale: 2

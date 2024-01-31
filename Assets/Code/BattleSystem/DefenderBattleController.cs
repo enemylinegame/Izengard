@@ -9,11 +9,11 @@ using UnitSystem.Enum;
 namespace BattleSystem
 {
     public class DefenderBattleController : BaseBattleController
-    {        
+    {
         public DefenderBattleController(
-            BattleSystemData data, 
+            BattleSystemData data,
             TargetFinder targetFinder,
-            IUnitsContainer unitsContainer, 
+            IUnitsContainer unitsContainer,
             MainTowerController mainTower) : base(data, targetFinder, unitsContainer, mainTower)
         {
         }
@@ -102,9 +102,9 @@ namespace BattleSystem
             if (target is not NoneTarget)
             {
                 unit.Target.SetTarget(target);
-                
+
                 unit.MoveTo(target.Position);
-         
+
                 unit.ChangeState(UnitStateType.Move);
             }
         }
@@ -130,7 +130,7 @@ namespace BattleSystem
                     }
                 }
             }
-            else 
+            else
             {
                 /*if (CheckIsOnDestinationPosition(unit))
                 {
@@ -147,8 +147,8 @@ namespace BattleSystem
         protected override void UnitAttackState(IUnit unit, float deltaTime)
         {
             IAttackTarget target = unit.Target.CurrentTarget;
-            
-            if (target is not NoneTarget) 
+
+            if (target is not NoneTarget)
             {
                 if (IsAttackDistanceSuitable(unit))
                 {
@@ -158,33 +158,43 @@ namespace BattleSystem
                             break;
 
                         case AttackPhase.None:
-                            unit.TimeProgress = deltaTime;
-                            unit.State.CurrentAttackPhase = AttackPhase.Cast;
-
-                            var dir = unit.Target.CurrentTarget.Position - unit.GetPosition();
-                            unit.SetRotation(dir);
-
-                            break;
-                        case AttackPhase.Cast:
-                            unit.TimeProgress += deltaTime;
-                            if (unit.TimeProgress >= unit.Offence.CastingTime)
                             {
-                                var damage = unit.Offence.GetDamage();
+                                unit.TimeProgress = deltaTime;
+                                unit.State.CurrentAttackPhase = AttackPhase.Cast;
 
-                                DebugGameManager.Log($"{unit.Name} deal [{damage.BaseDamage} + {damage.FireDamage} + {damage.ColdDamage}] damamage to {target.Name}", 
-                                    new[] { DebugTags.Unit, DebugTags.Damage });
-
-                                target.TakeDamage(damage);
-
-                                unit.State.CurrentAttackPhase = AttackPhase.None;
-                                unit.TimeProgress = 0.0f;
+                                var dir = unit.Target.CurrentTarget.Position - unit.GetPosition();
+                                unit.SetRotation(dir);
 
                                 StartAttackAnimation(unit);
                             }
-
                             break;
-                        case AttackPhase.Attack: 
+                        case AttackPhase.Cast:
                             {
+                                unit.TimeProgress += deltaTime;
+
+                                if (unit.TimeProgress >= unit.Offence.CastingTime)
+                                {
+                                    var damage = unit.Offence.GetDamage();
+
+                                    DebugGameManager.Log($"{unit.Name} deal [{damage.BaseDamage} + {damage.FireDamage} + {damage.ColdDamage}] damamage to {target.Name}",
+                                       new[] { DebugTags.Unit, DebugTags.Damage });
+
+                                    target.TakeDamage(damage);
+
+                                    unit.State.CurrentAttackPhase = AttackPhase.Attack;
+                                }
+
+                                break;
+                            }
+                        case AttackPhase.Attack:
+                            {
+                                unit.TimeProgress += deltaTime;
+
+                                if (unit.TimeProgress >= unit.Offence.AttackTime)
+                                {
+                                    unit.State.CurrentAttackPhase = AttackPhase.None;
+                                    unit.TimeProgress = 0.0f;
+                                }
                                 break;
                             }
                     }

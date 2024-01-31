@@ -168,15 +168,20 @@ namespace BattleSystem
                             break;
 
                         case AttackPhase.None:
-                            unit.TimeProgress = deltaTime;
-                            unit.State.CurrentAttackPhase = AttackPhase.Cast;
+                            {
+                                unit.TimeProgress = deltaTime;
+                                unit.State.CurrentAttackPhase = AttackPhase.Cast;
 
-                            var dir = unit.Target.CurrentTarget.Position - unit.GetPosition();
-                            unit.SetRotation(dir);
+                                var dir = unit.Target.CurrentTarget.Position - unit.GetPosition();
+                                unit.SetRotation(dir);
 
+                                StartAttackAnimation(unit);
+                            }
                             break;
                         case AttackPhase.Cast:
+                            
                             unit.TimeProgress += deltaTime;
+                            
                             if (unit.TimeProgress >= unit.Offence.CastingTime)
                             {
                                 var damage = unit.Offence.GetDamage();
@@ -185,16 +190,20 @@ namespace BattleSystem
                                    new[] { DebugTags.Unit, DebugTags.Damage });
 
                                 target.TakeDamage(damage);
-                                
-                                unit.State.CurrentAttackPhase = AttackPhase.None;
-                                unit.TimeProgress = 0.0f;
 
-                                StartAttackAnimation(unit);
+                                unit.State.CurrentAttackPhase = AttackPhase.Attack;
                             }
 
                             break;
                         case AttackPhase.Attack:
                             {
+                                unit.TimeProgress += deltaTime;
+
+                                if (unit.TimeProgress >= unit.Offence.AttackTime)
+                                {
+                                    unit.State.CurrentAttackPhase = AttackPhase.None;
+                                    unit.TimeProgress = 0.0f;
+                                }
                                 break;
                             }
                     }

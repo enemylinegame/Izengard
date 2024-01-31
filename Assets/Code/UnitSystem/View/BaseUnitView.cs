@@ -1,5 +1,6 @@
 using Abstraction;
 using System;
+using Tools;
 using UnitSystem.Enum;
 using UnityEditor;
 using UnityEngine;
@@ -18,6 +19,8 @@ namespace UnitSystem.View
         protected Collider unitCollider;
         protected IUnitAnimationView unitAnimation;
 
+        protected DamageFlash _damageEffect;
+
         public string Id => _id;
         public string Name => _name;
         public UnitType Type => _type;
@@ -26,18 +29,18 @@ namespace UnitSystem.View
         public Transform SelfTransform => selfTransform;
         public NavMeshAgent UnitNavigation => unitNavigation;
         public IUnitAnimationView UnitAnimation => unitAnimation;
- 
+
         public event Action<IDamage> OnTakeDamage;
-      
+
         public virtual void Init(UnitType type)
         {
             _type = type;
         }
 
-        public void Show() => 
+        public void Show() =>
             gameObject.SetActive(true);
 
-        public void Hide() => 
+        public void Hide() =>
             gameObject.SetActive(false);
 
         public abstract void SetUnitName(string name);
@@ -50,10 +53,12 @@ namespace UnitSystem.View
         {
             unitCollider.enabled = isEnabled;
         }
-        
+
         private void Awake()
         {
             _id = GUID.Generate().ToString();
+
+            _damageEffect = GetComponent<DamageFlash>();
 
             SetTransform();
             SetUnitNavigation();
@@ -70,12 +75,15 @@ namespace UnitSystem.View
 
         private void FixedUpdate()
         {
-            Debug.DrawRay(transform.position, transform.forward * 1.5f, Color.red, 0); 
+            Debug.DrawRay(transform.position, transform.forward * 1.5f, Color.red, 0);
         }
 
         public void TakeDamage(IDamage damage)
         {
             OnTakeDamage?.Invoke(damage);
+
+            if (_damageEffect != null)
+                _damageEffect.Flash();
         }
     }
 }

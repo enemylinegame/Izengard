@@ -2578,6 +2578,7 @@ GameObject:
   - component: {fileID: -3092681695506556703}
   - component: {fileID: 4416200106365465764}
   - component: {fileID: 2186755547359854036}
+  - component: {fileID: 8857908161663781761}
   m_Layer: 8
   m_Name: Orc_warrior
   m_TagString: Enemy
@@ -2737,10 +2738,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b46236cc90977b44e9bd344e57e97c1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _name: Orc_warrior
+  _damageEffect: {fileID: 8857908161663781761}
   _enemyNavMesh: {fileID: 5013786577506457904}
   _collider: {fileID: -5567821665638126747}
   _animationView: {fileID: 4416200106365465764}
+--- !u!114 &8857908161663781761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 163804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e33908af4f8a23a409594ed962b8eada, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshRenderType: 1
+  _flashTime: 0.15
 --- !u!1 &163906
 GameObject:
   m_ObjectHideFlags: 0

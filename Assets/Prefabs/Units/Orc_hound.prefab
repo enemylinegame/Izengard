@@ -1898,6 +1898,7 @@ GameObject:
   - component: {fileID: 290331745221332987}
   - component: {fileID: 6897823908451066028}
   - component: {fileID: 6191777416371704208}
+  - component: {fileID: -6054087239553571323}
   m_Layer: 8
   m_Name: Orc_hound
   m_TagString: Enemy
@@ -2054,10 +2055,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b46236cc90977b44e9bd344e57e97c1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _name: Orc_hound
   _enemyNavMesh: {fileID: 477096553137004399}
   _collider: {fileID: -4484706185885328441}
   _animationView: {fileID: 6897823908451066028}
+--- !u!114 &-6054087239553571323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 137360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e33908af4f8a23a409594ed962b8eada, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshRenderType: 1
+  _flashTime: 0.15
 --- !u!1 &138642
 GameObject:
   m_ObjectHideFlags: 0
