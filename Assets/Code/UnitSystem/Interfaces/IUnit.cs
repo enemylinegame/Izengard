@@ -1,4 +1,5 @@
 ﻿using Abstraction;
+using Tools;
 using UnitSystem.Enum;
 using UnitSystem.Model;
 using UnityEngine;
@@ -10,7 +11,8 @@ namespace UnitSystem
         IMovable,
         IPositioned<Vector3>, 
         IRotated<Vector3>,
-        IKillable<IUnit>
+        IKillable<IUnit>,
+        IHealthBarHandeled
     {
         IUnitView View { get; }
         UnitStatsModel Stats { get; }

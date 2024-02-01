@@ -2,8 +2,8 @@
 using Configs;
 using System;
 using System.Collections.Generic;
+using Tools;
 using UI;
-using UnitSystem.Enum;
 using UserInputSystem;
 
 namespace UnitSystem
@@ -13,6 +13,7 @@ namespace UnitSystem
         private readonly float unitsDestroyDelay;
         private readonly UnitStatsPanel _unitStatsPanel;
         private readonly RayCastController _rayCastController;
+        private readonly HealthBarManager _healthBarHandler;
 
         private List<IUnit> _createdUnits = new();
 
@@ -46,6 +47,8 @@ namespace UnitSystem
             _unitStatsPanel = unitStatsPanel;
 
             _rayCastController = rayCastController;
+
+            _healthBarHandler = new HealthBarManager();
 
             _rayCastController.LeftClick += SelectUnit;
             _rayCastController.RightClick += RemoveSelection;
@@ -83,6 +86,8 @@ namespace UnitSystem
             }
 
             _createdUnits.Add(unit);
+
+            _healthBarHandler.Add(unit);
         }
 
         private void UnitReachedZeroHealth(IUnit unit)
@@ -121,6 +126,8 @@ namespace UnitSystem
 
             _createdUnits.Remove(unit);
 
+            _healthBarHandler.Remove(unit);
+            
             toRemoveUnitsCollection.Add(unit);
         }
 
@@ -160,6 +167,8 @@ namespace UnitSystem
                 return;
 
             UpdateToBeRemovedUnits(toRemoveUnitsCollection, deltaTime);
+
+            _healthBarHandler.OnUpdate(deltaTime);
         }
 
         private void UpdateToBeRemovedUnits(List<IUnit> toRemoveUnits, float deltaTime)

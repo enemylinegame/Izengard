@@ -1,4 +1,5 @@
 ﻿using Abstraction;
+using Tools;
 using UnitSystem.Enum;
 using UnityEngine;
 using UnityEngine.AI;
@@ -11,8 +12,8 @@ namespace UnitSystem
 
         Transform SelfTransform { get; }
         NavMeshAgent UnitNavigation { get; }
-
         IUnitAnimationView UnitAnimation { get; }
+        HealthBarView HealthBar { get; }
 
         void Init(UnitType type);
 

@@ -18,6 +18,7 @@ namespace UnitSystem.View
         protected NavMeshAgent unitNavigation;
         protected Collider unitCollider;
         protected IUnitAnimationView unitAnimation;
+        protected HealthBarView _healthBar;
 
         protected DamageFlash _damageEffect;
 
@@ -29,6 +30,7 @@ namespace UnitSystem.View
         public Transform SelfTransform => selfTransform;
         public NavMeshAgent UnitNavigation => unitNavigation;
         public IUnitAnimationView UnitAnimation => unitAnimation;
+        public HealthBarView HealthBar => _healthBar;
 
         public event Action<IDamage> OnTakeDamage;
 
@@ -37,11 +39,16 @@ namespace UnitSystem.View
             _type = type;
         }
 
-        public void Show() =>
+        public void Show()
+        {
             gameObject.SetActive(true);
+            
+        }
 
-        public void Hide() =>
+        public void Hide()
+        {
             gameObject.SetActive(false);
+        }
 
         public abstract void SetUnitName(string name);
         public abstract void ChangeHealth(int hpValue);
@@ -59,6 +66,7 @@ namespace UnitSystem.View
             _id = GUID.Generate().ToString();
 
             _damageEffect = GetComponent<DamageFlash>();
+            _healthBar = GetComponentInChildren<HealthBarView>();
 
             SetTransform();
             SetUnitNavigation();
