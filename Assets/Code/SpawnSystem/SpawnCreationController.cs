@@ -15,11 +15,11 @@ using Object = UnityEngine.Object;
 
 namespace SpawnSystem
 {
-    public class SpawnCreationController : IOnController
+    public class SpawnCreationController : IOnController, IDisposable
     {
         private readonly CheckForBorders _checkForBorders;
 
-        private readonly SpawnPanelUI _spawnUI;
+        private readonly SpawnPanelUI _view;
         private readonly UnitSettingsPanel _unitSettingsPanel;
 
         private readonly SpawnerTypeSelectionPanel _typeSelectionPanel;
@@ -57,7 +57,7 @@ namespace SpawnSystem
         {
             _checkForBorders = new CheckForBorders(plane);
 
-            _spawnUI = sceneObjects.BattleUI.SpawnPanel;
+            _view = sceneObjects.BattleUI.SpawnPanel;
             _unitSettingsPanel = sceneObjects.BattleUI.UnitSettingsPanel;
 
             _typeSelectionPanel = sceneObjects.BattleUI.SpawnerTypeSelection;
@@ -74,31 +74,58 @@ namespace SpawnSystem
             _plane = plane;
             _grid = grid;
 
-            _spawnUI.OnSpawnerSelectAction += SelectSpawner;
-            _spawnUI.OnCreateSpawnerClick += CreateSpawner;
-            _spawnUI.OnRemoveSpawnerClick += RemoveSpawner;
+            Subscribe();
 
-            _unitSettingsPanel.Parametrs.OnUnitTypeChange += UnitTypeChanged;
-
-            _spawnUI.UnselectAll();
+            _view.UnselectAll();
 
             _typeSelectionPanel.Hide();
-
-            _rayCastController.RightClick += RemoveSelection;
 
             _spawnerCount = 0;
         }
 
+        private void Subscribe()
+        {
+            _view.OnSpawnerSelectAction += SelectSpawner;
+            _view.OnCreateSpawnerClick += CreateSpawner;
+            _view.OnRemoveSpawnerClick += RemoveSpawner;
+
+            _rayCastController.RightClick += SelectSpawner;
+            _rayCastController.LeftClick += RemoveSelection;
+
+            _unitSettingsPanel.Parametrs.OnUnitTypeChange += UnitTypeChanged;
+        }
+
+        private void Unsubscribe()
+        {
+            _view.OnSpawnerSelectAction -= SelectSpawner;
+            _view.OnCreateSpawnerClick -= CreateSpawner;
+            _view.OnRemoveSpawnerClick -= RemoveSpawner;
+
+            _rayCastController.RightClick -= SelectSpawner;
+            _rayCastController.LeftClick -= RemoveSelection;
+
+            _unitSettingsPanel.Parametrs.OnUnitTypeChange -= UnitTypeChanged;
+        }
+
+
         private void SelectSpawner(string spawnerId)
         {
+
+            if (spawnerId == null)
+                return;
+
             UnselectCurrentSpawner();
 
             _selectedSpawner = _createdSpawnersCollection.Find(spw => spw.Id == spawnerId);
+
+            if (_selectedSpawner == null)
+                return;
 
             ChangeMaterial(_selectedSpawner);
 
             UpdateUnitSettingsPanel(_selectedSpawner);
 
+            _view.SelectSpawner(spawnerId);
         }
 
         private void UpdateUnitSettingsPanel(Spawner selectedSpawner)
@@ -163,7 +190,7 @@ namespace SpawnSystem
             _plane.SetActive(true);
             _spawnerCount++;
 
-            _spawnUI.UnselectAll();
+            _view.UnselectAll();
 
             _unitSettingsPanel.SetFaction(FactionType.None);
             _unitSettingsPanel.Hide();
@@ -264,7 +291,7 @@ namespace SpawnSystem
             ChangeMaterial(_buildingSpawner, false);
 
             _createdSpawnersCollection.Add(_buildingSpawner);
-            _spawnUI.AddHUD(_buildingSpawner.Id, faction);
+            _view.AddHUD(_buildingSpawner.Id, faction);
 
             _buildingSpawner.SetFaction(faction);
 
@@ -308,7 +335,7 @@ namespace SpawnSystem
 
             ChangeMaterial(_selectedSpawner, false);
 
-            _spawnUI.RemoveHUD(_selectedSpawner.Id);
+            _view.RemoveHUD(_selectedSpawner.Id);
             
             _unitSettingsPanel.SetFaction(FactionType.None);
             _unitSettingsPanel.Hide();
@@ -325,7 +352,7 @@ namespace SpawnSystem
 
         private void RemoveSelection(string spawnerId)
         {
-            _spawnUI.UnselectAll();
+            _view.UnselectAll();
 
             UnselectCurrentSpawner();
 
@@ -369,7 +396,7 @@ namespace SpawnSystem
 
         public void Reset()
         {
-            _spawnUI.ClearHUD();
+            _view.ClearHUD();
 
             _unitSettingsPanel.SetFaction(FactionType.None);
             _unitSettingsPanel.Hide();
@@ -399,5 +426,21 @@ namespace SpawnSystem
 
             _createdSpawnersCollection.Clear();
         }
+
+
+        #region IDisposable
+
+        private bool _isDisposed = false;
+        public void Dispose()
+        {
+            if (_isDisposed)
+                return;
+
+            _isDisposed = true;
+
+            Unsubscribe();
+        }
+
+        #endregion
     }
 }
