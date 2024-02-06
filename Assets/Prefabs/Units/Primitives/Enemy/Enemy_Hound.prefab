@@ -291,6 +291,7 @@ GameObject:
   - component: {fileID: 6139363956173833243}
   - component: {fileID: 6139363956173833240}
   - component: {fileID: 6139363956173833241}
+  - component: {fileID: -2420342762772404049}
   m_Layer: 8
   m_Name: Enemy_Hound
   m_TagString: Enemy
@@ -345,6 +346,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshRenderType: 0
   _flashTime: 0.15
+  _flashColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!195 &6139363956173833242
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -412,6 +414,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.8, z: 1.4}
   m_Center: {x: 0, y: 0.4, z: 0}
+--- !u!114 &-2420342762772404049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6139363956173833247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d2e52011f71ee9468e57ab51d19227b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshRenderType: 0
+  _selctionMaterial: {fileID: 2100000, guid: e893b4ce2df8b7c4a9f59b9f1c930313, type: 2}
 --- !u!1 &6139363957028247352
 GameObject:
   m_ObjectHideFlags: 0

@@ -329,6 +329,7 @@ GameObject:
   - component: {fileID: 3374452548422350534}
   - component: {fileID: 3374452548422350533}
   - component: {fileID: 3374452548422350532}
+  - component: {fileID: 3092450426204439238}
   m_Layer: 8
   m_Name: Enemy_Archer
   m_TagString: Enemy
@@ -384,6 +385,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshRenderType: 0
   _flashTime: 0.15
+  _flashColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!195 &3374452548422350535
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -451,6 +453,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.2, z: 1}
   m_Center: {x: 0, y: 0.6, z: 0}
+--- !u!114 &3092450426204439238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3374452548422350530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d2e52011f71ee9468e57ab51d19227b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshRenderType: 0
+  _selctionMaterial: {fileID: 2100000, guid: e893b4ce2df8b7c4a9f59b9f1c930313, type: 2}
 --- !u!1 &3374452548613363774
 GameObject:
   m_ObjectHideFlags: 0

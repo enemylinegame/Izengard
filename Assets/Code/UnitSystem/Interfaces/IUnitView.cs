@@ -15,6 +15,8 @@ namespace UnitSystem
         IUnitAnimationView UnitAnimation { get; }
         HealthBarView HealthBar { get; }
 
+        OnSelectionEffect SelectionEffect { get; }
+
         void Init(UnitType type);
 
         void Show();

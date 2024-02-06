@@ -136,10 +136,7 @@ namespace UnitSystem
             if (Id == null)
                 return;
 
-            if(_selectedUnit != null)
-            {
-                _unitStatsPanel.Dispose();
-            }
+            UnselectUnit(_selectedUnit);
 
             var unit = _createdUnits.Find(u => u.Id == Id);
 
@@ -148,17 +145,26 @@ namespace UnitSystem
 
             _selectedUnit = unit;
 
+            _selectedUnit.View.SelectionEffect.Display();
+
             _unitStatsPanel.SetUnit(_selectedUnit);
         }
 
         public void RemoveSelection(string Id)
         {
-            if (_selectedUnit != null)
+             UnselectUnit(_selectedUnit);
+
+             _selectedUnit = null;
+        }
+
+        private void UnselectUnit(IUnit selectedUnit)
+        {
+            if (selectedUnit != null)
             {
                 _unitStatsPanel.Dispose();
-            }
 
-            _selectedUnit = null;
+                selectedUnit.View.SelectionEffect.Hide();
+            }
         }
 
         public void OnUpdate(float deltaTime)
