@@ -245,12 +245,20 @@ namespace UnitSystem
             for(int i =0; i< _createdUnits.Count; i++)
             {
                 var unit = _createdUnits[i];
-                unit.View.UnitAnimation.Stop();
+                
+                var unitAnim = unit.View.UnitAnimation;
+                
+                if(unitAnim != null)
+                    unit.View.UnitAnimation.Stop();
             }
             for (int i = 0; i < toRemoveUnitsCollection.Count; i++)
             {
                 var unit = toRemoveUnitsCollection[i];
-                unit.View.UnitAnimation.Stop();
+
+                var unitAnim = unit.View.UnitAnimation;
+
+                if (unitAnim != null)
+                    unit.View.UnitAnimation.Stop();
             }
         }
 
@@ -261,12 +269,20 @@ namespace UnitSystem
             for (int i = 0; i < _createdUnits.Count; i++)
             {
                 var unit = _createdUnits[i];
-                unit.View.UnitAnimation.Play();
+
+                var unitAnim = unit.View.UnitAnimation;
+
+                if (unitAnim != null)
+                    unit.View.UnitAnimation.Play();
             }
             for (int i = 0; i < toRemoveUnitsCollection.Count; i++)
             {
                 var unit = toRemoveUnitsCollection[i];
-                unit.View.UnitAnimation.Play();
+
+                var unitAnim = unit.View.UnitAnimation;
+
+                if (unitAnim != null)
+                    unit.View.UnitAnimation.Play();
             }
         }
 

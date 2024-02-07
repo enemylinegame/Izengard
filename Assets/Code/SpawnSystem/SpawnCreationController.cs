@@ -1,10 +1,8 @@
 ﻿using Abstraction;
 using Code.SceneConfigs;
 using Configs;
-using NewBuildingSystem;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UI;
 using UnitSystem;
 using UnitSystem.Enum;
@@ -17,8 +15,6 @@ namespace SpawnSystem
 {
     public class SpawnCreationController : IOnController, IDisposable
     {
-        private readonly CheckForBorders _checkForBorders;
-
         private readonly SpawnPanelUI _view;
         private readonly UnitSettingsPanel _unitSettingsPanel;
 
@@ -29,13 +25,11 @@ namespace SpawnSystem
 
         private readonly GameObject _spawnerPrefab;
         private readonly RayCastController _rayCastController;
-        private readonly Material _previewMaterial;
         private readonly GameObject _plane;
         private readonly Grid _grid;
 
         private List<Spawner> _createdSpawnersCollection = new();
 
-        private List<Material> _oldMaterials = new();
         private Spawner _buildingSpawner;
         private Spawner _selectedSpawner;
         private Vector2Int _mousePos;
@@ -55,8 +49,6 @@ namespace SpawnSystem
             GameObject plane,
             Grid grid)
         {
-            _checkForBorders = new CheckForBorders(plane);
-
             _view = sceneObjects.BattleUI.SpawnPanel;
             _unitSettingsPanel = sceneObjects.BattleUI.UnitSettingsPanel;
 
@@ -68,8 +60,6 @@ namespace SpawnSystem
             _spawnerPrefab = spawnerPrefab;
 
             _rayCastController = rayCastController;
-
-            _previewMaterial = Object.Instantiate(objects.PreveiwMaterial);
 
             _plane = plane;
             _grid = grid;
@@ -121,7 +111,7 @@ namespace SpawnSystem
             if (_selectedSpawner == null)
                 return;
 
-            ChangeMaterial(_selectedSpawner);
+            _selectedSpawner.Select();
 
             UpdateUnitSettingsPanel(_selectedSpawner);
 
@@ -201,18 +191,14 @@ namespace SpawnSystem
 
             var spawner = Object.Instantiate(_spawnerPrefab).GetComponent<Spawner>();
 
-            spawner.Init(GUID.Generate().ToString());
-
-            spawner.BuildingsType = EnumBuildings.None;
-            spawner._name = $"Spawner[{_spawnerCount - 1}]";
-            spawner.Size = new Vector2Int(1, 1);
+            spawner.Init(GUID.Generate().ToString(), $"Spawner[{_spawnerCount - 1}]");
 
             _buildingSpawner = spawner;
 
             InstallInCenterTile(_buildingSpawner);
-            ChangeMaterial(_buildingSpawner);
 
-            _buildingSpawner.OnTriggered += _checkForBorders.CheckPlaneForBuilding;
+            _buildingSpawner.Select();
+
             _buildingSpawner.ObjectBuild.transform.position = _plane.transform.position;
 
             _rayCastController.LeftClick += PlaceSpawner;
@@ -223,9 +209,7 @@ namespace SpawnSystem
         {
             if (_buildingSpawner == null) return;
 
-            ChangeMaterial(_buildingSpawner, false);
-
-            _buildingSpawner.OnTriggered -= _checkForBorders.CheckPlaneForBuilding;
+            _buildingSpawner.Unselect();
 
             _rayCastController.LeftClick -= PlaceSpawner;
             _rayCastController.MousePosition -= RayCastControllerOnMousePosition;
@@ -241,7 +225,6 @@ namespace SpawnSystem
         {
             var size = spawner.Size;
 
-            spawner.Size = size;
             var sizeX = size.x / 2f;
             var sizeY = size.y / 2f;
 
@@ -251,25 +234,6 @@ namespace SpawnSystem
 
             spawner.SpawnLocation.position = new Vector3(sizeX, 0, sizeY);
         }
-
-        private void ChangeMaterial(Spawner spawner, bool mode = true)
-        {
-            var materials = spawner.BuildingRenderer.materials.ToList();
-            if (!mode)
-            {
-                materials.Clear();
-                materials.AddRange(_oldMaterials);
-            }
-            else
-            {
-                _oldMaterials.Clear();
-                _oldMaterials.AddRange(materials);
-                materials.Clear();
-                materials.Add(_previewMaterial);
-            }
-            spawner.BuildingRenderer.materials = materials.ToArray();
-        }
-
 
         private void PlaceSpawner(string ID)
         {
@@ -288,7 +252,7 @@ namespace SpawnSystem
 
             _plane.SetActive(false);
 
-            ChangeMaterial(_buildingSpawner, false);
+            _buildingSpawner.Unselect();
 
             _createdSpawnersCollection.Add(_buildingSpawner);
             _view.AddHUD(_buildingSpawner.Id, faction);
@@ -306,8 +270,6 @@ namespace SpawnSystem
             }
 
             OnSpawnerCreated?.Invoke(_buildingSpawner);
-
-            _buildingSpawner.OnTriggered -= _checkForBorders.CheckPlaneForBuilding;
 
             _buildingSpawner = null;
         }
@@ -333,7 +295,7 @@ namespace SpawnSystem
             if (_selectedSpawner == null)
                 return;
 
-            ChangeMaterial(_selectedSpawner, false);
+            _selectedSpawner.Unselect();
 
             _view.RemoveHUD(_selectedSpawner.Id);
             
@@ -365,7 +327,7 @@ namespace SpawnSystem
         {
             if (_selectedSpawner != null)
             {
-                ChangeMaterial(_selectedSpawner, false);
+                _selectedSpawner.Unselect();
 
                 _selectedSpawner = null;
             }

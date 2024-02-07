@@ -126,6 +126,7 @@ GameObject:
   - component: {fileID: 5192074600866563341}
   - component: {fileID: 5192074600866563342}
   - component: {fileID: 5192074600866563343}
+  - component: {fileID: 7110123027193935412}
   m_Layer: 7
   m_Name: Spawner
   m_TagString: Building
@@ -162,19 +163,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a54dcdefcf949614e9a90d6eb2550f5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Collider: {fileID: 5192074600866563342}
-  ColliderArea: {fileID: 0}
-  BuildingRenderer: {fileID: 5192074600210680312}
-  PositionBuild: {fileID: 5192074600210680314}
-  ObjectBuild: {fileID: 5192074600866563378}
   _id: 
   _name: 
-  Image: {fileID: 0}
-  BuildingsType: 0
-  CurrentCountWorkers: 0
-  MaxCountWorkers: 0
-  Size: {x: 0, y: 0}
   _spawnlocation: {fileID: 1012355331905377569}
+  Collider: {fileID: 5192074600866563342}
+  PositionBuild: {fileID: 5192074600210680314}
+  ObjectBuild: {fileID: 5192074600866563378}
 --- !u!65 &5192074600866563342
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -204,3 +198,17 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &7110123027193935412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5192074600866563378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d2e52011f71ee9468e57ab51d19227b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshRenderType: 0
+  _selctionMaterial: {fileID: 2100000, guid: bc106fd93becf2e418618131c9ced068, type: 2}
