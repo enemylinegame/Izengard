@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 namespace UnitSystem
 {
-    public interface IUnitView : IAttackTarget
+    public interface IUnitView : IAttackTarget, ISelectedObject
     {
         UnitType Type { get; }
 
@@ -14,9 +14,6 @@ namespace UnitSystem
         NavMeshAgent UnitNavigation { get; }
         IUnitAnimationView UnitAnimation { get; }
         HealthBarView HealthBar { get; }
-
-        OnSelectionEffect SelectionEffect { get; }
-
         void Init(UnitType type);
 
         void Show();

@@ -145,7 +145,7 @@ namespace UnitSystem
 
             _selectedUnit = unit;
 
-            _selectedUnit.View.SelectionEffect.Display();
+            _selectedUnit.View.Select();
 
             _unitStatsPanel.SetUnit(_selectedUnit);
         }
@@ -163,7 +163,7 @@ namespace UnitSystem
             {
                 _unitStatsPanel.Dispose();
 
-                selectedUnit.View.SelectionEffect.Hide();
+                selectedUnit.View.Unselect();
             }
         }
 

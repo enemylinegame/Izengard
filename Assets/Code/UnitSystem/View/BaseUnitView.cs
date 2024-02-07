@@ -19,7 +19,6 @@ namespace UnitSystem.View
         protected Collider unitCollider;
         protected IUnitAnimationView unitAnimation;
         protected HealthBarView _healthBar;
-        protected OnSelectionEffect _selectionEffect;
         protected DamageFlash _damageEffect;
 
         public string Id => _id;
@@ -31,7 +30,6 @@ namespace UnitSystem.View
         public NavMeshAgent UnitNavigation => unitNavigation;
         public IUnitAnimationView UnitAnimation => unitAnimation;
         public HealthBarView HealthBar => _healthBar;
-        public OnSelectionEffect SelectionEffect => _selectionEffect;
 
         public event Action<IDamage> OnTakeDamage;
 
@@ -68,6 +66,7 @@ namespace UnitSystem.View
 
             _damageEffect = GetComponent<DamageFlash>();
             _healthBar = GetComponentInChildren<HealthBarView>();
+
             _selectionEffect = GetComponent<OnSelectionEffect>();
 
             SetTransform();
@@ -95,5 +94,27 @@ namespace UnitSystem.View
             if (_damageEffect != null)
                 _damageEffect.Flash();
         }
+
+        #region ISelectedObject
+
+        private OnSelectionEffect _selectionEffect;
+
+        public void Select()
+        {
+            if (_selectionEffect == null)
+                return;
+
+            _selectionEffect.Display();
+        }
+
+        public void Unselect()
+        {
+            if (_selectionEffect == null)
+                return;
+
+            _selectionEffect.Hide();
+        }
+
+        #endregion
     }
 }
