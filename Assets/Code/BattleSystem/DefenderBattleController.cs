@@ -27,7 +27,6 @@ namespace BattleSystem
                 var unit = unitsContainer.DefenderUnits[i];
 
                 unit.Stop();
-                unit.ChangeState(UnitStateType.Idle);
             }
         }
 

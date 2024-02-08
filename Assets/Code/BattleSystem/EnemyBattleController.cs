@@ -33,7 +33,6 @@ namespace BattleSystem
                 var unit = unitsContainer.EnemyUnits[i];
 
                 unit.Stop();
-                unit.ChangeState(UnitStateType.Idle);
             }
         }
 
