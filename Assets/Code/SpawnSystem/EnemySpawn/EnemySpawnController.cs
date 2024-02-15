@@ -22,6 +22,8 @@ namespace SpawnSystem
 
         private readonly float _maxSpawnRadius;
 
+        private List<UnitCreationData> _unitsCurrentDataList;
+
         private List<Spawner> _spawnersCollection;
 
         public event Action<IUnit> OnUnitSpawned;

@@ -41,6 +41,9 @@ namespace SpawnSystem
         public event Action<Spawner> OnSpawnerCreated;
         public event Action<Spawner> OnSpawnerRemoved;
 
+        private List<IUnitData> _defenderUnitsData;
+        private List<IUnitData> _enemyUnitsData;
+
         public SpawnCreationController(
             SceneObjectsHolder sceneObjects,
             GameObject spawnerPrefab,
@@ -56,6 +59,9 @@ namespace SpawnSystem
 
             _enemySpawners = sceneObjects.EnemySpawner;
             _defenderSpawners = sceneObjects.DefendersSpawner;
+
+            _defenderUnitsData = GetAvailableUnitData(_defenderSpawners.SpawnSettings); 
+            _enemyUnitsData = GetAvailableUnitData(_enemySpawners.SpawnSettings);
 
             _spawnerPrefab = spawnerPrefab;
 
@@ -83,6 +89,8 @@ namespace SpawnSystem
             _rayCastController.LeftClick += RemoveSelection;
 
             _unitSettingsPanel.Parametrs.OnUnitTypeChange += UnitTypeChanged;
+            _unitSettingsPanel.OnSaveUnitData += SaveUnitData;
+            _unitSettingsPanel.OnRestoreUnitData += RestoreUnitData;
         }
 
         private void Unsubscribe()
@@ -95,6 +103,8 @@ namespace SpawnSystem
             _rayCastController.LeftClick -= RemoveSelection;
 
             _unitSettingsPanel.Parametrs.OnUnitTypeChange -= UnitTypeChanged;
+            _unitSettingsPanel.OnSaveUnitData -= SaveUnitData;
+            _unitSettingsPanel.OnRestoreUnitData -= RestoreUnitData;
         }
 
 
@@ -131,8 +141,7 @@ namespace SpawnSystem
                         var availableUnitTypes = GetAvailableUnitTypes(_defenderSpawners.SpawnSettings);
                         _unitSettingsPanel.SetUnitTypes(availableUnitTypes);
 
-                        var availableUnitData = GetAvailableUnitData(_defenderSpawners.SpawnSettings);
-                        _unitSettingsPanel.ChangeData(availableUnitData[0]);
+                        _unitSettingsPanel.ChangeData(_defenderUnitsData[0]);
                         break;
                     }
                 case FactionType.Enemy:
@@ -140,8 +149,7 @@ namespace SpawnSystem
                         var availableUnitTypes = GetAvailableUnitTypes(_enemySpawners.SpawnSettings);
                         _unitSettingsPanel.SetUnitTypes(availableUnitTypes);
 
-                        var availableUnitData = GetAvailableUnitData(_enemySpawners.SpawnSettings);
-                        _unitSettingsPanel.ChangeData(availableUnitData[0]);
+                        _unitSettingsPanel.ChangeData(_enemyUnitsData[0]);
                         break;
                     }
             }
@@ -161,7 +169,7 @@ namespace SpawnSystem
             return result;
         }
 
-        public IList<IUnitData> GetAvailableUnitData(SpawnSettings settings)
+        private List<IUnitData> GetAvailableUnitData(SpawnSettings settings)
         {
             var result = new List<IUnitData>();
 
@@ -342,17 +350,76 @@ namespace SpawnSystem
             {
                 case FactionType.Defender:
                     {
-                        var availableUnitData = GetAvailableUnitData(_defenderSpawners.SpawnSettings);
-                        _unitSettingsPanel.ChangeData(availableUnitData[index]);
+                        _unitSettingsPanel.ChangeData(_defenderUnitsData[index]);
                         break;
                     }
                 case FactionType.Enemy:
                     {
-                        var availableUnitData = GetAvailableUnitData(_enemySpawners.SpawnSettings);
-                        _unitSettingsPanel.ChangeData(availableUnitData[index]);
+                        _unitSettingsPanel.ChangeData(_enemyUnitsData[index]);
                         break;
                     }
             }
+        }
+
+
+        private void SaveUnitData(IUnitData unitData)
+        {
+            if (_selectedSpawner == null)
+                return;
+
+            switch (_selectedSpawner.FactionType)
+            {
+                case FactionType.Defender:
+                    {
+                        var unitIndex = _defenderUnitsData.FindIndex(u => u.Type == unitData.Type);
+                        _defenderUnitsData[unitIndex] = unitData;
+                        break;
+                    }
+                case FactionType.Enemy:
+                    {
+                        var unitIndex = _enemyUnitsData.FindIndex(u => u.Type == unitData.Type);
+                        _enemyUnitsData[unitIndex] = unitData;
+                        break;
+                    }
+            }
+        }
+
+        private void RestoreUnitData(UnitType unitType)
+        {
+            if (_selectedSpawner == null)
+                return;
+
+            IUnitData unitData = null;
+
+            switch (_selectedSpawner.FactionType)
+            {
+                case FactionType.Defender:
+                    {
+                        var unitsDataCollection = GetAvailableUnitData(_defenderSpawners.SpawnSettings);
+                        
+                        unitData = unitsDataCollection.Find(u => u.Type == unitType);
+
+                        var restoreIndex = _defenderUnitsData.FindIndex(u => u.Type == unitType);
+                        
+                        _defenderUnitsData[restoreIndex] = unitData;
+
+                        break;
+                    }
+                case FactionType.Enemy:
+                    {
+                        var unitsDataCollection = GetAvailableUnitData(_enemySpawners.SpawnSettings);
+
+                        unitData = unitsDataCollection.Find(u => u.Type == unitType);
+
+                        var restoreIndex = _enemyUnitsData.FindIndex(u => u.Type == unitType);
+
+                        _enemyUnitsData[restoreIndex] = unitData;
+
+                        break;
+                    }
+            }
+
+            _unitSettingsPanel.ChangeData(unitData);
         }
 
 

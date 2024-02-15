@@ -28,28 +28,55 @@ namespace UI
 
         [SerializeField]
         private Button _spawnButton;
+        [SerializeField]
+        private Button _saveDataButton;
+        [SerializeField]
+        private Button _restoreDataButton;
 
         public UnitParametrs Parametrs => _parametrs;
 
         public event Action<int> OnSpawn;
+        public event Action<IUnitData> OnSaveUnitData;
+        public event Action<UnitType> OnRestoreUnitData;
 
         public void InitPanel()
         {
-            openButton.onClick.AddListener(OpenPanel);
-            closeButton.onClick.AddListener(ClosePanel);
+            Subscribe();
 
             openButton.gameObject.SetActive(false);
             closeButton.gameObject.SetActive(true);
 
             _spawnQuantityField.text = "1";
-            _plusButton.onClick.AddListener(() => ChangeQuantityFieldValue(1));
-            _minusButton.onClick.AddListener(() => ChangeQuantityFieldValue(-1));
-
-            _spawnButton.onClick.AddListener(SpawnQuantityUnits);
 
             _parametrs.Init();
 
             Hide();
+        }
+
+        private void Subscribe()
+        {
+            openButton.onClick.AddListener(OpenPanel);
+            closeButton.onClick.AddListener(ClosePanel);
+
+            _plusButton.onClick.AddListener(() => ChangeQuantityFieldValue(1));
+            _minusButton.onClick.AddListener(() => ChangeQuantityFieldValue(-1));
+            
+            _spawnButton.onClick.AddListener(SpawnQuantityUnits);
+            _saveDataButton.onClick.AddListener(SaveCurrentUnitData);
+            _restoreDataButton.onClick.AddListener(RestoreCurrentUnitData);
+        }
+
+        private void Unsubscribe()
+        {
+            openButton.onClick.RemoveListener(OpenPanel);
+            closeButton.onClick.RemoveListener(ClosePanel);
+
+            _plusButton.onClick.RemoveAllListeners();
+            _minusButton.onClick.RemoveAllListeners();
+
+            _spawnButton.onClick.RemoveListener(SpawnQuantityUnits);
+            _saveDataButton.onClick.RemoveListener(SaveCurrentUnitData);
+            _restoreDataButton.onClick.RemoveListener(RestoreCurrentUnitData);
         }
 
         private void OpenPanel()
@@ -84,6 +111,18 @@ namespace UI
             OnSpawn?.Invoke(int.Parse(_spawnQuantityField.text));
         }
 
+        private void SaveCurrentUnitData()
+        {
+            var unitData = _parametrs.GetData();
+            OnSaveUnitData?.Invoke(unitData);
+        }
+
+        private void RestoreCurrentUnitData()
+        {
+            var unitData = _parametrs.GetData();
+            OnRestoreUnitData?.Invoke(unitData.Type);
+        }
+
         public void Show()
         {
             gameObject.SetActive(true);
@@ -111,13 +150,7 @@ namespace UI
 
         private void OnDestroy()
         {
-            openButton.onClick.RemoveListener(OpenPanel);
-            closeButton.onClick.RemoveListener(ClosePanel);
-
-            _plusButton.onClick.RemoveAllListeners();
-            _minusButton.onClick.RemoveAllListeners();
-
-            _spawnButton.onClick.RemoveAllListeners();
+            Unsubscribe();
         }
     }
 }
