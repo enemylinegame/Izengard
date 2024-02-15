@@ -7917,10 +7917,10 @@ RectTransform:
   m_Father: {fileID: 529288848}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 60, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 180, y: -30}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &269135027
 MonoBehaviour:
@@ -9553,10 +9553,10 @@ RectTransform:
   m_Father: {fileID: 529288848}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 110, y: -30}
+  m_SizeDelta: {x: 100, y: 60}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &336599784
 MonoBehaviour:
@@ -38762,10 +38762,10 @@ RectTransform:
   m_Father: {fileID: 529288848}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 60, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 250, y: -30}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &1396716913
 MonoBehaviour:
@@ -51541,8 +51541,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1831737973244403283, guid: 69ec79a589802e24f971b185382ca841, type: 3}
+      propertyPath: m_Size.x
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1831737973244403283, guid: 69ec79a589802e24f971b185382ca841, type: 3}
+      propertyPath: m_Size.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1831737973244403283, guid: 69ec79a589802e24f971b185382ca841, type: 3}
+      propertyPath: m_Size.z
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1831737973244403283, guid: 69ec79a589802e24f971b185382ca841, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1831737973244403283, guid: 69ec79a589802e24f971b185382ca841, type: 3}
+      propertyPath: m_Center.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4437343820552527172, guid: 69ec79a589802e24f971b185382ca841, type: 3}
       propertyPath: m_RootOrder

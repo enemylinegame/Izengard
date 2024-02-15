@@ -698,6 +698,7 @@ GameObject:
   - component: {fileID: 1831737973244403283}
   - component: {fileID: 4977917654534155612}
   - component: {fileID: 7179972615514550580}
+  - component: {fileID: -3468848635542710429}
   m_Layer: 7
   m_Name: MainTower
   m_TagString: Building
@@ -782,6 +783,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _id: 0
+  _name: MainTower
+--- !u!114 &-3468848635542710429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4437343820552527173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d2e52011f71ee9468e57ab51d19227b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshRenderType: 0
+  _selctionMaterial: {fileID: 2100000, guid: bc106fd93becf2e418618131c9ced068, type: 2}
 --- !u!1 &6159994257669579350
 GameObject:
   m_ObjectHideFlags: 0

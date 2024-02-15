@@ -40,7 +40,7 @@ namespace Code.MVC_System
             var rayCastController = new RayCastController(_userInput, configs.GameConfig);
 
             var mainTower 
-                = new MainTowerController(sceneObjectsHolder.MainTower, configs.MainTowerSettings);
+                = new MainTowerController(sceneObjectsHolder.MainTower, configs.MainTowerSettings, rayCastController);
 
             var unitsContainer 
                 = new UnitsContainer(
