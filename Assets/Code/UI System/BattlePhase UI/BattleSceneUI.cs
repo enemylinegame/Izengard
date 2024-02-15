@@ -32,5 +32,15 @@ namespace UI
         public Button ResetButton => _resetButton;
 
         
+        public void Show()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
+        }
+
     }
 }

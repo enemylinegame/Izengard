@@ -1,32 +1,39 @@
 ﻿using System;
 using Abstraction;
+using Code.SceneConfigs;
 using UserInputSystem;
 
 
 namespace BattleSystem.MainTower
 {
     public class MainTowerController : IOnController, IOnStart
-    {     
+    {
         private MainTowerHandler _mainTower;
         private MainTowerConfig _mainTowerConfig;
         private MainTowerDefenceModel _towerDefenceModel;
 
+        private readonly SceneObjectsHolder _sceneObjects;
         private readonly RayCastController _rayCastController;
+
         public event Action OnMainTowerDestroyed;
 
         private bool _isDestroyed;
-          
+
         public MainTowerController(
-            MainTowerView mainTowerView, 
+            SceneObjectsHolder sceneObjects,
             MainTowerConfig mainTowerConfig,
             RayCastController rayCastController)
         {
+            _sceneObjects = sceneObjects;
             _mainTowerConfig = mainTowerConfig;
-            _towerDefenceModel = new MainTowerDefenceModel(_mainTowerConfig.DefenceData);
-            _mainTower = new MainTowerHandler(mainTowerView, _towerDefenceModel, (int)_mainTowerConfig.Durability);
-            _mainTower.OnReachedZeroHealth += mainTowerDestroyed;
-
             _rayCastController = rayCastController;
+
+            _towerDefenceModel = new MainTowerDefenceModel(_mainTowerConfig.DefenceData);
+            _mainTower = new MainTowerHandler(_sceneObjects.MainTower, _towerDefenceModel, (int)_mainTowerConfig.Durability);
+            _mainTower.OnReachedZeroHealth += mainTowerDestroyed;
+                     
+
+            _sceneObjects.MainTowerUI.InitUI();
 
             Subscribe();
         }
@@ -54,11 +61,17 @@ namespace BattleSystem.MainTower
                 return;
 
             _mainTower.View.Select();
+
+            _sceneObjects.BattleUI.Hide();
+            _sceneObjects.MainTowerUI.Show();
         }
 
         private void UnselectTower(string obj)
         {
             _mainTower.View.Unselect();
+
+            _sceneObjects.BattleUI.Show();
+            _sceneObjects.MainTowerUI.Hide();
         }
 
         private void mainTowerDestroyed(IMainTower building)
@@ -79,10 +92,10 @@ namespace BattleSystem.MainTower
         }
 
         public IAttackTarget GetMainTower() => _mainTower.View;
-        
+
         public void Reset()
         {
-            if(_isDestroyed)
+            if (_isDestroyed)
             {
                 _mainTower.Enable();
 
