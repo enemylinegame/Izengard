@@ -57,6 +57,9 @@ namespace Tools
 
         public void Hide()
         {
+            if (_oldMaterials.Count == 0)
+                return;
+
             for (int i = 0; i < _renderers.Count; i++)
             {
                 _renderers[i].material = _oldMaterials[i];
