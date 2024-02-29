@@ -2,8 +2,8 @@
 using Configs;
 using System;
 using System.Collections.Generic;
+using Tools;
 using UI;
-using UnitSystem.Enum;
 using UserInputSystem;
 
 namespace UnitSystem
@@ -13,6 +13,7 @@ namespace UnitSystem
         private readonly float unitsDestroyDelay;
         private readonly UnitStatsPanel _unitStatsPanel;
         private readonly RayCastController _rayCastController;
+        private readonly HealthBarManager _healthBarHandler;
 
         private List<IUnit> _createdUnits = new();
 
@@ -46,6 +47,8 @@ namespace UnitSystem
             _unitStatsPanel = unitStatsPanel;
 
             _rayCastController = rayCastController;
+
+            _healthBarHandler = new HealthBarManager();
 
             _rayCastController.LeftClick += SelectUnit;
             _rayCastController.RightClick += RemoveSelection;
@@ -83,6 +86,8 @@ namespace UnitSystem
             }
 
             _createdUnits.Add(unit);
+
+            _healthBarHandler.Add(unit);
         }
 
         private void UnitReachedZeroHealth(IUnit unit)
@@ -121,6 +126,8 @@ namespace UnitSystem
 
             _createdUnits.Remove(unit);
 
+            _healthBarHandler.Remove(unit);
+            
             toRemoveUnitsCollection.Add(unit);
         }
 
@@ -129,10 +136,7 @@ namespace UnitSystem
             if (Id == null)
                 return;
 
-            if(_selectedUnit != null)
-            {
-                _unitStatsPanel.Dispose();
-            }
+            UnselectUnit(_selectedUnit);
 
             var unit = _createdUnits.Find(u => u.Id == Id);
 
@@ -141,17 +145,26 @@ namespace UnitSystem
 
             _selectedUnit = unit;
 
+            _selectedUnit.View.Select();
+
             _unitStatsPanel.SetUnit(_selectedUnit);
         }
 
         public void RemoveSelection(string Id)
         {
-            if (_selectedUnit != null)
+             UnselectUnit(_selectedUnit);
+
+             _selectedUnit = null;
+        }
+
+        private void UnselectUnit(IUnit selectedUnit)
+        {
+            if (selectedUnit != null)
             {
                 _unitStatsPanel.Dispose();
-            }
 
-            _selectedUnit = null;
+                selectedUnit.View.Unselect();
+            }
         }
 
         public void OnUpdate(float deltaTime)
@@ -160,6 +173,8 @@ namespace UnitSystem
                 return;
 
             UpdateToBeRemovedUnits(toRemoveUnitsCollection, deltaTime);
+
+            _healthBarHandler.OnUpdate(deltaTime);
         }
 
         private void UpdateToBeRemovedUnits(List<IUnit> toRemoveUnits, float deltaTime)
@@ -230,12 +245,20 @@ namespace UnitSystem
             for(int i =0; i< _createdUnits.Count; i++)
             {
                 var unit = _createdUnits[i];
-                unit.View.UnitAnimation.Stop();
+                
+                var unitAnim = unit.View.UnitAnimation;
+                
+                if(unitAnim != null)
+                    unit.View.UnitAnimation.Stop();
             }
             for (int i = 0; i < toRemoveUnitsCollection.Count; i++)
             {
                 var unit = toRemoveUnitsCollection[i];
-                unit.View.UnitAnimation.Stop();
+
+                var unitAnim = unit.View.UnitAnimation;
+
+                if (unitAnim != null)
+                    unit.View.UnitAnimation.Stop();
             }
         }
 
@@ -246,12 +269,20 @@ namespace UnitSystem
             for (int i = 0; i < _createdUnits.Count; i++)
             {
                 var unit = _createdUnits[i];
-                unit.View.UnitAnimation.Play();
+
+                var unitAnim = unit.View.UnitAnimation;
+
+                if (unitAnim != null)
+                    unit.View.UnitAnimation.Play();
             }
             for (int i = 0; i < toRemoveUnitsCollection.Count; i++)
             {
                 var unit = toRemoveUnitsCollection[i];
-                unit.View.UnitAnimation.Play();
+
+                var unitAnim = unit.View.UnitAnimation;
+
+                if (unitAnim != null)
+                    unit.View.UnitAnimation.Play();
             }
         }
 

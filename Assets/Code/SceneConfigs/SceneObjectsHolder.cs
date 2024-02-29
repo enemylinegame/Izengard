@@ -13,5 +13,6 @@ namespace Code.SceneConfigs
         [field: SerializeField] public MainTowerView MainTower { get; private set; }
         [field: SerializeField] public NavigationSurfaceView GroundSurface { get; private set; }
         [field: SerializeField] public BattleSceneUI BattleUI { get; private set; }
+        [field: SerializeField] public MainTowerUI MainTowerUI { get; private set; }
     }
 }

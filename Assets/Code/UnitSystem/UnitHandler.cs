@@ -18,30 +18,26 @@ namespace UnitSystem
         private readonly UnitTargetModel _unitTarget;
         private readonly UnitPriorityModel _priority;
 
+        private readonly HealthBarController _healthBarController;
+
+
         private string _id;
         private string _name;
         private Vector3 _startPosition;
 
         public IUnitView View => _view;
-
         public UnitStatsModel Stats => _unitStats;
-
         public IUnitDefence Defence => _unitDefence;
-
         public IUnitOffence Offence => _unitOffence;
-
         public UnitStateModel State => _unitState;
         public UnitTargetModel Target => _unitTarget;
         public UnitPriorityModel Priority => _priority;
+        public HealthBarController HealthBarController => _healthBarController;
 
         public string Id => _id;
-
         public string Name => _name;
-
         public Vector3 StartPosition => _startPosition;
-        
         public float TimeProgress { get; set; }
-      
         public event Action<IUnit> OnReachedZeroHealth;
 
         public UnitHandler(string name, IUnitView view, IUnitData unitData)
@@ -66,6 +62,9 @@ namespace UnitSystem
             
             _unitTarget = new UnitTargetModel();
 
+            _healthBarController 
+                = new HealthBarController(_view.HealthBar, unitData.HealthPoints);
+
             _id = _view.Id;
 
             _view.SetUnitName(name);
@@ -83,7 +82,22 @@ namespace UnitSystem
             _view.ChangeSpeed(_unitStats.Speed.GetValue());
 
             _navigation.Enable();
+
             _unitState.ChangeState(UnitStateType.Idle);
+        }
+        
+        public void Disable()
+        {
+            Unsubscribe();
+
+            TimeProgress = 0;
+
+            _unitTarget.ResetTarget();
+            _navigation.Disable();
+
+            _unitState.ChangeState(UnitStateType.None);
+
+            _view.Hide();
         }
 
         private void Subscribe()
@@ -95,19 +109,8 @@ namespace UnitSystem
             _unitStats.Speed.OnValueChange += _view.ChangeSpeed;
 
             _view.OnTakeDamage += TakeDamage;
-        }
 
-        public void Disable()
-        {
-            Unsubscribe();
-
-            TimeProgress = 0;
-
-            _unitTarget.ResetTarget();
-            _navigation.Disable();
-            _unitState.ChangeState(UnitStateType.None);
-
-            _view.Hide();
+            _unitStats.Health.OnValueChange += _healthBarController.ChangeHealthRatio;
         }
 
         private void Unsubscribe()
@@ -119,6 +122,8 @@ namespace UnitSystem
             _unitStats.Speed.OnValueChange -= _view.ChangeSpeed;
             
             _view.OnTakeDamage -= TakeDamage;
+
+            _unitStats.Health.OnValueChange -= _healthBarController.ChangeHealthRatio;
         }
 
         public void SetStartPosition(Vector3 spawnPosition)

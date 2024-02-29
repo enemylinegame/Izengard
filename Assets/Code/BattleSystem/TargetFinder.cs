@@ -89,12 +89,12 @@ namespace BattleSystem
             {
                 IUnit foeUnit = foeUnitList[i];
 
-                if( (targetType != UnitType.None && foeUnit.Stats.Type != targetType) || foeUnit is NoneTarget )
+                if(targetType != UnitType.None && foeUnit.Stats.Type != targetType)
                     continue;
 
-                Vector3 defenderPos = foeUnit.GetPosition();
+                Vector3 foePos = foeUnit.GetPosition();
 
-                float distance = Vector3.Distance(unitPos, defenderPos);
+                float distance = Vector3.Distance(unitPos, foePos);
                 if (distance < minDist)
                 {
                     minDist = distance;

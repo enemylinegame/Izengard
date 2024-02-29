@@ -1,5 +1,6 @@
 ﻿using Abstraction;
 using DG.Tweening;
+using SpawnSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,13 +8,13 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class SpawnPanelUI: MonoBehaviour
+    public class SpawnPanelUI : MonoBehaviour
     {
         [SerializeField]
         private Button openButton;
         [SerializeField]
         private Button closeButton;
-        
+
         [SerializeField]
         private Button _createSpawnerButton;
         [SerializeField]
@@ -40,8 +41,8 @@ namespace UI
         public event Action<string> OnSpawnerSelectAction;
 
         private List<SpawnerHUD> _spawnerHUDCollection = new();
-      
-        public void AddHUD(string spawnerId, FactionType unitFaction) 
+
+        public void AddHUD(string spawnerId, FactionType unitFaction)
         {
             var hud = Instantiate(_spawnerHUD, _spawnGridPanel).GetComponent<SpawnerHUD>();
 
@@ -54,9 +55,9 @@ namespace UI
                         name = $"E";
                         break;
                     }
-                case FactionType.Defender: 
+                case FactionType.Defender:
                     {
-                        name = $"D";                   
+                        name = $"D";
                         break;
                     }
             }
@@ -68,13 +69,13 @@ namespace UI
             _spawnerHUDCollection.Add(hud);
         }
 
-        public void RemoveHUD(string spawnerId) 
+        public void RemoveHUD(string spawnerId)
         {
             var hud = _spawnerHUDCollection.Find(spw => spw.Id == spawnerId);
-            
+
             if (hud == null)
                 return;
-            
+
             hud.OnSelectAction -= SpawnerSelected;
 
             hud.Deinit();
@@ -86,10 +87,10 @@ namespace UI
 
         public void ClearHUD()
         {
-            for(int i =0; i < _spawnerHUDCollection.Count; i++)
+            for (int i = 0; i < _spawnerHUDCollection.Count; i++)
             {
                 var hud = _spawnerHUDCollection[i];
-                
+
                 hud.OnSelectAction -= SpawnerSelected;
 
                 hud.Deinit();
@@ -102,16 +103,19 @@ namespace UI
 
         private void SpawnerSelected(string spawnerId)
         {
+            OnSpawnerSelectAction?.Invoke(spawnerId);
+        }
+
+        public void SelectSpawner(string spawnerId)
+        {
             var spawnerHUD = _spawnerHUDCollection.Find(spwn => spwn.Id == spawnerId);
 
-            for(int i =0; i < _spawnerHUDCollection.Count; i++)
+            for (int i = 0; i < _spawnerHUDCollection.Count; i++)
             {
                 _spawnerHUDCollection[i].Unselect();
             }
 
             spawnerHUD.Select();
-
-            OnSpawnerSelectAction?.Invoke(spawnerId);
         }
 
         public void UnselectAll()

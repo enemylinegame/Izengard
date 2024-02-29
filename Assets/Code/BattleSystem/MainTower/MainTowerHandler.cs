@@ -18,7 +18,10 @@ namespace BattleSystem.MainTower
         
         public event Action<IMainTower> OnReachedZeroHealth;
 
-        public MainTowerHandler(MainTowerView view, MainTowerDefenceModel defence, int durability)
+        public MainTowerHandler(
+            MainTowerView view, 
+            MainTowerDefenceModel defence, 
+            int durability)
         {        
             _view = view;
             _defence = defence;

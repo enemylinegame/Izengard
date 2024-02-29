@@ -1,5 +1,6 @@
 using Abstraction;
 using System;
+using Tools;
 using UnitSystem.Enum;
 using UnitSystem.Model;
 using UnitSystem.View;
@@ -43,6 +44,8 @@ namespace UnitSystem
 
         public void Enable() { }
         public bool IsAlive => true;
+
+        public HealthBarController HealthBarController { get; }
 
         public void TakeDamage(IDamage damageValue) { }
 

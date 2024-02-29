@@ -1,5 +1,6 @@
 using Abstraction;
 using System;
+using Tools;
 using UnitSystem.Enum;
 using UnityEditor;
 using UnityEngine;
@@ -17,6 +18,8 @@ namespace UnitSystem.View
         protected NavMeshAgent unitNavigation;
         protected Collider unitCollider;
         protected IUnitAnimationView unitAnimation;
+        protected HealthBarView _healthBar;
+        protected DamageFlash _damageEffect;
 
         public string Id => _id;
         public string Name => _name;
@@ -26,19 +29,25 @@ namespace UnitSystem.View
         public Transform SelfTransform => selfTransform;
         public NavMeshAgent UnitNavigation => unitNavigation;
         public IUnitAnimationView UnitAnimation => unitAnimation;
- 
+        public HealthBarView HealthBar => _healthBar;
+
         public event Action<IDamage> OnTakeDamage;
-      
+
         public virtual void Init(UnitType type)
         {
             _type = type;
         }
 
-        public void Show() => 
+        public void Show()
+        {
             gameObject.SetActive(true);
+            
+        }
 
-        public void Hide() => 
+        public void Hide()
+        {
             gameObject.SetActive(false);
+        }
 
         public abstract void SetUnitName(string name);
         public abstract void ChangeHealth(int hpValue);
@@ -50,10 +59,15 @@ namespace UnitSystem.View
         {
             unitCollider.enabled = isEnabled;
         }
-        
+
         private void Awake()
         {
             _id = GUID.Generate().ToString();
+
+            _damageEffect = GetComponent<DamageFlash>();
+            _healthBar = GetComponentInChildren<HealthBarView>();
+
+            _selectionEffect = GetComponent<OnSelectionEffect>();
 
             SetTransform();
             SetUnitNavigation();
@@ -70,12 +84,37 @@ namespace UnitSystem.View
 
         private void FixedUpdate()
         {
-            Debug.DrawRay(transform.position, transform.forward * 1.5f, Color.red, 0); 
+            Debug.DrawRay(transform.position, transform.forward * 1.5f, Color.red, 0);
         }
 
         public void TakeDamage(IDamage damage)
         {
             OnTakeDamage?.Invoke(damage);
+
+            if (_damageEffect != null)
+                _damageEffect.Flash();
         }
+
+        #region ISelectedObject
+
+        private OnSelectionEffect _selectionEffect;
+
+        public void Select()
+        {
+            if (_selectionEffect == null)
+                return;
+
+            _selectionEffect.Display();
+        }
+
+        public void Unselect()
+        {
+            if (_selectionEffect == null)
+                return;
+
+            _selectionEffect.Hide();
+        }
+
+        #endregion
     }
 }

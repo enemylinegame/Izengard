@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Abstraction;
 using UnityEngine;
 
 namespace SpawnSystem
 {
-    public class SpawnerView : MonoBehaviour
+    public class SpawnerView : BaseGameObject
     {
         [SerializeField] private Transform _poolHolder;
         [SerializeField] private SpawnSettings _spawnSettings;

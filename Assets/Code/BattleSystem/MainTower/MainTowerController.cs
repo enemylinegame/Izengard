@@ -1,35 +1,86 @@
 ﻿using System;
 using Abstraction;
+using Code.SceneConfigs;
+using UserInputSystem;
 
 
 namespace BattleSystem.MainTower
 {
     public class MainTowerController : IOnController, IOnStart
-    {     
+    {
         private MainTowerHandler _mainTower;
         private MainTowerConfig _mainTowerConfig;
         private MainTowerDefenceModel _towerDefenceModel;
 
+        private readonly SceneObjectsHolder _sceneObjects;
+        private readonly RayCastController _rayCastController;
+
         public event Action OnMainTowerDestroyed;
 
         private bool _isDestroyed;
-          
-        public MainTowerController(MainTowerView mainTowerView, MainTowerConfig mainTowerConfig)
-        {
-            _mainTowerConfig = mainTowerConfig;
-            _towerDefenceModel = new MainTowerDefenceModel(_mainTowerConfig.DefenceData);
-            _mainTower = new MainTowerHandler(mainTowerView, _towerDefenceModel, (int)_mainTowerConfig.Durability);
-            _mainTower.OnReachedZeroHealth += mainTowerDestroyed;
 
+        public MainTowerController(
+            SceneObjectsHolder sceneObjects,
+            MainTowerConfig mainTowerConfig,
+            RayCastController rayCastController)
+        {
+            _sceneObjects = sceneObjects;
+            _mainTowerConfig = mainTowerConfig;
+            _rayCastController = rayCastController;
+
+            _towerDefenceModel = new MainTowerDefenceModel(_mainTowerConfig.DefenceData);
+            _mainTower = new MainTowerHandler(_sceneObjects.MainTower, _towerDefenceModel, (int)_mainTowerConfig.Durability);
+            _mainTower.OnReachedZeroHealth += mainTowerDestroyed;
+                     
+
+            _sceneObjects.MainTowerUI.InitUI();
+
+            Subscribe();
+        }
+
+        private void Subscribe()
+        {
+            _mainTower.OnReachedZeroHealth += mainTowerDestroyed;
+            _rayCastController.RightClick += SelectTower;
+            _rayCastController.LeftClick += UnselectTower;
+        }
+
+
+        private void Unsubscribe()
+        {
+            _mainTower.OnReachedZeroHealth -= mainTowerDestroyed;
+            _rayCastController.RightClick -= SelectTower;
+        }
+
+        private void SelectTower(string id)
+        {
+            if (id == null)
+                return;
+
+            if (_mainTower.Id != id)
+                return;
+
+            _mainTower.View.Select();
+
+            _sceneObjects.BattleUI.Hide();
+            _sceneObjects.MainTowerUI.Show();
+        }
+
+        private void UnselectTower(string obj)
+        {
+            _mainTower.View.Unselect();
+
+            _sceneObjects.BattleUI.Show();
+            _sceneObjects.MainTowerUI.Hide();
         }
 
         private void mainTowerDestroyed(IMainTower building)
         {
             _isDestroyed = true;
 
-            building.OnReachedZeroHealth -= mainTowerDestroyed;
+            Unsubscribe();
 
-            building.Disable();
+            _mainTower.Disable();
             OnMainTowerDestroyed?.Invoke();
         }
 
@@ -41,14 +92,14 @@ namespace BattleSystem.MainTower
         }
 
         public IAttackTarget GetMainTower() => _mainTower.View;
-        
+
         public void Reset()
         {
-            if(_isDestroyed)
+            if (_isDestroyed)
             {
                 _mainTower.Enable();
 
-                _mainTower.OnReachedZeroHealth += mainTowerDestroyed;
+                Subscribe();
             }
 
             _mainTower.Reset();

@@ -11,7 +11,6 @@ namespace BattleSystem
     public class EnemyBattleController : BaseBattleController
     {
         private readonly ISpawnController _enemySpawner;
-        private readonly MainTowerController _mainTower;
 
         public EnemyBattleController(
             BattleSystemData data,
@@ -21,7 +20,6 @@ namespace BattleSystem
             ISpawnController enemySpawner) : base(data, targetFinder, unitsContainer, mainTower)
         {
             _enemySpawner = enemySpawner;
-            _mainTower = mainTower;
 
             this.unitsContainer.OnDefenderAdded += ResetUnitState;
         }
@@ -35,7 +33,6 @@ namespace BattleSystem
                 var unit = unitsContainer.EnemyUnits[i];
 
                 unit.Stop();
-                unit.ChangeState(UnitStateType.Idle);
             }
         }
 
@@ -121,13 +118,10 @@ namespace BattleSystem
             if (target is not NoneTarget)
             {
                 unit.Target.SetTarget(target);
+                
                 unit.MoveTo(target.Position);
+                
                 unit.ChangeState(UnitStateType.Move);
-            }
-            else
-            {
-                unit.Stop();
-                unit.ChangeState(UnitStateType.None);
             }
         }
 
@@ -153,6 +147,8 @@ namespace BattleSystem
             }
             else
             {
+                unit.Stop();
+
                 unit.ChangeState(UnitStateType.Idle);               
             }
         }
@@ -171,15 +167,20 @@ namespace BattleSystem
                             break;
 
                         case AttackPhase.None:
-                            unit.TimeProgress = deltaTime;
-                            unit.State.CurrentAttackPhase = AttackPhase.Cast;
+                            {
+                                unit.TimeProgress = deltaTime;
+                                unit.State.CurrentAttackPhase = AttackPhase.Cast;
 
-                            var dir = unit.Target.CurrentTarget.Position - unit.GetPosition();
-                            unit.SetRotation(dir);
+                                var dir = unit.Target.CurrentTarget.Position - unit.GetPosition();
+                                unit.SetRotation(dir);
 
+                                StartAttackAnimation(unit);
+                            }
                             break;
                         case AttackPhase.Cast:
+                            
                             unit.TimeProgress += deltaTime;
+                            
                             if (unit.TimeProgress >= unit.Offence.CastingTime)
                             {
                                 var damage = unit.Offence.GetDamage();
@@ -188,16 +189,20 @@ namespace BattleSystem
                                    new[] { DebugTags.Unit, DebugTags.Damage });
 
                                 target.TakeDamage(damage);
-                                
-                                unit.State.CurrentAttackPhase = AttackPhase.None;
-                                unit.TimeProgress = 0.0f;
 
-                                StartAttackAnimation(unit);
+                                unit.State.CurrentAttackPhase = AttackPhase.Attack;
                             }
 
                             break;
                         case AttackPhase.Attack:
                             {
+                                unit.TimeProgress += deltaTime;
+
+                                if (unit.TimeProgress >= unit.Offence.AttackTime)
+                                {
+                                    unit.State.CurrentAttackPhase = AttackPhase.None;
+                                    unit.TimeProgress = 0.0f;
+                                }
                                 break;
                             }
                     }
