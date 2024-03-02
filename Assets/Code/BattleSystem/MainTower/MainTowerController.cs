@@ -31,7 +31,7 @@ namespace BattleSystem.MainTower
             _towerDefenceModel = new MainTowerDefenceModel(_mainTowerConfig.DefenceData);
             _mainTower = new MainTowerHandler(_sceneObjects.MainTower, _towerDefenceModel, (int)_mainTowerConfig.Durability);
             _mainTower.OnReachedZeroHealth += mainTowerDestroyed;
-                     
+
 
             _sceneObjects.MainTowerUI.InitUI();
 
@@ -41,24 +41,28 @@ namespace BattleSystem.MainTower
         private void Subscribe()
         {
             _mainTower.OnReachedZeroHealth += mainTowerDestroyed;
-            _rayCastController.RightClick += SelectTower;
-            _rayCastController.LeftClick += UnselectTower;
+            _rayCastController.LeftClick += Select;
+            _rayCastController.RightClick += Unselect;
         }
 
 
         private void Unsubscribe()
         {
             _mainTower.OnReachedZeroHealth -= mainTowerDestroyed;
-            _rayCastController.RightClick -= SelectTower;
+            _rayCastController.LeftClick += Select;
+            _rayCastController.RightClick -= Unselect;
         }
 
-        private void SelectTower(string id)
+        private void Select(string id)
         {
             if (id == null)
                 return;
 
             if (_mainTower.Id != id)
+            {
+                UnselectTower();
                 return;
+            }
 
             _mainTower.View.Select();
 
@@ -66,7 +70,9 @@ namespace BattleSystem.MainTower
             _sceneObjects.MainTowerUI.Show();
         }
 
-        private void UnselectTower(string obj)
+        private void Unselect(string obj) => UnselectTower();
+
+        private void UnselectTower()
         {
             _mainTower.View.Unselect();
 
