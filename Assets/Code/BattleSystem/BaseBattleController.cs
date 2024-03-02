@@ -76,10 +76,7 @@ namespace BattleSystem
                 }
                 else
                 {
-                    if (unit.Target.IsTargetChangePosition())
-                    {
-                        unit.MoveTo(target.Position);
-                    }
+                    unit.MoveTo(target.Position);
                 }
             }
             else
