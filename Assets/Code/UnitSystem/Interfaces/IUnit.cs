@@ -25,16 +25,12 @@ namespace UnitSystem
         string Id { get; }
 
         string Name { get; }
-
-        Vector3 StartPosition { get; }
         
         float TimeProgress { get; set; }
 
         void Enable();
 
         void Disable();
-
-        void SetStartPosition(Vector3 spawnPosition);
 
         void ChangeState(UnitStateType state);
     }

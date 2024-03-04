@@ -15,12 +15,10 @@ namespace UnitSystem
         private readonly RayCastController _rayCastController;
         private readonly HealthBarManager _healthBarHandler;
 
-        private List<IUnit> _createdUnits = new();
-
-        private List<IUnit> _enemyUnits = new();
-        private List<IUnit> _defenderUnits = new();
-
-        private List<IUnit> toRemoveUnitsCollection = new();
+        private readonly List<IUnit> _createdUnits = new();
+        private readonly List<IUnit> _enemyUnits = new();
+        private readonly List<IUnit> _defenderUnits = new();
+        private readonly List<IUnit> _toRemoveUnitsCollection = new();
 
         private IUnit _selectedUnit;
 
@@ -28,14 +26,11 @@ namespace UnitSystem
         public List<IUnit> DefenderUnits => _defenderUnits;
 
         public event Action<ITarget> OnUnitDead;
-        
         public event Action<IUnit> OnUnitRemoved;
 
         public event Action OnEnemyAdded;
         public event Action OnDefenderAdded;
-
         public event Action OnAllEnemyDestroyed;
-
         public event Action OnAllDefenderDestroyed;
  
         public UnitsContainer(
@@ -128,7 +123,7 @@ namespace UnitSystem
 
             _healthBarHandler.Remove(unit);
             
-            toRemoveUnitsCollection.Add(unit);
+            _toRemoveUnitsCollection.Add(unit);
         }
 
         private void SelectUnit(string Id)
@@ -172,7 +167,7 @@ namespace UnitSystem
             if (IsPaused)
                 return;
 
-            UpdateToBeRemovedUnits(toRemoveUnitsCollection, deltaTime);
+            UpdateToBeRemovedUnits(_toRemoveUnitsCollection, deltaTime);
 
             _healthBarHandler.OnUpdate(deltaTime);
         }
@@ -193,7 +188,7 @@ namespace UnitSystem
                     unit.Disable();
                     OnUnitRemoved?.Invoke(unit);
                     
-                    toRemoveUnitsCollection.Remove(unit);
+                    _toRemoveUnitsCollection.Remove(unit);
                 }
             }
         }
@@ -207,9 +202,9 @@ namespace UnitSystem
 
             _selectedUnit = null;
 
-            for (int i = 0; i < toRemoveUnitsCollection.Count; i++)
+            for (int i = 0; i < _toRemoveUnitsCollection.Count; i++)
             {
-                var unit = toRemoveUnitsCollection[i];
+                var unit = _toRemoveUnitsCollection[i];
 
                 unit.Disable();
 
@@ -230,7 +225,7 @@ namespace UnitSystem
             _createdUnits.Clear();
             _enemyUnits.Clear();
             _defenderUnits.Clear();
-            toRemoveUnitsCollection.Clear();
+            _toRemoveUnitsCollection.Clear();
 
         }
 
@@ -251,9 +246,9 @@ namespace UnitSystem
                 if(unitAnim != null)
                     unit.View.UnitAnimation.Stop();
             }
-            for (int i = 0; i < toRemoveUnitsCollection.Count; i++)
+            for (int i = 0; i < _toRemoveUnitsCollection.Count; i++)
             {
-                var unit = toRemoveUnitsCollection[i];
+                var unit = _toRemoveUnitsCollection[i];
 
                 var unitAnim = unit.View.UnitAnimation;
 
@@ -275,9 +270,9 @@ namespace UnitSystem
                 if (unitAnim != null)
                     unit.View.UnitAnimation.Play();
             }
-            for (int i = 0; i < toRemoveUnitsCollection.Count; i++)
+            for (int i = 0; i < _toRemoveUnitsCollection.Count; i++)
             {
-                var unit = toRemoveUnitsCollection[i];
+                var unit = _toRemoveUnitsCollection[i];
 
                 var unitAnim = unit.View.UnitAnimation;
 

@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-
-
-namespace Abstraction
+﻿namespace Abstraction
 {
     public interface IAttackTarget : ITarget,  IDamageable
     {

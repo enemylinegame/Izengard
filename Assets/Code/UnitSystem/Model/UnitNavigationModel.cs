@@ -7,12 +7,10 @@ namespace UnitSystem.Model
     public class UnitNavigationModel 
     {
         private readonly NavMeshAgent _navMesh;
-        private readonly Vector3 _initPos;
 
-        public UnitNavigationModel(NavMeshAgent navMesh, Vector3 initPos)
+        public UnitNavigationModel(NavMeshAgent navMesh)
         {
             _navMesh = navMesh;
-            _initPos = initPos;
         }
 
         public void Enable()
@@ -24,8 +22,6 @@ namespace UnitSystem.Model
 
             if (_navMesh.isOnNavMesh)
                 _navMesh.ResetPath();
-
-            //_navMesh.Warp(_initPos);
         }
 
         public void Disable()

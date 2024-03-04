@@ -82,7 +82,7 @@ namespace SpawnSystem
 
             var spawnPos = GetSpawnPosition(_spawnCreationController.SelectedSpawner);
 
-            unit.SetStartPosition(spawnPos);
+            unit.SetPosition(spawnPos);
 
             _unitsContainer.AddUnit(unit);
 
@@ -107,7 +107,7 @@ namespace SpawnSystem
 
             var spawnPos = GetSpawnPosition(_spawnersCollection[spawnerIndex]);
 
-            unit.SetStartPosition(spawnPos);
+            unit.SetPosition(spawnPos);
 
             _unitsContainer.AddUnit(unit);
 

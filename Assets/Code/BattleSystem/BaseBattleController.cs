@@ -176,14 +176,6 @@ namespace BattleSystem
             return maxAttackDistance * maxAttackDistance >= (attackerPosition - targetPosition).sqrMagnitude;
         }
 
-        protected bool CheckIsOnDestinationPosition(IUnit unit)
-        {
-            var destination = unit.StartPosition;
-            var position = unit.GetPosition();
-
-            return (position - destination).sqrMagnitude <= destinationPositionErrorSqr;
-        }
-
         #region IPaused
         
         public bool IsPaused { get; private set; }

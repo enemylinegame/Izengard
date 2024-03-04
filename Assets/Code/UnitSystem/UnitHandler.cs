@@ -10,7 +10,7 @@ namespace UnitSystem
     public class UnitHandler : IUnit, IDisposable
     {
         private readonly IUnitView _view;
-        private readonly UnitStatsModel _unitStats;       
+        private readonly UnitStatsModel _unitStats;
         private readonly IUnitDefence _unitDefence;
         private readonly IUnitOffence _unitOffence;
         private readonly UnitNavigationModel _navigation;
@@ -21,10 +21,6 @@ namespace UnitSystem
         private readonly HealthBarController _healthBarController;
 
 
-        private string _id;
-        private string _name;
-        private Vector3 _startPosition;
-
         public IUnitView View => _view;
         public UnitStatsModel Stats => _unitStats;
         public IUnitDefence Defence => _unitDefence;
@@ -34,38 +30,38 @@ namespace UnitSystem
         public UnitPriorityModel Priority => _priority;
         public HealthBarController HealthBarController => _healthBarController;
 
-        public string Id => _id;
-        public string Name => _name;
-        public Vector3 StartPosition => _startPosition;
+        public string Id { get; private set; }
+        public string Name {  get; private set; }
         public float TimeProgress { get; set; }
+
         public event Action<IUnit> OnReachedZeroHealth;
 
         public UnitHandler(string name, IUnitView view, IUnitData unitData)
         {
-            _name = name;
+            Name = name;
 
             _view = view;
 
-            _unitStats = new UnitStatsModel(unitData); 
+            _unitStats = new UnitStatsModel(unitData);
 
             _unitDefence = new UnitDefenceModel(unitData);
 
             _unitOffence = new UnitOffenceModel(unitData);
 
-            _navigation 
-                = new UnitNavigationModel(view.UnitNavigation, view.SelfTransform.position); ;
+            _navigation
+                = new UnitNavigationModel(view.UnitNavigation);
 
-            _priority 
-                = new UnitPriorityModel(unitData.UnitPriorities); ;
+            _priority
+                = new UnitPriorityModel(unitData.UnitPriorities);
 
             _unitState = new UnitStateModel();
-            
+
             _unitTarget = new UnitTargetModel();
 
-            _healthBarController 
+            _healthBarController
                 = new HealthBarController(_view.HealthBar, unitData.HealthPoints);
 
-            _id = _view.Id;
+            Id = _view.Id;
 
             _view.SetUnitName(name);
         }
@@ -85,7 +81,7 @@ namespace UnitSystem
 
             _unitState.ChangeState(UnitStateType.Idle);
         }
-        
+
         public void Disable()
         {
             Unsubscribe();
@@ -120,16 +116,10 @@ namespace UnitSystem
 
             _unitStats.Size.OnValueChange -= _view.ChangeSize;
             _unitStats.Speed.OnValueChange -= _view.ChangeSpeed;
-            
+
             _view.OnTakeDamage -= TakeDamage;
 
             _unitStats.Health.OnValueChange -= _healthBarController.ChangeHealthRatio;
-        }
-
-        public void SetStartPosition(Vector3 spawnPosition)
-        {
-            _startPosition = spawnPosition;
-            SetPosition(spawnPosition);
         }
 
         public void TakeDamage(IDamage damageValue)
@@ -179,7 +169,7 @@ namespace UnitSystem
                 }
             }
 
-            DebugGameManager.Log($"{_name}. Change state. Current State = {state}",
+            DebugGameManager.Log($"{Name}. Change state. Current State = {state}",
                 new[] { DebugTags.Unit, DebugTags.State });
         }
 
@@ -187,13 +177,13 @@ namespace UnitSystem
         private void ReachedZeroHealth(int value)
         {
             Target.ResetTarget();
-            TimeProgress = 0.0f;
+            TimeProgress = 0;
             _navigation.Disable();
 
             _view.SetCollisionEnabled(false);
 
             ChangeState(UnitStateType.Die);
-            
+
             OnReachedZeroHealth?.Invoke(this);
         }
 
@@ -205,7 +195,7 @@ namespace UnitSystem
         {
             return _unitOffence.GetDamage();
         }
-        
+
         public void StartAttack(IDamageable damageableTarget)
         {
             _damageableTarget = damageableTarget;
