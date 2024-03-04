@@ -8,7 +8,7 @@ using System;
 using Tools;
 using UI;
 using UnitSystem;
-using UnityEngine;
+using UserInputSystem;
 
 namespace Code.GlobalGameState
 {
@@ -33,40 +33,42 @@ namespace Code.GlobalGameState
         private BattlePhaseState _state;
 
         public BattlePhaseController(
-            SceneObjectsHolder sceneObjectsHolder,
-            ConfigsHolder configs,
-            PauseController pauseController,
-            SpawnCreationController spawnCreation,
-            MainTowerController mainTower,
-            IUnitsContainer unitsContainer)
+            BattleUIController battleUIController,
+            SceneObjectsHolder sceneObjectsHolder, 
+            ConfigsHolder configs, 
+            RayCastController rayCastController,
+            PauseController pauseController, 
+            SpawnCreationController spawnCreation, 
+            MainTowerController mainTower)
         {
-            _battleUIController = new BattleUIController(sceneObjectsHolder.BattleUI);
+            _battleUIController = battleUIController;
 
             _pauseController = pauseController;
             _spawnCreation = spawnCreation;
 
             _mainTowerController = mainTower;
 
-            _unitsContainer = unitsContainer;
+            _unitsContainer = new UnitsContainer(configs.BattleSystemConst, _battleUIController.View.UnitStatsPanel, rayCastController); ;
 
             var enemySpawner
-             = new EnemySpawnController(sceneObjectsHolder.EnemySpawner, spawnCreation, unitsContainer);
+             = new EnemySpawnController(sceneObjectsHolder.EnemySpawner, spawnCreation, _unitsContainer);
 
             var defendersSpawner
-                = new DefendersSpawnController(sceneObjectsHolder.DefendersSpawner, spawnCreation, unitsContainer);
+                = new DefendersSpawnController(sceneObjectsHolder.DefendersSpawner, spawnCreation, _unitsContainer);
 
             _enemySpawnHandler
                 = new EnemySpawnHandler(enemySpawner, configs.EnemyWaveSettings, _battleUIController);
             _defendersSpawnHandler
                 = new DefenderSpawnHandler(defendersSpawner, _battleUIController);
 
-            var targetFinder = new TargetFinder(mainTower, unitsContainer);
+            var targetFinder = new TargetFinder(mainTower, _unitsContainer);
 
             _enemyBattleController
-                = new EnemyBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, mainTower, enemySpawner);
+                = new EnemyBattleController(configs.BattleSystemConst, targetFinder, _unitsContainer, mainTower, enemySpawner);
             _defenderBattleController
-                = new DefenderBattleController(configs.BattleSystemConst, targetFinder, unitsContainer, mainTower);
-
+                = new DefenderBattleController(configs.BattleSystemConst, targetFinder, _unitsContainer, mainTower);
+            
+            _pauseController.Add(_unitsContainer);
             _pauseController.Add(_enemyBattleController);
             _pauseController.Add(_defenderBattleController);
 
@@ -77,6 +79,8 @@ namespace Code.GlobalGameState
 
             _state = BattlePhaseState.None;
         }
+
+     
 
         private void StartBattle()
         {
@@ -170,6 +174,7 @@ namespace Code.GlobalGameState
             if (_state != BattlePhaseState.Proceed)
                 return;
 
+            _unitsContainer.OnUpdate(deltaTime);
             _enemyBattleController.OnUpdate(deltaTime);
             _defenderBattleController.OnUpdate(deltaTime);
         }

@@ -6,7 +6,7 @@ using NewBuildingSystem;
 using SpawnSystem;
 using Tools;
 using Tools.Navigation;
-using UnitSystem;
+using UI;
 using UnityEngine;
 using UserInputSystem;
 
@@ -14,8 +14,7 @@ namespace Code.MVC_System
 {
     public class BattleSceneGameInit
     {
-
-        private UserInput _userInput;
+        private readonly UserInput _userInput;
 
         public BattleSceneGameInit( 
             Controller controller, 
@@ -30,6 +29,8 @@ namespace Code.MVC_System
             var userInputController = new UserInputController();
             _userInput = userInputController.UserInput;
 
+            var uIPanelInit = new BattleUIPanelInitialization(configs.UIElementsConfig, canvas);
+
             var timeRemainingService = new TimeRemainingController();
             var navigationUpdater = new NavigationUpdater();
             navigationUpdater.AddNavigationSurface(sceneObjectsHolder.GroundSurface);
@@ -41,18 +42,14 @@ namespace Code.MVC_System
 
             var mainTower 
                 = new MainTowerController(
+                    uIPanelInit.BattleUIController,
                     sceneObjectsHolder,
                     configs.MainTowerSettings, 
-                    rayCastController);
-
-            var unitsContainer 
-                = new UnitsContainer(
-                    configs.BattleSystemConst, 
-                    sceneObjectsHolder.BattleUI.UnitStatsPanel, 
                     rayCastController);
             
             var spawnerCreationController
                 = new SpawnCreationController(
+                    uIPanelInit.BattleUIController,
                     sceneObjectsHolder, spawnerPrefab, 
                     rayCastController, 
                     configs.ObjectsHolder, 
@@ -60,12 +57,13 @@ namespace Code.MVC_System
 
             var battleStateManager 
                 = new BattlePhaseController(
+                    uIPanelInit.BattleUIController,
                     sceneObjectsHolder, 
                     configs, 
+                    rayCastController,
                     pasueController,
                     spawnerCreationController, 
-                    mainTower, 
-                    unitsContainer);
+                    mainTower);
 
             var peaceStateManager = new PeacePhaseConttoller();
             
@@ -74,12 +72,9 @@ namespace Code.MVC_System
             var MapController = new MapController(map, configs.GameConfig.BattleStageMapSize);
 
 
-            pasueController.Add(unitsContainer);
-
             controller.Add(timeRemainingService);
             controller.Add(pasueController);
 
-            controller.Add(unitsContainer);
             controller.Add(rayCastController);
 
             controller.Add(spawnerCreationController);

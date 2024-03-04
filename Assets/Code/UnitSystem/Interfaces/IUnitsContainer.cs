@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace UnitSystem
 {
-    public interface IUnitsContainer
+    public interface IUnitsContainer : IOnController, IOnUpdate, IPaused
     {
         event Action<ITarget> OnUnitDead;
 

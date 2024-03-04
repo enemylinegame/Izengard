@@ -8,7 +8,7 @@ using UserInputSystem;
 
 namespace UnitSystem
 {
-    public class UnitsContainer : IUnitsContainer, IOnController, IOnUpdate, IPaused
+    public class UnitsContainer : IUnitsContainer
     {
         private readonly float unitsDestroyDelay;
         private readonly UnitStatsPanel _unitStatsPanel;

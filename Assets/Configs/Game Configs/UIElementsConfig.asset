@@ -20,3 +20,4 @@ MonoBehaviour:
   <CenterPanel>k__BackingField: {fileID: 0}
   <EndGameScreenPanel>k__BackingField: {fileID: 0}
   <InGameMenu>k__BackingField: {fileID: 0}
+  <BattlePanel>k__BackingField: {fileID: 5181284039954639084, guid: 9fcd9abedf9ddba49bde14ca1dd03b7a, type: 3}

@@ -45,6 +45,7 @@ namespace SpawnSystem
         private List<IUnitData> _enemyUnitsData;
 
         public SpawnCreationController(
+            BattleUIController battleUIController,
             SceneObjectsHolder sceneObjects,
             GameObject spawnerPrefab,
             RayCastController rayCastController,
@@ -52,10 +53,10 @@ namespace SpawnSystem
             GameObject plane,
             Grid grid)
         {
-            _view = sceneObjects.BattleUI.SpawnPanel;
-            _unitSettingsPanel = sceneObjects.BattleUI.UnitSettingsPanel;
+            _view = battleUIController.View.SpawnPanel;
+            _unitSettingsPanel = battleUIController.View.UnitSettingsPanel;
 
-            _typeSelectionPanel = sceneObjects.BattleUI.SpawnerTypeSelection;
+            _typeSelectionPanel = battleUIController.View.SpawnerTypeSelection;
 
             _enemySpawners = sceneObjects.EnemySpawner;
             _defenderSpawners = sceneObjects.DefendersSpawner;

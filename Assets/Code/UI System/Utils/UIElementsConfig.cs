@@ -13,5 +13,6 @@ namespace UI
         [field: SerializeField] public GameObject CenterPanel { get; private set; }
         [field: SerializeField] public GameObject EndGameScreenPanel { get; private set; }
         [field: SerializeField] public GameObject InGameMenu { get; private set; }
+        [field: SerializeField] public GameObject BattlePanel { get; private set; }
     }
 }

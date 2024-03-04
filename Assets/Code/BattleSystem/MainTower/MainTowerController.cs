@@ -1,6 +1,7 @@
 ﻿using System;
 using Abstraction;
 using Code.SceneConfigs;
+using UI;
 using UserInputSystem;
 
 
@@ -8,9 +9,10 @@ namespace BattleSystem.MainTower
 {
     public class MainTowerController : IOnController, IOnStart
     {
-        private MainTowerHandler _mainTower;
-        private MainTowerConfig _mainTowerConfig;
-        private MainTowerDefenceModel _towerDefenceModel;
+        private readonly BattleUIController _battleUIController;
+        private readonly MainTowerHandler _mainTower;
+        private readonly MainTowerConfig _mainTowerConfig;
+        private readonly MainTowerDefenceModel _towerDefenceModel;
 
         private readonly SceneObjectsHolder _sceneObjects;
         private readonly RayCastController _rayCastController;
@@ -20,10 +22,12 @@ namespace BattleSystem.MainTower
         private bool _isDestroyed;
 
         public MainTowerController(
+            BattleUIController battleUIController,
             SceneObjectsHolder sceneObjects,
             MainTowerConfig mainTowerConfig,
             RayCastController rayCastController)
         {
+            _battleUIController = battleUIController;
             _sceneObjects = sceneObjects;
             _mainTowerConfig = mainTowerConfig;
             _rayCastController = rayCastController;
@@ -66,7 +70,7 @@ namespace BattleSystem.MainTower
 
             _mainTower.View.Select();
 
-            _sceneObjects.BattleUI.Hide();
+            _battleUIController.View.Hide();
             _sceneObjects.MainTowerUI.Show();
         }
 
@@ -76,7 +80,7 @@ namespace BattleSystem.MainTower
         {
             _mainTower.View.Unselect();
 
-            _sceneObjects.BattleUI.Show();
+            _battleUIController.View.Show();
             _sceneObjects.MainTowerUI.Hide();
         }
 

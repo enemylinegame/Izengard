@@ -9,7 +9,7 @@ namespace UI
         public readonly BuildingInfoPanelController BuildingInfoPanelController;
         public readonly InfoPanelController infoPanelController;
         public readonly ResPanelController ResPanelController;
-        
+
         public UIPanelsInitialization(UIElementsConfig config, Canvas canvas)
         {
             var infoPanelFactory = new InfoPanelFactory(config, canvas);

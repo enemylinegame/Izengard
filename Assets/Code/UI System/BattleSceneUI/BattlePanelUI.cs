@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class BattleSceneUI : MonoBehaviour
+    public class BattlePanelUI : MonoBehaviour
     {
         [SerializeField]
         private UnitSettingsPanel _unitSettingsPanel;
