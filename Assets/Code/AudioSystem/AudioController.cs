@@ -12,29 +12,23 @@ namespace AudioSystem
 
         private int soundCodeIndex;
 
-        public AudioController(AudioPresenter presenter)
+        public AudioController()
         {
-            _presenter = presenter;
-
             _audioSources = new Dictionary<int, AudioSource>();
             _sourceMedia = new Dictionary<int, AudioSourceData>();
 
-            RegisterAudioSource(_presenter.GloabalMusicSource);
-            RegisterAudioSource(_presenter.GloabalUISource);
-
             var initAudioController = (IAudioController)this;
-            initAudioController.SoundEnabled = presenter.SoundEnabled;
-            initAudioController.MusicEnabled = presenter.MusicEnabled;
+            initAudioController.SoundEnabled = true;
+            initAudioController.MusicEnabled = true;
 
             soundCodeIndex = 0;
         }
 
-        #region IAudioController
 
         private bool _soundEnabled;
         private bool _musicEnabled;
 
-        bool IAudioController.SoundEnabled
+        public bool SoundEnabled
         {
             get => _soundEnabled;
             set 
@@ -56,7 +50,7 @@ namespace AudioSystem
             }
         }
 
-        bool IAudioController.MusicEnabled
+        public bool MusicEnabled
         {
             get => _musicEnabled;
             set
@@ -84,8 +78,6 @@ namespace AudioSystem
             AddSourceToCollection(source);
         }
 
-
-        #endregion
 
         #region IMusicPlayer
 

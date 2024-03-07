@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AudioSystem
+﻿namespace AudioSystem
 {
     public class UIAudioProvider : BaseAudioProvider
     {
@@ -27,7 +25,7 @@ namespace AudioSystem
         public UIAudioProvider(ISoundPlayer audioPlayer)
         {
             _audioPlayer = audioPlayer;
-
+              
             _onClickSound = LoadSound(_onClickSoundPath);
         }
 

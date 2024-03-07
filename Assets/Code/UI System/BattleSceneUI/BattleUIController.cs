@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AudioSystem;
+using System;
 using UnitSystem;
 
 namespace UI
@@ -6,7 +7,7 @@ namespace UI
     public class BattleUIController :  IOnController, IDisposable
     {
         private readonly BattlePanelUI _view;
-
+        private readonly UIAudioProvider _uiAudioProvider;
         public BattlePanelUI View => _view;
 
         public event Action OnStartBattle;
@@ -16,11 +17,11 @@ namespace UI
 
         public event Action<IUnitData> OnSpawnNewUnit;
 
-        public BattleUIController(UIViewFactory<BattlePanelUI> uIViewFactory)
+        public BattleUIController(UIViewFactory<BattlePanelUI> uIViewFactory, AudioController audioController)
         {
             _view = uIViewFactory.GetView(uIViewFactory.UIElementsConfig.BattlePanel);
 
-            _view.StartButton.onClick.AddListener(() => OnStartBattle?.Invoke());
+            _view.StartButton.onClick.AddListener(OnStart);
             _view.PauseButton.onClick.AddListener(OnPaused);
             _view.ResumeButton.onClick.AddListener(OnResumed);
             _view.ResetButton.onClick.AddListener(OnReseted);
@@ -28,20 +29,36 @@ namespace UI
             _view.UnitSettingsPanel.OnSpawn += SpawnUnits;
 
             _view.UnitSettingsPanel.InitPanel();
+
+            audioController.RegisterAudioSource(_view.UIAudioSource);
+            _uiAudioProvider = new UIAudioProvider(audioController);
+        }
+
+        private void OnStart()
+        {
+            _uiAudioProvider.PlayButtonClickCound();
+
+            OnStartBattle?.Invoke();
         }
 
         private void OnPaused()
         {
+            _uiAudioProvider.PlayButtonClickCound();
+
             OnPauseBattle?.Invoke();
         }
 
         private void OnResumed()
         {
+            _uiAudioProvider.PlayButtonClickCound();
+
             OnResumeBattle?.Invoke();
         }
 
         private void OnReseted()
         {
+            _uiAudioProvider.PlayButtonClickCound();
+
             _view.UnitSettingsPanel.ResetPanel();
             OnResetBattle?.Invoke();
         }

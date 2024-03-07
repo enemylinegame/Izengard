@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using AudioSystem;
+using UnityEngine;
 
 namespace UI
 {
@@ -6,11 +7,14 @@ namespace UI
     {
         public readonly BattleUIController BattleUIController;
 
-        public BattleUIPanelInitialization(UIElementsConfig config, Canvas canvas)
+        public BattleUIPanelInitialization(
+            UIElementsConfig config, 
+            Canvas canvas,
+            AudioController audioController)
         {
             var battlePanelFactory = new BattlePanelFactory(config, canvas);
 
-            BattleUIController = new BattleUIController(battlePanelFactory);
+            BattleUIController = new BattleUIController(battlePanelFactory, audioController);
         }
     }
 }

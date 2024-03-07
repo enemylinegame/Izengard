@@ -1,3 +1,4 @@
+using AudioSystem;
 using BattleSystem.MainTower;
 using Code.GlobalGameState;
 using Code.SceneConfigs;
@@ -29,7 +30,9 @@ namespace Code.MVC_System
             var userInputController = new UserInputController();
             _userInput = userInputController.UserInput;
 
-            var uIPanelInit = new BattleUIPanelInitialization(configs.UIElementsConfig, canvas);
+            var audioController = new AudioController();
+
+            var uIPanelInit = new BattleUIPanelInitialization(configs.UIElementsConfig, canvas, audioController);
 
             var timeRemainingService = new TimeRemainingController();
             var navigationUpdater = new NavigationUpdater();

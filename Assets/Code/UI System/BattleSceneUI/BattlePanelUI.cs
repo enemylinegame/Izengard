@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using AudioSystem;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
@@ -21,7 +22,9 @@ namespace UI
         private Button _resumeButton;
         [SerializeField]
         private Button _resetButton;
-
+        [SerializeField] 
+        private AudioSourceComponent _uIAudioSource;
+        
         public UnitSettingsPanel UnitSettingsPanel => _unitSettingsPanel;
         public SpawnPanelUI SpawnPanel => _spawnPanel;
         public SpawnerTypeSelectionPanel SpawnerTypeSelection => _spawnerTypeSelection;
@@ -30,8 +33,8 @@ namespace UI
         public Button PauseButton => _pauseButton;
         public Button ResumeButton => _resumeButton;
         public Button ResetButton => _resetButton;
+        public IAudioSource UIAudioSource => _uIAudioSource;
 
-        
         public void Show()
         {
             gameObject.SetActive(true);
