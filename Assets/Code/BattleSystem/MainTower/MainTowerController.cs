@@ -54,11 +54,11 @@ namespace BattleSystem.MainTower
 
         private void SelectTower(string id)
         {
-            if (id == null)
+            if (id == null || _mainTower.Id != id)
                 return;
 
-            if (_mainTower.Id != id)
-                return;
+            /*if (_mainTower.Id != id)
+                return;*/
 
             _mainTower.View.Select();
 

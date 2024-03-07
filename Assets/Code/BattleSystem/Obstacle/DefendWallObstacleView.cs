@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace BattleSystem.Obstacle
 {
+    
+    //TODO: не используется
     public class DefendWallObstacleView : MonoBehaviour, IObstacleView
     {
         [SerializeField] private DefenWallConfig _config;

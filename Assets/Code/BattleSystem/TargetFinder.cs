@@ -27,7 +27,7 @@ namespace BattleSystem
 
         private void MainToweDestroyed() => _isMainTowerDestroyed = false;
 
-        public IAttackTarget GetMainTower()
+        private IAttackTarget GetMainTower()
         {
             if (_isMainTowerDestroyed)
                 return _defaultTarget;
