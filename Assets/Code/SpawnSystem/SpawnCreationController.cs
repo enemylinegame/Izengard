@@ -86,8 +86,8 @@ namespace SpawnSystem
             _view.OnCreateSpawnerClick += CreateSpawner;
             _view.OnRemoveSpawnerClick += RemoveSpawner;
 
-            _rayCastController.RightClick += SelectSpawner;
-            _rayCastController.LeftClick += RemoveSelection;
+            _rayCastController.RightClick += RemoveSelection;
+            _rayCastController.LeftClick += SelectSpawner;
 
             _unitSettingsPanel.Parametrs.OnUnitTypeChange += UnitTypeChanged;
             _unitSettingsPanel.OnSaveUnitData += SaveUnitData;
@@ -100,8 +100,8 @@ namespace SpawnSystem
             _view.OnCreateSpawnerClick -= CreateSpawner;
             _view.OnRemoveSpawnerClick -= RemoveSpawner;
 
-            _rayCastController.RightClick -= SelectSpawner;
-            _rayCastController.LeftClick -= RemoveSelection;
+            _rayCastController.RightClick -= RemoveSelection;
+            _rayCastController.LeftClick -= SelectSpawner;
 
             _unitSettingsPanel.Parametrs.OnUnitTypeChange -= UnitTypeChanged;
             _unitSettingsPanel.OnSaveUnitData -= SaveUnitData;

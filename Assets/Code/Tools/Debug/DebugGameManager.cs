@@ -6,14 +6,7 @@ namespace Tools
     {
         public static void Log(string logMessage, DebugTags[] tags)
         {
-            if (tags.Length == 0)
-            {
-                Log(logMessage);
-            }
-            else
-            {
-                Log(GetTaggedMessage(logMessage, tags));
-            }
+            Log(tags.Length == 0 ? logMessage : GetTaggedMessage(logMessage, tags));
         }
         
         public static void Log(string logMessage)
@@ -23,31 +16,17 @@ namespace Tools
 
         public static void Error(string errorMessage, DebugTags[] tags)
         {
-            if (tags.Length == 0)
-            {
-                Error(errorMessage);
-            }
-            else
-            {
-                Error(GetTaggedMessage(errorMessage, tags));
-            }
+            Error(tags.Length == 0 ? errorMessage : GetTaggedMessage(errorMessage, tags));
         }
 
-        public static void Error(string errorMessage)
+        private static void Error(string errorMessage)
         {
             Debug.LogError(errorMessage);
         }
 
         public static void Warning(string warningMessage, DebugTags[] tags)
         {
-            if (tags.Length == 0)
-            {
-                Error(warningMessage);
-            }
-            else
-            {
-                Error(GetTaggedMessage(warningMessage, tags));
-            }
+            Error(tags.Length == 0 ? warningMessage : GetTaggedMessage(warningMessage, tags));
         }
 
         public static void Warning(string warningMessage)

@@ -50,14 +50,14 @@ namespace UserInputSystem
             {
                 if (isClick)
                 {
-                    DebugGameManager.Log($"<color=aqua> Left Click</color>");
+                    //DebugGameManager.Log($"<color=aqua> Left Click</color>");
                     if (hit.collider.GetComponent<BaseGameObject>())
                         LeftClick?.Invoke(hit.collider.GetComponent<ITarget>().Id); //TODO: Add raycast component
                     else LeftClick?.Invoke(null);
                 }
                 else
                 {
-                    DebugGameManager.Log($"<color=aqua> Left Click</color>");
+                    //DebugGameManager.Log($"<color=aqua> Left Click</color>");
                     if (hit.collider.GetComponent<BaseGameObject>())
                         RightClick?.Invoke(hit.collider.GetComponent<ITarget>().Id); //TODO: Add raycast component
                     else RightClick?.Invoke(null);

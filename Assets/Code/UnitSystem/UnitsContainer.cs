@@ -91,8 +91,6 @@ namespace UnitSystem
 
             switch (unit.Stats.Faction)
             {
-                default:
-                    break;
                 case FactionType.Enemy:
                     {
                         _enemyUnits.Remove(unit);
@@ -145,7 +143,7 @@ namespace UnitSystem
             _unitStatsPanel.SetUnit(_selectedUnit);
         }
 
-        public void RemoveSelection(string Id)
+        private void RemoveSelection(string Id)
         {
              UnselectUnit(_selectedUnit);
 

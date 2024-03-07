@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Abstraction;
 using Code.SceneConfigs;
 using UI;
@@ -59,7 +59,7 @@ namespace BattleSystem.MainTower
 
         private void Select(string id)
         {
-            if (id == null)
+            if (id == null || _mainTower.Id != id)
                 return;
 
             if (_mainTower.Id != id)
