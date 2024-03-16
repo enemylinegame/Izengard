@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace BrewSystem.UI
 {
-    internal class BrewStatusUI : MonoBehaviour
+    public class BrewStatusUI : MonoBehaviour
     {
         [SerializeField]
         private Slider _abvValueSlider;

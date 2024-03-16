@@ -2,7 +2,7 @@
 
 namespace BrewSystem
 {
-    internal interface IIngridienData
+    public interface IIngridienData
     {
         public string Name { get; }
         public string Description { get; }

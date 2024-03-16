@@ -4,15 +4,16 @@ using System;
 
 namespace BrewSystem
 {
-    internal class BrewController : IOnController, IDisposable
+    public class BrewController : IOnController, IDisposable
     {
-        private readonly BrewSystemUI _view;
+        private readonly BrewSystemUIController _viewController;
 
-        public BrewController(BrewSystemUI view, IngridientsDataConfig config)
+        public BrewController(
+            BrewSystemUIFactory uiFactory, 
+            IngridientsDataConfig config)
         {
-            _view = view;
+            _viewController = new BrewSystemUIController(uiFactory, config.Ingridients);
 
-            _view.InitUI(config.Ingridients);
         }
 
         #region IDisposable
@@ -26,7 +27,7 @@ namespace BrewSystem
             
             _disposed = true;
 
-            _view.Dispose();
+            _viewController.Dispose();
         }
 
         #endregion

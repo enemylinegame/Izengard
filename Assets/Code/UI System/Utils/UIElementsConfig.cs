@@ -14,5 +14,7 @@ namespace UI
         [field: SerializeField] public GameObject EndGameScreenPanel { get; private set; }
         [field: SerializeField] public GameObject InGameMenu { get; private set; }
         [field: SerializeField] public GameObject BattlePanel { get; private set; }
+        [field: SerializeField] public GameObject BrewSystemUI { get; private set; }
+
     }
 }

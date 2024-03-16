@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace BrewSystem.UI
 {
-    internal class IngridientUI : MonoBehaviour, IDisposable
+    public class IngridientUI : MonoBehaviour, IDisposable
     {
         [SerializeField]
         private Button _selfButon;

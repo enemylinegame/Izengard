@@ -1,13 +1,16 @@
 ﻿using BrewSystem.Configs;
 using BrewSystem.UI;
+using UI;
 using UnityEngine;
 
 namespace BrewSystem
 {
-    internal class BrewSystemMain : MonoBehaviour
+    public class BrewSystemMain : MonoBehaviour
     {
         [SerializeField]
-        private BrewSystemUI _brewSystemUI;
+        private UIElementsConfig _uiConfig;
+        [SerializeField]
+        private Canvas _canvas;
         [SerializeField]
         private IngridientsDataConfig IngridientsDataConfig;
 
@@ -15,7 +18,9 @@ namespace BrewSystem
 
         private void Start()
         {
-            _controller = new BrewController(_brewSystemUI, IngridientsDataConfig);
+            var uiFactory = new BrewSystemUIFactory(_uiConfig, _canvas);
+
+            _controller = new BrewController(uiFactory, IngridientsDataConfig);
         }
     }
 }

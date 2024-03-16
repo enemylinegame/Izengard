@@ -4,7 +4,7 @@ using UnityEngine;
 namespace BrewSystem.Configs
 {
     [Serializable]
-    internal class IngridientData : IIngridienData
+    public class IngridientData : IIngridienData
     {
         [SerializeField]
         private string _name;

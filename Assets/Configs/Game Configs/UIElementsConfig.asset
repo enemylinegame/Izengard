@@ -21,3 +21,4 @@ MonoBehaviour:
   <EndGameScreenPanel>k__BackingField: {fileID: 0}
   <InGameMenu>k__BackingField: {fileID: 0}
   <BattlePanel>k__BackingField: {fileID: 5181284039954639084, guid: 9fcd9abedf9ddba49bde14ca1dd03b7a, type: 3}
+  <BrewSystemUI>k__BackingField: {fileID: 6165651466936267627, guid: 760412e1cd34ac841aa164ad4c457bb0, type: 3}
