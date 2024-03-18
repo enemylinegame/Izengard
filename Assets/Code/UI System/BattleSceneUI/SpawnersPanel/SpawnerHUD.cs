@@ -2,7 +2,6 @@
 using TMPro;
 using UnityEngine.UI;
 using System;
-using SpawnSystem;
 
 namespace UI
 {

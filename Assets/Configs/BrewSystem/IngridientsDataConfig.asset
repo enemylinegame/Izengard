@@ -16,12 +16,12 @@ MonoBehaviour:
   - _name: 1
     _description: number 1
     _icon: {fileID: -1314473044, guid: db2283905189e6b4ab1be6cf5005359f, type: 3}
-    _abv: 5
-    _taste: 5
+    _abv: 20
+    _taste: -15
     _flavor: 0
   - _name: 2
     _description: number 2
     _icon: {fileID: -1467572436, guid: db2283905189e6b4ab1be6cf5005359f, type: 3}
-    _abv: 5
-    _taste: -2
-    _flavor: 5
+    _abv: 10
+    _taste: 30
+    _flavor: -25

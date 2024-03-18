@@ -12,7 +12,7 @@ namespace BrewSystem
         [SerializeField]
         private Canvas _canvas;
         [SerializeField]
-        private IngridientsDataConfig IngridientsDataConfig;
+        private BrewConfig _brewConfig;
 
         private BrewController _controller;
 
@@ -20,7 +20,7 @@ namespace BrewSystem
         {
             var uiFactory = new BrewSystemUIFactory(_uiConfig, _canvas);
 
-            _controller = new BrewController(uiFactory, IngridientsDataConfig);
+            _controller = new BrewController(uiFactory, _brewConfig);
         }
     }
 }
