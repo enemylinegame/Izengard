@@ -8,6 +8,7 @@ namespace BrewSystem
 {
     public class BrewController : IOnController, IDisposable
     {
+        private readonly BrewConfig _config;
         private readonly BrewModel _model;
 
         private readonly BrewSystemUIController _viewController;
@@ -22,6 +23,7 @@ namespace BrewSystem
             _ingridientsCollection = new();
             _brewMixCollection = new();
 
+            _config = config;
             _model = new BrewModel();
 
             var ingridients = config.IngridientsData.Ingridients;
@@ -54,7 +56,49 @@ namespace BrewSystem
 
         private void CheckBrewResult()
         {
-            
+            var brewCalculation = 100.0f - GetBrewAverage(_config, _model);
+            var brewResult = GetBrewResult(brewCalculation);
+
+            _viewController.DisplayBrewResult(brewResult);
+        }
+
+        private float GetBrewAverage(BrewConfig config, BrewModel model)
+        {
+            var result = 
+                ( MathF.Abs(config.ABVIdealValue - model.ABV)
+                + MathF.Abs(config.TasteIdealValue - model.Taste)
+                + MathF.Abs(config.TasteIdealValue - model.Taste))
+                / 3.0f;
+
+            return result;
+        }
+
+        private BrewResultType GetBrewResult(float value)
+        {
+            if (value >= 100.0f)
+                return BrewResultType.Ideal;
+
+            var result = BrewResultType.Lost;
+
+            if (IsInRange(value, 50.0f, 70.0f))
+            {
+                result = BrewResultType.Low;
+            }
+            else if(IsInRange(value, 70.0f, 90.0f))
+            {
+                result = BrewResultType.Normal;
+            }
+            else if(IsInRange(value, 90.0f, 100.0f))
+            {
+                result = BrewResultType.Ideal;
+            }
+
+            return result;
+        }
+
+        private bool IsInRange(float value, float min, float max)
+        {
+            return (value >= min) && (value < max);
         }
 
         private void IngridientSelected(int ingridientId)

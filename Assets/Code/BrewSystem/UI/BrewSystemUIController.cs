@@ -68,6 +68,11 @@ namespace BrewSystem.UI
             _view.ChangeBrewStatus(brewModel.ABV, brewModel.Taste, brewModel.Flavor);
         }
 
+        public void DisplayBrewResult(BrewResultType brewResult)
+        {
+            _view.ShowBrewStartRaiting(brewResult);
+        }
+
         #region IDisposable
 
         private bool _disposed;

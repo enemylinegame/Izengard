@@ -13,10 +13,13 @@ MonoBehaviour:
   m_Name: BrewConfig
   m_EditorClassIdentifier: 
   <MaxBrewIngridients>k__BackingField: 5
+  <ABVIdealValue>k__BackingField: 50
   <MinABVValue>k__BackingField: -100
   <MaxABVValue>k__BackingField: 100
+  <TasteIdealValue>k__BackingField: 25
   <MinTasteValue>k__BackingField: -100
   <MaxTasteValue>k__BackingField: 100
+  <FlavorIdealValue>k__BackingField: 25
   <MinFlavorValue>k__BackingField: -100
   <MaxFlavorValue>k__BackingField: 100
   <IngridientsData>k__BackingField: {fileID: 11400000, guid: 94ebd9c84796c4f4baebec75f692abab, type: 2}

@@ -38,5 +38,32 @@ namespace BrewSystem.UI
             _brewStatus.TasteValueSlider.value = taste;
             _brewStatus.FlavorValueSlider.value = flavor;
         }
+
+        public void ShowBrewStartRaiting(BrewResultType resultType)
+        {
+            switch (resultType)
+            {
+                default:
+                    {
+                        Debug.Log("You LOSE");
+                        break;
+                    }
+                case BrewResultType.Low:
+                    {
+                        Debug.Log("Your result 1 star");
+                        break;
+                    }
+                case BrewResultType.Normal:
+                    {
+                        Debug.Log("Your result 2 stars");
+                        break;
+                    }
+                case BrewResultType.Ideal:
+                    {
+                        Debug.Log("Your result 3 stars");
+                        break;
+                    }
+            }
+        }
     }
 }
