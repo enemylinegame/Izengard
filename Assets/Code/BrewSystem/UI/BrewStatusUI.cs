@@ -15,5 +15,12 @@ namespace BrewSystem.UI
         public Slider AbvValueSlider => _abvValueSlider;
         public Slider TasteValueSlider => _tasteValueSlider;
         public Slider FlavorValueSlider => _flavorValueSlider;
+
+        public void ChangeStatus(float abv, float taste, float flavor)
+        {
+            AbvValueSlider.value = abv;
+            TasteValueSlider.value = taste;
+            FlavorValueSlider.value = flavor;
+        }
     }
 }

@@ -65,12 +65,12 @@ namespace BrewSystem.UI
 
         public void UpdateBrewStatus(BrewModel brewModel)
         {
-            _view.ChangeBrewStatus(brewModel.ABV, brewModel.Taste, brewModel.Flavor);
+            _view.BrewStatus.ChangeStatus(brewModel.ABV, brewModel.Taste, brewModel.Flavor);
         }
 
         public void DisplayBrewResult(BrewResultType brewResult)
         {
-            _view.ShowBrewStartRaiting(brewResult);
+            _view.BrewResult.ShowResult(brewResult);
         }
 
         #region IDisposable

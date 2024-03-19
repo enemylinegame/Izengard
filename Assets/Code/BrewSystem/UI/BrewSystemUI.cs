@@ -13,12 +13,16 @@ namespace BrewSystem.UI
         [SerializeField]
         private BrewStatusUI _brewStatus;
         [SerializeField]
+        private BrewResultUI _brewResult;
+        [SerializeField]
         private Button _checkBrewResultButton;
 
         public Transform IngridientsHolder => _ingridientsHolder;
         public GameObject IngridientPrefab => _ingridientPrefab;
         public BrewStatusUI BrewStatus => _brewStatus;
+        public BrewResultUI BrewResult => _brewResult;
         public Button CheckBrewResultButton => _checkBrewResultButton;
+
 
         public void InitUI(BrewConfig config)
         {
@@ -30,40 +34,8 @@ namespace BrewSystem.UI
             
             _brewStatus.FlavorValueSlider.minValue = config.MinFlavorValue;
             _brewStatus.FlavorValueSlider.maxValue = config.MaxFlavorValue;
-        }
 
-        public void ChangeBrewStatus(float abv, float taste, float flavor)
-        {
-            _brewStatus.AbvValueSlider.value = abv;
-            _brewStatus.TasteValueSlider.value = taste;
-            _brewStatus.FlavorValueSlider.value = flavor;
-        }
-
-        public void ShowBrewStartRaiting(BrewResultType resultType)
-        {
-            switch (resultType)
-            {
-                default:
-                    {
-                        Debug.Log("You LOSE");
-                        break;
-                    }
-                case BrewResultType.Low:
-                    {
-                        Debug.Log("Your result 1 star");
-                        break;
-                    }
-                case BrewResultType.Normal:
-                    {
-                        Debug.Log("Your result 2 stars");
-                        break;
-                    }
-                case BrewResultType.Ideal:
-                    {
-                        Debug.Log("Your result 3 stars");
-                        break;
-                    }
-            }
+            _brewResult.InitUI();
         }
     }
 }
