@@ -43,15 +43,15 @@ namespace BrewSystem
         private void Subscribe()
         {
             _viewController.OnCheckBrewResult += CheckBrewResult;
-            _viewController.OnIngridientSelected += IngridientSelected;
-            _viewController.OnIngridientUnselected += IngridientUnselected;
+            _viewController.OnIngridientSelected += AddIngridientToBrew;
+            _viewController.OnIngridientUnselected += RemoveIngridientFromBrew;
         }
 
         private void Unsubscribe()
         {
             _viewController.OnCheckBrewResult -= CheckBrewResult;
-            _viewController.OnIngridientSelected -= IngridientSelected;
-            _viewController.OnIngridientUnselected -= IngridientUnselected;
+            _viewController.OnIngridientSelected -= AddIngridientToBrew;
+            _viewController.OnIngridientUnselected -= RemoveIngridientFromBrew;
         }
 
         private void CheckBrewResult()
@@ -101,15 +101,18 @@ namespace BrewSystem
             return (value >= min) && (value < max);
         }
 
-        private void IngridientSelected(int ingridientId)
+        private void AddIngridientToBrew(int ingridientId)
         {
+            if (_brewMixCollection.Count >= _config.MaxBrewIngridients)
+                return;
+
             var ingridient = _ingridientsCollection.Find(ing => ing.Id == ingridientId);
             _brewMixCollection.Add(ingridient);
 
             CalculateBrew(_brewMixCollection);
         }
 
-        private void IngridientUnselected(int ingridientId)
+        private void RemoveIngridientFromBrew(int ingridientId)
         {
             var ingridient = _ingridientsCollection.Find(ing => ing.Id == ingridientId);
             _brewMixCollection.Remove(ingridient);
