@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 
 namespace BrewSystem.UI
@@ -64,6 +65,13 @@ namespace BrewSystem.UI
             {
                 _starResults[i].SetActive(false);
             }
+        }
+
+        public void ResetUI()
+        {
+            ResetStars();
+
+            _resultDescription.text = "";
         }
     }
 }

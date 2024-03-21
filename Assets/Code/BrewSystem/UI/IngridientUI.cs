@@ -15,10 +15,6 @@ namespace BrewSystem.UI
         [SerializeField]
         private Image _icone;
         [SerializeField]
-        private GameObject _unselectedView;
-        [SerializeField]
-        private GameObject _selectedView;
-        [SerializeField]
         private GameObject _selectedIcon;
 
         private int _id;
@@ -38,9 +34,6 @@ namespace BrewSystem.UI
 
         public void ChangeSelection(bool state)
         {
-            /*_unselectedView.SetActive(!state);
-            _selectedView.SetActive(state);*/
-
             _selectedIcon.SetActive(state);
         }
 

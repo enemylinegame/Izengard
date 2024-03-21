@@ -120,20 +120,25 @@ namespace BrewSystem
 
             _brewMixCollection.Add(ingridient);
 
-            _viewController.UpdateIngridientsInBrewCount(_brewMixCollection.Count);
-            _viewController.ChangeIngridientSelection(ingridient.Id, true);
-
             CalculateBrew(_brewMixCollection);
+
+            UpdateViewControllerData(ingridient.Id, true);
         }
 
         private void RemoveIngridientFromBrew(IngridientModel ingridient)
         {
             _brewMixCollection.Remove(ingridient);
 
-            _viewController.UpdateIngridientsInBrewCount(_brewMixCollection.Count);
-            _viewController.ChangeIngridientSelection(ingridient.Id, false);
-
             CalculateBrew(_brewMixCollection);
+
+            UpdateViewControllerData(ingridient.Id, false);
+        }
+
+        private void UpdateViewControllerData(int ingridetnId, bool selectionState)
+        {
+            _viewController.UpdateIngridientsInBrewCount(_brewMixCollection.Count);
+            _viewController.ChangeIngridientSelection(ingridetnId, selectionState);
+            _viewController.ResetBrewResult();
         }
 
         private void CalculateBrew(List<IngridientModel> brewIngridients)

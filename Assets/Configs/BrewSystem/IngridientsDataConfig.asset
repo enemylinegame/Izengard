@@ -14,14 +14,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Ingridients:
   - _name: 1
-    _description: number 1
+    _description: ingridient 1
     _icon: {fileID: -1314473044, guid: db2283905189e6b4ab1be6cf5005359f, type: 3}
-    _abv: 20
-    _taste: -15
-    _flavor: 0
+    _abv: 25
+    _taste: 25
+    _flavor: 25
   - _name: 2
-    _description: number 2
+    _description: ingridient 2
     _icon: {fileID: -1467572436, guid: db2283905189e6b4ab1be6cf5005359f, type: 3}
-    _abv: 10
-    _taste: 30
-    _flavor: -25
+    _abv: 25
+    _taste: 25
+    _flavor: 0
+  - _name: 3
+    _description: ingridient 3
+    _icon: {fileID: -642037054, guid: db2283905189e6b4ab1be6cf5005359f, type: 3}
+    _abv: 25
+    _taste: 0
+    _flavor: 25
+  - _name: 4
+    _description: ingridient 4
+    _icon: {fileID: 1576974832, guid: db2283905189e6b4ab1be6cf5005359f, type: 3}
+    _abv: 0
+    _taste: 25
+    _flavor: 25
+  - _name: 5
+    _description: ingridient 5
+    _icon: {fileID: 1338583499, guid: db2283905189e6b4ab1be6cf5005359f, type: 3}
+    _abv: 25
+    _taste: 0
+    _flavor: 0
+  - _name: 6
+    _description: ingridient 6
+    _icon: {fileID: 1041252758, guid: db2283905189e6b4ab1be6cf5005359f, type: 3}
+    _abv: 0
+    _taste: 25
+    _flavor: 0
+  - _name: 7
+    _description: ingridient 7
+    _icon: {fileID: 2087509917, guid: db2283905189e6b4ab1be6cf5005359f, type: 3}
+    _abv: 0
+    _taste: 0
+    _flavor: 25

@@ -79,6 +79,11 @@ namespace BrewSystem.UI
             _view.BrewResult.ShowResult(brewResult);
         }
 
+        public void ResetBrewResult()
+        {
+            _view.BrewResult.ResetUI();
+        }
+
         #region IDisposable
 
         private bool _disposed;
