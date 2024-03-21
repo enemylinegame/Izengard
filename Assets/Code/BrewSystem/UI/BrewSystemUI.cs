@@ -1,4 +1,5 @@
 ﻿using BrewSystem.Configs;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,8 @@ namespace BrewSystem.UI
 {
     public class BrewSystemUI : MonoBehaviour
     {
+        [SerializeField]
+        private TMP_Text _ingridientsCount;
         [SerializeField]
         private Transform _ingridientsHolder;
         [SerializeField]
@@ -17,6 +20,7 @@ namespace BrewSystem.UI
         [SerializeField]
         private Button _checkBrewResultButton;
 
+        public TMP_Text IngridientsCount => _ingridientsCount;
         public Transform IngridientsHolder => _ingridientsHolder;
         public GameObject IngridientPrefab => _ingridientPrefab;
         public BrewStatusUI BrewStatus => _brewStatus;

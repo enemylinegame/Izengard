@@ -13,8 +13,7 @@ namespace BrewSystem.UI
         private List<IngridientUI> _ingridientsCollection = new();
 
         public Action OnCheckBrewResult;
-        public Action<int> OnIngridientSelected;
-        public Action<int> OnIngridientUnselected;
+        public Action<int> OnIngridientClicked;
 
         public BrewSystemUIController(
             BrewSystemUIFactory factory, 
@@ -28,6 +27,8 @@ namespace BrewSystem.UI
             _view.CheckBrewResultButton.onClick.AddListener(CheckBrewResultPressed);
 
             FillIngridients(ingridients);
+
+            UpdateIngridientsInBrewCount(0);
         }
 
         private void CheckBrewResultPressed()
@@ -46,21 +47,26 @@ namespace BrewSystem.UI
 
                 ingridientView.InitUI(ingridient);
 
-                ingridientView.OnSelected += SelectIngridient;
-                ingridientView.OnUnSelected += UnselectIngridient;
+                ingridientView.OnClicked += OnClickedIngridient;
 
                 _ingridientsCollection.Add(ingridientView);
             }
         }
 
-        private void SelectIngridient(int ingridientId)
+        private void OnClickedIngridient(int ingridientId)
         {
-            OnIngridientSelected?.Invoke(ingridientId);
+            OnIngridientClicked?.Invoke(ingridientId);
         }
 
-        private void UnselectIngridient(int ingridientId)
+        public void ChangeIngridientSelection(int ingridientId, bool selectionState)
         {
-            OnIngridientUnselected?.Invoke(ingridientId);
+            var ingridientUI = _ingridientsCollection.Find(ing => ing.Id ==  ingridientId);
+            ingridientUI.ChangeSelection(selectionState);
+        }
+
+        public void UpdateIngridientsInBrewCount(int value)
+        {
+            _view.IngridientsCount.text = $"Ingridients in Brew : {value}"; 
         }
 
         public void UpdateBrewStatus(BrewModel brewModel)
@@ -88,8 +94,7 @@ namespace BrewSystem.UI
 
             foreach (var ingridient in _ingridientsCollection)
             {
-                ingridient.OnSelected -= SelectIngridient; 
-                ingridient.OnUnSelected -= UnselectIngridient;
+                ingridient.OnClicked -= OnIngridientClicked; 
 
                 ingridient.Dispose();
 

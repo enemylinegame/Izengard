@@ -43,15 +43,13 @@ namespace BrewSystem
         private void Subscribe()
         {
             _viewController.OnCheckBrewResult += CheckBrewResult;
-            _viewController.OnIngridientSelected += AddIngridientToBrew;
-            _viewController.OnIngridientUnselected += RemoveIngridientFromBrew;
+            _viewController.OnIngridientClicked += UpdateIngridientsInBrew;
         }
 
         private void Unsubscribe()
         {
             _viewController.OnCheckBrewResult -= CheckBrewResult;
-            _viewController.OnIngridientSelected -= AddIngridientToBrew;
-            _viewController.OnIngridientUnselected -= RemoveIngridientFromBrew;
+            _viewController.OnIngridientClicked -= UpdateIngridientsInBrew;
         }
 
         private void CheckBrewResult()
@@ -101,21 +99,39 @@ namespace BrewSystem
             return (value >= min) && (value < max);
         }
 
-        private void AddIngridientToBrew(int ingridientId)
+        private void UpdateIngridientsInBrew(int ingridientId)
+        {
+            var ingridient = _ingridientsCollection.Find(ing => ing.Id == ingridientId);
+
+            if (_brewMixCollection.Contains(ingridient))
+            {
+                RemoveIngridientFromBrew(ingridient);
+            }
+            else
+            {
+                AddIngridientToBrew(ingridient);
+            }
+        }
+
+        private void AddIngridientToBrew(IngridientModel ingridient)
         {
             if (_brewMixCollection.Count >= _config.MaxBrewIngridients)
                 return;
 
-            var ingridient = _ingridientsCollection.Find(ing => ing.Id == ingridientId);
             _brewMixCollection.Add(ingridient);
+
+            _viewController.UpdateIngridientsInBrewCount(_brewMixCollection.Count);
+            _viewController.ChangeIngridientSelection(ingridient.Id, true);
 
             CalculateBrew(_brewMixCollection);
         }
 
-        private void RemoveIngridientFromBrew(int ingridientId)
+        private void RemoveIngridientFromBrew(IngridientModel ingridient)
         {
-            var ingridient = _ingridientsCollection.Find(ing => ing.Id == ingridientId);
             _brewMixCollection.Remove(ingridient);
+
+            _viewController.UpdateIngridientsInBrewCount(_brewMixCollection.Count);
+            _viewController.ChangeIngridientSelection(ingridient.Id, false);
 
             CalculateBrew(_brewMixCollection);
         }

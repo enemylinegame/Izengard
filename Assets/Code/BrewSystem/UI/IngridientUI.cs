@@ -9,7 +9,7 @@ namespace BrewSystem.UI
     public class IngridientUI : MonoBehaviour, IDisposable
     {
         [SerializeField]
-        private Button _selecttionButon;
+        private Button _clickedButon;
         [SerializeField]
         private TMP_Text _name;
         [SerializeField]
@@ -18,40 +18,35 @@ namespace BrewSystem.UI
         private GameObject _unselectedView;
         [SerializeField]
         private GameObject _selectedView;
+        [SerializeField]
+        private GameObject _selectedIcon;
 
         private int _id;
-        private bool _isSelected;
+        public int Id => _id;
 
-        public Action<int> OnSelected;
-        public Action<int> OnUnSelected;
+        public Action<int> OnClicked;
 
         public void InitUI(IngridientModel model)
         {
             _id = model.Id;
             _name.text = model.Data.Name;
             _icone.sprite = model.Data.Icon;
+            _clickedButon.onClick.AddListener(() => OnClicked?.Invoke(_id));
 
-            ChangeSelection();
-
-            _selecttionButon.onClick.AddListener(ChangeSelection);
+            ChangeSelection(false);
         }
 
-        public void ChangeSelection()
+        public void ChangeSelection(bool state)
         {
-            _unselectedView.SetActive(!_isSelected);
-            _selectedView.SetActive(_isSelected);
+            /*_unselectedView.SetActive(!state);
+            _selectedView.SetActive(state);*/
 
-            if(_isSelected)
-                OnSelected?.Invoke(_id);
-            else
-                OnUnSelected?.Invoke(_id);
-
-            _isSelected = !_isSelected;
+            _selectedIcon.SetActive(state);
         }
 
         public void Dispose()
         {
-            _selecttionButon.onClick.RemoveAllListeners();
+            _clickedButon.onClick.RemoveAllListeners();
         }
     }
 }
