@@ -3,6 +3,7 @@ using BrewSystem.Model;
 using BrewSystem.UI;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace BrewSystem
 {
@@ -17,6 +18,7 @@ namespace BrewSystem
         private List<IngridientModel> _brewMixCollection;
 
         public BrewController(
+            Canvas mainCanvas,
             BrewSystemUIFactory uiFactory,
             BrewConfig config)
         {
@@ -33,7 +35,7 @@ namespace BrewSystem
                 _ingridientsCollection.Add(new IngridientModel(i, ingridients[i]));
             }
 
-            _viewController = new BrewSystemUIController(uiFactory, config, _ingridientsCollection);
+            _viewController = new BrewSystemUIController(mainCanvas, uiFactory, config, _ingridientsCollection);
 
             Subscribe();
 

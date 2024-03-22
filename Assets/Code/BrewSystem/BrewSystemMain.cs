@@ -20,7 +20,7 @@ namespace BrewSystem
         {
             var uiFactory = new BrewSystemUIFactory(_uiConfig, _canvas);
 
-            _controller = new BrewController(uiFactory, _brewConfig);
+            _controller = new BrewController(_canvas, uiFactory, _brewConfig);
         }
     }
 }

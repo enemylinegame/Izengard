@@ -2,6 +2,8 @@
 using BrewSystem.Model;
 using System;
 using System.Collections.Generic;
+using Tools.DragAndDrop;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace BrewSystem.UI
@@ -9,6 +11,7 @@ namespace BrewSystem.UI
     public class BrewSystemUIController : IDisposable
     {
         private readonly BrewSystemUI _view;
+        private readonly DragAndDropController _dragController;
 
         private List<IngridientUI> _ingridientsCollection = new();
 
@@ -16,6 +19,7 @@ namespace BrewSystem.UI
         public Action<int> OnIngridientClicked;
 
         public BrewSystemUIController(
+            Canvas canvas,
             BrewSystemUIFactory factory, 
             BrewConfig config,
             List<IngridientModel> ingridients)
@@ -25,6 +29,8 @@ namespace BrewSystem.UI
             _view.InitUI(config);
 
             _view.CheckBrewResultButton.onClick.AddListener(CheckBrewResultPressed);
+
+            _dragController =new DragAndDropController(canvas);
 
             FillIngridients(ingridients);
 
@@ -50,6 +56,8 @@ namespace BrewSystem.UI
                 ingridientView.OnClicked += OnClickedIngridient;
 
                 _ingridientsCollection.Add(ingridientView);
+
+                _dragController.AddDraggable(ingridientView.GetComponent<IDraggable>());
             }
         }
 
@@ -102,6 +110,8 @@ namespace BrewSystem.UI
                 ingridient.OnClicked -= OnIngridientClicked; 
 
                 ingridient.Dispose();
+
+                _dragController.RemoveDraggable(ingridient.GetComponent<IDraggable>());
 
                 Object.Destroy(ingridient);
             }
