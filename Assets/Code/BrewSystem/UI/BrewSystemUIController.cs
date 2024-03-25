@@ -16,7 +16,7 @@ namespace BrewSystem.UI
         private List<IngridientUI> _ingridientsViewCollection = new();
 
         public Action OnCheckBrewResult;
-        public Action<int> OnIngridientClicked;
+        public Action<int> OnIngridientAdded;
 
         public BrewSystemUIController(
             Canvas canvas,
@@ -29,6 +29,7 @@ namespace BrewSystem.UI
             _view.InitUI(config);
 
             _view.CheckBrewResultButton.onClick.AddListener(CheckBrewResultPressed);
+            _view.BrewTank.OnAddedInSlot += IngridientAddedInTank;
 
             _tankDragDropController =new DragAndDropController(canvas, _view.BrewTank);
 
@@ -37,9 +38,15 @@ namespace BrewSystem.UI
             UpdateIngridientsInBrewCount(0);
         }
 
+   
         private void CheckBrewResultPressed()
         {
             OnCheckBrewResult?.Invoke();
+        }
+
+        private void IngridientAddedInTank(int ingridientId)
+        {
+            OnIngridientAdded?.Invoke(ingridientId);
         }
 
         private void FillIngridients(List<IngridientModel> ingridients)
@@ -53,23 +60,15 @@ namespace BrewSystem.UI
 
                 ingridientView.InitUI(ingridient);
 
-                ingridientView.OnClicked += OnClickedIngridient;
-
                 _ingridientsViewCollection.Add(ingridientView);
 
                 _tankDragDropController.AddDraggable(ingridientView);
             }
         }
 
-        private void OnClickedIngridient(int ingridientId)
-        {
-            OnIngridientClicked?.Invoke(ingridientId);
-        }
-
-        public void ChangeIngridientSelection(int ingridientId, bool selectionState)
+        public void ChangeIngridientSelection(int ingridientId)
         {
             var ingridientUI = _ingridientsViewCollection.Find(ing => ing.Id ==  ingridientId);
-            ingridientUI.ChangeSelection(selectionState);
         }
 
         public void UpdateIngridientsInBrewCount(int value)
@@ -85,12 +84,15 @@ namespace BrewSystem.UI
         public void DisplayBrewResult(BrewResultType brewResult)
         {
             _view.BrewResult.ShowResult(brewResult);
+
+            _view.BrewTank.ResetUI();
+
+            UpdateIngridientsInBrewCount(0);
         }
 
         public void ResetBrewResult()
         {
             _view.BrewResult.ResetUI();
-            _view.BrewTank.ResetUI();
         }
 
         #region IDisposable
@@ -105,11 +107,10 @@ namespace BrewSystem.UI
             _disposed = true;
 
             _view.CheckBrewResultButton.onClick.RemoveListener(CheckBrewResultPressed);
+            _view.BrewTank.OnAddedInSlot -= IngridientAddedInTank;
 
             foreach (var ingridientView in _ingridientsViewCollection)
             {
-                ingridientView.OnClicked -= OnIngridientClicked; 
-
                 ingridientView.Dispose();
 
                 _tankDragDropController.RemoveDraggable(ingridientView);

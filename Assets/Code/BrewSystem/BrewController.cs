@@ -45,19 +45,24 @@ namespace BrewSystem
         private void Subscribe()
         {
             _viewController.OnCheckBrewResult += CheckBrewResult;
-            _viewController.OnIngridientClicked += UpdateIngridientsInBrew;
+            _viewController.OnIngridientAdded += UpdateIngridientsInBrew;
         }
 
         private void Unsubscribe()
         {
             _viewController.OnCheckBrewResult -= CheckBrewResult;
-            _viewController.OnIngridientClicked -= UpdateIngridientsInBrew;
+            _viewController.OnIngridientAdded -= UpdateIngridientsInBrew;
         }
 
         private void CheckBrewResult()
         {
             var brewCalculation = 100.0f - GetBrewAverage(_config, _model);
             var brewResult = GetBrewResult(brewCalculation);
+
+            _brewMixCollection.Clear();
+
+            _model.Reset();
+            _viewController.UpdateBrewStatus(_model);
 
             _viewController.DisplayBrewResult(brewResult);
         }
@@ -105,14 +110,7 @@ namespace BrewSystem
         {
             var ingridient = _ingridientsCollection.Find(ing => ing.Id == ingridientId);
 
-            if (_brewMixCollection.Contains(ingridient))
-            {
-                RemoveIngridientFromBrew(ingridient);
-            }
-            else
-            {
-                AddIngridientToBrew(ingridient);
-            }
+            AddIngridientToBrew(ingridient);
         }
 
         private void AddIngridientToBrew(IngridientModel ingridient)
@@ -139,7 +137,7 @@ namespace BrewSystem
         private void UpdateViewControllerData(int ingridetnId, bool selectionState)
         {
             _viewController.UpdateIngridientsInBrewCount(_brewMixCollection.Count);
-            _viewController.ChangeIngridientSelection(ingridetnId, selectionState);
+            _viewController.ChangeIngridientSelection(ingridetnId);
             _viewController.ResetBrewResult();
         }
 
