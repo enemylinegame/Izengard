@@ -11,7 +11,7 @@ namespace BrewSystem.UI
     public class BrewSystemUIController : IDisposable
     {
         private readonly BrewSystemUI _view;
-        private readonly DragAndDropController _dragController;
+        private readonly DragAndDropController _tankDragDropController;
 
         private List<IngridientUI> _ingridientsViewCollection = new();
 
@@ -30,7 +30,7 @@ namespace BrewSystem.UI
 
             _view.CheckBrewResultButton.onClick.AddListener(CheckBrewResultPressed);
 
-            _dragController =new DragAndDropController(canvas, _view.BrewTank);
+            _tankDragDropController =new DragAndDropController(canvas, _view.BrewTank);
 
             FillIngridients(ingridients);
 
@@ -57,7 +57,7 @@ namespace BrewSystem.UI
 
                 _ingridientsViewCollection.Add(ingridientView);
 
-                _dragController.AddDraggable(ingridientView);
+                _tankDragDropController.AddDraggable(ingridientView);
             }
         }
 
@@ -90,6 +90,7 @@ namespace BrewSystem.UI
         public void ResetBrewResult()
         {
             _view.BrewResult.ResetUI();
+            _view.BrewTank.ResetUI();
         }
 
         #region IDisposable
@@ -111,7 +112,7 @@ namespace BrewSystem.UI
 
                 ingridientView.Dispose();
 
-                _dragController.RemoveDraggable(ingridientView);
+                _tankDragDropController.RemoveDraggable(ingridientView);
 
                 Object.Destroy(ingridientView);
             }

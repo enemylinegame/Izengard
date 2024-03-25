@@ -43,6 +43,8 @@ namespace BrewSystem.UI
             _brewStatus.FlavorValueSlider.maxValue = config.MaxFlavorValue;
 
             _brewResult.InitUI();
+
+            _brewTank.InitUI(config.MaxBrewIngridients);
         }
     }
 }

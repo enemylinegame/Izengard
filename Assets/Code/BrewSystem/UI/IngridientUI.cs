@@ -50,10 +50,20 @@ namespace BrewSystem.UI
         private RectTransform _rectTransform;
 
         private Transform _originalParent;
+
+        public IDraggedData Data { get; private set; }
+
         public bool IsPathEnd { get; private set; }
 
         public void Init(Canvas canvas)
         {
+
+            Data = new IngridientDragDataModel
+            {
+                Id = _id,
+                Sprite = _icone.sprite
+            };
+
             _draggableGO.GetComponent<Image>().sprite = _icone.sprite;
             _draggableGO.SetActive(false);
 
@@ -81,7 +91,6 @@ namespace BrewSystem.UI
         public void OnBeginDrag(PointerEventData eventData)
         {
             _draggableGO.SetActive(true);
-
             IsPathEnd = false;
 
             _rectTransform.SetParent(_parentDragTransform);
@@ -89,12 +98,11 @@ namespace BrewSystem.UI
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            if (IsPathEnd == false)
-            {
-                _rectTransform.SetParent(_originalParent);
-                _rectTransform.anchoredPosition = Vector2.zero;
-                _draggableGO.SetActive(false);
-            }
+            _rectTransform.SetParent(_originalParent);
+            _rectTransform.anchoredPosition = Vector2.zero;
+            _draggableGO.SetActive(false);
+
+            IsPathEnd = true;
         }
 
         #endregion
