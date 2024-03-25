@@ -1986,6 +1986,7 @@ MonoBehaviour:
   _ingridientPrefab: {fileID: 2332975611656826606, guid: 2546bf3df23952b4683a47b3bd2e1c2e, type: 3}
   _brewStatus: {fileID: 6165651466636152198}
   _brewResult: {fileID: 8811266042102374697}
+  _brewTank: {fileID: 2830021168661344957}
   _checkBrewResultButton: {fileID: 8387725066061695893}
 --- !u!1 &6165651466996864032
 GameObject:
@@ -2683,6 +2684,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6165651468410843194}
+  - component: {fileID: 2830021168661344957}
   m_Layer: 5
   m_Name: BrewTank
   m_TagString: Untagged
@@ -2713,6 +2715,18 @@ RectTransform:
   m_AnchoredPosition: {x: 50, y: -200}
   m_SizeDelta: {x: 400, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2830021168661344957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6165651468410843195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d94b51209cbd8846988783cc2808d52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6165651468414295230
 GameObject:
   m_ObjectHideFlags: 0

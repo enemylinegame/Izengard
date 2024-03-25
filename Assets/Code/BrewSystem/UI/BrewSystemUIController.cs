@@ -13,7 +13,7 @@ namespace BrewSystem.UI
         private readonly BrewSystemUI _view;
         private readonly DragAndDropController _dragController;
 
-        private List<IngridientUI> _ingridientsCollection = new();
+        private List<IngridientUI> _ingridientsViewCollection = new();
 
         public Action OnCheckBrewResult;
         public Action<int> OnIngridientClicked;
@@ -30,7 +30,7 @@ namespace BrewSystem.UI
 
             _view.CheckBrewResultButton.onClick.AddListener(CheckBrewResultPressed);
 
-            _dragController =new DragAndDropController(canvas);
+            _dragController =new DragAndDropController(canvas, _view.BrewTank);
 
             FillIngridients(ingridients);
 
@@ -55,9 +55,9 @@ namespace BrewSystem.UI
 
                 ingridientView.OnClicked += OnClickedIngridient;
 
-                _ingridientsCollection.Add(ingridientView);
+                _ingridientsViewCollection.Add(ingridientView);
 
-                _dragController.AddDraggable(ingridientView.GetComponent<IDraggable>());
+                _dragController.AddDraggable(ingridientView);
             }
         }
 
@@ -68,7 +68,7 @@ namespace BrewSystem.UI
 
         public void ChangeIngridientSelection(int ingridientId, bool selectionState)
         {
-            var ingridientUI = _ingridientsCollection.Find(ing => ing.Id ==  ingridientId);
+            var ingridientUI = _ingridientsViewCollection.Find(ing => ing.Id ==  ingridientId);
             ingridientUI.ChangeSelection(selectionState);
         }
 
@@ -105,18 +105,18 @@ namespace BrewSystem.UI
 
             _view.CheckBrewResultButton.onClick.RemoveListener(CheckBrewResultPressed);
 
-            foreach (var ingridient in _ingridientsCollection)
+            foreach (var ingridientView in _ingridientsViewCollection)
             {
-                ingridient.OnClicked -= OnIngridientClicked; 
+                ingridientView.OnClicked -= OnIngridientClicked; 
 
-                ingridient.Dispose();
+                ingridientView.Dispose();
 
-                _dragController.RemoveDraggable(ingridient.GetComponent<IDraggable>());
+                _dragController.RemoveDraggable(ingridientView);
 
-                Object.Destroy(ingridient);
+                Object.Destroy(ingridientView);
             }
 
-            _ingridientsCollection.Clear();
+            _ingridientsViewCollection.Clear();
         }
 
         #endregion

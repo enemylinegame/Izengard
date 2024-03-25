@@ -18,6 +18,8 @@ namespace BrewSystem.UI
         [SerializeField]
         private BrewResultUI _brewResult;
         [SerializeField]
+        private BrewTankUI _brewTank;
+        [SerializeField]
         private Button _checkBrewResultButton;
 
         public TMP_Text IngridientsCount => _ingridientsCount;
@@ -25,6 +27,7 @@ namespace BrewSystem.UI
         public GameObject IngridientPrefab => _ingridientPrefab;
         public BrewStatusUI BrewStatus => _brewStatus;
         public BrewResultUI BrewResult => _brewResult;
+        public BrewTankUI BrewTank => _brewTank;
         public Button CheckBrewResultButton => _checkBrewResultButton;
 
 

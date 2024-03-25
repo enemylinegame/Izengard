@@ -8,5 +8,7 @@ namespace Tools.DragAndDrop
         bool IsPathEnd { get; }
 
         public void Init(Canvas canvas);
+
+        public void ReachedTarget();
     }
 }
